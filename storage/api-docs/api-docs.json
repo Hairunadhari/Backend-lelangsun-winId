@@ -1,0 +1,91 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Documentation API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/produk": {
+            "get": {
+                "tags": [
+                    "Produk"
+                ],
+                "summary": "List Produk",
+                "description": "menampilkan semua produk",
+                "operationId": "produk",
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/topproduk": {
+            "get": {
+                "tags": [
+                    "Produk"
+                ],
+                "summary": "List Top Produk dan Kategori Produk",
+                "description": "menampilkan top 5 produk dan menampilkan semua kategori produk ",
+                "operationId": "ListTopProduk&KategoriProduk",
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/detailproduk/{id}": {
+            "get": {
+                "tags": [
+                    "Produk"
+                ],
+                "summary": "Mendapatkan detail produk berdasarkan ID",
+                "description": "Mendapatkan detail produk berdasarkan ID yg diberikan",
+                "operationId": "DetailProduk",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID produk yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/detailkategori/{id}": {
+            "get": {
+                "tags": [
+                    "Kategori Produk"
+                ],
+                "summary": "Detail Kategori",
+                "description": "Menampilkan semua produk berdasarkan kategori yg dipillih",
+                "operationId": "DetailKategori",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID kategori yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        }
+    }
+}
