@@ -25,6 +25,9 @@ class ApiController extends Controller
      */
     public function daftar_produk(){
         $produk = Produk::all();
+        $produk->each(function ($item) {
+            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+        });
         return response()->json([
             'produk' => $produk,
         ]);
@@ -46,6 +49,9 @@ class ApiController extends Controller
      */
     public function daftar_top_produk(){
         $topproduk = Produk::take(5)->get();
+        $topproduk->each(function ($item) {
+            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+        });
         return response()->json([
             'topproduk' => $topproduk
         ]);
@@ -75,7 +81,14 @@ class ApiController extends Controller
      */
     public function detail_produk($id){
         $produk = Produk::with('toko','kategoriproduk')->find($id);
+            $produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $produk->thumbnail);
+            $produk->toko->logo = url('https://backendwin.spero-lab.id/storage/image/' . $produk->toko->logo);
+            $produk->kategoriproduk->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $produk->kategoriproduk->gambar);
+
         $gambarproduk = GambarProduk::where('produk_id', $id)->get();
+        $gambarproduk->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
         return response()->json([
             'produk' => $produk,
             'gambarproduk' => $gambarproduk
@@ -106,7 +119,12 @@ class ApiController extends Controller
      */
      public function daftar_produk_berdasarkan_kategori($id){
         $kategoriproduk = KategoriProduk::find($id);
+        $kategoriproduk->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $kategoriproduk->gambar);
+        
         $produk = Produk::where('kategoriproduk_id',$id)->get();
+        $produk->each(function ($item) {
+            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+        });
         return response()->json([
             'kategoriproduk' => $kategoriproduk,
             'produk' => $produk
@@ -128,6 +146,9 @@ class ApiController extends Controller
      */
     public function daftar_kategori(){
         $kategoriproduk = KategoriProduk::all();
+        $kategoriproduk->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
         return response()->json([
             'kategoriproduk' => $kategoriproduk
             
