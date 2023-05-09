@@ -82,7 +82,7 @@
                         <label for="exampleInputEmail1">Thumbnail:</label>
                         <input type="file" class="form-control" name="thumbnail" value="{{$data->thumbnail}}">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" >
                         <label for="">Gambar Produk:</label>
                         <br>
                         @foreach ($gambar as $item)

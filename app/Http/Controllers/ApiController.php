@@ -25,7 +25,6 @@ class ApiController extends Controller
      */
     public function daftar_produk(){
         $produk = Produk::all();
-        $produk = Produk::all();
         return response()->json([
             'produk' => $produk,
         ]);
