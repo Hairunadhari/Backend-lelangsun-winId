@@ -128,10 +128,8 @@ class ApiController extends Controller
      * )
      */
     public function daftar_kategori(){
-        $topproduk = Produk::take(5)->get();
         $kategoriproduk = KategoriProduk::all();
         return response()->json([
-            'topproduk' => $topproduk,
             'kategoriproduk' => $kategoriproduk
             
         ]);

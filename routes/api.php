@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/produk', [ApiController::class, 'daftar_produk']);
 Route::get('/detailproduk/{id}/', [ApiController::class, 'detail_produk']);
-Route::get('/topproduk', [ApiController::class, 'daftar_top_produk_dan_kategori']);
+Route::get('/topproduk', [ApiController::class, 'daftar_top_produk']);
 
 Route::get('/kategori', [ApiController::class, 'daftar_kategori']);
 Route::get('/detailkategori/{id}/', [ApiController::class, 'daftar_produk_berdasarkan_kategori']);
