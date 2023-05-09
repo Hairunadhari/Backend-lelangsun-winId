@@ -36,22 +36,19 @@ class ApiController extends Controller
      * @OA\Get(
      *      path="/api/topproduk",
      *      tags={"Produk"},
-     *      summary="List Top Produk dan Kategori Produk",
-     *      description="menampilkan top 5 produk dan menampilkan semua kategori produk ",
-     *      operationId="ListTopProduk&KategoriProduk",
+     *      summary="List Top Produk",
+     *      description="menampilkan top 5 produk ",
+     *      operationId="ListTopProduk",
      *      @OA\Response(
      *          response="default",
      *          description="return array model produk"
      *      )
      * )
      */
-    public function daftar_top_produk_dan_kategori(){
+    public function daftar_top_produk(){
         $topproduk = Produk::take(5)->get();
-        $kategoriproduk = KategoriProduk::all();
         return response()->json([
-            'topproduk' => $topproduk,
-            'kategoriproduk' => $kategoriproduk
-
+            'topproduk' => $topproduk
         ]);
     }
 
@@ -114,6 +111,29 @@ class ApiController extends Controller
         return response()->json([
             'kategoriproduk' => $kategoriproduk,
             'produk' => $produk
+        ]);
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/kategori",
+     *      tags={"Kategori Produk"},
+     *      summary="Kategori Produk",
+     *      description="menampilkan semua kategori produk ",
+     *      operationId="KategoriProduk",
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model produk"
+     *      )
+     * )
+     */
+    public function daftar_kategori(){
+        $topproduk = Produk::take(5)->get();
+        $kategoriproduk = KategoriProduk::all();
+        return response()->json([
+            'topproduk' => $topproduk,
+            'kategoriproduk' => $kategoriproduk
+            
         ]);
     }
 }

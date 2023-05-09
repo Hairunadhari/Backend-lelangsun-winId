@@ -10,9 +10,11 @@ use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\EventLelang;
 use App\Models\ProdukPromo;
+use App\Models\BarangLelang;
 use App\Models\GambarProduk;
 use App\Models\PembelianNpl;
 use Illuminate\Http\Request;
+use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use Illuminate\Support\Facades\Storage;
 
@@ -128,7 +130,7 @@ class MenuController extends Controller
         // dd($produk);
 
         //render view with post
-        return view('e-commerce.detail_kategori_produk', compact('data','produk'));
+        return view('e-commerce.detail_kategori_produk', compact('data'));
     }
 
     public function edit_kategori_produk($id)
@@ -158,7 +160,7 @@ class MenuController extends Controller
             Storage::delete('public/image/'.$data->gambar);
 
             $data->update([
-                'toko'     => $request->toko,
+                'kategori'     => $request->kategori,
                 'gambar'     => $gambar->hashName(),
             ]);
 
@@ -438,14 +440,14 @@ class MenuController extends Controller
     }
 
     public function list_promosi(){
-        $data = Promosi::with('produkpromo')->paginate(10);
-        $produk = Produk::all();
+        $data = Promosi::with('produkpromo')->take(100)->get();
         // dd($data);
+        $produk = Produk::all();
         return view('e-commerce/list_promosi', compact('data','produk'));
     }
 
     public function form_input_promosi(){
-        $produk = Produk::paginate(10);
+        $produk = Produk::all();
         return view('e-commerce.tambah_promosi', compact('produk'));
     }
 
@@ -560,19 +562,239 @@ class MenuController extends Controller
 
         $output= "";
         $url = asset('/storage/image/');
+        $nomor = 1;
 
         foreach ($toko as $data) {
             $output.= 
             '<tr>
-                <td>'.$data->toko.'</td>
+                <td>'.$nomor++.'</td>
+                <td>'.ucfirst($data->toko).'</td>
                 <td><img src="'.$url.'/'.$data->logo.'" class="rounded" style="width: 100px"></td>
+                <td>
+                    <div class="dropdown d-inline">
+                        <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer"
+                            id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"></i>
+                            <form action="'.route('deletetoko', $data->id).'" method="POST"
+                            onsubmit="return confirm(\'Apakah anda yakin akan menghapus data ini ?\');">
+                            <div class="dropdown-menu" x-placement="bottom-start"
+                                style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item has-icon" href="'.route('detailtoko',$data->id).'"><i
+                                        class="fas fa-info-circle"></i>Detail</a>
+                                <a class="dropdown-item has-icon" href="'. route('edittoko', $data->id) .'"><i
+                                        class="far fa-edit"></i>Edit</a>
+                                '.csrf_field().'
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button class="btn btn-danger " style="margin-left: 20px;" type="submit"><i
+                                        class="far fa-trash-alt"></i> Hapus</button>
+                            </div>
+                        </form>
+                    </div>
+                </td>
             </tr>';
         }
-        
         return response($output);
-        
     }
 
-    
+    public function list_kategori_lelang(){
+        $data = KategoriBarang::paginate(10);
+        return view('lelang/list_kategori', compact('data'));
+    }
 
+    public function add_kategori_lelang(Request $request){
+
+        $this->validate($request, [
+            'kategori'     => 'unique:kategori_barangs,kategori',
+            
+        ]);
+
+        KategoriBarang::create([
+            'kategori'     => $request->kategori,
+        ]);
+
+        return redirect('/kategori-lelang')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function detail_kategori_lelang($id)
+    {
+        $data = KategoriBarang::find($id);
+        // dd($produk);
+
+        return view('lelang.detail_kategorilelang', compact('data'));
+    }
+
+    public function edit_kategori_lelang($id)
+    {
+        $data = KategoriBarang::findOrFail($id);
+
+        //render view with post
+        return view('lelang.edit_kategorilelang', compact('data'));
+    }
+
+    public function update_kategori_lelang(Request $request, $id)
+    {
+        $this->validate($request, [
+            'kategori'     => 'unique:kategori_barangs,kategori',
+            
+        ], [
+            'kategori.unique' => 'Kategori sudah digunakan. Silahkan gunakan kategori lain.',
+        ]);
+        
+        $data = KategoriBarang::findOrFail($id);
+            $data->update([
+                'kategori'     => $request->kategori,
+            ]);
+
+        //redirect to index
+        return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function delete_kategori_lelang($id)
+    {
+        $data = KategoriBarang::findOrFail($id);
+        $data->delete();
+        return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+    
+    public function list_barang_lelang(){
+        $data = BarangLelang::with('kategoribarang')->paginate(10);
+        $kategori = KategoriBarang::all();
+        return view('lelang/list_baranglelang', compact('data','kategori'));
+    }
+
+    public function add_barang_lelang(Request $request){
+        // dd($request);
+        if ($request->hasFile('faktur') && $request->hasFile('ktp') && $request->hasFile('kwitansi')) {
+
+            $files = [
+                'faktur' => $request->file('faktur'),
+                'ktp' => $request->file('ktp'),
+                'kwitansi' => $request->file('kwitansi')
+            ];
+            
+            foreach ($files as $file) {
+                $file->storeAs('public/image', $file->hashName());
+            }
+            
+
+            $produk = BarangLelang::create([
+                'kategoribarang_id'     => $request->kategoribarang_id,
+                'barang'     => $request->barang,
+                'nama_pemilik'     => $request->nama_pemilik,
+                'keterangan'     => $request->keterangan,
+                'faktur' => $files['faktur']->hashName(),
+                'ktp' => $files['ktp']->hashName(),
+                'kwitansi' => $files['kwitansi']->hashName(),
+            ]);
+        }
+        return redirect('/barang-lelang')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function detail_barang_lelang($id)
+    {
+        $data = BarangLelang::with('kategoribarang')->find($id);
+        // dd($gambar);
+        return view('lelang.detail_baranglelang', compact('data'));
+    }
+    public function edit_barang_lelang($id)
+    {
+        $data = BarangLelang::with('kategoribarang')->find($id);
+        $kategori = KategoriBarang::all();
+        //render view with post
+        return view('lelang.edit_baranglelang', compact('data','kategori'));
+    }
+
+    public function update_barang_lelang(Request $request, $id)
+    {
+        
+        $barang = BarangLelang::find($id);
+
+        if ($request->hasFile('faktur') && $request->hasFile('ktp') && $request->hasFile('kwitansi')) {
+            
+            $files = [
+                'faktur' => $request->file('faktur'),
+                'ktp' => $request->file('ktp'),
+                'kwitansi' => $request->file('kwitansi')
+            ];
+            
+            foreach ($files as $file) {
+                $file->storeAs('public/image', $file->hashName());
+            }
+            Storage::delete('public/image/'.$barang->faktur);
+            Storage::delete('public/image/'.$barang->ktp);
+            Storage::delete('public/image/'.$barang->kwitansi);
+
+            $barang->update([
+                'kategoribarang_id'     => $request->kategoribarang_id,
+                'barang'     => $request->barang,
+                'nama_pemilik'     => $request->nama_pemilik,
+                'keterangan'     => $request->keterangan,
+                'faktur' => $files['faktur']->hashName(),
+                'ktp' => $files['ktp']->hashName(),
+                'kwitansi' => $files['kwitansi']->hashName(),
+            ]);
+
+        }elseif ($request->hasFile('faktur')){
+
+            Storage::delete('public/image/'.$barang->faktur);
+            $faktur = $request->file('faktur');
+            $faktur->storeAs('public/image', $faktur->hashName());
+
+            $barang->update([
+                'kategoribarang_id'     => $request->kategoribarang_id,
+                'barang'     => $request->barang,
+                'nama_pemilik'     => $request->nama_pemilik,
+                'keterangan'     => $request->keterangan,
+                'faktur'     => $faktur->hashName(),
+            ]);
+        
+        }elseif ($request->hasFile('ktp')){
+
+            Storage::delete('public/image/'.$barang->ktp);
+            $ktp = $request->file('ktp');
+            $ktp->storeAs('public/image', $ktp->hashName());
+
+            $barang->update([
+                'kategoribarang_id'     => $request->kategoribarang_id,
+                'barang'     => $request->barang,
+                'nama_pemilik'     => $request->nama_pemilik,
+                'keterangan'     => $request->keterangan,
+                'ktp'     => $ktp->hashName(),
+            ]);
+        }elseif ($request->hasFile('kwitansi')){
+            Storage::delete('public/image/'.$barang->kwitansi);
+            $kwitansi = $request->file('kwitansi');
+            $kwitansi->storeAs('public/image', $kwitansi->hashName());
+
+            $barang->update([
+                'kategoribarang_id'     => $request->kategoribarang_id,
+                'barang'     => $request->barang,
+                'nama_pemilik'     => $request->nama_pemilik,
+                'keterangan'     => $request->keterangan,
+                'kwitansi'     => $kwitansi->hashName(),
+            ]);
+        }else {
+            $barang->update([
+                'kategoribarang_id'     => $request->kategoribarang_id,
+                'barang'     => $request->barang,
+                'nama_pemilik'     => $request->nama_pemilik,
+                'keterangan'     => $request->keterangan,
+            ]);
+        }
+
+        return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+   
+
+    // public function delete_produk($id)
+    // {
+    //     $produk = Produk::find($id);
+    //     $gambarProduk = GambarProduk::where('produk_id',$id);
+    //     foreach ($gambarProduk as $gambar) {
+    //         Storage::delete('public/image/'.$gambar->gambar);
+    //     }
+    //     Storage::delete('public/video/'.$produk->video);
+    //     $produk->delete();
+    //     return redirect()->route('produk')->with(['success' => 'Data Berhasil Dihapus!']);
+    // }
 }   

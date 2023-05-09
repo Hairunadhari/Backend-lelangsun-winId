@@ -16,14 +16,14 @@
         </div>
         <div class="card-body">
             @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
                 <strong>{{ session('success') }}</strong>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             @elseif ($errors->has('promosi'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
                 <strong>Promo Sudah Terdaftar!</strong>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -44,9 +44,9 @@
                         @php
                         $no = 1;
                         @endphp
-                        @forelse ($data as $index => $d)
+                        @forelse ($data as $d)
                         <tr>
-                            <td>{{$index + $data->firstItem()}}</td>
+                            <td>{{$no++}}</td>
                             <td>{{$d->promosi}}</td>
                             <td>
                                 <div class="dropdown d-inline">
@@ -75,9 +75,9 @@
                     </tbody>
                 </table>
             </div>
-            <div style="margin-left:20px">
+            {{-- <div style="margin-left:20px">
                 {{ $data->links() }}
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>

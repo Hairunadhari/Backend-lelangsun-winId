@@ -25,9 +25,9 @@
                 "tags": [
                     "Produk"
                 ],
-                "summary": "List Top Produk dan Kategori Produk",
-                "description": "menampilkan top 5 produk dan menampilkan semua kategori produk ",
-                "operationId": "ListTopProduk&KategoriProduk",
+                "summary": "List Top Produk",
+                "description": "menampilkan top 5 produk ",
+                "operationId": "ListTopProduk",
                 "responses": {
                     "default": {
                         "description": "return array model produk"
@@ -80,6 +80,21 @@
                         }
                     }
                 ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/kategori": {
+            "get": {
+                "tags": [
+                    "Kategori Produk"
+                ],
+                "summary": "Kategori Produk",
+                "description": "menampilkan semua kategori produk ",
+                "operationId": "KategoriProduk",
                 "responses": {
                     "default": {
                         "description": "return array model produk"

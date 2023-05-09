@@ -44,7 +44,7 @@
                             <th scope="col">Opsi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="alldata">
                         @forelse ($data as $index => $d)
                         <tr>
                             <td>{{$index + $data->firstItem()}}</td>
@@ -77,7 +77,7 @@
                         @empty
                         @endforelse
                     </tbody>
-                    <tbody id="content"></tbody>
+                    <tbody id="content" class="searchdata"></tbody>
                 </table>
             </div>
             <div style="margin-left:20px">
@@ -90,10 +90,18 @@
     $('#cari').on('keyup',function()
     {
         $value=$(this).val();
+        if ($value) {
+            $('.alldata').hide();
+            $('.searchdata').show();
+            
+        }else{
+            $('.alldata').show();
+            $('.searchdata').hide();
+        }
 
         $.ajax({
             type:'get',
-            url:'{{route('cari')}}',
+            url:'{{route('cari-toko')}}',
             data:{'cari':$value},
 
             success:function(data){

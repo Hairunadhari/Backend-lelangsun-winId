@@ -26,6 +26,7 @@
                     </button>
                 </div>
                 @endif
+                <button class="btn btn-primary mb-3" type="submit">Simpan</button>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="tabel1">
                         <div class="form-group">
@@ -75,7 +76,6 @@
         </div>
     </div>
     <div class="card-footer text-right">
-        <button class="btn btn-primary mr-1" type="submit">Simpan</button>
     </div>
 </div>
 </form>

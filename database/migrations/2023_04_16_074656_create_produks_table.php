@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('stok');
             $table->string('thumbnail');
             $table->string('video');
+            $table->string('rating')->nullable();
             $table->timestamps();
         });
     }

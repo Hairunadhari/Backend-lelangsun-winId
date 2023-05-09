@@ -87,4 +87,20 @@ Route::get('/edit-event-lelang/{id}/', [MenuController::class, 'edit_event_lelan
 Route::put('/update-event-lelang/{id}/', [MenuController::class, 'update_event_lelang'])->name('update-event-lelang');
 Route::delete('/delete-event-lelang/{id}/', [MenuController::class, 'delete_event_lelang'])->name('delete-event-lelang');
 
-Route::get('/cari', [MenuController::class, 'cari_toko'])->name('cari');
+Route::get('/cari-toko', [MenuController::class, 'cari_toko'])->name('cari-toko');
+
+// route kategori-lelang
+Route::get('/kategori-lelang', [MenuController::class, 'list_kategori_lelang'])->name('kategori-lelang');
+Route::post('/add-kategori-lelang', [MenuController::class, 'add_kategori_lelang'])->name('add-kategori-lelang');
+Route::get('/detail-kategori-lelang/{id}/', [MenuController::class, 'detail_kategori_lelang'])->name('detail-kategori-lelang');
+Route::get('/edit-kategori-lelang/{id}/', [MenuController::class, 'edit_kategori_lelang'])->name('edit-kategori-lelang');
+Route::put('/update-kategori-lelang/{id}/', [MenuController::class, 'update_kategori_lelang'])->name('update-kategori-lelang');
+Route::delete('/delete-kategori-lelang/{id}/', [MenuController::class, 'delete_kategori_lelang'])->name('delete-kategori-lelang');
+
+// route barang-lelang
+Route::get('/barang-lelang', [MenuController::class, 'list_barang_lelang'])->name('barang-lelang');
+Route::post('/add-barang-lelang', [MenuController::class, 'add_barang_lelang'])->name('add-barang-lelang');
+Route::get('/detail-barang-lelang/{id}/', [MenuController::class, 'detail_barang_lelang'])->name('detail-barang-lelang');
+Route::get('/edit-barang-lelang/{id}/', [MenuController::class, 'edit_barang_lelang'])->name('edit-barang-lelang');
+Route::put('/update-barang-lelang/{id}/', [MenuController::class, 'update_barang_lelang'])->name('update-barang-lelang');
+Route::delete('/delete-barang-lelang/{id}/', [MenuController::class, 'delete_barang_lelang'])->name('delete-barang-lelang');

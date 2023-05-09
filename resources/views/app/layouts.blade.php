@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/modules/chocolat/dist/css/chocolat.css')}}">
 
   
   
@@ -219,12 +220,13 @@
                 <li class="{{ request()->routeIs('pengiriman') ? 'active' : '' }}"><a class="nav-link" href="{{route('pengiriman')}}">Pengiriman</a></li>
               </ul>
             </li>
-            <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang']) ? 'active' : '' }}">
+            <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-gavel"></i> <span>Lelang</span></a>
               <ul class="dropdown-menu">
+                <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('kategori-lelang')}}">Kategori Barang Lelang</a></li>
+                <li class="{{ request()->routeIs('barang-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('barang-lelang')}}">Barang Lelang</a></li>
                 <li class="{{ request()->routeIs('pembelian-npl') ? 'active' : '' }}"><a class="nav-link " href="{{route('pembelian-npl')}}">Pembelian NPL</a></li>
                 <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a class="nav-link" href="{{route('lot')}}">Lot</a></li>
-                <li class="{{ request()->routeIs('barang-lelang') ? 'active' : '' }}"><a class="nav-link" href="{{route('barang-lelang')}}">Barang Lelang</a></li>
                 <li class="{{ request()->routeIs('event-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('event-lelang')}}">Event Lelang</a></li>
               </ul>
             </li>
@@ -267,6 +269,7 @@
   <script src="{{ asset('assets/modules/datatables/datatables.min.js')}}"></script>
   <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
   <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/chocolat/dist/js/jquery.chocolat.min.js')}}"></script>
   <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js')}}"></script>
 
   <!-- Page Specific JS File -->
@@ -276,6 +279,7 @@
   <!-- Template JS File -->
   <script src="{{ asset('assets/js/scripts.js')}}"></script>
   <script src="{{ asset('assets/js/custom.js')}}"></script>
+  
 
   
   

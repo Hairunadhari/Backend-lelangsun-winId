@@ -44,9 +44,6 @@
                     </tbody>
                 </table>
             </div>
-            <div style="margin-left:10px; margin-top: 20px;">
-                {{ $produk->links() }}
-            </div>
         </form>
         </div>
     </div>
