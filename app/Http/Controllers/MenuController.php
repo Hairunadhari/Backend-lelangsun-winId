@@ -456,7 +456,7 @@ class MenuController extends Controller
         $this->validate($request, [
             'produk_id'     => 'required',
             'promosi'     => 'required|unique:promosis,promosi',
-            'gambar'     => 'required|image|mimes:jpeg,jpg,png',
+            'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
         ]);
 
         $produkId = $request->produk_id;

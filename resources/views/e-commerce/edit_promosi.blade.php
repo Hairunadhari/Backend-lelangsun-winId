@@ -5,6 +5,16 @@
         margin-left: auto;
     }
 
+    .my-custom-scrollbar {
+        position: relative;
+        height: 300px;
+        overflow: auto;
+    }
+
+    .table-wrapper-scroll-y {
+        display: block;
+    }
+
 </style>
 <div class="section-header">
     <h1>Data E-commerce</h1>
@@ -26,59 +36,59 @@
                     </button>
                 </div>
                 @endif
-                <button class="btn btn-primary mb-3" type="submit">Simpan</button>
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="tabel1">
-                        <div class="form-group">
-                            <label>Nama Promo</label>
-                            <input type="text" class="form-control" name="promosi"
-                                value="{{old('promosi', $data->promosi)}}">
-                        </div>
-                        <thead>
-                            <label for="">Pilih Produk :</label>
-                            <tr>
-                                <th><input type="checkbox" id="pilihsemua"></th>
-                                <th>Nama Produk</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($produk as $p)
-                            <tr>
-                                <td><input type="checkbox" name="produk_id[]" value="{{$p->id}}"
-                                        {{isset($produkTerpilih[$p->id])?"checked":""}}></td>
-                                <td>{{$p->nama}}</td>
-                            </tr>
-                            @empty
-                            @endforelse
-                        </tbody>
-                    </table>
+                    <div class="form-group">
+                        <label>Nama Promo</label>
+                        <input type="text" class="form-control" name="promosi"
+                            value="{{old('promosi', $data->promosi)}}">
+                    </div>
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                        <table class="table table-bordered" id="tabel1">
+                            <thead style="position: sticky; top: 0; background-color: white;">
+                                <label for="">Pilih Produk :</label>
+                                <tr>
+                                    <th><input type="checkbox" id="pilihsemua"></th>
+                                    <th>Nama Produk</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($produk as $p)
+                                <tr>
+                                    <td><input type="checkbox" name="produk_id[]" value="{{$p->id}}"
+                                            {{isset($produkTerpilih[$p->id])?"checked":""}}></td>
+                                    <td>{{$p->nama}}</td>
+                                </tr>
+                                @empty
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                {{-- <div class="row">{{ $produk->links() }}
-            </div> --}}
+            </div>
         </div>
-</div>
-<div class="card">
-    <div class="card-header">
-        <h4>Media</h4>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <label>Gambar Promo</label>
-            <br>
-            <img class="ms-auto" src="{{ asset('storage/image/'.$data->gambar) }}" style="width:200px">
+        <div class="card">
+            <div class="card-header">
+                <h4>Media</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Gambar Promo</label>
+                    <br>
+                    <img class="ms-auto" src="{{ asset('storage/image/'.$data->gambar) }}" style="width:200px">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Ganti Gambar Promo</label>
+                    <input type="file" class="form-control mb-2" name="gambar" id="gambar">
+                    <div id="preview"></div>
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <button class="btn btn-success mt-3" type="submit">Simpan</button>
+            </div>
         </div>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <label>Ganti Gambar Promo</label>
-            <input type="file" class="form-control mb-2" name="gambar" id="gambar">
-            <div id="preview"></div>
-        </div>
-    </div>
-    <div class="card-footer text-right">
-    </div>
-</div>
-</form>
+    </form>
 
 </div>
 

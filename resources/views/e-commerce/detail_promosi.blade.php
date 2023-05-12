@@ -25,7 +25,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama Produk</th>
-                            <th>Keterangan Produk</th>
+                            <th>Gambar Produk</th>
                         </tr>
                     </thead>
                     @php
@@ -36,7 +36,9 @@
                         <tr>
                             <td>{{$no++}}</td>
                             <td>{{$item->produk->nama}}</td>
-                            <td>{{$item->produk->keterangan}}</td>
+                            <td>
+                                <img src="{{ asset('/storage/image/'.$item->produk->thumbnail) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
