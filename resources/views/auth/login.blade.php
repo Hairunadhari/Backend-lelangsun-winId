@@ -82,10 +82,10 @@
                                         </button>
                                     </div>
                                 </form>
-                                <div>lupa password?</div>
+                                {{-- <div>lupa password?</div>
                                 <div class="mt-5 text-muted text-center">
                                     Tidak Punya Akun? <a href="auth-register.html">Daftar disini</a>
-                                  </div>
+                                  </div> --}}
                             </div>
                         </div>
                         <div class="simple-footer">
