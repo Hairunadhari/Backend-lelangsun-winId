@@ -181,15 +181,19 @@
           </li>
           <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
             <img alt="image" src="{{asset('assets/img/avatar/avatar-1.png')}}" class="rounded-circle mr-1">
-            <div class="d-sm-none d-lg-inline-block">SuperAdmin</div></a>
+            <div class="d-sm-none d-lg-inline-block">{{ Auth::user()->name }},SuperAdmin</div></a>
             <div class="dropdown-menu dropdown-menu-right">
               <a href="features-profile.html" class="dropdown-item has-icon">
                 <i class="far fa-user"></i> Profile
               </a>
               <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item has-icon text-danger">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </a>
+              <form method="POST" action="{{ route('logout') }}">
+                  @csrf
+                <button type="submit" class="dropdown-item has-icon text-danger" style="cursor: pointer">
+                  <i class="fas fa-sign-out-alt mt-2"></i> <span style="font-size: 14px">Logout</span>
+                </button>
+            </form>
+              
             </div>
           </li>
         </ul>

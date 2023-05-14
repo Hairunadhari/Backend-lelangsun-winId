@@ -79,11 +79,11 @@
                         <input type="text" class="form-control" name="video" value="{{$data->video}}">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Thumbnail:</label>
+                        <label for="exampleInputEmail1">Cover Produk:</label>
                         <input type="file" class="form-control" name="thumbnail" value="{{$data->thumbnail}}">
                     </div>
                     <div class="form-group" >
-                        <label for="">Gambar Produk:</label>
+                        <label for="">Gambar Detail Produk:</label>
                         <br>
                         @foreach ($gambar as $item)
                         <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}"
@@ -91,7 +91,7 @@
                         @endforeach
                     </div>
                     <div class="form-group gambar">
-                        <label>Ganti Gambar Produk:</label>
+                        <label>Ganti Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar)</small></label>
                         <br>
                         <input type="file" name="gambar[]" class="form-control mb-2" id="gambar" multiple>
                         <div id="preview"></div>

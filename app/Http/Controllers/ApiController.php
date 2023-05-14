@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
+use App\Models\User;
 use App\Models\Produk;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ApiController extends Controller
 {
@@ -154,4 +157,142 @@ class ApiController extends Controller
             
         ]);
     }
+
+
+   /**
+     * @OA\Post(
+     *      path="/api/register",
+     *      tags={"Register dan Login"},
+     *      summary="register",
+     *      description="masukkan name,email,password dan konfirmasi password untuk register",
+     *      operationId="Registrasi",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="form register",
+     *          @OA\JsonContent(
+     *              required={"name", "email", "password", "confirm_password"},
+     *              @OA\Property(property="name", type="string"),
+     *              @OA\Property(property="email", type="string", format="email"),
+     *              @OA\Property(property="password", type="string"),
+     *              @OA\Property(property="confirm_password", type="string"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="registrasi berhasil",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="message", type="string", example="register Sukses"),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="token", type="string"),
+     *                  @OA\Property(property="name", type="string"),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="registrasi gagal",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="ada kesalahan"),
+     *              @OA\Property(property="data", type="null"),
+     *          ),
+     *      ),
+     * )
+     */
+
+    public function register(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name'     => 'required|',
+            'email'     => 'required|email|unique:users,email',
+            'password'     => 'required',
+            'confirm_password'     => 'required|same:password',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada Kesalahan',
+                'data' =>$validator->errors()
+            ], 401);
+        }
+
+        $input = $request->all();
+        $input['password'] = bcrypt($input['password']);
+        $user = User::create($input);
+
+        $success['token'] = $user->createToken('auth_token')->plainTextToken;
+        $success['name'] = $user->name;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sukses Register',
+            'data' => $success,
+        ])->withHeaders([
+            'X-CSRF-Token' => csrf_token(), // kasih token CSRF di header response
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *      path="/api/login",
+     *      tags={"Register dan Login"},
+     *      summary="login",
+     *      description="Masukkan email dan password yang sudah terdaftar",
+     *      operationId="Login",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="Form login",
+     *          @OA\JsonContent(
+     *              required={"email", "password"},
+     *              @OA\Property(property="email", type="string", format="email"),
+     *              @OA\Property(property="password", type="string"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Login berhasil",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="message", type="string", example="Login Sukses"),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="token", type="string"),
+     *                  @OA\Property(property="name", type="string"),
+     *                  @OA\Property(property="email", type="string", format="email"),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Login gagal",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Cek email dan password lagi"),
+     *              @OA\Property(property="data", type="null"),
+     *          ),
+     *      ),
+     * )
+     */
+public function login(Request $request)
+{
+    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $auth = Auth::user();
+        $success['token'] = $auth->createToken('auth_token')->plainTextToken;
+        $success['name'] = $auth->name;
+        $success['email'] = $auth->email;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login Sukses',
+            'data' => $success,
+        ]);
+    } else {
+        return response()->json([
+            'success' => false,
+            'message' => 'Cek email dan password lagi',
+            'data' => null,
+        ], 401);
+    }
+}
+
 }

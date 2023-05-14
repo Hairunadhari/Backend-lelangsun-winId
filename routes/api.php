@@ -25,3 +25,6 @@ Route::get('/topproduk', [ApiController::class, 'daftar_top_produk']);
 
 Route::get('/kategori', [ApiController::class, 'daftar_kategori']);
 Route::get('/detailkategori/{id}/', [ApiController::class, 'daftar_produk_berdasarkan_kategori']);
+
+Route::post('/register', [ApiController::class, 'register']);
+Route::post('/login', [ApiController::class, 'login']);

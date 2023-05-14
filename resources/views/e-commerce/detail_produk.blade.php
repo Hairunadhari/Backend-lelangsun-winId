@@ -43,12 +43,12 @@
                     <a href="{{ $data->video }}">{{ $data->video }}</a>
                 </div>
                 <div class="form-group">
-                    <label>Thumbnail Produk</label>
+                    <label>Cover Produk</label>
                     <br>
                     <img class="d-block" style="width:200px" src="{{ asset('storage/image/'.$data->thumbnail) }}" alt="">
                 </div>
                     <div class="card-header">
-                        <h4>Gambar Produk</h4>
+                        <h4>Gambar Detail Produk</h4>
                     </div>
                     <div class="card-body">
                         <div id="carouselExampleIndicators3" class="carousel slide" data-ride="carousel">

@@ -31,9 +31,8 @@
                 <thead>
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Kategori</th>
                         <th scope="col">Nama Produk</th>
-                        <th scope="col">Thumbnail</th>
+                        <th scope="col">Cover Produk</th>
                         <th scope="col">Stok</th>
                         <th scope="col">Opsi</th>
                     </tr>
@@ -45,7 +44,6 @@
                     @forelse ($data as $index => $d)
                     <tr>
                         <td>{{$index + $data->firstItem()}}</td>
-                        <td>{{$d->kategoriproduk->kategori}}</td>
                         <td>{{$d->nama}}</td>
                         <td>
                             <img src="{{ asset('/storage/image/'.$d->thumbnail) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
@@ -138,11 +136,11 @@
                         <input type="text" class="form-control" name="video" required placeholder="">
                     </div>
                     <div class="form-group">
-                        <label>Thumbnail:</label>
+                        <label>Cover Produk:</label>
                         <input type="file" class="form-control" name="thumbnail" required placeholder="">
                     </div>
                     <div class="form-group">
-                        <label>Gambar Produk</label>
+                        <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar)</small></label>
                         <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
                     </div>
                         <div id="preview" class="review"></div>
