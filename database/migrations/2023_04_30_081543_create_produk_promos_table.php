@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('promosi_id')->constrained('promosis')->onDelete('cascade');
             $table->foreignId('produk_id')->constrained('produks')->onDelete('cascade');
+            $table->bigInteger('total_diskon');
             $table->timestamps();
         });
     }

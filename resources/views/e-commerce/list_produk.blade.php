@@ -129,7 +129,7 @@
                     </div>
                     <div class="form-group">
                         <label>Stok</label>
-                        <input type="number" class="form-control" name="stok" required >
+                        <input type="number" class="form-control" name="stok" required onkeyup="formatStok(this)" >
                     </div>
                     <div class="form-group">
                         <label>Link Video:</label>
@@ -189,6 +189,13 @@
     
       // Memasukkan nilai format ke dalam input
       input.value = formattedNum;
+    }
+
+    function formatStok(input) {
+      // Menghilangkan karakter selain angka
+      var num = input.value.replace(/[^0-9]/g, '');
+      
+      input.value = num;
     }
 
 </script>

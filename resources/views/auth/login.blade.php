@@ -48,6 +48,14 @@
                                 <h4>Login</h4>
                             </div>
                             <div class="card-body">
+                                @if ($errors->has('email') || $errors->has('password'))
+                                <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
+                                    <strong>Email Belum Terdaftar!</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @endif
                                 <form method="POST" action="{{ route('login') }}" class="needs-validation"
                                     novalidate="">
                                     @csrf
@@ -55,17 +63,10 @@
                                         <label for="email">Email</label>
                                         <input id="email" type="email" class="form-control" name="email"
                                             value="{{ old('email') }}" required>
-                                        @if ($errors->has('email'))
-                                        <small class="text-danger">Email Belum Terdaftar!</small>
-                                        @endif
                                     </div>
-
                                     <div class="form-group">
                                         <label for="password" class="d-block">Password</label>
                                         <input id="password" type="password" class="form-control" name="password">
-                                        @if ($errors->has('password'))
-                                        <small class="text-danger">Password Salah!</small>
-                                        @endif
                                     </div>
 
                                     <div class="form-group">
@@ -77,7 +78,7 @@
                             </div>
                         </div>
                         <div class="simple-footer">
-                            Copyright &copy; Stisla 2018
+                            Copyright &copy; WIN
                         </div>
                     </div>
                 </div>

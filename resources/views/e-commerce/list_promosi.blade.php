@@ -22,13 +22,6 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @elseif ($errors->has('promosi'))
-            <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
-                <strong>Promo Sudah Terdaftar!</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
             @endif
             <a href="{{route('form-input-promosi')}}" class="btn btn-success mb-3">+ Tambah</a>
             <div class="table-responsive">
@@ -37,6 +30,7 @@
                         <tr>
                             <th scope="col">No</th>
                             <th scope="col">Nama Promosi</th>
+                            <th scope="col">Status Promo</th>
                             <th scope="col">Opsi</th>
                         </tr>
                     </thead>
@@ -48,6 +42,13 @@
                         <tr>
                             <td>{{$no++}}</td>
                             <td>{{$d->promosi}}</td>
+                            @if ($d->status == 'akan datang')
+                                <td><span class="badge badge-primary">Coming Soon</span></td>
+                            @elseif($d->status == 'sedang berlangsung')
+                                <td><span class="badge badge-success">Sedang Berlangsung</span></td>
+                            @else
+                                <td><span class="badge badge-light">Selesai</span></td>
+                            @endif
                             <td>
                                 <div class="dropdown d-inline">
                                     <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer"
