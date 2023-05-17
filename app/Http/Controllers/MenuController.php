@@ -451,28 +451,41 @@ class MenuController extends Controller
         return view('e-commerce.tambah_promosi', compact('produk'));
     }
 
-    public function add_promosi(Request $request){
+    
 
+    public function add_promosi(Request $request){
+        // dd($request);
         $this->validate($request, [
-            'produk_id'     => 'required',
-            'promosi'     => 'required|unique:promosis,promosi',
             'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
         ]);
+
+        $hapuspersendiskon = preg_replace('/\D/', '', $request->diskon); 
+        $diskon = trim($hapuspersendiskon);
 
         $produkId = $request->produk_id;
         $gambar = $request->file('gambar');
         $gambar->storeAs('public/image', $gambar->hashName());
 
         $promosi = Promosi::create([
-            'produk_id'     => $request->produk_id,
             'promosi'     => $request->promosi,
+            'deskripsi'     => $request->deskripsi,
+            'diskon'     => $diskon,
+            'tanggal_mulai'     => $request->tanggal_mulai,
+            'tanggal_selesai'     => $request->tanggal_selesai,
+            'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
             'gambar'     => $gambar->hashName(),
         ]);
         
-        foreach ($produkId as $id) {
+        
+        $dataProduk = Produk::whereIn('id', $produkId)->get();
+
+        foreach ($dataProduk as $produk) {
+            $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
+        
             ProdukPromo::create([
-                'promosi_id'     => $promosi->id,
-                'produk_id'     => $id,
+                'promosi_id' => $promosi->id,
+                'produk_id' => $produk->id,
+                'total_diskon' => $hargadiskon,
             ]);
         }
 
@@ -482,7 +495,7 @@ class MenuController extends Controller
     public function detail_promosi($id)
     {
         $data = Promosi::find($id);
-        $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->get();
+        $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->paginate(5);
         // dd($produkPromo);
         return view('e-commerce.detail_promosi', compact('data','produkPromo'));
     }
@@ -504,41 +517,68 @@ class MenuController extends Controller
 
     public function update_promosi(Request $request, $id)
     {
-
         $data = Promosi::findOrFail($id);
-        $produkid = $request->produk_id;
+        
+        $produkId = $request->produk_id;
+        $hapuspersendiskon = preg_replace('/\D/', '', $request->diskon); 
+        $diskon = trim($hapuspersendiskon);
 
-        if (is_null($produkid)) {
+        if (is_null($produkId)) {
             return redirect()->back()->with('error', 'Anda belum memilih produk!');
         }else{
+
 
             if ($request->hasFile('gambar')) {
                 $gambar = $request->file('gambar');
                 $gambar->storeAs('public/image', $gambar->hashName());
-    
+                
                 Storage::delete('public/image/'.$data->gambar);
+
+               
                 $data->update([
                     'promosi'     => $request->promosi,
+                    'deskripsi'     => $request->deskripsi,
+                    'diskon'     => $diskon,
+                    'tanggal_mulai'     => $request->tanggal_mulai,
+                    'tanggal_selesai'     => $request->tanggal_selesai,
+                    'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
                     'gambar'     => $gambar->hashName(),
                 ]);
 
                 ProdukPromo::where('promosi_id', $id)->delete();
-                foreach ($produkid as $pid) {
+                $dataProduk = Produk::whereIn('id', $produkId)->get();
+
+                foreach ($dataProduk as $produk) {
+                    $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
+                
                     ProdukPromo::create([
-                        'promosi_id'     => $data->id,
-                        'produk_id'     => $pid,
+                        'promosi_id' => $data->id,
+                        'produk_id' => $produk->id,
+                        'total_diskon' => $hargadiskon,
                     ]);
                 }
+
             } else {
-                 $data->update([
-                    'promosi'     => $request->promosi,
+                $data->update([
+                    'promosi' => $request->promosi,
+                    'deskripsi' => $request->deskripsi,
+                    'diskon' => $diskon,
+                    'tanggal_mulai' => $request->tanggal_mulai,
+                    'tanggal_selesai' => $request->tanggal_selesai,
+                    'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
                 ]);
+                
 
                 ProdukPromo::where('promosi_id',$id)->delete();
-                foreach ($produkid as $pid) {
+                $dataProduk = Produk::whereIn('id', $produkId)->get();
+
+                foreach ($dataProduk as $produk) {
+                    $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
+                
                     ProdukPromo::create([
-                        'promosi_id'     => $data->id,
-                        'produk_id'     => $pid,
+                        'promosi_id' => $data->id,
+                        'produk_id' => $produk->id,
+                        'total_diskon' => $hargadiskon,
                     ]);
                 }
             }
@@ -547,6 +587,22 @@ class MenuController extends Controller
         //redirect to index
         return redirect()->route('promosi')->with(['success' => 'Data Berhasil Diubah!']);
     }
+
+    private function getStatusPromo($tanggalMulai, $tanggalSelesai)
+    {
+        $today = now()->toDateString();
+        $mulaiPromo = date('Y-m-d', strtotime($tanggalMulai));
+        $selesaiPromo = date('Y-m-d', strtotime($tanggalSelesai));
+
+        if ($mulaiPromo > $today && $selesaiPromo > $today) {
+            return 'akan datang';
+        } elseif ($mulaiPromo <= $today && $selesaiPromo >= $today) {
+            return 'sedang berlangsung';
+        } else {
+            return 'selesai';
+        }
+    }
+
 
     public function delete_promosi($id)
     {

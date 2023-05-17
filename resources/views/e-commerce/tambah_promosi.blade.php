@@ -1,16 +1,10 @@
 @extends('app.layouts')
 @section('content')
 <style>
-    .my-custom-scrollbar {
-        position: relative;
-        height: 300px;
-        overflow: auto;
+    .scroll{
+        height:400px;
+        overflow: scroll;
     }
-
-    .table-wrapper-scroll-y {
-        display: block;
-    }
-
 </style>
 <div class="section-header">
     <h1>Data E-commerce</h1>
@@ -29,16 +23,33 @@
                         <input type="text" class="form-control" name="promosi" required>
                     </div>
                     <div class="form-group">
+                        <label>Deksripsi Promo</label>
+                        <input type="text" class="form-control" name="deskripsi" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Diskon</label>
+                        <input type="text" class="form-control" name="diskon" required onkeyup="formatPromo(this)">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Mulai</label>
+                        <input type="date" class="form-control" name="tanggal_mulai">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Selesai</label>
+                        <input type="date" class="form-control" name="tanggal_selesai">
+                    </div>
+                    <div class="form-group">
                         <label>Gambar Promo</label>
                         <input type="file" class="form-control" name="gambar" required>
                     </div>
                     <label for="">Pilih Produk :</label>
-                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <div class="scroll">
                         <table class="table table-bordered" id="tabel1">
                             <thead style="position: sticky; top: 0; background-color: white;">
                                 <tr>
                                     <th><input type="checkbox" id="pilihsemua"></th>
                                     <th>Nama Produk</th>
+                                    <th>Cover Produk</th>
                                 </tr>
                             </thead>
                             <tbody >
@@ -46,6 +57,9 @@
                                 <tr>
                                     <td><input type="checkbox" name="produk_id[]" value="{{$p->id}}"></td>
                                     <td>{{$p->nama}}</td>
+                                    <td>
+                                        <img src="{{ asset('/storage/image/'.$p->thumbnail) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
+                                    </td>
                                 </tr>
                                 @empty
                                 @endforelse
@@ -72,6 +86,22 @@
             $("#tabel1 tbody input[type='checkbox']").prop('checked', isChecked);
         });
     });
+
+    function formatPromo(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+        
+        // Memastikan angka tidak melebihi 100 (maksimum 3 digit)
+        if (num > 100) {
+            num = 100;
+        }
+      
+        // Menambahkan tanda persen (%) di belakang angka
+        var formattedNum = num + '%';
+      
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    }   
 
 </script>
 @endsection

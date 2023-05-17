@@ -42,6 +42,22 @@
                         <input type="text" class="form-control" name="promosi"
                             value="{{old('promosi', $data->promosi)}}">
                     </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <input type="text" class="form-control" name="deskripsi" value="{{old('deskripsi', $data->deskripsi)}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Diskon</label>
+                        <input type="text" class="form-control" name="diskon" value="{{old('diskon', $data->diskon)}}" onkeyup="formatPromo(this)">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Mulai</label>
+                        <input type="date" class="form-control" name="tanggal_mulai" value="{{ $data->tanggal_mulai }}">
+                    </div>                    
+                    <div class="form-group">
+                        <label>Tanggal Selesai</label>
+                        <input type="date" class="form-control" name="tanggal_selesai" value="{{$data->tanggal_selesai}}">
+                    </div>
                     <div class="table-wrapper-scroll-y my-custom-scrollbar">
                         <table class="table table-bordered" id="tabel1">
                             <thead style="position: sticky; top: 0; background-color: white;">
@@ -111,7 +127,7 @@
         }
 
         function readAndPreview(file) {
-            if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
+            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
                 return alert(file.name + " is not an image");
             }
             var reader = new FileReader();
@@ -130,6 +146,23 @@
     document.querySelector('#resetButton').addEventListener('click', function () {
         document.querySelector('#preview').innerHTML = '';
     });
+
+    function formatPromo(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+        
+        // Memastikan angka tidak melebihi 100 (maksimum 3 digit)
+        if (num > 100) {
+            num = 100;
+        }
+      
+        // Menambahkan tanda persen (%) di belakang angka
+        var formattedNum = num + '%';
+      
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    }   
+
 
 </script>
 @endsection
