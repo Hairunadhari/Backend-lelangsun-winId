@@ -224,7 +224,7 @@
                 <li class="{{ request()->routeIs('pengiriman') ? 'active' : '' }}"><a class="nav-link" href="{{route('pengiriman')}}">Pengiriman</a></li>
               </ul>
             </li>
-            <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
+            {{-- <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-gavel"></i> <span>Lelang</span></a>
               <ul class="dropdown-menu">
                 <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('kategori-lelang')}}">Kategori Barang Lelang</a></li>
@@ -233,7 +233,7 @@
                 <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a class="nav-link" href="{{route('lot')}}">Lot</a></li>
                 <li class="{{ request()->routeIs('event-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('event-lelang')}}">Event Lelang</a></li>
               </ul>
-            </li>
+            </li> --}}
             
           </ul>
         </aside>
