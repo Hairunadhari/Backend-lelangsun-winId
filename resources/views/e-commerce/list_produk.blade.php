@@ -98,18 +98,16 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Nama Toko:</label>
+                        <label>Pilih Nama Toko:</label>
                         <select class="form-control" name="toko_id" required>
-                            <option>Pilih Toko</option>
                             @foreach ($dataToko as $item)
                             <option value="{{ $item->id }}">{{ $item->toko }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Kategori Produk</label>
+                        <label>Pilih Kategori Produk</label>
                         <select class="form-control" name="kategoriproduk_id" required>
-                            <option>Pilih Kategori</option>
                             @foreach ($dataKategoriproduk as $item)
                             <option value="{{ $item->id }}">{{ $item->kategori }}</option>
                             @endforeach
