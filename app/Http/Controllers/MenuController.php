@@ -447,7 +447,7 @@ class MenuController extends Controller
     }
 
     public function form_input_promosi(){
-        $produk = Produk::all();
+        $produk = Produk::orderBy('nama', 'asc')->get();
         return view('e-commerce.tambah_promosi', compact('produk'));
     }
 
@@ -719,30 +719,13 @@ class MenuController extends Controller
     }
 
     public function add_barang_lelang(Request $request){
-        // dd($request);
-        if ($request->hasFile('faktur') && $request->hasFile('ktp') && $request->hasFile('kwitansi')) {
 
-            $files = [
-                'faktur' => $request->file('faktur'),
-                'ktp' => $request->file('ktp'),
-                'kwitansi' => $request->file('kwitansi')
-            ];
-            
-            foreach ($files as $file) {
-                $file->storeAs('public/image', $file->hashName());
-            }
-            
-
-            $produk = BarangLelang::create([
+        $produk = BarangLelang::create([
                 'kategoribarang_id'     => $request->kategoribarang_id,
                 'barang'     => $request->barang,
                 'nama_pemilik'     => $request->nama_pemilik,
                 'keterangan'     => $request->keterangan,
-                'faktur' => $files['faktur']->hashName(),
-                'ktp' => $files['ktp']->hashName(),
-                'kwitansi' => $files['kwitansi']->hashName(),
             ]);
-        }
         return redirect('/barang-lelang')->with('success', 'Data Berhasil Ditambahkan');
     }
 
@@ -765,92 +748,22 @@ class MenuController extends Controller
         
         $barang = BarangLelang::find($id);
 
-        if ($request->hasFile('faktur') && $request->hasFile('ktp') && $request->hasFile('kwitansi')) {
-            
-            $files = [
-                'faktur' => $request->file('faktur'),
-                'ktp' => $request->file('ktp'),
-                'kwitansi' => $request->file('kwitansi')
-            ];
-            
-            foreach ($files as $file) {
-                $file->storeAs('public/image', $file->hashName());
-            }
-            Storage::delete('public/image/'.$barang->faktur);
-            Storage::delete('public/image/'.$barang->ktp);
-            Storage::delete('public/image/'.$barang->kwitansi);
-
-            $barang->update([
-                'kategoribarang_id'     => $request->kategoribarang_id,
-                'barang'     => $request->barang,
-                'nama_pemilik'     => $request->nama_pemilik,
-                'keterangan'     => $request->keterangan,
-                'faktur' => $files['faktur']->hashName(),
-                'ktp' => $files['ktp']->hashName(),
-                'kwitansi' => $files['kwitansi']->hashName(),
-            ]);
-
-        }elseif ($request->hasFile('faktur')){
-
-            Storage::delete('public/image/'.$barang->faktur);
-            $faktur = $request->file('faktur');
-            $faktur->storeAs('public/image', $faktur->hashName());
-
-            $barang->update([
-                'kategoribarang_id'     => $request->kategoribarang_id,
-                'barang'     => $request->barang,
-                'nama_pemilik'     => $request->nama_pemilik,
-                'keterangan'     => $request->keterangan,
-                'faktur'     => $faktur->hashName(),
-            ]);
-        
-        }elseif ($request->hasFile('ktp')){
-
-            Storage::delete('public/image/'.$barang->ktp);
-            $ktp = $request->file('ktp');
-            $ktp->storeAs('public/image', $ktp->hashName());
-
-            $barang->update([
-                'kategoribarang_id'     => $request->kategoribarang_id,
-                'barang'     => $request->barang,
-                'nama_pemilik'     => $request->nama_pemilik,
-                'keterangan'     => $request->keterangan,
-                'ktp'     => $ktp->hashName(),
-            ]);
-        }elseif ($request->hasFile('kwitansi')){
-            Storage::delete('public/image/'.$barang->kwitansi);
-            $kwitansi = $request->file('kwitansi');
-            $kwitansi->storeAs('public/image', $kwitansi->hashName());
-
-            $barang->update([
-                'kategoribarang_id'     => $request->kategoribarang_id,
-                'barang'     => $request->barang,
-                'nama_pemilik'     => $request->nama_pemilik,
-                'keterangan'     => $request->keterangan,
-                'kwitansi'     => $kwitansi->hashName(),
-            ]);
-        }else {
             $barang->update([
                 'kategoribarang_id'     => $request->kategoribarang_id,
                 'barang'     => $request->barang,
                 'nama_pemilik'     => $request->nama_pemilik,
                 'keterangan'     => $request->keterangan,
             ]);
-        }
+
 
         return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Diubah!']);
     }
    
 
-    // public function delete_produk($id)
-    // {
-    //     $produk = Produk::find($id);
-    //     $gambarProduk = GambarProduk::where('produk_id',$id);
-    //     foreach ($gambarProduk as $gambar) {
-    //         Storage::delete('public/image/'.$gambar->gambar);
-    //     }
-    //     Storage::delete('public/video/'.$produk->video);
-    //     $produk->delete();
-    //     return redirect()->route('produk')->with(['success' => 'Data Berhasil Dihapus!']);
-    // }
+    public function delete_barang_lelang($id)
+    {
+        $produk = Produk::find($id);
+        $produk->delete();
+        return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
 }   

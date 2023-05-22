@@ -31,7 +31,6 @@
                 <thead>
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Kategori</th>
                         <th scope="col">Nama Barang Lelang</th>
                         <th scope="col">Nama Pemilik</th>
                         <th scope="col">Opsi</th>
@@ -44,7 +43,6 @@
                     @forelse ($data as $index => $d)
                     <tr>
                         <td>{{$index + $data->firstItem()}}</td>
-                        <td>{{$d->kategoribarang->kategori}}</td>
                         <td>{{$d->barang}}</td>
                         <td>{{$d->nama_pemilik}}</td>
                         <td>
@@ -96,16 +94,15 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Kategori Barang</label>
+                        <label>Pilih Kategori Barang Lelang</label>
                         <select class="form-control" name="kategoribarang_id" required>
-                            <option>Pilih Kategori</option>
                             @foreach ($kategori as $item)
                             <option value="{{ $item->id }}">{{ $item->kategori }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Nama Barang Lelang</label>
+                        <label>Nama Barang</label>
                         <input type="text" class="form-control" name="barang" required >
                     </div>
                     <div class="form-group">
@@ -115,20 +112,6 @@
                     <div class="form-group">
                         <label>Deskripsi</label>
                         <textarea class="form-control" name="keterangan"  required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Lampiran FAKTUR</label>
-                        <input type="file" class="form-control" name="faktur" required>
-                    </div>
-                        <div id="preview" class="review"></div>
-                    <div class="form-group">
-                        <label>Lampiran KTP</label>
-                        <input type="file" class="form-control" name="ktp" required>
-                    </div>
-                        <div id="preview" class="review"></div>
-                    <div class="form-group">
-                        <label>Lampiran KWITANSI</label>
-                        <input type="file" class="form-control" name="kwitansi" required>
                     </div>
                 </div>
                 <div class="modal-footer">
