@@ -17,9 +17,6 @@ return new class extends Migration
             $table->string('barang');
             $table->string('nama_pemilik');
             $table->string('keterangan');
-            $table->string('faktur');
-            $table->string('ktp');
-            $table->string('kwitansi');
             $table->timestamps();
         });
     }

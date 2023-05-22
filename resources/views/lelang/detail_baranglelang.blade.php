@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label>Kategori</label>
+                        <label>Kategori Barang Lelang</label>
                         <br>
                         <input type="text" class="form-control" value="{{ $data->kategoribarang->kategori }}" readonly>
                     </div>
@@ -29,22 +29,6 @@
                     <div class="form-group">
                         <label>Keterangan</label>
                         <textarea class="form-control" readonly>{{$data->keterangan}}</textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h4>Lampiran Faktur/Ktp/Kwitansi</h4>
-                </div>
-                <div class="card-body">
-                    <div class="gallery">
-                        <div class="gallery-item" data-image="{{ asset('storage/image/'.$data->faktur) }}" data-title="Image 1">
-                        </div>
-                        <div class="gallery-item" data-image="{{ asset('storage/image/'.$data->ktp) }}" data-title="Image 2">
-                        </div>
-                        <div class="gallery-item" data-image="{{ asset('storage/image/'.$data->kwitansi) }}"
-                            data-title="Image 3">
-                        </div>
                     </div>
                 </div>
             </div>

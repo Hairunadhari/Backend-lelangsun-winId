@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label>Kategori Barang Lelang</label>
+                        <label>Pilih Kategori Barang Lelang</label>
                         <select class="form-control" name="kategoribarang_id" >
                             @foreach ($kategori as $item)
                             <option value="{{ $item->id }}" {{ $item->id == $data->kategoribarang->id ? 'selected' : '' }}>
@@ -26,7 +26,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Nama Barang Lelang</label>
+                        <label>Nama Barang</label>
                         <input type="text" class="form-control" name="barang" value="{{ $data->barang }}" >
                     </div>
                     <div class="form-group">
@@ -36,20 +36,6 @@
                     <div class="form-group">
                         <label>Keterangan</label>
                         <textarea class="form-control" name="keterangan" >{{$data->keterangan}}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Lampiran FAKTUR</label>
-                        <input type="file" class="form-control" name="faktur" value="{{$data->faktur}}">
-                    </div>
-                        <div id="preview" class="review"></div>
-                    <div class="form-group">
-                        <label>Lampiran KTP</label>
-                        <input type="file" class="form-control" name="ktp" value="{{$data->ktp}}">
-                    </div>
-                        <div id="preview" class="review"></div>
-                    <div class="form-group">
-                        <label>Lampiran KWITANSI</label>
-                        <input type="file" class="form-control" name="kwitansi" value="{{$data->kwitansi}}">
                     </div>
                 </div>
                 <div class="card-footer text-right">
