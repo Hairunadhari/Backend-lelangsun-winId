@@ -28,3 +28,6 @@ Route::get('/detailkategori/{id}/', [ApiController::class, 'daftar_produk_berdas
 
 Route::post('/register', [ApiController::class, 'register']);
 Route::post('/login', [ApiController::class, 'login']);
+
+Route::get('/promosi', [ApiController::class, 'daftar_promo']);
+Route::get('/detailpromosi/{id}/', [ApiController::class, 'detail_promosi']);

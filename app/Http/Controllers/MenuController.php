@@ -26,7 +26,6 @@ class MenuController extends Controller
 
     public function list_toko(){
         $data = Toko::paginate(10);
-        // dd($data);
         return view('e-commerce/list_toko', compact('data'));
     }
 
@@ -494,9 +493,8 @@ class MenuController extends Controller
 
     public function detail_promosi($id)
     {
-        $data = Promosi::find($id);
+        $data = Promosi::where($id);
         $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->paginate(5);
-        // dd($produkPromo);
         return view('e-commerce.detail_promosi', compact('data','produkPromo'));
     }
 
