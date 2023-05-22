@@ -493,7 +493,7 @@ class MenuController extends Controller
 
     public function detail_promosi($id)
     {
-        $data = Promosi::where($id);
+        $data = Promosi::find($id);
         $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->paginate(5);
         return view('e-commerce.detail_promosi', compact('data','produkPromo'));
     }
