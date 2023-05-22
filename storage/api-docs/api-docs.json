@@ -299,7 +299,7 @@
                 "tags": [
                     "Promosi"
                 ],
-                "summary": "List Promosi",
+                "summary": "List Promo Produk",
                 "description": "menampilkan semua jenis promo produk yg sedang berlangsung",
                 "operationId": "promosi",
                 "responses": {
@@ -321,7 +321,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID produk yang akan ditampilkan",
+                        "description": "ID promosi yang akan ditampilkan",
                         "required": true,
                         "schema": {
                             "type": "integer"

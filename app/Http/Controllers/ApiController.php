@@ -301,7 +301,7 @@ class ApiController extends Controller
      * @OA\Get(
      *      path="/api/promosi",
      *      tags={"Promosi"},
-     *      summary="List Promosi",
+     *      summary="List Promo Produk",
      *      description="menampilkan semua jenis promo produk yg sedang berlangsung",
      *      operationId="promosi",
      *      @OA\Response(
@@ -312,6 +312,9 @@ class ApiController extends Controller
      */
     public function daftar_promo(){
         $promosi = Promosi::where('status', 'sedang berlangsung')->get();
+        $promosi->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
         return response()->json([
             'promosi' => $promosi,
         ]);
@@ -328,7 +331,7 @@ class ApiController extends Controller
     *          name="id",
     *          in="path",
     *          required=true,
-    *          description="ID produk yang akan ditampilkan",
+    *          description="ID promosi yang akan ditampilkan",
     *          @OA\Schema(
     *              type="integer"
     *          )
@@ -341,10 +344,15 @@ class ApiController extends Controller
      */
     public function detail_promosi($id){
         $datapromosi = Promosi::find($id);
-        $detailprodukpromosi = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
+            $datapromosi->gambar =  url('https://backendwin.spero-lab.id/storage/image/' . $datapromosi->gambar);
+        
+        $detailproduk = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
+        $detailproduk->each(function ($item){
+            $item->produk->thumbnail =  url('https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail);
+        });
         return response()->json([
             'datapromosi' => $datapromosi,
-            'detailprodukpromosi' => $detailprodukpromosi,
+            'detailproduk' => $detailproduk,
         ]);
     }
 
