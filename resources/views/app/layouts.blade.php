@@ -233,7 +233,7 @@
                 <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a class="nav-link" href="{{route('lot')}}">Lot</a></li>
                 <li class="{{ request()->routeIs('event-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('event-lelang')}}">Event Lelang</a></li> --}}
               </ul>
-            </li> --}}
+            </li>
             
           </ul>
         </aside>

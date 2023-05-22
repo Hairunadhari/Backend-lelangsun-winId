@@ -496,7 +496,7 @@ class MenuController extends Controller
     {
         $data = Promosi::find($id);
         $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->paginate(5);
-        dd($data);
+        // dd($data);
         return view('e-commerce.detail_promosi', compact('data','produkPromo'));
     }
 
