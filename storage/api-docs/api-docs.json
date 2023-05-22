@@ -293,6 +293,47 @@
                     }
                 }
             }
+        },
+        "/api/promosi": {
+            "get": {
+                "tags": [
+                    "Promosi"
+                ],
+                "summary": "List Promosi",
+                "description": "menampilkan semua jenis promo produk yg sedang berlangsung",
+                "operationId": "promosi",
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/detailpromosi/{id}": {
+            "get": {
+                "tags": [
+                    "Promosi"
+                ],
+                "summary": "Mendapatkan detail promo produk berdasarkan ID",
+                "description": "menampilkan semua produk yg sedang diskon berdasarkan ID Promosi yg diberikan",
+                "operationId": "DetailPromosi",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID produk yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
         }
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Validator;
 use App\Models\User;
 use App\Models\Produk;
+use App\Models\Promosi;
+use App\Models\ProdukPromo;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
@@ -273,26 +275,77 @@ class ApiController extends Controller
      *      ),
      * )
      */
-public function login(Request $request)
-{
-    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-        $auth = Auth::user();
-        $success['token'] = $auth->createToken('auth_token')->plainTextToken;
-        $success['name'] = $auth->name;
-        $success['email'] = $auth->email;
+    public function login(Request $request)
+    {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $auth = Auth::user();
+            $success['token'] = $auth->createToken('auth_token')->plainTextToken;
+            $success['name'] = $auth->name;
+            $success['email'] = $auth->email;
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Login Sukses',
-            'data' => $success,
-        ]);
-    } else {
-        return response()->json([
-            'success' => false,
-            'message' => 'Cek email dan password lagi',
-            'data' => null,
-        ], 401);
+            return response()->json([
+                'success' => true,
+                'message' => 'Login Sukses',
+                'data' => $success,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cek email dan password lagi',
+                'data' => null,
+            ], 401);
+        }
     }
-}
+
+    /**
+     * @OA\Get(
+     *      path="/api/promosi",
+     *      tags={"Promosi"},
+     *      summary="List Promosi",
+     *      description="menampilkan semua jenis promo produk yg sedang berlangsung",
+     *      operationId="promosi",
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model produk"
+     *      )
+     * )
+     */
+    public function daftar_promo(){
+        $promosi = Promosi::where('status', 'sedang berlangsung')->get();
+        return response()->json([
+            'promosi' => $promosi,
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *      path="/api/detailpromosi/{id}",
+     *      tags={"Promosi"},
+     *      summary="Mendapatkan detail promo produk berdasarkan ID",
+     *      description="menampilkan semua produk yg sedang diskon berdasarkan ID Promosi yg diberikan",
+     *      operationId="DetailPromosi",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID produk yang akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model produk"
+     *      )
+     * )
+     */
+    public function detail_promosi($id){
+        $datapromosi = Promosi::find($id);
+        $detailprodukpromosi = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
+        return response()->json([
+            'datapromosi' => $datapromosi,
+            'detailprodukpromosi' => $detailprodukpromosi,
+        ]);
+    }
 
 }
