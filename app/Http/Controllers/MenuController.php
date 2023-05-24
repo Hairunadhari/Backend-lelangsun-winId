@@ -764,4 +764,9 @@ class MenuController extends Controller
         $produk->delete();
         return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
+
+    public function download_apk()
+    {
+       
+    }
 }   
