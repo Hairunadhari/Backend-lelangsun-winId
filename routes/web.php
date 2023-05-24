@@ -128,9 +128,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-barang-lelang/{id}/', [MenuController::class, 'update_barang_lelang'])->name('update-barang-lelang');
     Route::delete('/delete-barang-lelang/{id}/', [MenuController::class, 'delete_barang_lelang'])->name('delete-barang-lelang');
 
-    Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
-
+    
 });
+    Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 
  
 require __DIR__.'/auth.php';

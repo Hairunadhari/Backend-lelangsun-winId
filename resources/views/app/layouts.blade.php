@@ -211,9 +211,6 @@
             <li class="dropdown {{ request()->routeIs('dashboard') ? 'active' : '' }}">
               <a href="{{route('dashboard')}}" class="nav-link"><i class="fas fa-th"></i><span>Dashboard</span></a>
             </li>
-            <li class="dropdown">
-              <a href="{{ asset('assets/app-release.apk')}}" class="nav-link"><i class="fas fa-download"></i><span>Download APK</span></a>
-            </li>
             <li class="menu-header">Starter</li>
             <li class="dropdown {{ request()->routeIs(['toko', 'kategori-produk', 'produk', 'order', 'pembayaran', 'pengiriman','promosi']) ? 'active' : '' }}">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-shopping-cart"></i> <span>E-commerce</span></a>

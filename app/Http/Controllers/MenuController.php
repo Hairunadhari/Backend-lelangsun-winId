@@ -767,6 +767,6 @@ class MenuController extends Controller
 
     public function download_apk()
     {
-       
+       return view ('download-apk');
     }
 }   
