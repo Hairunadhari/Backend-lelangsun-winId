@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
 {
@@ -346,6 +347,10 @@ class ApiController extends Controller
             'datapromosi' => $datapromosi,
             'detailprodukpromosi' => $detailprodukpromosi,
         ]);
+    }
+
+    public function tes_xendit(Request $request){
+        Storage::disk('local')->put('response-xendit.txt', json_encode($request));
     }
 
 }

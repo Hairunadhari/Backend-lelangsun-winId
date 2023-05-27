@@ -31,3 +31,5 @@ Route::post('/login', [ApiController::class, 'login']);
 
 Route::get('/promosi', [ApiController::class, 'daftar_promo']);
 Route::get('/detailpromosi/{id}/', [ApiController::class, 'detail_promosi']);
+
+Route::post('/test-xendit', [ApiController::class, 'tes_xendit']);
