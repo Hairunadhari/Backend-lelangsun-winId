@@ -352,5 +352,11 @@ class ApiController extends Controller
     public function tes_xendit(Request $request){
         Storage::disk('local')->put('response-xendit.txt', json_encode($request));
     }
+    
+    public function show_xendit(){
+        $myfile = fopen("response-xendit.txt", "r") or die("Unable to open file!");
+        echo fread($myfile,filesize("response-xendit.txt"));
+        fclose($myfile);
+    }
 
 }
