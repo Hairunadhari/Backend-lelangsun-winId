@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Validator;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
+use App\Models\OrderItem;
 use App\Models\ProdukPromo;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
@@ -350,6 +352,7 @@ class ApiController extends Controller
     }
 
     public function tes_xendit(Request $request){
+        var_dump(json_encode($request));
         Storage::disk('local')->put('response-xendit.txt', json_encode($request));
     }
     
@@ -357,6 +360,75 @@ class ApiController extends Controller
         $myfile = fopen("response-xendit.txt", "r") or die("Unable to open file!");
         echo fread($myfile,filesize("response-xendit.txt"));
         fclose($myfile);
+    }
+    
+
+     /**
+     * @OA\Post(
+     *      path="/api/add-order",
+     *      tags={"Order Barang"},
+     *      summary="Order",
+     *      description="masukkan user id, order id, produk id dan qty",
+     *      operationId="Order",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="form data",
+     *          @OA\JsonContent(
+     *              required={"user_id", "order_id", "produk_id", "qty"},
+     *              @OA\Property(property="user_id", type="integer"),
+     *              @OA\Property(property="order_id", type="integer"),
+     *              @OA\Property(property="produk_id", type="integer"),
+     *              @OA\Property(property="qty", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="order berhasil",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="message", type="integer", example="data Sukses"),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="token", type="integer"),
+     *                  @OA\Property(property="user_id", type="integer"),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="order gagal",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="ada kesalahan"),
+     *              @OA\Property(property="data", type="null"),
+     *          ),
+     *      ),
+     * )
+     */
+    public function add_order(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required',
+            'order_id'     => 'required',
+            'produk_id'     => 'required',
+            'qty'     => 'required',
+        ]);
+
+        $order = Order::create([
+            'id' => $request->id,
+            'user_id' => $request->user_id
+        ]);
+        $orderitem = OrderItem::create([
+            'id' => $request->id,
+            'order_id' => $request->order_id,
+            'produk_id' => $request->produk_id,
+            'qty' => $request->qty,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Order Berhasil Ditambahkan',
+            'order' => $order,
+            'orderitem' => $orderitem,
+        ]);
     }
 
 }

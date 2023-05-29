@@ -30,6 +30,8 @@
                         <tr>
                             <th scope="col">No</th>
                             <th scope="col">Nama Promosi</th>
+                            <th scope="col">Gambar Promo</th>
+                            <th scope="col">Diskon</th>
                             <th scope="col">Status Promo</th>
                             <th scope="col">Opsi</th>
                         </tr>
@@ -38,10 +40,14 @@
                         @php
                         $no = 1;
                         @endphp
-                        @forelse ($data as $d)
+                        @forelse ($data as $index => $d)
                         <tr>
-                            <td>{{$no++}}</td>
+                            <td>{{$index + $data->firstItem()}}</td>
                             <td>{{$d->promosi}}</td>
+                            <td>
+                                <img src="{{ asset('/storage/image/'.$d->gambar) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
+                            </td>
+                            <td>{{$d->diskon}}%</td>
                             @if ($d->status == 'akan datang')
                                 <td><span class="badge badge-primary">Coming Soon</span></td>
                             @elseif($d->status == 'sedang berlangsung')
@@ -76,9 +82,9 @@
                     </tbody>
                 </table>
             </div>
-            {{-- <div style="margin-left:20px">
+            <div style="margin-left:20px">
                 {{ $data->links() }}
-            </div> --}}
+            </div>
         </div>
     </div>
 </div>

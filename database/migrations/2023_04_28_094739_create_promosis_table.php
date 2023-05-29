@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('promosis', function (Blueprint $table) {
             $table->id();
             $table->string('promosi');
-            $table->string('deskripsi');
+            $table->text('deskripsi');
             $table->bigInteger('diskon');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
