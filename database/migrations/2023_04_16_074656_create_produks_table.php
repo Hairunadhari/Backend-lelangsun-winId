@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('toko_id')->constrained('tokos')->onDelete('cascade');
             $table->foreignId('kategoriproduk_id')->constrained('kategori_produks')->onDelete('cascade');
             $table->string('nama');
-            $table->string('keterangan');
+            $table->text('keterangan');
             $table->string('harga');
             $table->bigInteger('stok');
             $table->string('thumbnail');

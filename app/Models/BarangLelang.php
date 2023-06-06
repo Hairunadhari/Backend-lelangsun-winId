@@ -8,10 +8,4 @@ use Illuminate\Database\Eloquent\Model;
 class BarangLelang extends Model
 {
     use HasFactory;
-    protected $guarded = [''];
-    
-    public function kategoribarang()
-    {
-        return $this->belongsTo(KategoriBarang::class);
-    }
 }

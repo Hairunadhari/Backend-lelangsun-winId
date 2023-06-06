@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('pengirimen', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->string('pengiriman');
+            $table->text('lokasi_pengiriman');
+            $table->string('nama_pengirim');
             $table->timestamps();
         });
     }

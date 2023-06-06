@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use Validator;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
+use App\Models\OrderItem;
+use App\Models\Pembayaran;
+use App\Models\Pengiriman;
 use App\Models\ProdukPromo;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
 {
@@ -29,7 +34,7 @@ class ApiController extends Controller
      * )
      */
     public function daftar_produk(){
-        $produk = Produk::all();
+        $produk = Produk::where('stok', '>', 0)->get();
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
@@ -353,6 +358,109 @@ class ApiController extends Controller
         return response()->json([
             'datapromosi' => $datapromosi,
             'detailproduk' => $detailproduk,
+        ]);
+    }
+
+    public function tes_xendit(Request $request){
+        var_dump(json_encode($request));
+        Storage::disk('local')->put('response-xendit.txt', json_encode($request));
+    }
+    
+    public function show_xendit(){
+        $myfile = fopen("response-xendit.txt", "r") or die("Unable to open file!");
+        echo fread($myfile,filesize("response-xendit.txt"));
+        fclose($myfile);
+    }
+    
+
+     /**
+     * @OA\Post(
+     *      path="/api/add-order",
+     *      tags={"Order Barang"},
+     *      summary="Order",
+     *      description="masukkan user id, order id, produk id dan qty",
+     *      operationId="Order",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="form data",
+     *          @OA\JsonContent(
+     *              required={"user_id", "order_id", "produk_id", "qty"},
+     *              @OA\Property(property="user_id", type="integer"),
+     *              @OA\Property(property="produk_id", type="integer"),
+     *              @OA\Property(property="qty", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="order berhasil",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="message", type="integer", example="data Sukses"),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="user_id", type="integer"),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="order gagal",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="ada kesalahan"),
+     *              @OA\Property(property="data", type="null"),
+     *          ),
+     *      ),
+     * )
+     */
+    public function add_order(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required',
+            'produk_id'     => 'required',
+            'qty'     => 'required',
+            'pengiriman'     => 'required',
+            'lokasi_pengiriman'     => 'required',
+            'nama_pengirim'     => 'required',
+            'metode_pembayaran'     => 'required',
+            'total_pembayaran'     => 'required',
+        ]);
+
+        $order = Order::create([
+            'id' => $request->id,
+            'user_id' => $request->user_id
+        ]);
+        $orderitem = OrderItem::create([
+            'id' => $request->id,
+            'order_id' => $order->id,
+            'produk_id' => $request->produk_id,
+            'qty' => $request->qty,
+        ]);
+
+        $produk = Produk::find($request->produk_id);
+        $produk->update([
+            'stok' => $produk->stok - $request->qty,
+        ]);
+        $pengiriman = Pengiriman::create([
+            'id' => $request->id,
+            'order_id' => $order->id,
+            'pengiriman' => $request->pengiriman,
+            'lokasi_pengiriman' => $request->lokasi_pengiriman,
+            'nama_pengirim' => $request->nama_pengirim
+        ]);
+        $pembayaran = Pembayaran::create([
+            'id' => $request->id,
+            'order_id' => $order->id,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'total_pembayaran' => $request->total_pembayaran,
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Order Berhasil Ditambahkan',
+            'order' => $order,
+            'orderitem' => $orderitem,
+            'pengiriman' => $pengiriman,
+            'pembayaran' => $pembayaran,
         ]);
     }
 

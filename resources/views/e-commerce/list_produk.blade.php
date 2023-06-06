@@ -33,6 +33,7 @@
                         <th scope="col">No</th>
                         <th scope="col">Nama Produk</th>
                         <th scope="col">Cover Produk</th>
+                        <th scope="col">Harga</th>
                         <th scope="col">Stok</th>
                         <th scope="col">Opsi</th>
                     </tr>
@@ -48,6 +49,7 @@
                         <td>
                             <img src="{{ asset('/storage/image/'.$d->thumbnail) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
                         </td>
+                        <td>Rp. {{number_format($d->harga)}}</td>
                         <td>{{$d->stok}}</td>
                         <td>
                             <div class="dropdown d-inline">
