@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
 use App\Models\OrderItem;
+use App\Models\Pembayaran;
+use App\Models\Pengiriman;
 use App\Models\ProdukPromo;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
@@ -32,7 +34,7 @@ class ApiController extends Controller
      * )
      */
     public function daftar_produk(){
-        $produk = Produk::all();
+        $produk = Produk::where('stok', '>', 0)->get();
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
@@ -376,7 +378,6 @@ class ApiController extends Controller
      *          @OA\JsonContent(
      *              required={"user_id", "order_id", "produk_id", "qty"},
      *              @OA\Property(property="user_id", type="integer"),
-     *              @OA\Property(property="order_id", type="integer"),
      *              @OA\Property(property="produk_id", type="integer"),
      *              @OA\Property(property="qty", type="integer"),
      *          )
@@ -388,7 +389,6 @@ class ApiController extends Controller
      *              @OA\Property(property="success", type="boolean", example=true),
      *              @OA\Property(property="message", type="integer", example="data Sukses"),
      *              @OA\Property(property="data", type="object",
-     *                  @OA\Property(property="token", type="integer"),
      *                  @OA\Property(property="user_id", type="integer"),
      *              ),
      *          ),
@@ -407,9 +407,13 @@ class ApiController extends Controller
     public function add_order(Request $request){
         $validator = Validator::make($request->all(), [
             'user_id'     => 'required',
-            'order_id'     => 'required',
             'produk_id'     => 'required',
             'qty'     => 'required',
+            'pengiriman'     => 'required',
+            'lokasi_pengiriman'     => 'required',
+            'nama_pengirim'     => 'required',
+            'metode_pembayaran'     => 'required',
+            'total_pembayaran'     => 'required',
         ]);
 
         $order = Order::create([
@@ -418,9 +422,28 @@ class ApiController extends Controller
         ]);
         $orderitem = OrderItem::create([
             'id' => $request->id,
-            'order_id' => $request->order_id,
+            'order_id' => $order->id,
             'produk_id' => $request->produk_id,
             'qty' => $request->qty,
+        ]);
+
+        $produk = Produk::find($request->produk_id);
+        $produk->update([
+            'stok' => $produk->stok - $request->qty,
+        ]);
+        $pengiriman = Pengiriman::create([
+            'id' => $request->id,
+            'order_id' => $order->id,
+            'pengiriman' => $request->pengiriman,
+            'lokasi_pengiriman' => $request->lokasi_pengiriman,
+            'nama_pengirim' => $request->nama_pengirim
+        ]);
+        $pembayaran = Pembayaran::create([
+            'id' => $request->id,
+            'order_id' => $order->id,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'total_pembayaran' => $request->total_pembayaran,
+            'status' => 'pending',
         ]);
 
         return response()->json([
@@ -428,6 +451,8 @@ class ApiController extends Controller
             'message' => 'Data Order Berhasil Ditambahkan',
             'order' => $order,
             'orderitem' => $orderitem,
+            'pengiriman' => $pengiriman,
+            'pembayaran' => $pembayaran,
         ]);
     }
 

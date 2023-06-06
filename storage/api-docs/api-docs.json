@@ -335,13 +335,13 @@
                 }
             }
         },
-        "/api/add-produk": {
+        "/api/add-order": {
             "post": {
                 "tags": [
-                    "Register dan Login"
+                    "Order Barang"
                 ],
-                "summary": "data",
-                "description": "masukkan name,email,password dan konfirmasi password untuk data",
+                "summary": "Order",
+                "description": "masukkan user id, order id, produk id dan qty",
                 "operationId": "Order",
                 "requestBody": {
                     "description": "form data",
@@ -357,9 +357,6 @@
                                 ],
                                 "properties": {
                                     "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "order_id": {
                                         "type": "integer"
                                     },
                                     "produk_id": {
@@ -391,9 +388,6 @@
                                         },
                                         "data": {
                                             "properties": {
-                                                "token": {
-                                                    "type": "integer"
-                                                },
                                                 "user_id": {
                                                     "type": "integer"
                                                 }
