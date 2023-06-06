@@ -40,7 +40,7 @@
                     @forelse ($data as $index => $d)
                     <tr>
                         <td>{{$index + $data->firstItem() }}</td>
-                        <td>{{$d->kategori}}</td>
+                        <td>{{strtoupper($d->kategori)}}</td>
                         <td>
                             <img src="{{ asset('/storage/image/'.$d->gambar) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
                         </td>

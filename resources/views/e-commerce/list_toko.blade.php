@@ -48,7 +48,7 @@
                         @forelse ($data as $index => $d)
                         <tr>
                             <td>{{$index + $data->firstItem()}}</td>
-                            <td>{{ucfirst($d->toko)}}</td>
+                            <td>{{strtoupper($d->toko)}}</td>
                             <td>
                                 <img src="{{ asset('/storage/image/'.$d->logo) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
                             </td>
