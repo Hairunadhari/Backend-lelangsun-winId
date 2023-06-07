@@ -3,19 +3,24 @@
 namespace App\Http\Controllers;
 
 use Validator;
+use DateTimeZone;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
+use App\Models\Tagihan;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\ProdukPromo;
+use Illuminate\Support\Str;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
@@ -415,8 +420,16 @@ class ApiController extends Controller
      *      ),
      * )
      */
+
+    public function tes(){
+        $user = Auth::user();
+        if ($user){
+    
+        }
+    }
+
     public function add_order(Request $request){
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all() , [
             'user_id'     => 'required',
             'produk_id'     => 'required',
             'qty'     => 'required',
@@ -427,12 +440,22 @@ class ApiController extends Controller
             'total_pembayaran'     => 'required',
         ]);
 
+        $secret_key = 'Basic '.config('xendit.key_auth');
+        $external_id = Str::random(10);
+        
+        $data_request = Http::withHeaders([
+            'Authorization' => $secret_key
+        ])->post('https://api.xendit.co/v2/invoices', [
+            'external_id' => $external_id,
+            'amount' => $request->total_pembayaran
+        ]);
+        $response = $data_request->object();
+
         $order = Order::create([
             'id' => $request->id,
             'user_id' => $request->user_id
         ]);
         $orderitem = OrderItem::create([
-            'id' => $request->id,
             'order_id' => $order->id,
             'produk_id' => $request->produk_id,
             'qty' => $request->qty,
@@ -443,27 +466,57 @@ class ApiController extends Controller
             'stok' => $produk->stok - $request->qty,
         ]);
         $pengiriman = Pengiriman::create([
-            'id' => $request->id,
             'order_id' => $order->id,
             'pengiriman' => $request->pengiriman,
             'lokasi_pengiriman' => $request->lokasi_pengiriman,
             'nama_pengirim' => $request->nama_pengirim
         ]);
-        $pembayaran = Pembayaran::create([
-            'id' => $request->id,
+
+        $create_date = Carbon::now(new DateTimeZone('Asia/Jakarta'));
+        $exp_date = Carbon::now(new DateTimeZone('Asia/Jakarta'))->addDay();
+        
+        $invoice = Tagihan::create([
             'order_id' => $order->id,
+            'external_id' => $external_id,
+            'status' => $response->status,
             'metode_pembayaran' => $request->metode_pembayaran,
             'total_pembayaran' => $request->total_pembayaran,
-            'status' => 'pending',
+            'create_date' => $create_date,
+            'exp_date' => $exp_date,
         ]);
-
+        
         return response()->json([
             'success' => true,
             'message' => 'Data Order Berhasil Ditambahkan',
             'order' => $order,
             'orderitem' => $orderitem,
             'pengiriman' => $pengiriman,
-            'pembayaran' => $pembayaran,
+            'invoice' => $invoice,
+        ]);
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/payment-method",
+     *      tags={"Payment Method"},
+     *      summary="Daftar Paymet Method",
+     *      description="menampilkan semua jenis metode pembayaran",
+     *      operationId="payment method",
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model payment method"
+     *      )
+     * )
+     */
+    public function payment_method(){
+        $secret_key = 'Basic '.config('xendit.key_auth');
+        $data_request = Http::withHeaders([
+            'Authorization' => $secret_key
+        ])->get('https://api.xendit.co/payment_channels');
+        $payment_method = json_decode($data_request);
+        
+        return response()->json([
+            'payment_method' => $payment_method,
         ]);
     }
 

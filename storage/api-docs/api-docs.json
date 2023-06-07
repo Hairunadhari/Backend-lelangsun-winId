@@ -438,6 +438,21 @@
                     }
                 }
             }
+        },
+        "/api/payment-method": {
+            "get": {
+                "tags": [
+                    "Payment Method"
+                ],
+                "summary": "Daftar Paymet Method",
+                "description": "menampilkan semua jenis metode pembayaran",
+                "operationId": "payment method",
+                "responses": {
+                    "default": {
+                        "description": "return array model payment method"
+                    }
+                }
+            }
         }
     }
 }
