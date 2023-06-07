@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
@@ -404,8 +405,16 @@ class ApiController extends Controller
      *      ),
      * )
      */
+
+    public function tes(){
+        $user = Auth::user();
+        if ($user){
+    
+        }
+    }
+
     public function add_order(Request $request){
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all() , [
             'user_id'     => 'required',
             'produk_id'     => 'required',
             'qty'     => 'required',
@@ -453,6 +462,31 @@ class ApiController extends Controller
             'orderitem' => $orderitem,
             'pengiriman' => $pengiriman,
             'pembayaran' => $pembayaran,
+        ]);
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/payment-method",
+     *      tags={"Payment Method"},
+     *      summary="Daftar Paymet Method",
+     *      description="menampilkan semua jenis metode pembayaran",
+     *      operationId="payment method",
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model payment method"
+     *      )
+     * )
+     */
+    public function payment_method(){
+        $secret_key = 'Basic '.config('xendit.key_auth');
+        $data_request = Http::withHeaders([
+            'Authorization' => $secret_key
+        ])->get('https://api.xendit.co/payment_channels');
+        $payment_method = json_decode($data_request);
+        
+        return response()->json([
+            'payment_method' => $payment_method,
         ]);
     }
 

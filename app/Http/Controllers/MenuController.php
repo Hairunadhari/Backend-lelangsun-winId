@@ -183,7 +183,7 @@ class MenuController extends Controller
     }
    
     public function list_order(){
-        $data = Order::all();
+        $data = Order::with('user')->paginate(10);
         return view('e-commerce/list_order', compact('data'));
     }
     public function list_pembayaran(){
