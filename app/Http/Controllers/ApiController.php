@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Validator;
 use DateTimeZone;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
 use App\Models\Tagihan;
+use App\Models\TLogApi;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
@@ -429,58 +431,117 @@ class ApiController extends Controller
             'total_pembayaran'     => 'required',
         ]);
 
+
         $secret_key = 'Basic '.config('xendit.key_auth');
         $external_id = Str::random(10);
         
         $data_request = Http::withHeaders([
             'Authorization' => $secret_key
-        ])->post('https://api.xendit.co/v2/invoices', [
+            ])->post('https://api.xendit.co/v2/invoices', [
             'external_id' => $external_id,
             'amount' => $request->total_pembayaran
         ]);
+        
         $response = $data_request->object();
 
-        $order = Order::create([
-            'id' => $request->id,
-            'user_id' => $request->user_id
-        ]);
-        $orderitem = OrderItem::create([
-            'order_id' => $order->id,
-            'produk_id' => $request->produk_id,
-            'qty' => $request->qty,
-        ]);
+        try{
+            $order = Order::create([
+                'id' => $request->id,
+                'user_id' => $request->user_id ?? null
+            ]);
+            $orderitem = OrderItem::create([
+                'id' => $request->id,
+                'order_id' => $order->id ?? null,
+                'produk_id' => $request->produk_id ?? null,
+                'qty' => $request->qty ?? null,
+            ]);
+            
+            $produk = Produk::find($request->produk_id);
+            $produk->update([
+                'stok' => $produk->stok - $request->qty,
+            ]);
+            $pengiriman = Pengiriman::create([
+                'id' => $request->id,
+                'order_id' => $order->id ?? null,
+                'pengiriman' => $request->pengiriman ?? null,
+                'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
+                'nama_pengirim' => $request->nama_pengirim ?? null
+            ]);
 
-        $produk = Produk::find($request->produk_id);
-        $produk->update([
-            'stok' => $produk->stok - $request->qty,
-        ]);
-        $pengiriman = Pengiriman::create([
-            'order_id' => $order->id,
-            'pengiriman' => $request->pengiriman,
-            'lokasi_pengiriman' => $request->lokasi_pengiriman,
-            'nama_pengirim' => $request->nama_pengirim
-        ]);
+            $create_date = Carbon::now(new DateTimeZone('Asia/Jakarta'));
+            $exp_date = Carbon::now(new DateTimeZone('Asia/Jakarta'))->addDay();
+            
+            $invoice = Tagihan::create([
+                'id' => $request->id,
+                'order_id' => $order->id ?? null,
+                'external_id' => $external_id ?? null,
+                'status' => $response->status ?? null,
+                'metode_pembayaran' => $request->metode_pembayaran ?? null,
+                'total_pembayaran' => $request->total_pembayaran ?? null,
+                'create_date' => $create_date,
+                'exp_date' => $exp_date,
+            ]);
 
-        $create_date = Carbon::now(new DateTimeZone('Asia/Jakarta'));
-        $exp_date = Carbon::now(new DateTimeZone('Asia/Jakarta'))->addDay();
-        
-        $invoice = Tagihan::create([
-            'order_id' => $order->id,
-            'external_id' => $external_id,
-            'status' => $response->status,
-            'metode_pembayaran' => $request->metode_pembayaran,
-            'total_pembayaran' => $request->total_pembayaran,
-            'create_date' => $create_date,
-            'exp_date' => $exp_date,
-        ]);
+            
+            TLogApi::create([
+                    'k_t' => 'kirim',
+                    'object' => 'mobile',
+                    'data' => json_encode([
+                        'order' => $order,
+                        'orderitem' => $orderitem,
+                        'pengiriman' => $pengiriman,
+                        'invoice' => $invoice,
+                    ]),
+                    'result' => json_encode('200-success'),
+                ]);
+                $success = true;
+                $message = 'Data Order Berhasil Ditambahkan';
+
+        } catch (Exception $e) {
+            TLogApi::create([
+                'k_t' => 'kirim',
+                'object' => 'mobile',
+                'data' => json_encode([
+                    'order' => [
+                        'id' => $request->id,
+                        'user_id' => $request->user_id ?? null
+                    ],
+                    'orderitem' => [
+                        'id' => $request->id,
+                        'order_id' => $order->id ?? null,
+                        'produk_id' => $request->produk_id ?? null,
+                        'qty' => $request->qty ?? null,
+                    ],
+                    'pengiriman' => [
+                        'id' => $request->id,
+                        'order_id' => $order->id ?? null,
+                        'pengiriman' => $request->pengiriman ?? null,
+                        'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
+                        'nama_pengirim' => $request->nama_pengirim ?? null    
+                    ],
+                    'invoice' => [
+                        'id' => $request->id,
+                        'order_id' => $order->id ?? null,
+                        'external_id' => $external_id ?? null,
+                        'status' => $response->status ?? null,
+                        'metode_pembayaran' => $request->metode_pembayaran ?? null,
+                        'total_pembayaran' => $request->total_pembayaran ?? null,
+                    ],
+                ]),
+                'result' => json_encode('400-failure'),
+            ]);
+            
+            $success = false;
+            $message = 'Data Order Gagal Ditambahkan';
+        };
         
         return response()->json([
-            'success' => true,
-            'message' => 'Data Order Berhasil Ditambahkan',
-            'order' => $order,
-            'orderitem' => $orderitem,
-            'pengiriman' => $pengiriman,
-            'invoice' => $invoice,
+            'success' => $success,
+            'message' => $message,
+            'order' => $order ?? null,
+            'orderitem' => $orderitem ?? null,
+            'pengiriman' => $pengiriman ?? null,
+            'invoice' => $invoice ?? null,
         ]);
     }
 
