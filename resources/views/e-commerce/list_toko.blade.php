@@ -7,7 +7,7 @@
 <div class="section-body">
     <div class="card">
         <div class="card-header">
-            <h4>Daftar Tokos</h4>
+            <h4>Daftar Toko</h4>
         </div>
         <div class="card-body">
             @if(session('success'))
