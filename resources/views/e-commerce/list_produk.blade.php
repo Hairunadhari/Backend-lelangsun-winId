@@ -103,7 +103,7 @@
                         <label>Pilih Nama Toko:</label>
                         <select class="form-control" name="toko_id" required>
                             @foreach ($dataToko as $item)
-                            <option value="{{ $item->id }}">{{ $item->toko }}</option>
+                            <option value="{{ $item->id }}">{{ strtoupper($item->toko) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -111,7 +111,7 @@
                         <label>Pilih Kategori Produk</label>
                         <select class="form-control" name="kategoriproduk_id" required>
                             @foreach ($dataKategoriproduk as $item)
-                            <option value="{{ $item->id }}">{{ $item->kategori }}</option>
+                            <option value="{{ $item->id }}">{{ strtoupper($item->kategori) }}</option>
                             @endforeach
                         </select>
                     </div>

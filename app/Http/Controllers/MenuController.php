@@ -143,11 +143,9 @@ class MenuController extends Controller
     public function update_kategori_produk(Request $request, $id)
     {
         $this->validate($request, [
-            'kategori'     => 'unique:kategori_produks,kategori',
+            'kategori'     => 'required',
             'gambar'     => 'image|mimes:jpeg,jpg,png,webp',
             
-        ], [
-            'kategori.unique' => 'Kategori sudah digunakan. Silahkan gunakan kategori lain.',
         ]);
         
         $data = KategoriProduk::findOrFail($id);

@@ -6,18 +6,6 @@
 </div>
 <div class="section-body">
     <div class="card">
-        <form action="{{url('api/add-order')}}" method="post">
-        @csrf
-        <input type="text" name="user_id" id="">
-        <input type="text" name="produk_id" id="">
-        <input type="text" name="qty" id="">
-        <input type="text" name="pengiriman" id="">
-        <input type="text" name="lokasi_pengiriman" id="">
-        <input type="text" name="nama_penigirim" id="">
-        <input type="text" name="metode_pembayaran" id="">
-        <input type="text" name="total_pembayaran" id="">
-        <button type="submit">simpan</button>
-        </form>
         <div class="card-header">
             <h4>Daftar Toko</h4>
         </div>
@@ -37,13 +25,6 @@
                     </button>
                 </div>
                 <div class="col-5">
-                    <form>
-                        <div class="input-group">
-                          <input type="text" id="cari" name="cari" class="form-control" placeholder="Search...">
-                          <div class="input-group-btn">
-                          </div>
-                        </div>
-                      </form>
                 </div>
             </div>
             <div class="table-responsive">
