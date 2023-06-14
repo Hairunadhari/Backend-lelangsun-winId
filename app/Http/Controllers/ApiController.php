@@ -371,11 +371,35 @@ class ApiController extends Controller
         fclose($myfile);
     }
     
+         /**
+     * @OA\Get(
+     *      path="/api/payment-method",
+     *      tags={"Payment Method"},
+     *      summary="Daftar Paymet Method",
+     *      description="menampilkan semua jenis metode pembayaran",
+     *      operationId="payment method",
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model payment method"
+     *      )
+     * )
+     */
+    public function payment_method(){
+        $secret_key = 'Basic '.config('xendit.key_auth');
+        $data_request = Http::withHeaders([
+            'Authorization' => $secret_key
+        ])->get('https://api.xendit.co/payment_channels');
+        $payment_method = json_decode($data_request);
+        
+        return response()->json([
+            'payment_method' => $payment_method,
+        ]);
+    }
 
      /**
      * @OA\Post(
      *      path="/api/add-order",
-     *      tags={"Order Barang"},
+     *      tags={"Order Produk"},
      *      summary="Order",
      *      description="masukkan user id, order id, produk id dan qty",
      *      operationId="Order",
@@ -383,10 +407,15 @@ class ApiController extends Controller
      *          required=true,
      *          description="form data",
      *          @OA\JsonContent(
-     *              required={"user_id", "order_id", "produk_id", "qty"},
+     *              required={"user_id","produk_id", "qty","pengiriman","lokasi_pengiriman","nama_pengirim","metode_pembayaran","total_pembayaran"},
      *              @OA\Property(property="user_id", type="integer"),
      *              @OA\Property(property="produk_id", type="integer"),
      *              @OA\Property(property="qty", type="integer"),
+     *              @OA\Property(property="pengiriman", type="integer"),
+     *              @OA\Property(property="lokasi_pengiriman", type="integer"),
+     *              @OA\Property(property="nama_pengirim", type="integer"),
+     *              @OA\Property(property="metode_pembayaran", type="integer"),
+     *              @OA\Property(property="total_pembayaran", type="integer"),
      *          )
      *      ),
      *      @OA\Response(
@@ -430,20 +459,6 @@ class ApiController extends Controller
             'metode_pembayaran'     => 'required',
             'total_pembayaran'     => 'required',
         ]);
-
-
-        $secret_key = 'Basic '.config('xendit.key_auth');
-        $external_id = Str::random(10);
-        
-        $data_request = Http::withHeaders([
-            'Authorization' => $secret_key
-            ])->post('https://api.xendit.co/v2/invoices', [
-            'external_id' => $external_id,
-            'amount' => $request->total_pembayaran
-        ]);
-        
-        $response = $data_request->object();
-
         try{
             $order = Order::create([
                 'id' => $request->id,
@@ -467,39 +482,73 @@ class ApiController extends Controller
                 'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
                 'nama_pengirim' => $request->nama_pengirim ?? null
             ]);
-
-            $create_date = Carbon::now(new DateTimeZone('Asia/Jakarta'));
-            $exp_date = Carbon::now(new DateTimeZone('Asia/Jakarta'))->addDay();
             
-            $invoice = Tagihan::create([
-                'id' => $request->id,
-                'order_id' => $order->id ?? null,
-                'external_id' => $external_id ?? null,
-                'status' => $response->status ?? null,
-                'metode_pembayaran' => $request->metode_pembayaran ?? null,
-                'total_pembayaran' => $request->total_pembayaran ?? null,
-                'create_date' => $create_date,
-                'exp_date' => $exp_date,
-            ]);
-
             
-            TLogApi::create([
+            $user = User::where('id', $request->user_id)->first();
+            $data = [
+                'currency' => 'IDR',
+                'amount' => $request->total_pembayaran,
+                'payment_method' => [
+                    'type' => 'VIRTUAL_ACCOUNT',
+                    'reusability' => 'ONE_TIME_USE',
+                    'virtual_account' => [
+                        'channel_code'=> $request->metode_pembayaran,
+                        'channel_properties' => [
+                            'customer_name' => $user->name
+                        ]
+                    ]
+                ]
+            ];
+            $secret_key = 'Basic '.config('xendit.key_auth');
+            $response = Http::withHeaders([
+                'Authorization' => $secret_key,
+            ])->post('https://api.xendit.co/payment_requests', $data);
+
+            $responseData = $response->json();
+
+            if($data){
+                TLogApi::create([
                     'k_t' => 'kirim',
-                    'object' => 'mobile',
+                    'object' => 'xendit',
                     'data' => json_encode([
                         'order' => $order,
                         'orderitem' => $orderitem,
                         'pengiriman' => $pengiriman,
-                        'invoice' => $invoice,
+                        'responseData'=> $responseData
                     ]),
                     'result' => json_encode('200-success'),
                 ]);
-                $success = true;
-                $message = 'Data Order Berhasil Ditambahkan';
+            }
+            
+            TLogApi::create([
+                'k_t' => 'terima',
+                'object' => 'mobile',
+                'data' => json_encode([
+                    'order' => $order,
+                    'orderitem' => $orderitem,
+                    'pengiriman' => $pengiriman,
+                    'responsedata' => $data,
+                 ]),
+                'result' => json_encode('200-success'),
+            ]);
+            $createDate = Carbon::parse($responseData['created'])->toDateTimeString();
+            $exp_date = Carbon::parse($responseData['payment_method']['virtual_account']['channel_properties']['expires_at'])->toDateTimeString();
 
+            $tagihan = Tagihan::create([
+                'order_id' => $order->id,
+                'virtual_account_number' => $responseData['payment_method']['virtual_account']['channel_properties']['virtual_account_number'],
+                'status' => $responseData['status'],
+                'metode_pembayaran' => $responseData['payment_method']['virtual_account']['channel_code'],
+                'total_pembayaran' => $responseData['payment_method']['virtual_account']['amount'],
+                'create_date' => $createDate,
+                'exp_date' => $exp_date
+            ]);
+            $success = true;
+            $message = 'Data Order Berhasil Ditambahkan';
+            
         } catch (Exception $e) {
             TLogApi::create([
-                'k_t' => 'kirim',
+                'k_t' => 'terima',
                 'object' => 'mobile',
                 'data' => json_encode([
                     'order' => [
@@ -519,55 +568,30 @@ class ApiController extends Controller
                         'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
                         'nama_pengirim' => $request->nama_pengirim ?? null    
                     ],
-                    'invoice' => [
-                        'id' => $request->id,
-                        'order_id' => $order->id ?? null,
-                        'external_id' => $external_id ?? null,
-                        'status' => $response->status ?? null,
-                        'metode_pembayaran' => $request->metode_pembayaran ?? null,
-                        'total_pembayaran' => $request->total_pembayaran ?? null,
-                    ],
+                    'responseData' => $responseData
                 ]),
                 'result' => json_encode('400-failure'),
             ]);
-            
             $success = false;
             $message = 'Data Order Gagal Ditambahkan';
         };
-        
         return response()->json([
             'success' => $success,
             'message' => $message,
-            'order' => $order ?? null,
-            'orderitem' => $orderitem ?? null,
-            'pengiriman' => $pengiriman ?? null,
-            'invoice' => $invoice ?? null,
+            'name' => $user->name,
+            'created_date' => $createDate ?? null,
+            'exp_date' => $exp_date ?? null,
+            'metode_pembayaran' => $tagihan->metode_pembayaran ?? null,
+            'virtual_account_number' => $tagihan->virtual_account_number ?? null,
+            'total_pembayaran' => $tagihan->total_pembayaran ?? null,
+            'status' => $tagihan->status ?? null,
         ]);
+            
     }
 
-     /**
-     * @OA\Get(
-     *      path="/api/payment-method",
-     *      tags={"Payment Method"},
-     *      summary="Daftar Paymet Method",
-     *      description="menampilkan semua jenis metode pembayaran",
-     *      operationId="payment method",
-     *      @OA\Response(
-     *          response="default",
-     *          description="return array model payment method"
-     *      )
-     * )
-     */
-    public function payment_method(){
-        $secret_key = 'Basic '.config('xendit.key_auth');
-        $data_request = Http::withHeaders([
-            'Authorization' => $secret_key
-        ])->get('https://api.xendit.co/payment_channels');
-        $payment_method = json_decode($data_request);
-        
-        return response()->json([
-            'payment_method' => $payment_method,
-        ]);
+
+    public function pembayaran(){
+
     }
 
 }

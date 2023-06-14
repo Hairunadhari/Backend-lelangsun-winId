@@ -335,10 +335,25 @@
                 }
             }
         },
+        "/api/payment-method": {
+            "get": {
+                "tags": [
+                    "Payment Method"
+                ],
+                "summary": "Daftar Paymet Method",
+                "description": "menampilkan semua jenis metode pembayaran",
+                "operationId": "payment method",
+                "responses": {
+                    "default": {
+                        "description": "return array model payment method"
+                    }
+                }
+            }
+        },
         "/api/add-order": {
             "post": {
                 "tags": [
-                    "Order Barang"
+                    "Order Produk"
                 ],
                 "summary": "Order",
                 "description": "masukkan user id, order id, produk id dan qty",
@@ -422,21 +437,6 @@
                                 }
                             }
                         }
-                    }
-                }
-            }
-        },
-        "/api/payment-method": {
-            "get": {
-                "tags": [
-                    "Payment Method"
-                ],
-                "summary": "Daftar Paymet Method",
-                "description": "menampilkan semua jenis metode pembayaran",
-                "operationId": "payment method",
-                "responses": {
-                    "default": {
-                        "description": "return array model payment method"
                     }
                 }
             }

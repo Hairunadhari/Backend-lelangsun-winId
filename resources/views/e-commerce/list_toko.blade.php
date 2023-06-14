@@ -9,6 +9,9 @@
         <div class="card-header">
             <h4>Daftar Toko</h4>
         </div>
+        <form action="" method="post">
+            
+        </form>
         <div class="card-body">
             @if(session('success'))
             <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
