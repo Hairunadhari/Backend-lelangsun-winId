@@ -335,28 +335,13 @@
                 }
             }
         },
-        "/api/payment-method": {
-            "get": {
-                "tags": [
-                    "Payment Method"
-                ],
-                "summary": "Daftar Paymet Method",
-                "description": "menampilkan semua jenis metode pembayaran",
-                "operationId": "payment method",
-                "responses": {
-                    "default": {
-                        "description": "return array model payment method"
-                    }
-                }
-            }
-        },
         "/api/add-order": {
             "post": {
                 "tags": [
                     "Order Produk"
                 ],
                 "summary": "Order",
-                "description": "masukkan user id, order id, produk id dan qty",
+                "description": "masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, nama pengirim/kurir, total pembayaran",
                 "operationId": "Order",
                 "requestBody": {
                     "description": "form data",
@@ -366,9 +351,13 @@
                             "schema": {
                                 "required": [
                                     "user_id",
-                                    "order_id",
                                     "produk_id",
-                                    "qty"
+                                    "qty",
+                                    "pengiriman",
+                                    "lokasi_pengiriman",
+                                    "nama_pengirim",
+                                    "metode_pembayaran",
+                                    "total_pembayaran"
                                 ],
                                 "properties": {
                                     "user_id": {
@@ -379,6 +368,18 @@
                                     },
                                     "qty": {
                                         "type": "integer"
+                                    },
+                                    "pengiriman": {
+                                        "type": "string"
+                                    },
+                                    "lokasi_pengiriman": {
+                                        "type": "string"
+                                    },
+                                    "nama_pengirim": {
+                                        "type": "string"
+                                    },
+                                    "total_pembayaran": {
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -387,56 +388,8 @@
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "order berhasil",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "integer",
-                                            "example": "data Sukses"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "user_id": {
-                                                    "type": "integer"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "order gagal",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "ada kesalahan"
-                                        },
-                                        "data": {
-                                            "type": "null"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                    "default": {
+                        "description": ""
                     }
                 }
             }

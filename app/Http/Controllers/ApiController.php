@@ -371,37 +371,13 @@ class ApiController extends Controller
         fclose($myfile);
     }
     
-         /**
-     * @OA\Get(
-     *      path="/api/payment-method",
-     *      tags={"Payment Method"},
-     *      summary="Daftar Paymet Method",
-     *      description="menampilkan semua jenis metode pembayaran",
-     *      operationId="payment method",
-     *      @OA\Response(
-     *          response="default",
-     *          description="return array model payment method"
-     *      )
-     * )
-     */
-    public function payment_method(){
-        $secret_key = 'Basic '.config('xendit.key_auth');
-        $data_request = Http::withHeaders([
-            'Authorization' => $secret_key
-        ])->get('https://api.xendit.co/payment_channels');
-        $payment_method = json_decode($data_request);
-        
-        return response()->json([
-            'payment_method' => $payment_method,
-        ]);
-    }
 
      /**
      * @OA\Post(
      *      path="/api/add-order",
      *      tags={"Order Produk"},
      *      summary="Order",
-     *      description="masukkan user id, order id, produk id dan qty",
+     *      description="masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, nama pengirim/kurir, total pembayaran",
      *      operationId="Order",
      *      @OA\RequestBody(
      *          required=true,
@@ -411,42 +387,18 @@ class ApiController extends Controller
      *              @OA\Property(property="user_id", type="integer"),
      *              @OA\Property(property="produk_id", type="integer"),
      *              @OA\Property(property="qty", type="integer"),
-     *              @OA\Property(property="pengiriman", type="integer"),
-     *              @OA\Property(property="lokasi_pengiriman", type="integer"),
-     *              @OA\Property(property="nama_pengirim", type="integer"),
-     *              @OA\Property(property="metode_pembayaran", type="integer"),
+     *              @OA\Property(property="pengiriman", type="string"),
+     *              @OA\Property(property="lokasi_pengiriman", type="string"),
+     *              @OA\Property(property="nama_pengirim", type="string"),
      *              @OA\Property(property="total_pembayaran", type="integer"),
      *          )
      *      ),
      *      @OA\Response(
-     *          response=200,
-     *          description="order berhasil",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="success", type="boolean", example=true),
-     *              @OA\Property(property="message", type="integer", example="data Sukses"),
-     *              @OA\Property(property="data", type="object",
-     *                  @OA\Property(property="user_id", type="integer"),
-     *              ),
-     *          ),
-     *      ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="order gagal",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="success", type="boolean", example=false),
-     *              @OA\Property(property="message", type="string", example="ada kesalahan"),
-     *              @OA\Property(property="data", type="null"),
-     *          ),
-     *      ),
+     *          response="default",
+     *          description=""
+     *      )
      * )
      */
-
-    public function tes(){
-        $user = Auth::user();
-        if ($user){
-    
-        }
-    }
 
     public function add_order(Request $request){
         $validator = Validator::make($request->all() , [
@@ -456,25 +408,29 @@ class ApiController extends Controller
             'pengiriman'     => 'required',
             'lokasi_pengiriman'     => 'required',
             'nama_pengirim'     => 'required',
-            'metode_pembayaran'     => 'required',
             'total_pembayaran'     => 'required',
         ]);
-        try{
+
+        try {
+           
+            $user = User::where('id', $request->user_id)->first();
             $order = Order::create([
                 'id' => $request->id,
                 'user_id' => $request->user_id ?? null
             ]);
+
             $orderitem = OrderItem::create([
                 'id' => $request->id,
                 'order_id' => $order->id ?? null,
                 'produk_id' => $request->produk_id ?? null,
                 'qty' => $request->qty ?? null,
             ]);
-            
+                        
             $produk = Produk::find($request->produk_id);
             $produk->update([
                 'stok' => $produk->stok - $request->qty,
             ]);
+                        
             $pengiriman = Pengiriman::create([
                 'id' => $request->id,
                 'order_id' => $order->id ?? null,
@@ -482,31 +438,38 @@ class ApiController extends Controller
                 'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
                 'nama_pengirim' => $request->nama_pengirim ?? null
             ]);
-            
-            
-            $user = User::where('id', $request->user_id)->first();
-            $data = [
-                'currency' => 'IDR',
-                'amount' => $request->total_pembayaran,
-                'payment_method' => [
-                    'type' => 'VIRTUAL_ACCOUNT',
-                    'reusability' => 'ONE_TIME_USE',
-                    'virtual_account' => [
-                        'channel_code'=> $request->metode_pembayaran,
-                        'channel_properties' => [
-                            'customer_name' => $user->name
-                        ]
-                    ]
-                ]
-            ];
+
             $secret_key = 'Basic '.config('xendit.key_auth');
-            $response = Http::withHeaders([
-                'Authorization' => $secret_key,
-            ])->post('https://api.xendit.co/payment_requests', $data);
+            $external_id = Str::random(10);
+            $data_request = Http::withHeaders([
+                'Authorization' => $secret_key
+            ])->post('https://api.xendit.co/v2/invoices', [
+                'external_id' => $external_id,
+                'amount' => $request->total_pembayaran
+            ]);
 
-            $responseData = $response->json();
+            $response = $data_request->object();
+            
+            $tagihan = Tagihan::create([
+                'order_id' => $order->id,
+                'external_id' => $external_id,
+                'status' => $response->status,
+                'total_pembayaran' => $request->total_pembayaran,
+                'payment_link' => $response->invoice_url
+            ]);
+            $success = true;
+            $message = 'Data Order Berhasil Ditambahkan';
 
-            if($data){
+            $res = [
+                'success' => $success,
+                'message' => $message,
+                'name' => $user->name,
+                'status' => $tagihan->status ?? null,
+                'total_pembayaran' => $tagihan->total_pembayaran ?? null,
+                'payment_link' => $tagihan->payment_link ?? null,
+            ];
+
+            if($response){
                 TLogApi::create([
                     'k_t' => 'kirim',
                     'object' => 'xendit',
@@ -514,12 +477,12 @@ class ApiController extends Controller
                         'order' => $order,
                         'orderitem' => $orderitem,
                         'pengiriman' => $pengiriman,
-                        'responseData'=> $responseData
+                        'responseData'=> $response
                     ]),
-                    'result' => json_encode('200-success'),
+                    'result' => json_encode($res),
                 ]);
             }
-            
+
             TLogApi::create([
                 'k_t' => 'terima',
                 'object' => 'mobile',
@@ -527,26 +490,22 @@ class ApiController extends Controller
                     'order' => $order,
                     'orderitem' => $orderitem,
                     'pengiriman' => $pengiriman,
-                    'responsedata' => $data,
-                 ]),
-                'result' => json_encode('200-success'),
+                    'responsedata' => $response,
+                ]),
+                'result' => json_encode($res),
             ]);
-            $createDate = Carbon::parse($responseData['created'])->toDateTimeString();
-            $exp_date = Carbon::parse($responseData['payment_method']['virtual_account']['channel_properties']['expires_at'])->toDateTimeString();
 
-            $tagihan = Tagihan::create([
-                'order_id' => $order->id,
-                'virtual_account_number' => $responseData['payment_method']['virtual_account']['channel_properties']['virtual_account_number'],
-                'status' => $responseData['status'],
-                'metode_pembayaran' => $responseData['payment_method']['virtual_account']['channel_code'],
-                'total_pembayaran' => $responseData['payment_method']['virtual_account']['amount'],
-                'create_date' => $createDate,
-                'exp_date' => $exp_date
-            ]);
-            $success = true;
-            $message = 'Data Order Berhasil Ditambahkan';
-            
         } catch (Exception $e) {
+            $success = false;
+            $message = 'Data Order Gagal Ditambahkan';
+            $res = [
+                'success' => $success,
+                'message' => $message,
+                'name' => $user->name ?? null,
+                'status' => $tagihan->status ?? null,
+                'total_pembayaran' => $tagihan->total_pembayaran ?? null,
+                'payment_link' => $tagihan->payment_link ?? null,
+            ];
             TLogApi::create([
                 'k_t' => 'terima',
                 'object' => 'mobile',
@@ -568,30 +527,28 @@ class ApiController extends Controller
                         'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
                         'nama_pengirim' => $request->nama_pengirim ?? null    
                     ],
-                    'responseData' => $responseData
+                    'responseData' => $response ?? null
                 ]),
-                'result' => json_encode('400-failure'),
+                'result' => json_encode($res),
             ]);
-            $success = false;
-            $message = 'Data Order Gagal Ditambahkan';
-        };
-        return response()->json([
-            'success' => $success,
-            'message' => $message,
-            'name' => $user->name,
-            'created_date' => $createDate ?? null,
-            'exp_date' => $exp_date ?? null,
-            'metode_pembayaran' => $tagihan->metode_pembayaran ?? null,
-            'virtual_account_number' => $tagihan->virtual_account_number ?? null,
-            'total_pembayaran' => $tagihan->total_pembayaran ?? null,
-            'status' => $tagihan->status ?? null,
-        ]);
             
+        }
+        return response()->json($res);
     }
 
-
-    public function pembayaran(){
-
+    public function get_invoice(Request $request){
+        // dd(json_encode($request->all()));
+        $res = [
+            'success' => 'sukses',
+            'data' => json_encode($request->all())
+        ];
+        TLogApi::create([
+            'k_t' => 'terima',
+            'object' => 'xendit',
+            'data' => json_encode($request->all()),
+            'result' => json_encode($res)
+        ]);
+        return response()->json($res);
     }
 
 }
