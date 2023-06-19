@@ -335,16 +335,6 @@
                 }
             }
         },
-<<<<<<< HEAD
-        "/api/payment-method": {
-            "get": {
-                "tags": [
-                    "Payment Method"
-                ],
-                "summary": "Daftar Paymet Method",
-                "description": "menampilkan semua jenis metode pembayaran",
-                "operationId": "payment method",
-=======
         "/api/add-order": {
             "post": {
                 "tags": [
@@ -397,7 +387,6 @@
                         }
                     }
                 },
->>>>>>> origin/hairun
                 "responses": {
                     "default": {
                         "description": ""
