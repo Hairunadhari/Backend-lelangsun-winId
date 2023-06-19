@@ -335,6 +335,7 @@
                 }
             }
         },
+<<<<<<< HEAD
         "/api/payment-method": {
             "get": {
                 "tags": [
@@ -343,9 +344,63 @@
                 "summary": "Daftar Paymet Method",
                 "description": "menampilkan semua jenis metode pembayaran",
                 "operationId": "payment method",
+=======
+        "/api/add-order": {
+            "post": {
+                "tags": [
+                    "Order Produk"
+                ],
+                "summary": "Order",
+                "description": "masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, nama pengirim/kurir, total pembayaran",
+                "operationId": "Order",
+                "requestBody": {
+                    "description": "form data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "produk_id",
+                                    "qty",
+                                    "pengiriman",
+                                    "lokasi_pengiriman",
+                                    "nama_pengirim",
+                                    "metode_pembayaran",
+                                    "total_pembayaran"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "produk_id": {
+                                        "type": "integer"
+                                    },
+                                    "qty": {
+                                        "type": "integer"
+                                    },
+                                    "pengiriman": {
+                                        "type": "string"
+                                    },
+                                    "lokasi_pengiriman": {
+                                        "type": "string"
+                                    },
+                                    "nama_pengirim": {
+                                        "type": "string"
+                                    },
+                                    "total_pembayaran": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+>>>>>>> origin/hairun
                 "responses": {
                     "default": {
-                        "description": "return array model payment method"
+                        "description": ""
                     }
                 }
             }

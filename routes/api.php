@@ -36,4 +36,4 @@ Route::get('/show-xendit', [ApiController::class, 'show_xendit']);
 Route::post('/test-xendit', [ApiController::class, 'tes_xendit']);
 
 Route::post('/add-order', [ApiController::class, 'add_order']);
-Route::get('/payment-method', [ApiController::class, 'payment_method']);
+Route::post('/callback-xendit', [ApiController::class, 'callback_xendit']);

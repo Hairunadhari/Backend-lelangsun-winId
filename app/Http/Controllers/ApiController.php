@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Validator;
 use DateTimeZone;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
 use App\Models\Tagihan;
+use App\Models\TLogApi;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
@@ -362,33 +364,199 @@ class ApiController extends Controller
         });
         return response()->json([
             'datapromosi' => $datapromosi,
-            'detailproduk' => $detailproduk,
+            'detailprodukpromosi' => $detailprodukpromosi,
         ]);
     }
 
+    public function tes_xendit(Request $request){
+        var_dump(json_encode($request));
+        Storage::disk('local')->put('response-xendit.txt', json_encode($request));
+    }
+    
+    public function show_xendit(){
+        $myfile = fopen("response-xendit.txt", "r") or die("Unable to open file!");
+        echo fread($myfile,filesize("response-xendit.txt"));
+        fclose($myfile);
+    }
+    
+
      /**
-     * @OA\Get(
-     *      path="/api/payment-method",
-     *      tags={"Payment Method"},
-     *      summary="Daftar Paymet Method",
-     *      description="menampilkan semua jenis metode pembayaran",
-     *      operationId="payment method",
+     * @OA\Post(
+     *      path="/api/add-order",
+     *      tags={"Order Produk"},
+     *      summary="Order",
+     *      description="masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, nama pengirim/kurir, total pembayaran",
+     *      operationId="Order",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="form data",
+     *          @OA\JsonContent(
+     *              required={"user_id","produk_id", "qty","pengiriman","lokasi_pengiriman","nama_pengirim","metode_pembayaran","total_pembayaran"},
+     *              @OA\Property(property="user_id", type="integer"),
+     *              @OA\Property(property="produk_id", type="integer"),
+     *              @OA\Property(property="qty", type="integer"),
+     *              @OA\Property(property="pengiriman", type="string"),
+     *              @OA\Property(property="lokasi_pengiriman", type="string"),
+     *              @OA\Property(property="nama_pengirim", type="string"),
+     *              @OA\Property(property="total_pembayaran", type="integer"),
+     *          )
+     *      ),
      *      @OA\Response(
      *          response="default",
-     *          description="return array model payment method"
+     *          description=""
      *      )
      * )
      */
-    public function payment_method(){
-        $secret_key = 'Basic '.config('xendit.key_auth');
-        $data_request = Http::withHeaders([
-            'Authorization' => $secret_key
-        ])->get('https://api.xendit.co/payment_channels');
-        $payment_method = json_decode($data_request);
-        
-        return response()->json([
-            'payment_method' => $payment_method,
+
+    public function add_order(Request $request){
+        $validator = Validator::make($request->all() , [
+            'user_id'     => 'required',
+            'produk_id'     => 'required',
+            'qty'     => 'required',
+            'pengiriman'     => 'required',
+            'lokasi_pengiriman'     => 'required',
+            'nama_pengirim'     => 'required',
+            'total_pembayaran'     => 'required',
         ]);
+
+        try {
+           
+            $user = User::where('id', $request->user_id)->first();
+            $order = Order::create([
+                'id' => $request->id,
+                'user_id' => $request->user_id ?? null
+            ]);
+
+            $orderitem = OrderItem::create([
+                'id' => $request->id,
+                'order_id' => $order->id ?? null,
+                'produk_id' => $request->produk_id ?? null,
+                'qty' => $request->qty ?? null,
+            ]);
+                        
+            $produk = Produk::find($request->produk_id);
+            $produk->update([
+                'stok' => $produk->stok - $request->qty,
+            ]);
+                        
+            $pengiriman = Pengiriman::create([
+                'id' => $request->id,
+                'order_id' => $order->id ?? null,
+                'pengiriman' => $request->pengiriman ?? null,
+                'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
+                'nama_pengirim' => $request->nama_pengirim ?? null
+            ]);
+
+            $secret_key = 'Basic '.config('xendit.key_auth');
+            $external_id = Str::random(10);
+            $data_request = Http::withHeaders([
+                'Authorization' => $secret_key
+            ])->post('https://api.xendit.co/v2/invoices', [
+                'external_id' => $external_id,
+                'amount' => $request->total_pembayaran
+            ]);
+
+            $response = $data_request->object();
+            
+            $tagihan = Tagihan::create([
+                'order_id' => $order->id,
+                'external_id' => $external_id,
+                'status' => $response->status,
+                'total_pembayaran' => $request->total_pembayaran,
+                'payment_link' => $response->invoice_url
+            ]);
+            $success = true;
+            $message = 'Data Order Berhasil Ditambahkan';
+
+            $res = [
+                'success' => $success,
+                'message' => $message,
+                'name' => $user->name,
+                'status' => $tagihan->status ?? null,
+                'total_pembayaran' => $tagihan->total_pembayaran ?? null,
+                'payment_link' => $tagihan->payment_link ?? null,
+            ];
+
+            if($response){
+                TLogApi::create([
+                    'k_t' => 'kirim',
+                    'object' => 'xendit',
+                    'data' => json_encode([
+                        'order' => $order,
+                        'orderitem' => $orderitem,
+                        'pengiriman' => $pengiriman,
+                        'responseData'=> $response
+                    ]),
+                    'result' => json_encode($res),
+                ]);
+            }
+
+            TLogApi::create([
+                'k_t' => 'terima',
+                'object' => 'mobile',
+                'data' => json_encode([
+                    'order' => $order,
+                    'orderitem' => $orderitem,
+                    'pengiriman' => $pengiriman,
+                    'responsedata' => $response,
+                ]),
+                'result' => json_encode($res),
+            ]);
+
+        } catch (Exception $e) {
+            $success = false;
+            $message = 'Data Order Gagal Ditambahkan';
+            $res = [
+                'success' => $success,
+                'message' => $message,
+                'name' => $user->name ?? null,
+                'status' => $tagihan->status ?? null,
+                'total_pembayaran' => $tagihan->total_pembayaran ?? null,
+                'payment_link' => $tagihan->payment_link ?? null,
+            ];
+            TLogApi::create([
+                'k_t' => 'terima',
+                'object' => 'mobile',
+                'data' => json_encode([
+                    'order' => [
+                        'id' => $request->id,
+                        'user_id' => $request->user_id ?? null
+                    ],
+                    'orderitem' => [
+                        'id' => $request->id,
+                        'order_id' => $order->id ?? null,
+                        'produk_id' => $request->produk_id ?? null,
+                        'qty' => $request->qty ?? null,
+                    ],
+                    'pengiriman' => [
+                        'id' => $request->id,
+                        'order_id' => $order->id ?? null,
+                        'pengiriman' => $request->pengiriman ?? null,
+                        'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
+                        'nama_pengirim' => $request->nama_pengirim ?? null    
+                    ],
+                    'responseData' => $response ?? null
+                ]),
+                'result' => json_encode($res),
+            ]);
+            
+        }
+        return response()->json($res);
+    }
+
+    public function callback_xendit(Request $request){
+        // dd(json_encode($request->all()));
+        $res = [
+            'success' => 'sukses',
+            'data' => json_encode($request->all())
+        ];
+        TLogApi::create([
+            'k_t' => 'terima',
+            'object' => 'xendit',
+            'data' => json_encode($request->all()),
+            'result' => json_encode($res)
+        ]);
+        return response()->json($res);
     }
 
 }
