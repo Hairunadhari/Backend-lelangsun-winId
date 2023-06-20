@@ -14,4 +14,9 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function tagihan()
+    {
+        return $this->hasOne(Tagihan::class);
+    }
 }

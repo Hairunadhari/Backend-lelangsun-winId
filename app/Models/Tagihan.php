@@ -9,4 +9,14 @@ class Tagihan extends Model
 {
     use HasFactory;
     protected $guarded = [''];
+
+    public function pembayaran()
+    {
+        return $this->hasMany(GambarProduk::class);
+    }
+
+    public function Order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }
