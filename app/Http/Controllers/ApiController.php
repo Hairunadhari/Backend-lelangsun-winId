@@ -545,39 +545,40 @@ class ApiController extends Controller
     }
 
     public function callback_xendit(Request $request){
-            $invoice = Tagihan::where('external_id', $request->external_id)->first();
-            if ($invoice == null) {
-                $failed = [
-                    'message' => 'FAILED'
-                ];
-                return response()->json($failed);
-            }
-            $invoice->update([
-                'status' => $request->status,
-            ]);
-            
-            Pembayaran::create([
-                'external_id' => $request->external_id,
-                'metode_pembayaran' => $request->payment_method,
-                'email_user' => '1',
-                'status' => $request->status,
-                'total_pembayaran' => $request->paid_amount,
-                'bank_code' => $request->bank_code,
-            ]);
-
-            $res = [
-                'message' => 'success',
-                'data' => json_encode($request->all())
+        $user = '1';
+        $invoice = Tagihan::where('external_id', $request->external_id)->first();
+        if ($invoice == null) {
+            $failed = [
+                'message' => 'FAILED'
             ];
-            
-            TLogApi::create([
-                'k_t' => 'terima',
-                'object' => 'xendit',
-                'data' => json_encode($request->all()),
-                'result' => json_encode($res)
-            ]);
-            return response()->json($res);
+            return response()->json($failed);
+        }
+        $invoice->update([
+            'status' => $request->status,
+        ]);
+        
+        Pembayaran::create([
+            'external_id' => $request->external_id,
+            'metode_pembayaran' => $request->payment_method,
+            'email_user' => '1',
+            'status' => $request->status,
+            'total_pembayaran' => $request->paid_amount,
+            'bank_code' => $request->bank_code,
+        ]);
 
-    }
+        $res = [
+            'message' => 'success',
+            'data' => json_encode($request->all())
+        ];
+        
+        TLogApi::create([
+            'k_t' => 'terima',
+            'object' => 'xendit',
+            'data' => json_encode($request->all()),
+            'result' => json_encode($res)
+        ]);
+        return response()->json($res);
+
+}
 
 }
