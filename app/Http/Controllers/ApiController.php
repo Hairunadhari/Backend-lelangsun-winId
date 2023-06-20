@@ -545,7 +545,7 @@ class ApiController extends Controller
     }
 
     public function callback_xendit(Request $request){
-        // dd(json_encode($request->all()));
+        
         $res = [
             'success' => 'sukses',
             'data' => json_encode($request->all())
