@@ -460,6 +460,7 @@ class ApiController extends Controller
             
             $tagihan = Tagihan::create([
                 'order_id' => $order->id,
+                'user_id' => $order->user_id,
                 'external_id' => $external_id,
                 'status' => $response->status,
                 'total_pembayaran' => $request->total_pembayaran,
@@ -561,7 +562,7 @@ class ApiController extends Controller
             'external_id' => $request->external_id,
             'metode_pembayaran' => $request->payment_method,
             'email_user' => '1',
-            'status' => $request->status,
+            'status' => $request->status, 
             'total_pembayaran' => $request->paid_amount,
             'bank_code' => $request->bank_code,
         ]);
