@@ -548,7 +548,7 @@ class ApiController extends Controller
         $invoice->update([
             'status' => $request->status,
         ]);
-        
+        $testing = 'null';
         Pembayaran::create([
             'external_id' => $request->external_id,
             'metode_pembayaran' => $request->payment_method,
