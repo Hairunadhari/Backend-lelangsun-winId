@@ -294,6 +294,7 @@ class ApiController extends Controller
             $success['token'] = $auth->createToken('auth_token')->plainTextToken;
             $success['name'] = $auth->name;
             $success['email'] = $auth->email;
+            $success['user_id'] = $auth->id;
 
             return response()->json([
                 'success' => true,
