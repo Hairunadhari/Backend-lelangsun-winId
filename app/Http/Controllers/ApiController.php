@@ -604,12 +604,34 @@ class ApiController extends Controller
         return response()->json([
             'data' => $produk
         ]);
-    }
+    }   
     
-    public function profil_toko($id){
-        $toko = Toko::find($id);
+     /**
+     * @OA\Get(
+     *      path="/api/info-akun/{id}",
+     *      tags={"Akun"},
+     *      summary="Informasi Akun",
+     *      description="menampilkan informasi akun berdasarkan id user yg di masukkan",
+     *      operationId="InfoAkun",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="masukkan id user",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function info_akun($id){
+        $user = User::find($id);
         return response()->json([
-            'data' => $toko
+            'data' => $user
         ]);
     }
 

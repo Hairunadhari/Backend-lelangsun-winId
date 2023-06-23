@@ -419,6 +419,32 @@
                     }
                 }
             }
+        },
+        "/api/info-akun/{id}": {
+            "get": {
+                "tags": [
+                    "Akun"
+                ],
+                "summary": "Informasi Akun",
+                "description": "menampilkan informasi akun berdasarkan id user yg di masukkan",
+                "operationId": "InfoAkun",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "masukkan id user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }
