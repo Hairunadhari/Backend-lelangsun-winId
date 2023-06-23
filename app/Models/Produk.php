@@ -26,4 +26,8 @@ class Produk extends Model
     {
         return $this->hasMany(ProdukPromo::class);
     }
+    public function orderitem()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

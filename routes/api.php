@@ -37,3 +37,6 @@ Route::post('/test-xendit', [ApiController::class, 'tes_xendit']);
 
 Route::post('/add-order', [ApiController::class, 'add_order']);
 Route::post('/callback-xendit', [ApiController::class, 'callback_xendit']);
+Route::get('/status-pesanan/{id}/', [ApiController::class, 'status_pesanan']);
+Route::get('/cari-produk/{name}/', [ApiController::class, 'cari_produk']);
+Route::get('/profil-toko/{id}/', [ApiController::class, 'profil_toko']);
