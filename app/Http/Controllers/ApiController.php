@@ -642,7 +642,6 @@ class ApiController extends Controller
         ]);
     }
 
-   
     public function status_pesanan($id){
         $data = Order::with('user', 'orderitem.produk')->find($id);
 
