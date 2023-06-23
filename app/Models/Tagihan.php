@@ -14,4 +14,9 @@ class Tagihan extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function pembayaran()
+    {
+        return $this->hasOne(Pembayaran::class);
+    }
 }

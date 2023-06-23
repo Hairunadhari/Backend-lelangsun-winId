@@ -6,6 +6,7 @@ use Exception;
 use Validator;
 use DateTimeZone;
 use Carbon\Carbon;
+use App\Models\Toko;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Produk;
@@ -78,8 +79,8 @@ class ApiController extends Controller
      * @OA\Get(
      *      path="/api/detailproduk/{id}",
      *      tags={"Produk"},
-     *      summary="Mendapatkan detail produk berdasarkan ID",
-     *      description="Mendapatkan detail produk berdasarkan ID yg diberikan",
+     *      summary="Menampilkan detail produk berdasarkan ID",
+     *      description="Menampilkan detail produk berdasarkan ID yg diberikan",
      *      operationId="DetailProduk",
      *       @OA\Parameter(
     *          name="id",
@@ -294,6 +295,7 @@ class ApiController extends Controller
             $success['token'] = $auth->createToken('auth_token')->plainTextToken;
             $success['name'] = $auth->name;
             $success['email'] = $auth->email;
+            $success['user_id'] = $auth->id;
 
             return response()->json([
                 'success' => true,
@@ -383,7 +385,7 @@ class ApiController extends Controller
      /**
      * @OA\Post(
      *      path="/api/add-order",
-     *      tags={"Order Produk"},
+     *      tags={"Order"},
      *      summary="Order",
      *      description="masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, nama pengirim/kurir, total pembayaran",
      *      operationId="Order",
@@ -448,7 +450,7 @@ class ApiController extends Controller
             ]);
 
             $secret_key = 'Basic '.config('xendit.key_auth');
-            $external_id = Str::random(10);
+            $external_id = Str::random(20);
             $data_request = Http::withHeaders([
                 'Authorization' => $secret_key
             ])->post('https://api.xendit.co/v2/invoices', [
@@ -476,6 +478,7 @@ class ApiController extends Controller
                 'status' => $tagihan->status ?? null,
                 'total_pembayaran' => $tagihan->total_pembayaran ?? null,
                 'payment_link' => $tagihan->payment_link ?? null,
+                'order_id' => $tagihan->id ?? null,
             ];
 
             if($response){
@@ -563,6 +566,7 @@ class ApiController extends Controller
             'status' => $request->status,
             'total_pembayaran' => $request->paid_amount,
             'bank_code' => $request->bank_code,
+            'tagihan_id' => $invoice->id,
         ]);
 
         $res = [
@@ -578,6 +582,61 @@ class ApiController extends Controller
         ]);
         return response()->json($res);
 
-}
+    }
 
+     /**
+     * @OA\Get(
+     *      path="/api/cari-produk/{name}",
+     *      tags={"Search Produk"},
+     *      summary="cari produk",
+     *      description="menampilkan produk berdasarkan nama produk yg di masukkan",
+     *      operationId="SearchProduk",
+     *       @OA\Parameter(
+    *          name="name",
+    *          in="path",
+    *          required=true,
+    *          description="masukkan nama produk",
+    *          @OA\Schema(
+    *              type="string"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function cari_produk($name){
+        $produk = Produk::where('nama','Like','%'.$name.'%')->get();
+        return response()->json([
+            'data' => $produk
+        ]);
+    }
+    
+    public function profil_toko($id){
+        $toko = Toko::find($id);
+        return response()->json([
+            'data' => $toko
+        ]);
+    }
+
+   
+    public function status_pesanan($id){
+        $data = Order::with('user', 'orderitem.produk')->find($id);
+
+        $produkArray = $data->orderitem->map(function ($item) {
+            $produk = $item->produk;
+
+            return [
+                'nama' => $produk->nama,
+                'harga' => $produk->harga,
+                'stok' => $produk->stok,
+            ];
+        });
+
+        return response()->json($produkArray);
+
+    }
+
+ 
 }

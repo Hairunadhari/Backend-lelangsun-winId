@@ -40,8 +40,8 @@
                 "tags": [
                     "Produk"
                 ],
-                "summary": "Mendapatkan detail produk berdasarkan ID",
-                "description": "Mendapatkan detail produk berdasarkan ID yg diberikan",
+                "summary": "Menampilkan detail produk berdasarkan ID",
+                "description": "Menampilkan detail produk berdasarkan ID yg diberikan",
                 "operationId": "DetailProduk",
                 "parameters": [
                     {
@@ -338,7 +338,7 @@
         "/api/add-order": {
             "post": {
                 "tags": [
-                    "Order Produk"
+                    "Order"
                 ],
                 "summary": "Order",
                 "description": "masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, nama pengirim/kurir, total pembayaran",
@@ -387,6 +387,32 @@
                         }
                     }
                 },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/cari-produk/{name}": {
+            "get": {
+                "tags": [
+                    "Search Produk"
+                ],
+                "summary": "cari produk",
+                "description": "menampilkan produk berdasarkan nama produk yg di masukkan",
+                "operationId": "SearchProduk",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "masukkan nama produk",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "default": {
                         "description": ""

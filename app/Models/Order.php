@@ -19,4 +19,8 @@ class Order extends Model
     {
         return $this->hasOne(Tagihan::class);
     }
+    public function orderitem()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }
