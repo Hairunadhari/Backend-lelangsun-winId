@@ -498,6 +498,36 @@
                     }
                 }
             }
+        },
+        "/api/list-banner-utama": {
+            "get": {
+                "tags": [
+                    "Banner"
+                ],
+                "summary": "List Banner Utama",
+                "description": "menampilkan semua banner utama",
+                "operationId": "banner utama",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/list-banner-diskon": {
+            "get": {
+                "tags": [
+                    "Banner"
+                ],
+                "summary": "List Banner Diskon",
+                "description": "menampilkan semua banner diskon",
+                "operationId": "banner diskon",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }

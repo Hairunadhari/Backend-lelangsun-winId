@@ -16,8 +16,10 @@ use App\Models\TLogApi;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
+use App\Models\BannerUtama;
 use App\Models\ProdukPromo;
 use Illuminate\Support\Str;
+use App\Models\BannerDiskon;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
@@ -699,6 +701,52 @@ class ApiController extends Controller
 
         return response()->json($produkArray);
 
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/list-banner-utama",
+     *      tags={"Banner"},
+     *      summary="List Banner Utama",
+     *      description="menampilkan semua banner utama",
+     *      operationId="banner utama",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function daftar_banner_utama(){
+        $data = BannerUtama::all();
+        $data->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/list-banner-diskon",
+     *      tags={"Banner"},
+     *      summary="List Banner Diskon",
+     *      description="menampilkan semua banner diskon",
+     *      operationId="banner diskon",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function daftar_banner_diskon(){
+        $data = BannerDiskon::all();
+        $data->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
+        return response()->json([
+            'data' => $data,
+        ]);
     }
 
  
