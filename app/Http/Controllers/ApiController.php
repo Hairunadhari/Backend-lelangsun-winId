@@ -16,8 +16,10 @@ use App\Models\TLogApi;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
+use App\Models\BannerUtama;
 use App\Models\ProdukPromo;
 use Illuminate\Support\Str;
+use App\Models\BannerDiskon;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
@@ -448,7 +450,7 @@ class ApiController extends Controller
                 'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
                 'nama_pengirim' => $request->nama_pengirim ?? null
             ]);
-
+            
             $secret_key = 'Basic '.config('xendit.key_auth');
             $external_id = Str::random(20);
             $data_request = Http::withHeaders([
@@ -642,21 +644,50 @@ class ApiController extends Controller
         ]);
     }
 
-    public function status_pesanan($id){
-        $data = Order::with('user', 'orderitem.produk')->find($id);
-
-        $produkArray = $data->orderitem->map(function ($item) {
-            $produk = $item->produk;
-
-            return [
-                'nama' => $produk->nama,
-                'harga' => $produk->harga,
-                'stok' => $produk->stok,
-            ];
+     /**
+     * @OA\Get(
+     *      path="/api/list-banner-utama",
+     *      tags={"Banner"},
+     *      summary="List Banner Utama",
+     *      description="menampilkan semua banner utama",
+     *      operationId="banner utama",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function daftar_banner_utama(){
+        $data = BannerUtama::all();
+        $data->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
         });
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
 
-        return response()->json($produkArray);
-
+     /**
+     * @OA\Get(
+     *      path="/api/list-banner-diskon",
+     *      tags={"Banner"},
+     *      summary="List Banner Diskon",
+     *      description="menampilkan semua banner diskon",
+     *      operationId="banner diskon",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function daftar_banner_diskon(){
+        $data = BannerDiskon::all();
+        $data->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
+        return response()->json([
+            'data' => $data,
+        ]);
     }
 
  

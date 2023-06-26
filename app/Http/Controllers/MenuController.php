@@ -8,8 +8,10 @@ use App\Models\Produk;
 use App\Models\Promosi;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
+use App\Models\BannerUtama;
 use App\Models\EventLelang;
 use App\Models\ProdukPromo;
+use App\Models\BannerDiskon;
 use App\Models\BarangLelang;
 use App\Models\GambarProduk;
 use App\Models\PembelianNpl;
@@ -761,8 +763,122 @@ class MenuController extends Controller
         return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
-    public function download_apk()
-    {
-       return view ('download-apk');
+    public function list_banner_utama(){
+        $data = BannerUtama::paginate(10);
+        return view('publikasi.banner_utama', compact('data'));
     }
+
+    public function add_banner_utama(Request $request){
+
+        $this->validate($request, [
+            'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
+        ]);
+
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
+        BannerUtama::create([
+            'gambar'     => $gambar->hashName(),
+        ]);
+
+        return redirect('/banner-utama')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_banner_utama($id)
+    {
+        $data = BannerUtama::findOrFail($id);
+
+        //render view with post
+        return view('publikasi.edit_banner_utama', compact('data'));
+    }
+
+    public function update_banner_utama(Request $request, $id)
+    {
+        $data = BannerUtama::findOrFail($id);
+
+        //check if image is uploaded
+        if ($request->hasFile('gambar')) {
+
+            //upload new image
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+
+            //delete old gambar
+            Storage::delete('public/image/'.$data->gambar);
+
+            //update post with new gambar
+            $data->update([
+                'gambar'     => $gambar->hashName(),
+            ]);
+
+        } 
+        return redirect()->route('banner-utama')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function delete_banner_utama($id)
+    {
+        $data = BannerUtama::findOrFail($id);
+        Storage::delete('public/image/'. $data->gambar);
+        $data->delete();
+        return redirect()->route('banner-utama')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function list_banner_diskon(){
+        $data = BannerDiskon::paginate(10);
+        return view('publikasi.banner_diskon', compact('data'));
+    }
+
+    public function add_banner_diskon(Request $request){
+
+        $this->validate($request, [
+            'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
+        ]);
+
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
+        BannerDiskon::create([
+            'gambar'     => $gambar->hashName(),
+        ]);
+
+        return redirect('/banner-diskon')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_banner_diskon($id)
+    {
+        $data = BannerDiskon::findOrFail($id);
+
+        //render view with post
+        return view('publikasi.edit_banner_diskon', compact('data'));
+    }
+
+    public function update_banner_diskon(Request $request, $id)
+    {
+        $data = BannerDiskon::findOrFail($id);
+
+        //check if image is uploaded
+        if ($request->hasFile('gambar')) {
+
+            //upload new image
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+
+            //delete old gambar
+            Storage::delete('public/image/'.$data->gambar);
+
+            //update post with new gambar
+            $data->update([
+                'gambar'     => $gambar->hashName(),
+            ]);
+
+        } 
+        return redirect()->route('banner-diskon')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function delete_banner_diskon($id)
+    {
+        $data = BannerDiskon::findOrFail($id);
+        Storage::delete('public/image/'. $data->gambar);
+        $data->delete();
+        return redirect()->route('banner-diskon')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
 }   
