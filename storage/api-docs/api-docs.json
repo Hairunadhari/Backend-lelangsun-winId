@@ -445,6 +445,59 @@
                     }
                 }
             }
+        },
+        "/api/update-akun/{id}": {
+            "put": {
+                "tags": [
+                    "Akun"
+                ],
+                "summary": "Update Akun",
+                "description": "Mengupdate data akun berdasarkan ID",
+                "operationId": "UpdateAkun",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Akun yang akan diupdate",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Data yang akan diupdate",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "no_telp",
+                                    "alamat"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "no_telp": {
+                                        "type": "integer"
+                                    },
+                                    "alamat": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }

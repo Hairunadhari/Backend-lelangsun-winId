@@ -441,6 +441,7 @@ class ApiController extends Controller
                 'nama_pengirim' => $request->nama_pengirim ?? null
             ]);
 
+            
             $secret_key = 'Basic '.config('xendit.key_auth');
             $external_id = Str::random(20);
             $data_request = Http::withHeaders([
@@ -631,6 +632,53 @@ class ApiController extends Controller
     public function info_akun($id){
         $user = User::find($id);
         return response()->json([
+            'data' => $user
+        ]);
+    }
+
+
+    /**
+     * @OA\Put(
+     *      path="/api/update-akun/{id}",
+    *      tags={"Akun"},
+    *      summary="Update Akun",
+    *      description="Mengupdate data akun berdasarkan ID",
+    *      operationId="UpdateAkun",
+    *      @OA\Parameter(
+    *          name="id",
+    *          description="ID Akun yang akan diupdate",
+    *          required=true,
+    *          in="path",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\RequestBody(
+    *          required=true,
+    *          description="Data yang akan diupdate",
+    *          @OA\JsonContent(
+    *              required={"name", "no_telp","alamat"},
+    *              @OA\Property(property="name", type="string"),
+    *              @OA\Property(property="no_telp", type="integer"),
+    *              @OA\Property(property="alamat", type="string"),
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function update_akun(Request $request, $id){
+        $user = User::find($id);
+        $user->update([
+            'name' => $request->name,
+            'no_telp' => $request->no_telp,
+            'alamat' => $request->alamat,
+        ]);
+
+        return response()->json([
+            'message' => 'SUCCESS',
             'data' => $user
         ]);
     }

@@ -40,3 +40,4 @@ Route::post('/callback-xendit', [ApiController::class, 'callback_xendit']);
 Route::get('/status-pesanan/{id}/', [ApiController::class, 'status_pesanan']);
 Route::get('/cari-produk/{name}/', [ApiController::class, 'cari_produk']);
 Route::get('/info-akun/{id}/', [ApiController::class, 'info_akun']);
+Route::put('/update-akun/{id}/', [ApiController::class, 'update_akun']);

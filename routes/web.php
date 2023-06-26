@@ -127,6 +127,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-barang-lelang/{id}/', [MenuController::class, 'edit_barang_lelang'])->name('edit-barang-lelang');
     Route::put('/update-barang-lelang/{id}/', [MenuController::class, 'update_barang_lelang'])->name('update-barang-lelang');
     Route::delete('/delete-barang-lelang/{id}/', [MenuController::class, 'delete_barang_lelang'])->name('delete-barang-lelang');
+    
+    // route publikasi
+    Route::get('/banner-utama', [MenuController::class, 'list_banner_utama'])->name('banner-utama');
+    Route::post('/add-banner-utama', [MenuController::class, 'add_banner_utama'])->name('add-banner-utama');
+    Route::get('/edit-banner-utama/{id}/', [MenuController::class, 'edit_banner_utama'])->name('edit-banner-utama');
+    Route::put('/update-banner-utama/{id}/', [MenuController::class, 'update_banner_utama'])->name('update-banner-utama');
+    Route::delete('/delete-banner-utama/{id}/', [MenuController::class, 'delete_banner_utama'])->name('delete-banner-utama');
+    Route::get('/banner-diskon', [MenuController::class, 'list_banner_diskon'])->name('banner-diskon');
+    Route::post('/add-banner-diskon', [MenuController::class, 'add_banner_diskon'])->name('add-banner-diskon');
+    Route::get('/edit-banner-diskon/{id}/', [MenuController::class, 'edit_banner_diskon'])->name('edit-banner-diskon');
+    Route::put('/update-banner-diskon/{id}/', [MenuController::class, 'update_banner_diskon'])->name('update-banner-diskon');
+    Route::delete('/delete-banner-diskon/{id}/', [MenuController::class, 'delete_banner_diskon'])->name('delete-banner-diskon');
 
 });
 
