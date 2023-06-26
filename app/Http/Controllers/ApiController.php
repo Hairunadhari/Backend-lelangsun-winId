@@ -328,6 +328,9 @@ class ApiController extends Controller
      */
     public function daftar_promo(){
         $promosi = Promosi::where('status', 'sedang berlangsung')->get();
+        $promosi->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
         return response()->json([
             'promosi' => $promosi,
         ]);
@@ -357,24 +360,18 @@ class ApiController extends Controller
      */
     public function detail_promosi($id){
         $datapromosi = Promosi::find($id);
-        $detailprodukpromosi = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
+        $datapromosi->gambar =  url('https://backendwin.spero-lab.id/storage/image/' . $datapromosi->gambar);
+
+        $detailproduk = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
+        $detailproduk->each(function ($item){
+            $item->produk->thumbnail =  url('https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail);
+        });
         return response()->json([
             'datapromosi' => $datapromosi,
-            'detailprodukpromosi' => $detailprodukpromosi,
+            'detailproduk' => $detailproduk,
         ]);
     }
 
-    public function tes_xendit(Request $request){
-        var_dump(json_encode($request));
-        Storage::disk('local')->put('response-xendit.txt', json_encode($request));
-    }
-    
-    public function show_xendit(){
-        $myfile = fopen("response-xendit.txt", "r") or die("Unable to open file!");
-        echo fread($myfile,filesize("response-xendit.txt"));
-        fclose($myfile);
-    }
-    
 
      /**
      * @OA\Post(
