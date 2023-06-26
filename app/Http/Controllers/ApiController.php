@@ -360,29 +360,18 @@ class ApiController extends Controller
      */
     public function detail_promosi($id){
         $datapromosi = Promosi::find($id);
-            $datapromosi->gambar =  url('https://backendwin.spero-lab.id/storage/image/' . $datapromosi->gambar);
-        
+        $datapromosi->gambar =  url('https://backendwin.spero-lab.id/storage/image/' . $datapromosi->gambar);
+
         $detailproduk = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
         $detailproduk->each(function ($item){
             $item->produk->thumbnail =  url('https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail);
         });
         return response()->json([
             'datapromosi' => $datapromosi,
-            'detailprodukpromosi' => $detailprodukpromosi,
+            'detailproduk' => $detailproduk,
         ]);
     }
 
-    public function tes_xendit(Request $request){
-        var_dump(json_encode($request));
-        Storage::disk('local')->put('response-xendit.txt', json_encode($request));
-    }
-    
-    public function show_xendit(){
-        $myfile = fopen("response-xendit.txt", "r") or die("Unable to open file!");
-        echo fread($myfile,filesize("response-xendit.txt"));
-        fclose($myfile);
-    }
-    
 
      /**
      * @OA\Post(
@@ -452,12 +441,16 @@ class ApiController extends Controller
             ]);
             
             $secret_key = 'Basic '.config('xendit.key_auth');
-            $external_id = Str::random(20);
+            $timestamp = time();
+            $strRandom = Str::random(5);
+            $external_id = "invoice-win-{$timestamp}-{$strRandom}";
+
             $data_request = Http::withHeaders([
                 'Authorization' => $secret_key
             ])->post('https://api.xendit.co/v2/invoices', [
                 'external_id' => $external_id,
-                'amount' => $request->total_pembayaran
+                'amount' => $request->total_pembayaran,
+                'payer_email' => $user->email
             ]);
 
             $response = $data_request->object();
