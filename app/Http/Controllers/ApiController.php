@@ -445,12 +445,16 @@ class ApiController extends Controller
 
             
             $secret_key = 'Basic '.config('xendit.key_auth');
-            $external_id = Str::random(20);
+            $timestamp = time();
+            $strRandom = Str::random(5);
+            $external_id = "invoice-win-{$timestamp}-{$strRandom}";
+
             $data_request = Http::withHeaders([
                 'Authorization' => $secret_key
             ])->post('https://api.xendit.co/v2/invoices', [
                 'external_id' => $external_id,
-                'amount' => $request->total_pembayaran
+                'amount' => $request->total_pembayaran,
+                'payer_email' => $user->email
             ]);
 
             $response = $data_request->object();
@@ -554,7 +558,6 @@ class ApiController extends Controller
         $invoice->update([
             'status' => $request->status,
         ]);
-        $testing = 'null';
         Pembayaran::create([
             'external_id' => $request->external_id,
             'metode_pembayaran' => $request->payment_method,
