@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
 use App\Models\BannerDiskon;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
+use App\Models\BannerSpesial;
 use App\Models\KategoriProduk;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -741,6 +742,28 @@ class ApiController extends Controller
      */
     public function daftar_banner_diskon(){
         $data = BannerDiskon::all();
+        $data->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+     /**
+     * @OA\Get(
+     *      path="/api/list-banner-spesial",
+     *      tags={"Banner"},
+     *      summary="List Banner Spesial",
+     *      description="menampilkan semua banner spesial",
+     *      operationId="banner spesial",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function daftar_banner_spesial(){
+        $data = BannerSpesial::all();
         $data->each(function ($item) {
             $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
         });

@@ -44,3 +44,4 @@ Route::put('/update-akun/{id}/', [ApiController::class, 'update_akun']);
 
 Route::get('/list-banner-utama', [ApiController::class, 'daftar_banner_utama']);
 Route::get('/list-banner-diskon', [ApiController::class, 'daftar_banner_diskon']);
+Route::get('/list-banner-spesial', [ApiController::class, 'daftar_banner_spesial']);

@@ -16,6 +16,7 @@ use App\Models\BarangLelang;
 use App\Models\GambarProduk;
 use App\Models\PembelianNpl;
 use Illuminate\Http\Request;
+use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use Illuminate\Support\Facades\Storage;
@@ -881,6 +882,65 @@ class MenuController extends Controller
         Storage::delete('public/image/'. $data->gambar);
         $data->delete();
         return redirect()->route('banner-diskon')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function list_banner_spesial(){
+        $data = BannerSpesial::paginate(10);
+        return view('publikasi.banner_spesial', compact('data'));
+    }
+
+    public function add_banner_spesial(Request $request){
+
+        $this->validate($request, [
+            'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
+        ]);
+
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
+        BannerSpesial::create([
+            'gambar'     => $gambar->hashName(),
+        ]);
+
+        return redirect('/banner-spesial')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_banner_spesial($id)
+    {
+        $data = BannerSpesial::findOrFail($id);
+
+        //render view with post
+        return view('publikasi.edit_banner_spesial', compact('data'));
+    }
+
+    public function update_banner_spesial(Request $request, $id)
+    {
+        $data = BannerSpesial::findOrFail($id);
+
+        //check if image is uploaded
+        if ($request->hasFile('gambar')) {
+
+            //upload new image
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+
+            //delete old gambar
+            Storage::delete('public/image/'.$data->gambar);
+
+            //update post with new gambar
+            $data->update([
+                'gambar'     => $gambar->hashName(),
+            ]);
+
+        } 
+        return redirect()->route('banner-spesial')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function delete_banner_spesial($id)
+    {
+        $data = BannerSpesial::findOrFail($id);
+        Storage::delete('public/image/'. $data->gambar);
+        $data->delete();
+        return redirect()->route('banner-spesial')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
 }   

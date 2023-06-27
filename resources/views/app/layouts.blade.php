@@ -217,6 +217,7 @@
               <ul class="dropdown-menu">
                 <li class="{{ request()->routeIs('banner-utama') ? 'active' : '' }}"><a class="nav-link " href="{{route('banner-utama')}}">Banner Utama</a></li>
                 <li class="{{ request()->routeIs('banner-diskon') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-diskon')}}">Banner Diskon</a></li>
+                <li class="{{ request()->routeIs('banner-spesial') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-spesial')}}">Banner Spesial</a></li>
               </ul>
             </li>
             <li class="dropdown {{ request()->routeIs(['toko', 'kategori-produk', 'produk', 'order', 'pembayaran', 'pengiriman','promosi']) ? 'active' : '' }}">
