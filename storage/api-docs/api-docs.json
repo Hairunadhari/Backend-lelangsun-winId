@@ -528,6 +528,21 @@
                     }
                 }
             }
+        },
+        "/api/list-banner-spesial": {
+            "get": {
+                "tags": [
+                    "Banner"
+                ],
+                "summary": "List Banner Spesial",
+                "description": "menampilkan semua banner spesial",
+                "operationId": "banner spesial",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }

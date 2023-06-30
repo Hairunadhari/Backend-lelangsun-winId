@@ -1,18 +1,16 @@
 @extends('app.layouts')
 @section('content')
-
-<div class="section-header">
-    <h1>Data Publikasi</h1>
-</div>
-<div class="section-body">
-    <div class="card">
-        <div class="card-header">
-            <h4>Daftar Banner Utama</h4>
-        </div>
-        <form action="" method="post">
-            
-        </form>
-        <div class="card-body">
+  <div class="section-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="w-100">Daftar Banner Utama</h4>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+                <span class="text">+ Tambah</span>
+            </button>
+          </div>
+          <div class="card-body">
             @if(session('success'))
             <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
                 <strong>{{ session('success') }}</strong>
@@ -21,61 +19,61 @@
                 </button>
             </div>
             @endif
-            <div class="row">
-                <div class="col-7">
-                    <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#exampleModal">
-                        <span class="text">+ Tambah</span>
-                    </button>
-                </div>
-                <div class="col-5">
-                    {{-- <form>
-                        <div class="input-group">
-                          <input type="text" id="cari" name="cari" class="form-control" placeholder="Search...">
-                          <div class="input-group-btn">
-                          </div>
-                        </div>
-                      </form> --}}
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Gambar</th>
-                            <th scope="col">Opsi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="alldata">
-                        @forelse ($data as $index => $d)
-                        <tr>
-                            <td>{{$index + $data->firstItem()}}</td>
-                            <td>
-                                <img src="{{ asset('/storage/image/'.$d->gambar) }}" class="rounded m-2" style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
-                            </td>
-                            <td>
-                                    <form action="{{route('delete-banner-utama', $d->id)}}" method="POST"
-                                        onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                                            <span><a class="btn btn-primary" href="{{ route('edit-banner-utama', $d->id) }}"><i
-                                                    class="far fa-edit"></i>Edit</a></span>
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-danger " type="submit"><i
-                                                    class="far fa-trash-alt"></i> Hapus</button>
-                                    </form>
-                            </td>
-                        </tr>
-                        @empty
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            <div style="margin-left:20px">
-                {{ $data->links() }}
-            </div>
+              <table class="table table-striped" id="tablebanner-1">
+                <thead>                                 
+                  <tr>
+                    <th>No</th>
+                    <th>Gambar</th>
+                    <th>Opsi</th>
+                  </tr>
+                </thead>
+                <tbody>                                 
+                </tbody>
+              </table>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function () {
+        $('#tablebanner-1').DataTable({
+            processing: true,
+            ordering: false,
+            fixedColumns: true,
+            // fixedHeader: true,
+        ajax: '{{ url()->current() }}',
+        columns: [
+          {
+             render: function (data, type, row, meta) {
+               return meta.row + meta.settings._iDisplayStart + 1;
+             },
+          },
+          { 
+            data: "gambar",
+            render: function (data) {
+              return '<img src="/storage/image/' + data + '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
+            },
+          },
+          {
+            data: null,
+            render: function (data) {
+              var deleteUrl = '/delete-banner-utama/' + data.id;
+              var editUrl = '/edit-banner-utama/' + data.id;
+              return `
+                <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                  <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
+                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+                </form>
+              `;
+            },
+          },
+        ],
+      });
+    });
+  </script>
 @endsection
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -112,9 +110,6 @@
             [].forEach.call(this.files, readAndPreview);
         }
         function readAndPreview(file) {
-            if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
-                return alert(file.name + " is not an image");
-            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();
@@ -132,5 +127,3 @@
         document.querySelector('#preview').innerHTML = '';
     });
 </script>
-
-<!-- /.container-fluid -->

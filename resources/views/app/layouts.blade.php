@@ -212,7 +212,7 @@
               <a href="{{route('dashboard')}}" class="nav-link"><i class="fas fa-th"></i><span>Dashboard</span></a>
             </li>
             <li class="menu-header">Menu SuperAdmin</li>
-            <li class="dropdown {{ request()->routeIs(['toko', 'kategori-produk', 'produk', 'order', 'pembayaran', 'pengiriman','promosi','banner-utama','banner-diskon']) ? 'active' : '' }}">
+            <li class="dropdown {{ request()->routeIs(['banner-utama','banner-diskon','banner-spesial']) ? 'active' : '' }}">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-large"></i> <span>Publikasi</span></a>
               <ul class="dropdown-menu">
                 <li class="{{ request()->routeIs('banner-utama') ? 'active' : '' }}"><a class="nav-link " href="{{route('banner-utama')}}">Banner Utama</a></li>

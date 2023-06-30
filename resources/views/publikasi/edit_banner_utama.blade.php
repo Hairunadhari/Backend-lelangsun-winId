@@ -5,11 +5,7 @@
             box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     }
 </style>
-<div class="section-header">
-    <h1>Data Publikasi</h1>
-</div>
 <!-- Begin Page Content -->
-<div class="container-fluid">
     <div class="card">
         <div class="card-header">
             <h4>Edit Banner</h4>
@@ -34,7 +30,6 @@
             </div>
         </form>
     </div>
-</div>
 <script>
     function previewImages() {
         var preview = document.querySelector('#preview');

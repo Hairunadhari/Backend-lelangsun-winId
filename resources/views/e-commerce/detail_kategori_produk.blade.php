@@ -1,9 +1,9 @@
 @extends('app.layouts')
 @section('content')
-<div class="section-header">
-  <h1>Data E-commerce</h1>
+<div class="card">
+  <div class="card-header">
+    <h4 class="w-100">Detail Kategori Produk</h4>
 </div>
-<div class="card m-auto" style="width: 50rem;">
     <div class="card-body">
       <form>
         <div class="form-group">
@@ -13,7 +13,7 @@
         <div class="form-group">
           <label for="exampleInputEmail1">Gambar:</label>
           <br>
-          <img src="{{ asset('storage/image/'.$data->gambar) }}" width="150">
+          <img src="{{ asset('storage/image/'.$data->gambar) }}"  style="width:700px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px;">
         </div>
       </form>
     </div>

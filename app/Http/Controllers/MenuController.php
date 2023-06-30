@@ -20,6 +20,7 @@ use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use Illuminate\Support\Facades\Storage;
+use DataTables;
 
 class MenuController extends Controller
 {
@@ -28,8 +29,11 @@ class MenuController extends Controller
     }
 
     public function list_toko(){
-        $data = Toko::paginate(10);
-        return view('e-commerce/list_toko', compact('data'));
+        if (request()->ajax()) {
+            $data = Toko::all();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/list_toko');
     }
 
     public function add_toko(Request $request){
@@ -102,8 +106,11 @@ class MenuController extends Controller
     }
 
     public function kategori_produk(){
-        $data = KategoriProduk::paginate(10);
-        return view('e-commerce/kategori_produk', compact('data'));
+        if (request()->ajax()) {
+            $data = KategoriProduk::all();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/kategori_produk');
     }
 
     public function add_kategori_produk(Request $request){
@@ -767,8 +774,11 @@ class MenuController extends Controller
     }
 
     public function list_banner_utama(){
-        $data = BannerUtama::paginate(10);
-        return view('publikasi.banner_utama', compact('data'));
+        if (request()->ajax()) {
+            $data = BannerUtama::all();
+            return DataTables::of($data)->make();
+        }
+        return view('publikasi.banner_utama');
     }
 
     public function add_banner_utama(Request $request){
@@ -826,8 +836,11 @@ class MenuController extends Controller
     }
 
     public function list_banner_diskon(){
-        $data = BannerDiskon::paginate(10);
-        return view('publikasi.banner_diskon', compact('data'));
+        if (request()->ajax()) {
+            $data = BannerDiskon::all();
+            return DataTables::of($data)->make();
+        }
+        return view('publikasi.banner_diskon');
     }
 
     public function add_banner_diskon(Request $request){
@@ -885,8 +898,11 @@ class MenuController extends Controller
     }
 
     public function list_banner_spesial(){
-        $data = BannerSpesial::paginate(10);
-        return view('publikasi.banner_spesial', compact('data'));
+        if (request()->ajax()) {
+            $data = BannerSpesial::all();
+            return DataTables::of($data)->make();
+        }
+        return view('publikasi.banner_spesial');
     }
 
     public function add_banner_spesial(Request $request){
