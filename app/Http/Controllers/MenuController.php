@@ -206,10 +206,13 @@ class MenuController extends Controller
     }
 
     public function list_produk(){
-        $data = Produk::with('toko','kategoriproduk')->paginate(10);
         $dataToko = Toko::all();
         $dataKategoriproduk = KategoriProduk::all();
-        return view('e-commerce/list_produk', compact('data','dataToko','dataKategoriproduk'));
+        if (request()->ajax()) {
+            $data = Produk::all();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/list_produk', compact('dataToko','dataKategoriproduk'));
     }
 
     public function add_produk(Request $request){
@@ -449,8 +452,11 @@ class MenuController extends Controller
     }
 
     public function list_promosi(){
-        $data = Promosi::with('produkpromo')->paginate();
-        return view('e-commerce/list_promosi', compact('data'));
+        if (request()->ajax()) {
+            $data = Promosi::all();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/list_promosi');
     }
 
     public function form_input_promosi(){
@@ -502,14 +508,17 @@ class MenuController extends Controller
     public function detail_promosi($id)
     {
         $data = Promosi::find($id);
-        $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->paginate(5);
-        return view('e-commerce.detail_promosi', compact('data','produkPromo'));
+        if (request()->ajax()) {
+            $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->get();
+            return DataTables::of($produkPromo)->make();
+        }
+        return view('e-commerce.detail_promosi', compact('data'));
     }
 
     public function edit_promosi($id)
     {
         $data = Promosi::find($id);
-        $produk = Produk::all();
+        $produk = Produk::orderBy('nama', 'asc')->get();
         $produkPromo = ProdukPromo::where('promosi_id',$id)->get();
         $produkTerpilih = [];
 

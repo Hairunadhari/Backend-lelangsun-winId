@@ -8,12 +8,7 @@
     }
 
 </style>
-<!-- Begin Page Content -->
-<div class="section-header">
-    <h1>Data E-commerce</h1>
-</div>
 <div class="section-body">
-    <div class="container-fluid">
         <form action="{{route('updateproduk', $data->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -101,7 +96,6 @@
                     <button class="btn btn-primary mr-1" type="submit">Simpan</button>
                 </div>
         </form>
-    </div>
 </div>
 </div>
 <script>

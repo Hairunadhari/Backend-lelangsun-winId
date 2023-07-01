@@ -1,86 +1,63 @@
 @extends('app.layouts')
 @section('content')
-<style>
-    nav {
-        margin-left: auto;
-    }
-
-</style>
-<div class="section-header">
-    <h1>Data E-commerce</h1>
-</div>
 <div class="section-body">
     <div class="card">
         <div class="card-header">
             <h4>Detail Promo Produk</h4>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="tabel1">
-                    <div class="form-group">
-                        <label>Nama Promo</label>
-                        <input type="text" class="form-control" name="promosi" value="{{$data->promosi}}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Deskripsi</label>
-                        <input type="text" class="form-control" name="promosi" value="{{$data->deskripsi}}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Diskon</label>
-                        <input type="text" class="form-control" name="promosi" value="{{$data->diskon}}%" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Tanggal Mulai</label>
-                        <input type="text" class="form-control" name="promosi" value="{{$data->tanggal_mulai}}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Tanggal Selesai</label>
-                        <input type="text" class="form-control" name="promosi" value="{{$data->tanggal_selesai}}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <input type="text" class="form-control" name="promosi" value="{{$data->status}}" readonly>
-                    </div>
-                    <thead style="position: sticky; top: 0; background-color: white;">
+                <div class="form-group">
+                    <label>Nama Promo</label>
+                    <input type="text" class="form-control" name="promosi" value="{{$data->promosi}}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <input type="text" class="form-control" name="promosi" value="{{$data->deskripsi}}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Diskon</label>
+                    <input type="text" class="form-control" name="promosi" value="{{$data->diskon}}%" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Mulai</label>
+                    <input type="text" class="form-control" name="promosi" value="{{$data->tanggal_mulai}}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Selesai</label>
+                    <input type="text" class="form-control" name="promosi" value="{{$data->tanggal_selesai}}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <input type="text" class="form-control" name="promosi" value="{{$data->status}}" readonly>
+                </div>
+                <label for="">Produk :</label>
+                <table class="table table-striped" id="tabeldetailpromosi">
+                    <thead >
                         <tr>
                             <th>No</th>
                             <th>Nama Produk</th>
-                            <th>Gambar Produk</th>
+                            <th>Cover Produk</th>
                             <th>Harga Produk</th>
                             <th>Harga Diskon</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($produkPromo as $produk => $item)
-                        <tr>
-                            <td>{{$produk + $produkPromo->firstItem()}}</td>
-                            <td>{{$item->produk->nama}}</td>
-                            <td>
-                                <img src="{{ asset('/storage/image/'.$item->produk->thumbnail) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
-                            </td>
-                            <td><s>Rp. {{number_format($item->produk->harga)}}</s></td>
-                            <td>Rp. {{number_format($item->total_diskon)}}</td>
-                        </tr>
-                        @endforeach
                     </tbody>
                 </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>Media</h4>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label>Gambar Promo</label>
+                <br>
+                <img class="ms-auto" src="{{ asset('storage/image/'.$data->gambar) }}" style="width:700px">
             </div>
-            <div class="row">{{ $produkPromo->links() }}
         </div>
     </div>
-</div>
-<div class="card">
-    <div class="card-header">
-        <h4>Media</h4>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <label>Gambar Promo</label>
-            <br>
-            <img class="ms-auto" src="{{ asset('storage/image/'.$data->gambar) }}" style="width:700px">
-        </div>
-    </div>
-</div>
 </div>
 
 
@@ -95,5 +72,42 @@
         });
     });
 
+    $(document).ready(function () {
+        $('#tabeldetailpromosi').DataTable({
+            processing: false,
+            ordering: false,
+            fixedColumns: true,
+            searching: false,
+            ajax: '{{ url()->current() }}',
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "produk.nama",
+                },
+                {
+                    data: "produk.thumbnail",
+                    render: function (data) {
+                        return '<img src="/storage/image/' + data +
+                            '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
+                    },
+                },
+                {
+                    data: "produk.harga",
+                    render: function (data) {
+                        return '<s>' + 'Rp.' +  data + '</s>';
+                    }
+                },
+                {
+                    data: "total_diskon",
+                    render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. '),
+                }
+            ],
+        });
+    });
+    
 </script>
 @endsection
+{{-- // <s>Rp. {{number_format($item->produk->harga)}}</s> --}}

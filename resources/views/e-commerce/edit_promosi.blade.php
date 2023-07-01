@@ -1,24 +1,11 @@
 @extends('app.layouts')
 @section('content')
 <style>
-    nav {
-        margin-left: auto;
-    }
-
     .my-custom-scrollbar {
-        position: relative;
-        height: 300px;
-        overflow: auto;
+        height:500px;
+        overflow: scroll;
     }
-
-    .table-wrapper-scroll-y {
-        display: block;
-    }
-
 </style>
-<div class="section-header">
-    <h1>Data E-commerce</h1>
-</div>
 <div class="section-body">
     <form action="{{route('updatepromosi', $data->id)}}" method="post" enctype="multipart/form-data">
         @csrf
@@ -65,6 +52,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="pilihsemua"></th>
                                     <th>Nama Produk</th>
+                                    <th>Cover Produk</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,7 +60,8 @@
                                 <tr>
                                     <td><input type="checkbox" name="produk_id[]" value="{{$p->id}}"
                                             {{isset($produkTerpilih[$p->id])?"checked":""}}></td>
-                                    <td>{{$p->nama}}</td>
+                                    <td>{{strtoupper($p->nama)}}</td>
+                                    <td><img class="ms-auto" src="{{ asset('storage/image/'.$p->thumbnail) }}" style="width:100px"></td>
                                 </tr>
                                 @empty
                                 @endforelse

@@ -6,9 +6,6 @@
         overflow: scroll;
     }
 </style>
-<div class="section-header">
-    <h1>Data E-commerce</h1>
-</div>
 <div class="section-body">
     <div class="card">
         <div class="card-header">

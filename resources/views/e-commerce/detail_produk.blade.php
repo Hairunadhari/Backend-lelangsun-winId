@@ -2,11 +2,11 @@
 @section('content')
 <style>
 </style>
-<div class="section-header">
-    <h1>Data E-commerce</h1>
-</div>
 <div class="section-body">
-    <div class="card m-auto" style="width: 50rem;">
+    <div class="card">
+        <div class="card-header">
+            <h4>Detail Produk</h4>
+        </div>
         <div class="card-body">
             <form>
                 <div class="form-group">
