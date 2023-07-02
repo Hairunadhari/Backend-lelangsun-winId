@@ -2,7 +2,7 @@
 @section('content')
 <style>
     .scroll{
-        height:400px;
+        height:500px;
         overflow: scroll;
     }
 </style>
@@ -12,6 +12,14 @@
             <h4>Input Promo Produk</h4>
         </div>
         <div class="card-body">
+            @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ session('error') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
             <form action="{{route('addpromosi')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="table-responsive">

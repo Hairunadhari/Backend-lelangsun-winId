@@ -45,10 +45,10 @@
                         <label>Tanggal Selesai</label>
                         <input type="date" class="form-control" name="tanggal_selesai" value="{{$data->tanggal_selesai}}">
                     </div>
+                    <label for="">Pilih Produk :</label>
                     <div class="table-wrapper-scroll-y my-custom-scrollbar">
                         <table class="table table-bordered" id="tabel1">
                             <thead style="position: sticky; top: 0; background-color: white;">
-                                <label for="">Pilih Produk :</label>
                                 <tr>
                                     <th><input type="checkbox" id="pilihsemua"></th>
                                     <th>Nama Produk</th>

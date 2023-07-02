@@ -452,6 +452,25 @@ class MenuController extends Controller
     }
 
     public function list_promosi(){
+
+        $datapromosi = Promosi::all();
+
+        foreach ($datapromosi as $datapromo) {
+            $tgl_mulai = $datapromo->tanggal_mulai;
+            $tgl_selesai = $datapromo->tanggal_selesai;
+            $today = now()->toDateString();
+            
+            if ($tgl_mulai <= $today && $tgl_selesai >= $today) {
+                $datapromo->update([
+                    'status' => 'sedang berlangsung',
+                ]);
+            } elseif ($tgl_mulai < $today && $tgl_selesai < $today) {
+                $datapromo->update([
+                    'status' => 'selesai',
+                ]);
+            }
+        }
+
         if (request()->ajax()) {
             $data = Promosi::all();
             return DataTables::of($data)->make();
@@ -464,44 +483,41 @@ class MenuController extends Controller
         return view('e-commerce.tambah_promosi', compact('produk'));
     }
 
-    
-
     public function add_promosi(Request $request){
-        // dd($request);
         $this->validate($request, [
             'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
         ]);
-
-        $hapuspersendiskon = preg_replace('/\D/', '', $request->diskon); 
-        $diskon = trim($hapuspersendiskon);
-
-        $produkId = $request->produk_id;
-        $gambar = $request->file('gambar');
-        $gambar->storeAs('public/image', $gambar->hashName());
-
-        $promosi = Promosi::create([
-            'promosi'     => $request->promosi,
-            'deskripsi'     => $request->deskripsi,
-            'diskon'     => $diskon,
-            'tanggal_mulai'     => $request->tanggal_mulai,
-            'tanggal_selesai'     => $request->tanggal_selesai,
-            'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
-            'gambar'     => $gambar->hashName(),
-        ]);
-        
-        
-        $dataProduk = Produk::whereIn('id', $produkId)->get();
-
-        foreach ($dataProduk as $produk) {
-            $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
-        
-            ProdukPromo::create([
-                'promosi_id' => $promosi->id,
-                'produk_id' => $produk->id,
-                'total_diskon' => $hargadiskon,
+        if (is_null($request->produk_id)) {
+            return redirect()->back()->with('error', 'Anda belum memilih produk!');
+        }else {
+            
+            $hapuspersendiskon = preg_replace('/\D/', '', $request->diskon); 
+            $diskon = trim($hapuspersendiskon);
+            $produkId = $request->produk_id;
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+            
+            $promosi = Promosi::create([
+                'promosi'     => $request->promosi,
+                'deskripsi'     => $request->deskripsi,
+                'diskon'     => $diskon,
+                'tanggal_mulai'     => $request->tanggal_mulai,
+                'tanggal_selesai'     => $request->tanggal_selesai,
+                'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
+                'gambar'     => $gambar->hashName(),
             ]);
+            
+            $dataProduk = Produk::whereIn('id', $produkId)->get();
+            foreach ($dataProduk as $produk) {
+                $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
+                ProdukPromo::create([
+                    'promosi_id' => $promosi->id,
+                    'produk_id' => $produk->id,
+                    'total_diskon' => $hargadiskon,
+                ]);
+            }
+            
         }
-
         return redirect('/promosi')->with('success', 'Data Berhasil ditambahkan');
     }
 
