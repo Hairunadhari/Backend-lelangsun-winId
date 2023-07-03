@@ -53,6 +53,8 @@
                             badge = `<span class="badge badge-primary">PENDING</span>`
                         } else if (data == "PAID") {
                             badge = `<span class="badge badge-success">PAID</span>`
+                        } else if(data == "EXPIRED"){
+                            badge = `<span class="badge badge-light">EXPIRED</span>`
                         }
                         return badge;
                     }
