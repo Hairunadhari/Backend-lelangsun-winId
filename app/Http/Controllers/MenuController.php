@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use DataTables;
 use App\Models\Toko;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
+use App\Models\Tagihan;
+use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\BannerUtama;
@@ -20,7 +23,6 @@ use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use Illuminate\Support\Facades\Storage;
-use DataTables;
 
 class MenuController extends Controller
 {
@@ -192,10 +194,14 @@ class MenuController extends Controller
         return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Dihapus!']);
     }
    
-    public function list_order(){
-        $data = Order::with('user')->paginate(10);
-        return view('e-commerce/list_order', compact('data'));
+    public function list_pesanan(){
+        if (request()->ajax()) {
+            $data = Order::with('user','orderitem','tagihan')->get();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/list_pesanan');
     }
+    
     public function list_pembayaran(){
         $data = Pembayaran::all();
         return view('e-commerce/list_pembayaran', compact('data'));
@@ -644,45 +650,6 @@ class MenuController extends Controller
         return redirect()->route('promosi')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
-    public function cari_toko(Request $request){
-        $toko = Toko::where('toko','Like','%'.$request->cari.'%')->orWhere('logo','Like','%'.$request->cari.'%')->get();
-
-        $output= "";
-        $url = asset('/storage/image/');
-        $nomor = 1;
-
-        foreach ($toko as $data) {
-            $output.= 
-            '<tr>
-                <td>'.$nomor++.'</td>
-                <td>'.ucfirst($data->toko).'</td>
-                <td><img src="'.$url.'/'.$data->logo.'" class="rounded" style="width: 100px"></td>
-                <td>
-                    <div class="dropdown d-inline">
-                        <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer"
-                            id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"></i>
-                            <form action="'.route('deletetoko', $data->id).'" method="POST"
-                            onsubmit="return confirm(\'Apakah anda yakin akan menghapus data ini ?\');">
-                            <div class="dropdown-menu" x-placement="bottom-start"
-                                style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item has-icon" href="'.route('detailtoko',$data->id).'"><i
-                                        class="fas fa-info-circle"></i>Detail</a>
-                                <a class="dropdown-item has-icon" href="'. route('edittoko', $data->id) .'"><i
-                                        class="far fa-edit"></i>Edit</a>
-                                '.csrf_field().'
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button class="btn btn-danger " style="margin-left: 20px;" type="submit"><i
-                                        class="far fa-trash-alt"></i> Hapus</button>
-                            </div>
-                        </form>
-                    </div>
-                </td>
-            </tr>';
-        }
-        return response($output);
-    }
-
     public function list_kategori_lelang(){
         $data = KategoriBarang::paginate(10);
         return view('lelang/list_kategori', compact('data'));
@@ -982,6 +949,14 @@ class MenuController extends Controller
         Storage::delete('public/image/'. $data->gambar);
         $data->delete();
         return redirect()->route('banner-spesial')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function detail_pesanan($id){
+        $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
+        $pengiriman = Pengiriman::where('order_id', $id)->first();
+        $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
+        // dd($tagihan);
+        return view('e-commerce.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
     }
 
 }   

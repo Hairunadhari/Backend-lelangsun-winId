@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Exception;
 use Validator;
 use DateTimeZone;
@@ -456,14 +457,17 @@ class ApiController extends Controller
             ]);
 
             $response = $data_request->object();
-            
+            $dataExipre = $response->expiry_date;
+            $dateTime = new DateTime($dataExipre);
+            $exp_date = $dateTime->format('Y-m-d H:i:s'); 
             $tagihan = Tagihan::create([
                 'order_id' => $order->id,
                 'user_id' => $order->user_id,
                 'external_id' => $external_id,
                 'status' => $response->status,
                 'total_pembayaran' => $request->total_pembayaran,
-                'payment_link' => $response->invoice_url
+                'payment_link' => $response->invoice_url,
+                'exp_date' => $exp_date
             ]);
             $success = true;
             $message = 'Data Order Berhasil Ditambahkan';
@@ -497,6 +501,7 @@ class ApiController extends Controller
                 'object' => 'mobile',
                 'data' => json_encode([
                     'order' => $order,
+                    'tagihan' => $tagihan,
                     'orderitem' => $orderitem,
                     'pengiriman' => $pengiriman,
                     'responsedata' => $response,
@@ -769,6 +774,78 @@ class ApiController extends Controller
         });
         return response()->json([
             'data' => $data,
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *      path="/api/list-pesanan/{id}",
+     *      tags={"List Pesanan"},
+     *      summary="Menampilkan daftar pesanan berdasarkan ID user yg login",
+     *      description="Menampilkan daftar pesanan berdasarkan ID user yg login",
+     *      operationId="ListPesanan",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="data user yg akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function list_pesanan($userid){
+        $data = Order::with('user', 'orderitem', 'tagihan')->where('user_id', $userid)->get();
+        return response()->json([
+            'order' => $data
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *      path="/api/detail-pesanan/{id}",
+     *      tags={"Detail Pesanan"},
+     *      summary="Menampilkan detail pesanan berdasarkan id user yg login",
+     *      description="Menampilkan daftar pesanan berdasarkan ID user yg login",
+     *      operationId="DetailPesanan",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="data user yg akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model produk"
+     *      )
+     * )
+     */
+    public function detail_pesanan($id){
+        $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
+        $pengiriman = Pengiriman::where('order_id', $id)->first();
+        $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
+        return response()->json([
+            'email_user' => $tagihan->user->email,
+            'user_name' => $tagihan->user->name,
+            'no_telp_user' => $tagihan->user->no_telp,
+            'alamat_user' => $tagihan->user->alamat,
+            'pengiriman' => $pengiriman->pengiriman,
+            'lokasi_pengiriman' => $pengiriman->lokasi_pengiriman,
+            'nama_pengirim' => $pengiriman->nama_pengirim,
+            'order_date' => $tagihan->created_at,
+            'exp_date' => $tagihan->exp_date,
+            'metode_pembayaran' => $tagihan->pembayaran->bank_code,
+            'item_pesanan' => $itemproduk->produk,
+            'qty' => $itemproduk->qty,
+            'total_pembayaran' => $tagihan->pembayaran->total_pembayaran,
         ]);
     }
 

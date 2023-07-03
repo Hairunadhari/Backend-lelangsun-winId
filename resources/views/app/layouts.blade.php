@@ -220,16 +220,16 @@
                 <li class="{{ request()->routeIs('banner-spesial') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-spesial')}}">Banner Spesial</a></li>
               </ul>
             </li>
-            <li class="dropdown {{ request()->routeIs(['toko', 'kategori-produk', 'produk', 'order', 'pembayaran', 'pengiriman','promosi']) ? 'active' : '' }}">
+            <li class="dropdown {{ request()->routeIs(['toko', 'kategori-produk', 'produk', 'pesanan', 'pembayaran', 'pengiriman','promosi','detail-pesanan']) ? 'active' : '' }}">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-shopping-cart"></i> <span>E-commerce</span></a>
               <ul class="dropdown-menu">
                 <li class="{{ request()->routeIs('toko') ? 'active' : '' }}"><a class="nav-link " href="{{route('toko')}}">Toko</a></li>
                 <li class="{{ request()->routeIs('kategori-produk') ? 'active' : '' }}"><a class="nav-link" href="{{route('kategori-produk')}}">Kategori Produk</a></li>
                 <li class="{{ request()->routeIs('produk') ? 'active' : '' }}"><a class="nav-link" href="{{route('produk')}}">Produk</a></li>
                 <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a class="nav-link" href="{{route('promosi')}}">Promo Produk</a></li>
-                <li class="{{ request()->routeIs('order') ? 'active' : '' }}"><a class="nav-link " href="{{route('order')}}">Order</a></li>
-                <li class="{{ request()->routeIs('pembayaran') ? 'active' : '' }}"><a class="nav-link" href="{{route('pembayaran')}}">Pembayaran</a></li>
-                <li class="{{ request()->routeIs('pengiriman') ? 'active' : '' }}"><a class="nav-link" href="{{route('pengiriman')}}">Pengiriman</a></li>
+                <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a class="nav-link " href="{{route('pesanan')}}">Pesanan</a></li>
+                {{-- <li class="{{ request()->routeIs('pembayaran') ? 'active' : '' }}"><a class="nav-link" href="{{route('pembayaran')}}">Pembayaran</a></li> --}}
+                {{-- <li class="{{ request()->routeIs('pengiriman') ? 'active' : '' }}"><a class="nav-link" href="{{route('pengiriman')}}">Pengiriman</a></li> --}}
               </ul>
             </li>
             <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">

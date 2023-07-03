@@ -543,6 +543,58 @@
                     }
                 }
             }
+        },
+        "/api/list-pesanan/{id}": {
+            "get": {
+                "tags": [
+                    "List Pesanan"
+                ],
+                "summary": "Menampilkan daftar pesanan berdasarkan ID user yg login",
+                "description": "Menampilkan daftar pesanan berdasarkan ID user yg login",
+                "operationId": "ListPesanan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "data user yg akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/detail-pesanan/{id}": {
+            "get": {
+                "tags": [
+                    "Detail Pesanan"
+                ],
+                "summary": "Menampilkan detail pesanan berdasarkan id user yg login",
+                "description": "Menampilkan daftar pesanan berdasarkan ID user yg login",
+                "operationId": "DetailPesanan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "data user yg akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
         }
     }
 }

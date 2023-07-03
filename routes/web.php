@@ -74,7 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/updatepromosi/{id}/', [MenuController::class, 'update_promosi'])->name('updatepromosi');
     Route::delete('/deletepromosi/{id}/', [MenuController::class, 'delete_promosi'])->name('deletepromosi');
 
-    Route::get('/order', [MenuController::class, 'list_order'])->name('order');
+    
     Route::get('/pembayaran', [MenuController::class, 'list_pembayaran'])->name('pembayaran');
     Route::get('/pengiriman', [MenuController::class, 'list_pengiriman'])->name('pengiriman');
 
@@ -146,6 +146,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-banner-spesial/{id}/', [MenuController::class, 'edit_banner_spesial'])->name('edit-banner-spesial');
     Route::put('/update-banner-spesial/{id}/', [MenuController::class, 'update_banner_spesial'])->name('update-banner-spesial');
     Route::delete('/delete-banner-spesial/{id}/', [MenuController::class, 'delete_banner_spesial'])->name('delete-banner-spesial');
+
+    // route transaksi
+    Route::get('/pesanan', [MenuController::class, 'list_pesanan'])->name('pesanan');
+    Route::get('/detail-pesanan/{id}/', [MenuController::class, 'detail_pesanan'])->name('detail-pesanan');
 
 });
 
