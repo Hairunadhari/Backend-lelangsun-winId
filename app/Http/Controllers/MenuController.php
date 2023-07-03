@@ -950,6 +950,7 @@ class MenuController extends Controller
     }
 
     public function detail_pesanan($id){
+        $tes = 'null';
         $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
         $pengiriman = Pengiriman::where('order_id', $id)->first();
         $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
