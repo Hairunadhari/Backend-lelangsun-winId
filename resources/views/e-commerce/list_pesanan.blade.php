@@ -48,7 +48,7 @@
                 },
                 {
                     data: "tagihan.status",
-                    render: function(data, type, row, meta) {
+                    render: function (data, type, row, meta) {
                         if (data == "PENDING") {
                             badge = `<span class="badge badge-primary">PENDING</span>`
                         } else if (data == "PAID") {
@@ -61,18 +61,17 @@
                     data: "tagihan.exp_date",
                 },
                 {
-                data: null,
-                render: function (data) {
-                    var detailUrl = '/detail-pesanan/' + data.id;
-                    return `
+                    data: null,
+                    render: function (data) {
+                        var detailUrl = '/detail-pesanan/' + data.id;
+                        return `
                         <span><a class="btn btn-primary" href="${detailUrl}"><i class="fas fa-info-circle"></i>Detail</a></span>
                     `;
+                    },
                 },
-            },
             ],
         });
     });
-
 
 </script>
 @endsection

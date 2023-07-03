@@ -23,8 +23,5 @@ class Order extends Model
     {
         return $this->hasOne(OrderItem::class);
     }
-    public function tagihan()
-    {
-        return $this->hasOne(Tagihan::class);
-    }
+    
 }

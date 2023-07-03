@@ -33,67 +33,6 @@
                         </table>
                 </div>
             </div>
-<<<<<<< HEAD
-            @elseif ($errors->has('kategori'))
-            <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
-                <strong>Kategori sudah terdaftar!</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-            <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#exampleModal2">
-                <span class="text">+ Tambah</span>
-            </button>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">Kategori</th>
-                        <th scope="col">Gambar</th>
-                        <th scope="col">Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($data as $index => $d)
-                    <tr>
-                        <td>{{$index + $data->firstItem() }}</td>
-                        <td>{{strtoupper($d->kategori)}}</td>
-                        <td>
-                            <img src="{{ asset('/storage/image/'.$d->gambar) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
-                        </td>
-                        <td>
-                            <div class="dropdown d-inline">
-                                <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                                <form action="{{route('delete-kategori-produk', $d->id)}}" method="POST"
-                                    onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                                    <div class="dropdown-menu" x-placement="bottom-start"
-                                        style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                        <a class="dropdown-item has-icon"
-                                            href="{{route('detail-kategori-produk',$d->id)}}"><i
-                                                class="fas fa-info-circle"></i>Detail</a>
-                                        <a class="dropdown-item has-icon"
-                                            href="{{ route('edit-kategori-produk', $d->id) }}"><i
-                                                class="far fa-edit"></i>Edit</a>
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger " style="margin-left: 20px;" type="submit"><i
-                                                class="far fa-trash-alt"></i> Hapus</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        <div style="margin-left:20px">
-            {{ $data->links() }}
-=======
->>>>>>> origin/hairun
         </div>
     </div>
 </div>

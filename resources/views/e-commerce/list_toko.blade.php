@@ -10,60 +10,6 @@
                         <span class="text">+ Tambah</span>
                     </button>
                 </div>
-<<<<<<< HEAD
-                <div class="col-5">
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Toko</th>
-                            <th scope="col">Logo</th>
-                            <th scope="col">Opsi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="alldata">
-                        @forelse ($data as $index => $d)
-                        <tr>
-                            <td>{{$index + $data->firstItem()}}</td>
-                            <td>{{strtoupper($d->toko)}}</td>
-                            <td>
-                                <img src="{{ asset('/storage/image/'.$d->logo) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
-                            </td>
-                            <td>
-                                <div class="dropdown d-inline">
-                                    <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer"
-                                        id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false"></i>
-                                    <form action="{{route('deletetoko', $d->id)}}" method="POST"
-                                        onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                                        <div class="dropdown-menu" x-placement="bottom-start"
-                                            style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                            <a class="dropdown-item has-icon" href="{{route('detailtoko',$d->id)}}"><i
-                                                    class="fas fa-info-circle"></i>Detail</a>
-                                            <a class="dropdown-item has-icon" href="{{ route('edittoko', $d->id) }}"><i
-                                                    class="far fa-edit"></i>Edit</a>
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-danger " style="margin-left: 20px;" type="submit"><i
-                                                    class="far fa-trash-alt"></i> Hapus</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        @endforelse
-                    </tbody>
-                    <tbody id="content" class="searchdata"></tbody>
-                </table>
-            </div>
-            <div style="margin-left:20px">
-                {{ $data->links() }}
-            </div>
-=======
                 <div class="card-body">
                     @if(session('success'))
                     <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
@@ -87,7 +33,6 @@
                     </table>
                 </div>
             </div>
->>>>>>> origin/hairun
         </div>
     </div>
 </div>
