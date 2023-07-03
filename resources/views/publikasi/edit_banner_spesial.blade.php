@@ -7,24 +7,20 @@
 </style>
     <div class="card">
         <div class="card-header">
-            <h4>Edit Toko</h4>
+            <h4>Edit Banner</h4>
         </div>
-        <form action="{{route('updatetoko', $data->id)}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('update-banner-spesial', $data->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="card-body">
                 <div class="form-group">
-                    <label>Nama Toko:</label>
-                    <input type="text" class="form-control" value="{{ old('toko', $data->toko) }}" name="toko">
-                </div>
-                <div class="form-group">
-                    <label>Logo:</label>
+                    <label>Gambar:</label>
                     <br>
-                    <img src="{{ asset('storage/image/'.$data->logo) }}" width="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                    <img src="{{ asset('storage/image/'.$data->gambar) }}" width="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
                 </div>
                 <div class="form-group">
-                    <label>Ganti Logo</label>
-                    <input type="file" class="form-control mb-4" name="logo" id="gambar">
+                    <label>Ganti Gambar</label>
+                    <input type="file" class="form-control mb-4" name="gambar" id="gambar">
                     <div id="preview"></div>
                 </div>
             </div>

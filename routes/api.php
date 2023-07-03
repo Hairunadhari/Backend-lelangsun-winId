@@ -43,3 +43,7 @@ Route::get('/info-akun/{id}/', [ApiController::class, 'info_akun']);
 
 Route::get('/list-banner-utama', [ApiController::class, 'daftar_banner_utama']);
 Route::get('/list-banner-diskon', [ApiController::class, 'daftar_banner_diskon']);
+Route::get('/list-banner-spesial', [ApiController::class, 'daftar_banner_spesial']);
+
+Route::get('/list-pesanan/{id}/', [ApiController::class, 'list_pesanan']);
+Route::get('/detail-pesanan/{id}/', [ApiController::class, 'detail_pesanan']);

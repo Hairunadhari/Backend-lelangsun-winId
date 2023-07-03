@@ -50,6 +50,6 @@ class User extends Authenticatable
     }
     public function tagihan()
     {
-        return $this->hasMany(Tagihan::class);
+        return $this->hasOne(Tagihan::class);
     }
 }

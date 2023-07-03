@@ -74,7 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/updatepromosi/{id}/', [MenuController::class, 'update_promosi'])->name('updatepromosi');
     Route::delete('/deletepromosi/{id}/', [MenuController::class, 'delete_promosi'])->name('deletepromosi');
 
-    Route::get('/order', [MenuController::class, 'list_order'])->name('order');
+    
     Route::get('/pembayaran', [MenuController::class, 'list_pembayaran'])->name('pembayaran');
     Route::get('/pengiriman', [MenuController::class, 'list_pengiriman'])->name('pengiriman');
 
@@ -134,11 +134,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-banner-utama/{id}/', [MenuController::class, 'edit_banner_utama'])->name('edit-banner-utama');
     Route::put('/update-banner-utama/{id}/', [MenuController::class, 'update_banner_utama'])->name('update-banner-utama');
     Route::delete('/delete-banner-utama/{id}/', [MenuController::class, 'delete_banner_utama'])->name('delete-banner-utama');
+        // banner diskon
     Route::get('/banner-diskon', [MenuController::class, 'list_banner_diskon'])->name('banner-diskon');
     Route::post('/add-banner-diskon', [MenuController::class, 'add_banner_diskon'])->name('add-banner-diskon');
     Route::get('/edit-banner-diskon/{id}/', [MenuController::class, 'edit_banner_diskon'])->name('edit-banner-diskon');
     Route::put('/update-banner-diskon/{id}/', [MenuController::class, 'update_banner_diskon'])->name('update-banner-diskon');
     Route::delete('/delete-banner-diskon/{id}/', [MenuController::class, 'delete_banner_diskon'])->name('delete-banner-diskon');
+        // banner spesial
+    Route::get('/banner-spesial', [MenuController::class, 'list_banner_spesial'])->name('banner-spesial');
+    Route::post('/add-banner-spesial', [MenuController::class, 'add_banner_spesial'])->name('add-banner-spesial');
+    Route::get('/edit-banner-spesial/{id}/', [MenuController::class, 'edit_banner_spesial'])->name('edit-banner-spesial');
+    Route::put('/update-banner-spesial/{id}/', [MenuController::class, 'update_banner_spesial'])->name('update-banner-spesial');
+    Route::delete('/delete-banner-spesial/{id}/', [MenuController::class, 'delete_banner_spesial'])->name('delete-banner-spesial');
+
+    // route transaksi
+    Route::get('/pesanan', [MenuController::class, 'list_pesanan'])->name('pesanan');
+    Route::get('/detail-pesanan/{id}/', [MenuController::class, 'detail_pesanan'])->name('detail-pesanan');
 
     
 });

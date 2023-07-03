@@ -1,12 +1,12 @@
 @extends('app.layouts')
 @section('content')
-  <div class="section-body">
+<div class="section-body">
     <div class="row">
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h4 class="w-100">Daftar Banner Utama</h4>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+            <h4 class="w-100">Daftar Banner Spesial</h4>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#bannerspesial">
                 <span class="text">+ Tambah</span>
             </button>
           </div>
@@ -19,7 +19,7 @@
                 </button>
             </div>
             @endif
-              <table class="table table-striped" id="tablebanner-1">
+              <table class="table table-striped" id="tablebanner-3">
                 <thead>                                 
                   <tr>
                     <th>No</th>
@@ -37,7 +37,7 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function () {
-        $('#tablebanner-1').DataTable({
+        $('#tablebanner-3').DataTable({
             processing: true,
             ordering: false,
             fixedColumns: true,
@@ -51,42 +51,44 @@
           },
           { 
             data: "gambar",
-            render: function (data) {
-              return '<img src="/storage/image/' + data + '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
-            },
+          render: function (data) {
+            return '<img src="/storage/image/' + data + '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
           },
-          {
-            data: null,
-            render: function (data) {
-              var deleteUrl = '/delete-banner-utama/' + data.id;
-              var editUrl = '/edit-banner-utama/' + data.id;
-              return `
-                <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                  <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
-                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
-                </form>
-              `;
             },
+            {
+                data: null,
+          render: function (data) {
+            var deleteUrl = '/delete-banner-spesial/' + data.id;
+            var editUrl = '/edit-banner-spesial/' + data.id;
+            return `
+              <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+              </form>
+            `;
           },
+        },
+
+         
         ],
       });
     });
   </script>
 @endsection
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="bannerspesial" tabindex="-1" role="dialog" aria-labelledby="bannerspesialLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Form Input Banner</h5>
+                <h5 class="modal-title" id="bannerspesialLabel">Form Input Banner</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('add-banner-utama')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('add-banner-spesial')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -110,6 +112,9 @@
             [].forEach.call(this.files, readAndPreview);
         }
         function readAndPreview(file) {
+            if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                return alert(file.name + " is not an image");
+            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();
@@ -127,3 +132,5 @@
         document.querySelector('#preview').innerHTML = '';
     });
 </script>
+
+<!-- /.container-fluid -->

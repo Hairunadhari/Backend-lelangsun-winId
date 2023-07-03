@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use DataTables;
 use App\Models\Toko;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
+use App\Models\Tagihan;
+use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\BannerUtama;
@@ -16,6 +19,7 @@ use App\Models\BarangLelang;
 use App\Models\GambarProduk;
 use App\Models\PembelianNpl;
 use Illuminate\Http\Request;
+use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use Illuminate\Support\Facades\Storage;
@@ -27,8 +31,11 @@ class MenuController extends Controller
     }
 
     public function list_toko(){
-        $data = Toko::paginate(10);
-        return view('e-commerce/list_toko', compact('data'));
+        if (request()->ajax()) {
+            $data = Toko::all();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/list_toko');
     }
 
     public function add_toko(Request $request){
@@ -101,8 +108,11 @@ class MenuController extends Controller
     }
 
     public function kategori_produk(){
-        $data = KategoriProduk::paginate(10);
-        return view('e-commerce/kategori_produk', compact('data'));
+        if (request()->ajax()) {
+            $data = KategoriProduk::all();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/kategori_produk');
     }
 
     public function add_kategori_produk(Request $request){
@@ -182,10 +192,14 @@ class MenuController extends Controller
         return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Dihapus!']);
     }
    
-    public function list_order(){
-        $data = Order::with('user')->paginate(10);
-        return view('e-commerce/list_order', compact('data'));
+    public function list_pesanan(){
+        if (request()->ajax()) {
+            $data = Order::with('user','orderitem','tagihan')->get();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/list_pesanan');
     }
+    
     public function list_pembayaran(){
         $data = Pembayaran::all();
         return view('e-commerce/list_pembayaran', compact('data'));
@@ -196,10 +210,13 @@ class MenuController extends Controller
     }
 
     public function list_produk(){
-        $data = Produk::with('toko','kategoriproduk')->paginate(10);
         $dataToko = Toko::all();
         $dataKategoriproduk = KategoriProduk::all();
-        return view('e-commerce/list_produk', compact('data','dataToko','dataKategoriproduk'));
+        if (request()->ajax()) {
+            $data = Produk::all();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/list_produk', compact('dataToko','dataKategoriproduk'));
     }
 
     public function add_produk(Request $request){
@@ -439,8 +456,30 @@ class MenuController extends Controller
     }
 
     public function list_promosi(){
-        $data = Promosi::with('produkpromo')->paginate();
-        return view('e-commerce/list_promosi', compact('data'));
+
+        $datapromosi = Promosi::all();
+
+        foreach ($datapromosi as $datapromo) {
+            $tgl_mulai = $datapromo->tanggal_mulai;
+            $tgl_selesai = $datapromo->tanggal_selesai;
+            $today = now()->toDateString();
+            
+            if ($tgl_mulai <= $today && $tgl_selesai >= $today) {
+                $datapromo->update([
+                    'status' => 'sedang berlangsung',
+                ]);
+            } elseif ($tgl_mulai < $today && $tgl_selesai < $today) {
+                $datapromo->update([
+                    'status' => 'selesai',
+                ]);
+            }
+        }
+
+        if (request()->ajax()) {
+            $data = Promosi::all();
+            return DataTables::of($data)->make();
+        }
+        return view('e-commerce/list_promosi');
     }
 
     public function form_input_promosi(){
@@ -448,58 +487,58 @@ class MenuController extends Controller
         return view('e-commerce.tambah_promosi', compact('produk'));
     }
 
-    
-
     public function add_promosi(Request $request){
-        // dd($request);
         $this->validate($request, [
             'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
         ]);
-
-        $hapuspersendiskon = preg_replace('/\D/', '', $request->diskon); 
-        $diskon = trim($hapuspersendiskon);
-
-        $produkId = $request->produk_id;
-        $gambar = $request->file('gambar');
-        $gambar->storeAs('public/image', $gambar->hashName());
-
-        $promosi = Promosi::create([
-            'promosi'     => $request->promosi,
-            'deskripsi'     => $request->deskripsi,
-            'diskon'     => $diskon,
-            'tanggal_mulai'     => $request->tanggal_mulai,
-            'tanggal_selesai'     => $request->tanggal_selesai,
-            'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
-            'gambar'     => $gambar->hashName(),
-        ]);
-        
-        
-        $dataProduk = Produk::whereIn('id', $produkId)->get();
-
-        foreach ($dataProduk as $produk) {
-            $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
-        
-            ProdukPromo::create([
-                'promosi_id' => $promosi->id,
-                'produk_id' => $produk->id,
-                'total_diskon' => $hargadiskon,
+        if (is_null($request->produk_id)) {
+            return redirect()->back()->with('error', 'Anda belum memilih produk!');
+        }else {
+            
+            $hapuspersendiskon = preg_replace('/\D/', '', $request->diskon); 
+            $diskon = trim($hapuspersendiskon);
+            $produkId = $request->produk_id;
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+            
+            $promosi = Promosi::create([
+                'promosi'     => $request->promosi,
+                'deskripsi'     => $request->deskripsi,
+                'diskon'     => $diskon,
+                'tanggal_mulai'     => $request->tanggal_mulai,
+                'tanggal_selesai'     => $request->tanggal_selesai,
+                'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
+                'gambar'     => $gambar->hashName(),
             ]);
+            
+            $dataProduk = Produk::whereIn('id', $produkId)->get();
+            foreach ($dataProduk as $produk) {
+                $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
+                ProdukPromo::create([
+                    'promosi_id' => $promosi->id,
+                    'produk_id' => $produk->id,
+                    'total_diskon' => $hargadiskon,
+                ]);
+            }
+            
         }
-
         return redirect('/promosi')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function detail_promosi($id)
     {
         $data = Promosi::find($id);
-        $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->paginate(5);
-        return view('e-commerce.detail_promosi', compact('data','produkPromo'));
+        if (request()->ajax()) {
+            $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->get();
+            return DataTables::of($produkPromo)->make();
+        }
+        return view('e-commerce.detail_promosi', compact('data'));
     }
 
     public function edit_promosi($id)
     {
         $data = Promosi::find($id);
-        $produk = Produk::all();
+        $produk = Produk::orderBy('nama', 'asc')->get();
         $produkPromo = ProdukPromo::where('promosi_id',$id)->get();
         $produkTerpilih = [];
 
@@ -607,45 +646,6 @@ class MenuController extends Controller
         ProdukPromo::where('promosi_id', $id)->delete();
         $data->delete();
         return redirect()->route('promosi')->with(['success' => 'Data Berhasil Dihapus!']);
-    }
-
-    public function cari_toko(Request $request){
-        $toko = Toko::where('toko','Like','%'.$request->cari.'%')->orWhere('logo','Like','%'.$request->cari.'%')->get();
-
-        $output= "";
-        $url = asset('/storage/image/');
-        $nomor = 1;
-
-        foreach ($toko as $data) {
-            $output.= 
-            '<tr>
-                <td>'.$nomor++.'</td>
-                <td>'.ucfirst($data->toko).'</td>
-                <td><img src="'.$url.'/'.$data->logo.'" class="rounded" style="width: 100px"></td>
-                <td>
-                    <div class="dropdown d-inline">
-                        <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer"
-                            id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"></i>
-                            <form action="'.route('deletetoko', $data->id).'" method="POST"
-                            onsubmit="return confirm(\'Apakah anda yakin akan menghapus data ini ?\');">
-                            <div class="dropdown-menu" x-placement="bottom-start"
-                                style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item has-icon" href="'.route('detailtoko',$data->id).'"><i
-                                        class="fas fa-info-circle"></i>Detail</a>
-                                <a class="dropdown-item has-icon" href="'. route('edittoko', $data->id) .'"><i
-                                        class="far fa-edit"></i>Edit</a>
-                                '.csrf_field().'
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button class="btn btn-danger " style="margin-left: 20px;" type="submit"><i
-                                        class="far fa-trash-alt"></i> Hapus</button>
-                            </div>
-                        </form>
-                    </div>
-                </td>
-            </tr>';
-        }
-        return response($output);
     }
 
     public function list_kategori_lelang(){
@@ -764,8 +764,11 @@ class MenuController extends Controller
     }
 
     public function list_banner_utama(){
-        $data = BannerUtama::paginate(10);
-        return view('publikasi.banner_utama', compact('data'));
+        if (request()->ajax()) {
+            $data = BannerUtama::all();
+            return DataTables::of($data)->make();
+        }
+        return view('publikasi.banner_utama');
     }
 
     public function add_banner_utama(Request $request){
@@ -823,8 +826,11 @@ class MenuController extends Controller
     }
 
     public function list_banner_diskon(){
-        $data = BannerDiskon::paginate(10);
-        return view('publikasi.banner_diskon', compact('data'));
+        if (request()->ajax()) {
+            $data = BannerDiskon::all();
+            return DataTables::of($data)->make();
+        }
+        return view('publikasi.banner_diskon');
     }
 
     public function add_banner_diskon(Request $request){
@@ -879,6 +885,76 @@ class MenuController extends Controller
         Storage::delete('public/image/'. $data->gambar);
         $data->delete();
         return redirect()->route('banner-diskon')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function list_banner_spesial(){
+        if (request()->ajax()) {
+            $data = BannerSpesial::all();
+            return DataTables::of($data)->make();
+        }
+        return view('publikasi.banner_spesial');
+    }
+
+    public function add_banner_spesial(Request $request){
+
+        $this->validate($request, [
+            'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
+        ]);
+
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
+        BannerSpesial::create([
+            'gambar'     => $gambar->hashName(),
+        ]);
+
+        return redirect('/banner-spesial')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_banner_spesial($id)
+    {
+        $data = BannerSpesial::findOrFail($id);
+
+        //render view with post
+        return view('publikasi.edit_banner_spesial', compact('data'));
+    }
+
+    public function update_banner_spesial(Request $request, $id)
+    {
+        $data = BannerSpesial::findOrFail($id);
+
+        //check if image is uploaded
+        if ($request->hasFile('gambar')) {
+
+            //upload new image
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+
+            //delete old gambar
+            Storage::delete('public/image/'.$data->gambar);
+
+            //update post with new gambar
+            $data->update([
+                'gambar'     => $gambar->hashName(),
+            ]);
+
+        } 
+        return redirect()->route('banner-spesial')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function delete_banner_spesial($id)
+    {
+        $data = BannerSpesial::findOrFail($id);
+        Storage::delete('public/image/'. $data->gambar);
+        $data->delete();
+        return redirect()->route('banner-spesial')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function detail_pesanan($id){
+        $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
+        $pengiriman = Pengiriman::where('order_id', $id)->first();
+        $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
+        // dd($tagihan);
+        return view('e-commerce.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
     }
 
 }   
