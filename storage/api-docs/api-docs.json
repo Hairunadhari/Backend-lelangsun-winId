@@ -549,8 +549,8 @@
                 "tags": [
                     "List Pesanan"
                 ],
-                "summary": "Menampilkan daftar pesanan berdasarkan ID user yg login",
-                "description": "Menampilkan daftar pesanan berdasarkan ID user yg login",
+                "summary": "id user",
+                "description": "Menampilkan list pesanan berdasarkan user yg login",
                 "operationId": "ListPesanan",
                 "parameters": [
                     {
@@ -575,7 +575,7 @@
                 "tags": [
                     "Detail Pesanan"
                 ],
-                "summary": "Menampilkan detail pesanan berdasrkan order id",
+                "summary": "order id",
                 "description": "Menampilkan detail pesanan berdasrkan order id",
                 "operationId": "DetailPesanan",
                 "parameters": [

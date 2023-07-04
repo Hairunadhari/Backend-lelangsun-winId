@@ -778,8 +778,8 @@ class ApiController extends Controller
      * @OA\Get(
      *      path="/api/list-pesanan/{id}",
      *      tags={"List Pesanan"},
-     *      summary="Menampilkan daftar pesanan berdasarkan ID user yg login",
-     *      description="Menampilkan daftar pesanan berdasarkan ID user yg login",
+     *      summary="id user",
+     *      description="Menampilkan list pesanan berdasarkan user yg login",
      *      operationId="ListPesanan",
      *       @OA\Parameter(
     *          name="id",
@@ -807,7 +807,7 @@ class ApiController extends Controller
      * @OA\Get(
      *      path="/api/detail-pesanan/{id}",
      *      tags={"Detail Pesanan"},
-     *      summary="Menampilkan detail pesanan berdasrkan order id",
+     *      summary="order id",
      *      description="Menampilkan detail pesanan berdasrkan order id",
      *      operationId="DetailPesanan",
      *       @OA\Parameter(
