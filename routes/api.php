@@ -47,3 +47,4 @@ Route::get('/list-banner-spesial', [ApiController::class, 'daftar_banner_spesial
 
 Route::get('/list-pesanan/{id}/', [ApiController::class, 'list_pesanan']);
 Route::get('/detail-pesanan/{id}/', [ApiController::class, 'detail_pesanan']);
+Route::get('/detail-toko/{id}/', [ApiController::class, 'detail_toko']);

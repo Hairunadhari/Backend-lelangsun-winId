@@ -785,5 +785,42 @@ class ApiController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Get(
+     *      path="/api/detail-toko/{id}",
+     *      tags={"Detail Toko"},
+     *      summary="id toko",
+     *      description="Menampilkan detail toko berdasrkan id toko",
+     *      operationId="DetailToko",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="id toko",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function detail_toko($id){
+        $toko = Toko::with('produk.kategoriproduk')->find($id);
+        $toko->logo = url('https://backendwin.spero-lab.id/storage/image/' . $toko->logo);
+        
+        $toko->produk->each(function ($item) {
+            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+        });
+        
+        return response()->json([
+            'toko' => $toko
+        ]);        
+        
+
+    }
+
  
 }
