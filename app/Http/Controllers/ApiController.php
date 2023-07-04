@@ -404,6 +404,7 @@ class ApiController extends Controller
      */
 
     public function add_order(Request $request){
+        // dd($request);
         $validator = Validator::make($request->all() , [
             'user_id'     => 'required',
             'produk_id'     => 'required',
@@ -418,12 +419,10 @@ class ApiController extends Controller
            
             $user = User::where('id', $request->user_id)->first();
             $order = Order::create([
-                'id' => $request->id,
                 'user_id' => $request->user_id ?? null
             ]);
 
             $orderitem = OrderItem::create([
-                'id' => $request->id,
                 'order_id' => $order->id ?? null,
                 'produk_id' => $request->produk_id ?? null,
                 'qty' => $request->qty ?? null,
@@ -435,7 +434,6 @@ class ApiController extends Controller
             ]);
                         
             $pengiriman = Pengiriman::create([
-                'id' => $request->id,
                 'order_id' => $order->id ?? null,
                 'pengiriman' => $request->pengiriman ?? null,
                 'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
@@ -478,7 +476,6 @@ class ApiController extends Controller
                 'status' => $tagihan->status ?? null,
                 'total_pembayaran' => $tagihan->total_pembayaran ?? null,
                 'payment_link' => $tagihan->payment_link ?? null,
-                'order_id' => $tagihan->id ?? null,
             ];
 
             if($response){
@@ -744,21 +741,21 @@ class ApiController extends Controller
      * @OA\Get(
      *      path="/api/detail-pesanan/{id}",
      *      tags={"Detail Pesanan"},
-     *      summary="Menampilkan detail pesanan berdasarkan id user yg login",
-     *      description="Menampilkan daftar pesanan berdasarkan ID user yg login",
+     *      summary="Menampilkan detail pesanan berdasrkan order id",
+     *      description="Menampilkan detail pesanan berdasrkan order id",
      *      operationId="DetailPesanan",
      *       @OA\Parameter(
     *          name="id",
     *          in="path",
     *          required=true,
-    *          description="data user yg akan ditampilkan",
+    *          description="order id",
     *          @OA\Schema(
     *              type="integer"
     *          )
     *      ),
      *      @OA\Response(
      *          response="default",
-     *          description="return array model produk"
+     *          description=""
      *      )
      * )
      */
@@ -766,7 +763,9 @@ class ApiController extends Controller
         $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
         $pengiriman = Pengiriman::where('order_id', $id)->first();
         $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
+        $itemproduk->produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $itemproduk->produk->thumbnail);
         return response()->json([
+            'id_order' => $tagihan->order_id,
             'email_user' => $tagihan->user->email,
             'user_name' => $tagihan->user->name,
             'no_telp_user' => $tagihan->user->no_telp,
@@ -776,10 +775,13 @@ class ApiController extends Controller
             'nama_pengirim' => $pengiriman->nama_pengirim,
             'order_date' => $tagihan->created_at,
             'exp_date' => $tagihan->exp_date,
-            'metode_pembayaran' => $tagihan->pembayaran->bank_code,
+            'status' => $tagihan->status,
+            'metode_pembayaran' => $tagihan->pembayaran->metode_pembayaran ?? null,
+            'bank_code' => $tagihan->pembayaran->bank_code ?? null,
             'item_pesanan' => $itemproduk->produk,
             'qty' => $itemproduk->qty,
-            'total_pembayaran' => $tagihan->pembayaran->total_pembayaran,
+            'total_pembayaran' => $tagihan->total_pembayaran,
+            'link_payment' => $tagihan->payment_link,
         ]);
     }
 

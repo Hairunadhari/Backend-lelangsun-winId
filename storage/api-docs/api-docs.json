@@ -522,14 +522,14 @@
                 "tags": [
                     "Detail Pesanan"
                 ],
-                "summary": "Menampilkan detail pesanan berdasarkan id user yg login",
-                "description": "Menampilkan daftar pesanan berdasarkan ID user yg login",
+                "summary": "Menampilkan detail pesanan berdasrkan order id",
+                "description": "Menampilkan detail pesanan berdasrkan order id",
                 "operationId": "DetailPesanan",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "data user yg akan ditampilkan",
+                        "description": "order id",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -538,7 +538,7 @@
                 ],
                 "responses": {
                     "default": {
-                        "description": "return array model produk"
+                        "description": ""
                     }
                 }
             }
