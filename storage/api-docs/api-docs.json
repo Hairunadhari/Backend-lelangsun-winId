@@ -595,6 +595,32 @@
                     }
                 }
             }
+        },
+        "/api/detail-toko/{id}": {
+            "get": {
+                "tags": [
+                    "Detail Toko"
+                ],
+                "summary": "id toko",
+                "description": "Menampilkan detail toko berdasrkan id toko",
+                "operationId": "DetailToko",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id toko",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }
