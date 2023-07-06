@@ -14,6 +14,7 @@ use App\Models\Produk;
 use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\TLogApi;
+use App\Models\Wishlist;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
@@ -854,10 +855,10 @@ class ApiController extends Controller
     /**
      * @OA\Get(
      *      path="/api/detail-toko/{id}",
-     *      tags={"Detail Toko"},
+     *      tags={"Deskripsi Toko"},
      *      summary="id toko",
      *      description="Menampilkan detail toko berdasrkan id toko",
-     *      operationId="DetailToko",
+     *      operationId="DeskrispsiToko",
      *       @OA\Parameter(
     *          name="id",
     *          in="path",
@@ -880,12 +881,38 @@ class ApiController extends Controller
         $toko->produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
-        
         return response()->json([
             'toko' => $toko
         ]);        
-        
+    }
 
+    public function add_wishlist(Request $request){
+        $this->validate($request, [
+            'user_id'     => 'required',
+            'produk_id'     => 'required',
+        ]);
+
+        Wishlist::where('produk_id', $request->produk_id)->where('user_id', $request->user_id)->delete();
+
+        $data = Wishlist::create([
+            'user_id' => $request->user_id,
+            'produk_id' => $request->produk_id,
+        ]);
+
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+    public function list_wishlist($id){
+        $data = Wishlist::with('produk')->where('user_id', $id)->get();
+        $data->each(function ($item){
+            $item->produk->thumbnail =  'https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail;
+        });
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
  

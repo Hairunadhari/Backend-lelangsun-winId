@@ -118,7 +118,6 @@ class MenuController extends Controller
     public function add_kategori_produk(Request $request){
 
         $this->validate($request, [
-            'kategori'     => 'required|unique:kategori_produks,kategori',
             'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
             
         ]);
@@ -155,11 +154,8 @@ class MenuController extends Controller
     public function update_kategori_produk(Request $request, $id)
     {
         $this->validate($request, [
-            'kategori'     => 'unique:kategori_produks,kategori',
             'gambar'     => 'image|mimes:jpeg,jpg,png,webp',
             
-        ], [
-            'kategori.unique' => 'Kategori sudah digunakan. Silahkan gunakan kategori lain.',
         ]);
         
         $data = KategoriProduk::findOrFail($id);
@@ -437,10 +433,6 @@ class MenuController extends Controller
     }
     public function update_event_lelang(Request $request, $id)
     {
-        //validate form
-        $this->validate($request, [
-            'event'     => 'required|unique:event_lelangs,event',
-        ]);
 
         $data = EventLelang::find($id);
         $data->update([
@@ -651,16 +643,14 @@ class MenuController extends Controller
     }
 
     public function list_kategori_lelang(){
-        $data = KategoriBarang::paginate(10);
-        return view('lelang/list_kategori', compact('data'));
+        if (request()->ajax()) {
+            $data = KategoriBarang::all();
+            return DataTables::of($data)->make();
+        }
+        return view('lelang/kategori_lelang');
     }
 
     public function add_kategori_lelang(Request $request){
-
-        $this->validate($request, [
-            'kategori'     => 'unique:kategori_barangs,kategori',
-            
-        ]);
 
         KategoriBarang::create([
             'kategori'     => $request->kategori,
@@ -669,37 +659,20 @@ class MenuController extends Controller
         return redirect('/kategori-lelang')->with('success', 'Data Berhasil Ditambahkan');
     }
 
-    public function detail_kategori_lelang($id)
-    {
-        $data = KategoriBarang::find($id);
-        // dd($produk);
-
-        return view('lelang.detail_kategorilelang', compact('data'));
-    }
-
     public function edit_kategori_lelang($id)
     {
         $data = KategoriBarang::findOrFail($id);
 
-        //render view with post
         return view('lelang.edit_kategorilelang', compact('data'));
     }
 
     public function update_kategori_lelang(Request $request, $id)
     {
-        $this->validate($request, [
-            'kategori'     => 'unique:kategori_barangs,kategori',
-            
-        ], [
-            'kategori.unique' => 'Kategori sudah digunakan. Silahkan gunakan kategori lain.',
-        ]);
-        
         $data = KategoriBarang::findOrFail($id);
             $data->update([
                 'kategori'     => $request->kategori,
             ]);
 
-        //redirect to index
         return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
@@ -711,9 +684,12 @@ class MenuController extends Controller
     }
     
     public function list_barang_lelang(){
-        $data = BarangLelang::with('kategoribarang')->paginate(10);
         $kategori = KategoriBarang::all();
-        return view('lelang/list_baranglelang', compact('data','kategori'));
+        if (request()->ajax()) {
+            $data = BarangLelang::with('kategoribarang')->get();
+            return DataTables::of($data)->make();
+        }
+        return view('lelang/list_baranglelang', compact('kategori'));
     }
 
     public function add_barang_lelang(Request $request){

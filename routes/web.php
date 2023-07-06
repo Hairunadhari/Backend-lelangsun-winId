@@ -115,7 +115,6 @@ Route::middleware('auth')->group(function () {
     // route kategori-lelang
     Route::get('/kategori-lelang', [MenuController::class, 'list_kategori_lelang'])->name('kategori-lelang');
     Route::post('/add-kategori-lelang', [MenuController::class, 'add_kategori_lelang'])->name('add-kategori-lelang');
-    Route::get('/detail-kategori-lelang/{id}/', [MenuController::class, 'detail_kategori_lelang'])->name('detail-kategori-lelang');
     Route::get('/edit-kategori-lelang/{id}/', [MenuController::class, 'edit_kategori_lelang'])->name('edit-kategori-lelang');
     Route::put('/update-kategori-lelang/{id}/', [MenuController::class, 'update_kategori_lelang'])->name('update-kategori-lelang');
     Route::delete('/delete-kategori-lelang/{id}/', [MenuController::class, 'delete_kategori_lelang'])->name('delete-kategori-lelang');

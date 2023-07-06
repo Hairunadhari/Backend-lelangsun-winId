@@ -1991,23 +1991,22 @@ tr:first-child > td > .fc-day-grid-event {
 }
 .wizard-steps .wizard-step {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
-  background-color: #fff;
   border-radius: 3px;
   border: none;
   position: relative;
-  margin-bottom: 30px;
+  margin-bottom: 0px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  padding: 30px;
+  padding: 10px;
   text-align: center;
   flex-grow: 1;
   flex-basis: 0;
-  margin: 0 10px;
+  margin: 0 5px;
 }
 .wizard-steps .wizard-step:before {
   counter-increment: wizard-counter;
   content: counter(wizard-counter);
   position: absolute;
-  bottom: -40px;
+  bottom: -30px;
   left: 50%;
   transform: translateX(-50%);
   width: 20px;
@@ -2064,7 +2063,7 @@ tr:first-child > td > .fc-day-grid-event {
   margin-bottom: 15px;
 }
 .wizard-steps .wizard-step .wizard-step-label {
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;
@@ -2075,7 +2074,7 @@ tr:first-child > td > .fc-day-grid-event {
     display: block;
   }
   .wizard-steps .wizard-step {
-    margin-bottom: 50px;
+    margin-bottom: 0px;
   }
 }
 

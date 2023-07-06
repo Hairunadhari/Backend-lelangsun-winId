@@ -213,7 +213,7 @@
             </li>
             <li class="menu-header">Menu SuperAdmin</li>
             <li class="dropdown {{ request()->routeIs(['banner-utama','banner-diskon','banner-spesial']) ? 'active' : '' }}">
-              <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-large"></i> <span>Publikasi</span></a>
+              <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-large"></i> <span>Banner</span></a>
               <ul class="dropdown-menu">
                 <li class="{{ request()->routeIs('banner-utama') ? 'active' : '' }}"><a class="nav-link " href="{{route('banner-utama')}}">Banner Utama</a></li>
                 <li class="{{ request()->routeIs('banner-diskon') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-diskon')}}">Banner Diskon</a></li>
@@ -228,14 +228,12 @@
                 <li class="{{ request()->routeIs('produk') ? 'active' : '' }}"><a class="nav-link" href="{{route('produk')}}">Produk</a></li>
                 <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a class="nav-link" href="{{route('promosi')}}">Promo Produk</a></li>
                 <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a class="nav-link " href="{{route('pesanan')}}">Pesanan</a></li>
-                {{-- <li class="{{ request()->routeIs('pembayaran') ? 'active' : '' }}"><a class="nav-link" href="{{route('pembayaran')}}">Pembayaran</a></li> --}}
-                {{-- <li class="{{ request()->routeIs('pengiriman') ? 'active' : '' }}"><a class="nav-link" href="{{route('pengiriman')}}">Pengiriman</a></li> --}}
               </ul>
             </li>
             <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-gavel"></i> <span>Lelang</span></a>
               <ul class="dropdown-menu">
-                <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('kategori-lelang')}}">Kategori Barang Lelang</a></li>
+                <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('kategori-lelang')}}">Kategori Lelang</a></li>
                 <li class="{{ request()->routeIs('barang-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('barang-lelang')}}">Barang Lelang</a></li>
                 {{-- <li class="{{ request()->routeIs('pembelian-npl') ? 'active' : '' }}"><a class="nav-link " href="{{route('pembelian-npl')}}">Pembelian NPL</a></li>
                 <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a class="nav-link" href="{{route('lot')}}">Lot</a></li>

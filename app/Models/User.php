@@ -52,4 +52,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Tagihan::class);
     }
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
 }

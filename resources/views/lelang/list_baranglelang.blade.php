@@ -1,85 +1,48 @@
 @extends('app.layouts')
 @section('content')
-<div class="section-header">
-    <h1>Data Lelang</h1>
-</div>
 <div class="section-body">
-    <div class="card">
-        <div class="card-header">
-            <h4>Daftar Barang Lelang</h4>
-        </div>
-        <div class="card-body">
-            @if(session('success'))
-            <div class="alert alert-success text-center alert-dismissible fade show" role="alert">
-                <strong>{{ session('success') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="w-100">Daftar Barang</h4>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#baranglelangmodal">
+                        <span class="text">+ Tambah</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if(session('success'))
+                    <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
+                        <strong>{{ session('success') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
+                        <table class="table table-striped" id="kategori-lelang">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>testing</th>
+                                    <th>Opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                </div>
             </div>
-            @endif
-            <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#exampleModal">
-                <span class="text">+ Tambah</span>
-            </button>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">Nama Barang Lelang</th>
-                        <th scope="col">Nama Pemilik</th>
-                        <th scope="col">Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                    $no = 1;
-                    @endphp
-                    @forelse ($data as $index => $d)
-                    <tr>
-                        <td>{{$index + $data->firstItem()}}</td>
-                        <td>{{$d->barang}}</td>
-                        <td>{{$d->nama_pemilik}}</td>
-                        <td>
-                            <div class="dropdown d-inline">
-                                <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer"
-                                    id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false"></i>
-                                <form action="{{route('delete-barang-lelang', $d->id)}}" method="POST"
-                                    onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                                    <div class="dropdown-menu" x-placement="bottom-start"
-                                        style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                        <a class="dropdown-item has-icon"
-                                            href="{{route('detail-barang-lelang',$d->id)}}"><i
-                                                class="fas fa-info-circle"></i>Detail</a>
-                                        <a class="dropdown-item has-icon"
-                                            href="{{ route('edit-barang-lelang', $d->id) }}"><i
-                                                class="far fa-edit"></i>Edit</a>
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger " style="margin-left: 20px;" type="submit"><i
-                                                class="far fa-trash-alt"></i> Hapus</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        <div style="margin-left:20px">
-            {{ $data->links() }}
         </div>
     </div>
 </div>
 @endsection
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="baranglelangmodal" tabindex="-1" role="dialog" aria-labelledby="baranglelangmodalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Form Input Barang Lelang</h5>
+                <h5 class="modal-title" id="baranglelangmodalLabel">Form Input Barang Lelang</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -248,7 +211,7 @@
                                 Ada
                             </label>
                         </div>
-                        <div class="foram-check">
+                        <div class="form-check">
                             <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
                                 checked="">
                             <label class="form-check-label" for="exampleRadios2">
