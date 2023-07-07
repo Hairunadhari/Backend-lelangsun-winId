@@ -11,6 +11,7 @@ use App\Models\Toko;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Produk;
+use App\Models\Review;
 use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\TLogApi;
@@ -649,24 +650,15 @@ class ApiController extends Controller
     *      tags={"Akun"},
     *      summary="Update Akun",
     *      description="Mengupdate data akun berdasarkan ID",
-    *      operationId="UpdateAkun",
-    *      @OA\Parameter(
-    *          name="id",
-    *          description="ID Akun yang akan diupdate",
-    *          required=true,
-    *          in="path",
-    *          @OA\Schema(
-    *              type="integer"
-    *          )
-    *      ),
      *      @OA\RequestBody(
     *          required=true,
-    *          description="Data yang akan diupdate",
+    *          description="form edit",
     *          @OA\JsonContent(
     *              required={"name", "no_telp","alamat"},
     *              @OA\Property(property="name", type="string"),
     *              @OA\Property(property="no_telp", type="integer"),
     *              @OA\Property(property="alamat", type="string"),
+    *              @OA\Property(property="foto", type="string"),
     *          )
     *      ),
      *      @OA\Response(
@@ -676,36 +668,37 @@ class ApiController extends Controller
      * )
      */
     public function update_akun(Request $request, $id){
-        $user = User::find($id);
-        $user->update([
-            'name' => $request->name,
-            'no_telp' => $request->no_telp,
-            'alamat' => $request->alamat,
-        ]);
+        $data = User::find($id);
+
+        if ($request->hasFile('foto')) {
+
+            //upload new image
+            $foto = $request->file('foto');
+            $foto->storeAs('public/image', $foto->hashName());
+
+            Storage::delete('public/image/'.$data->foto);
+
+            $data->update([
+                'name' => $request->name,
+                'no_telp' => $request->no_telp,
+                'alamat' => $request->alamat,
+                'foto'     => $foto->hashName(),
+            ]);
+
+        } else {
+            $data->update([
+                'name'     => $request->name,
+                'no_telp' => $request->no_telp,
+                'alamat' => $request->alamat,
+            ]);
+        }
 
         return response()->json([
             'message' => 'SUCCESS',
-            'data' => $user
+            'data' => $data
         ]);
     }
 
-   
-    public function status_pesanan($id){
-        $data = Order::with('user', 'orderitem.produk')->find($id);
-
-        $produkArray = $data->orderitem->map(function ($item) {
-            $produk = $item->produk;
-
-            return [
-                'nama' => $produk->nama,
-                'harga' => $produk->harga,
-                'stok' => $produk->stok,
-            ];
-        });
-
-        return response()->json($produkArray);
-
-    }
 
      /**
      * @OA\Get(
@@ -913,6 +906,29 @@ class ApiController extends Controller
         return response()->json([
             'data' => $data
         ]);
+    }
+
+    public function add_review(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required',
+            'produk_id'     => 'required',
+            'review'     => 'required',
+            'rating'     => 'required|numeric|between:1,5',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->fails()
+            ]);
+        }
+
+        Review::create([
+            'user_id' => $request->user_id,
+            'produk_id' => $request->produk_id,
+             'review' => $request->review,
+            'rating' => $request->rating,
+        ]);
+
     }
 
  

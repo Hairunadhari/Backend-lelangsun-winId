@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DataTables;
 use App\Models\Toko;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Promosi;
@@ -928,12 +929,43 @@ class MenuController extends Controller
     }
 
     public function detail_pesanan($id){
-        $tes = 'null';
         $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
         $pengiriman = Pengiriman::where('order_id', $id)->first();
         $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
         // dd($tagihan);
         return view('e-commerce.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
+    }
+
+    public function profil($id){
+        $data = User::find($id);
+        return view('profile.profil_akun', compact('data'));
+    }
+
+    public function update_akun(Request $request, $id){
+        // dd($request->foto);
+        $data = User::find($id);
+
+        if ($request->hasFile('foto')) {
+
+            //upload new image
+            $foto = $request->file('foto');
+            $foto->storeAs('public/image', $foto->hashName());
+
+            Storage::delete('public/image/'.$data->foto);
+
+            $data->update([
+                'name'     => $request->name,
+                'foto'     => $foto->hashName(),
+            ]);
+
+        } else {
+            $data->update([
+                'name'     => $request->name,
+            ]);
+        }
+
+        //redirect to index
+        return redirect()->back()->with(['success' => 'Data Berhasil Diubah!']);
     }
 
 }   

@@ -453,20 +453,9 @@
                 ],
                 "summary": "Update Akun",
                 "description": "Mengupdate data akun berdasarkan ID",
-                "operationId": "UpdateAkun",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID Akun yang akan diupdate",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
+                "operationId": "717091c36e78d1bedce3096fa1802f05",
                 "requestBody": {
-                    "description": "Data yang akan diupdate",
+                    "description": "form edit",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -484,6 +473,9 @@
                                         "type": "integer"
                                     },
                                     "alamat": {
+                                        "type": "string"
+                                    },
+                                    "foto": {
                                         "type": "string"
                                     }
                                 },
@@ -599,11 +591,11 @@
         "/api/detail-toko/{id}": {
             "get": {
                 "tags": [
-                    "Detail Toko"
+                    "Deskripsi Toko"
                 ],
                 "summary": "id toko",
                 "description": "Menampilkan detail toko berdasrkan id toko",
-                "operationId": "DetailToko",
+                "operationId": "DeskrispsiToko",
                 "parameters": [
                     {
                         "name": "id",

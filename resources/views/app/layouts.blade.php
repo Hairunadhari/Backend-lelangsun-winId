@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/chocolat/dist/css/chocolat.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}">
 
   
   
@@ -183,7 +185,7 @@
             <img alt="image" src="{{asset('assets/img/avatar/avatar-1.png')}}" class="rounded-circle mr-1">
             <div class="d-sm-none d-lg-inline-block">{{ Auth::user()->name}},SuperAdmin</div></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <a href="features-profile.html" class="dropdown-item has-icon">
+              <a href="{{ route('profil',['id' => Auth::user()->id]) }}" class="dropdown-item has-icon">
                 <i class="far fa-user"></i> Profile
               </a>
               <div class="dropdown-divider"></div>
@@ -281,10 +283,14 @@
   <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
   <script src="{{ asset('assets/modules/chocolat/dist/js/jquery.chocolat.min.js')}}"></script>
   <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/jquery-selectric/jquery.selectric.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/upload-preview/assets/js/jquery.uploadPreview.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
 
   <!-- Page Specific JS File -->
   <script src="{{ asset('assets/js/page/modules-datatables.js')}}"></script>
   <script src="{{ asset('assets/js/page/index.js')}}"></script>
+  <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script>
 
   <!-- Template JS File -->
   <script src="{{ asset('assets/js/scripts.js')}}"></script>

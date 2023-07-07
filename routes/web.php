@@ -149,7 +149,10 @@ Route::middleware('auth')->group(function () {
     // route transaksi
     Route::get('/pesanan', [MenuController::class, 'list_pesanan'])->name('pesanan');
     Route::get('/detail-pesanan/{id}/', [MenuController::class, 'detail_pesanan'])->name('detail-pesanan');
-
+    
+    // rute profil akun
+    Route::get('/profil/{id}/', [MenuController::class, 'profil'])->name('profil');
+    Route::put('/update-akun/{id}/', [MenuController::class, 'update_akun'])->name('update-akun');
 });
 
  
