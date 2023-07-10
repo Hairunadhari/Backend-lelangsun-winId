@@ -6,7 +6,9 @@ use DataTables;
 use App\Models\Toko;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Reply;
 use App\Models\Produk;
+use App\Models\Review;
 use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\OrderItem;
@@ -966,6 +968,80 @@ class MenuController extends Controller
 
         //redirect to index
         return redirect()->back()->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function list_review()
+    {
+        if (request()->ajax()) {
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = Review::with('user', 'produk')->where('status', 'active')->get();
+            } elseif ($status == 'not-active') {
+                $data = Review::with('user', 'produk')->where('status', 'not-active')->get();
+            }
+
+            return DataTables::of($data)->make();
+        }
+
+        return view('e-commerce.list_review');
+    }
+
+
+    public function detail_review($id){
+        $data = Review::with('user','produk.gambarproduk','reply')->find($id);
+        return view('e-commerce.detail_review',compact('data'));
+    }
+
+    public function add_reply(Request $request,$id){
+        $hapusData = Reply::where('review_id', $id)->delete();
+        Reply::create([
+            'reply' => $request->reply,
+            'review_id' => $id,
+        ]);
+        return redirect()->route('list-review')->with(['success' => 'Data Berhasil Diupdate!']);
+    }
+
+    public function active_review($id){
+        $ambilDataUserLama = Review::find($id);
+        $dataUserlama = Review::where('user_id', $ambilDataUserLama->user_id)->where('status','active')->first();
+        
+        // kalo ada data $dataUserlama
+        if ($dataUserlama) {
+            $dataReply = Reply::where('review_id',$dataUserlama->id)->first();
+            if ($dataReply) {
+                $dataReply->delete();
+                $dataUserlama->delete();
+
+                $data = Review::find($id);
+                $data->update([
+                    'status' => 'active'
+                ]);
+
+            } else {
+                $dataUserlama->delete();
+                $data = Review::find($id);
+                $data->update([
+                    'status' => 'active'
+                ]);
+            }
+
+        // kalo gada data $dataUserlama
+        }else {
+            
+            $data = Review::find($id);
+            $data->update([
+                'status' => 'active'
+            ]);
+        }
+        return redirect()->route('list-review')->with(['success' => 'Data Berhasil Diaktifkan!']);
+    }
+    public function nonactive_review($id){
+        $data = Review::find($id);
+        $data->update([
+            'status' => 'not-active'
+        ]);
+        return redirect()->route('list-review')->with(['success' => 'Data Berhasil Dinonaktifkan!']);
     }
 
 }   

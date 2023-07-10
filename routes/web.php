@@ -153,6 +153,15 @@ Route::middleware('auth')->group(function () {
     // rute profil akun
     Route::get('/profil/{id}/', [MenuController::class, 'profil'])->name('profil');
     Route::put('/update-akun/{id}/', [MenuController::class, 'update_akun'])->name('update-akun');
+
+    // ruote review
+    Route::get('/list-review', [MenuController::class, 'list_review'])->name('list-review');
+    Route::get('/detail-review/{id}/', [MenuController::class, 'detail_review'])->name('detail-review');
+
+    // route reply
+    Route::post('/add-reply/{id}/', [MenuController::class, 'add_reply'])->name('add-reply');
+    Route::put('/active-review/{id}/', [MenuController::class, 'active_review'])->name('active-review');
+    Route::put('/nonactive-review/{id}/', [MenuController::class, 'nonactive_review'])->name('nonactive-review');
 });
 
  

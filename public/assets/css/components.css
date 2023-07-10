@@ -1527,7 +1527,7 @@ tr:first-child > td > .fc-day-grid-event {
   margin: 0 10px;
 }
 .tickets .ticket-content {
-  width: 70%;
+  width: 100%;
 }
 .tickets .ticket-content .ticket-header {
   display: flex;

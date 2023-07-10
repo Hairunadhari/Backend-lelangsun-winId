@@ -539,7 +539,7 @@
         "/api/list-pesanan/{id}": {
             "get": {
                 "tags": [
-                    "List Pesanan"
+                    "Pesanan"
                 ],
                 "summary": "id user",
                 "description": "Menampilkan list pesanan berdasarkan user yg login",
@@ -565,7 +565,7 @@
         "/api/detail-pesanan/{id}": {
             "get": {
                 "tags": [
-                    "Detail Pesanan"
+                    "Pesanan"
                 ],
                 "summary": "order id",
                 "description": "Menampilkan detail pesanan berdasrkan order id",
@@ -588,25 +588,107 @@
                 }
             }
         },
-        "/api/detail-toko/{id}": {
+        "/api/add-wishlist": {
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Wishlist",
+                "description": "masukkan user id, produk id",
+                "operationId": "Wishlist",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "produk_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "produk_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/list-wishlist/{id}": {
             "get": {
                 "tags": [
-                    "Deskripsi Toko"
+                    "Wishlist"
                 ],
-                "summary": "id toko",
-                "description": "Menampilkan detail toko berdasrkan id toko",
-                "operationId": "DeskrispsiToko",
+                "summary": "user id",
+                "description": "menampilkan semua data wishlist berdasrkan user id",
+                "operationId": "ListWishlist",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id toko",
+                        "description": "user id",
                         "required": true,
                         "schema": {
                             "type": "integer"
                         }
                     }
                 ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/add-review": {
+            "post": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Review",
+                "description": "masukkan user id, produk id, review, rating, rating maksimal 5",
+                "operationId": "Review",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "produk_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "produk_id": {
+                                        "type": "integer"
+                                    },
+                                    "review": {
+                                        "type": "string"
+                                    },
+                                    "rating": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "default": {
                         "description": ""

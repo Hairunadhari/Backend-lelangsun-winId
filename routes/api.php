@@ -54,3 +54,4 @@ Route::post('/add-wishlist', [ApiController::class, 'add_wishlist']);
 Route::get('/list-wishlist/{id}/', [ApiController::class, 'list_wishlist']);
 
 Route::put('/update-akun/{id}/', [ApiController::class, 'update_akun']);
+Route::post('/add-review', [ApiController::class, 'add_review']);
