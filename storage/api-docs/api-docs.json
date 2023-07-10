@@ -446,8 +446,6 @@
                 }
             }
         },
-<<<<<<< HEAD
-=======
         "/api/update-akun/{id}": {
             "put": {
                 "tags": [
@@ -493,7 +491,6 @@
                 }
             }
         },
->>>>>>> origin/hairun
         "/api/list-banner-utama": {
             "get": {
                 "tags": [
