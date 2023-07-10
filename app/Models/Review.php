@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Wishlist extends Model
+class Review extends Model
 {
     use HasFactory;
     protected $guarded = [''];
@@ -19,5 +19,8 @@ class Wishlist extends Model
     {
         return $this->belongsTo(Produk::class);
     }
-
+    public function reply()
+    {
+        return $this->hasOne(Reply::class);
+    }
 }

@@ -55,6 +55,10 @@
                             badge = `<span class="badge badge-success">PAID</span>`
                         } else if(data == "EXPIRED"){
                             badge = `<span class="badge badge-light">EXPIRED</span>`
+                        } else if(data == "FAILED"){
+                            badge = `<span class="badge badge-danger">ERROR</span>`
+                        } else if(data == "ERROR"){
+                            badge = `<span class="badge badge-danger">ERROR</span>`
                         }
                         return badge;
                     }

@@ -30,4 +30,12 @@ class Produk extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

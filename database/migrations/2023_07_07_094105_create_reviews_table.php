@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wishlists', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
+            $table->timestamps();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('produk_id')->nullable();
-            $table->timestamps();
+            $table->string('review')->nullable();
+            $table->bigInteger('rating')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('produk_id')->references('id')->on('produks');
-        
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wishlists');
+        Schema::dropIfExists('reviews');
     }
 };

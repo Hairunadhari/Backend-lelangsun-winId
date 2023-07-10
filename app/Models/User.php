@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'no_telp',
         'alamat',
+        'foto',
     ];
 
     /**
@@ -51,5 +52,13 @@ class User extends Authenticatable
     public function tagihan()
     {
         return $this->hasOne(Tagihan::class);
+    }
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+    public function review()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }

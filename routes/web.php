@@ -115,7 +115,6 @@ Route::middleware('auth')->group(function () {
     // route kategori-lelang
     Route::get('/kategori-lelang', [MenuController::class, 'list_kategori_lelang'])->name('kategori-lelang');
     Route::post('/add-kategori-lelang', [MenuController::class, 'add_kategori_lelang'])->name('add-kategori-lelang');
-    Route::get('/detail-kategori-lelang/{id}/', [MenuController::class, 'detail_kategori_lelang'])->name('detail-kategori-lelang');
     Route::get('/edit-kategori-lelang/{id}/', [MenuController::class, 'edit_kategori_lelang'])->name('edit-kategori-lelang');
     Route::put('/update-kategori-lelang/{id}/', [MenuController::class, 'update_kategori_lelang'])->name('update-kategori-lelang');
     Route::delete('/delete-kategori-lelang/{id}/', [MenuController::class, 'delete_kategori_lelang'])->name('delete-kategori-lelang');
@@ -150,8 +149,19 @@ Route::middleware('auth')->group(function () {
     // route transaksi
     Route::get('/pesanan', [MenuController::class, 'list_pesanan'])->name('pesanan');
     Route::get('/detail-pesanan/{id}/', [MenuController::class, 'detail_pesanan'])->name('detail-pesanan');
-
     
+    // rute profil akun
+    Route::get('/profil/{id}/', [MenuController::class, 'profil'])->name('profil');
+    Route::put('/update-akun/{id}/', [MenuController::class, 'update_akun'])->name('update-akun');
+
+    // ruote review
+    Route::get('/list-review', [MenuController::class, 'list_review'])->name('list-review');
+    Route::get('/detail-review/{id}/', [MenuController::class, 'detail_review'])->name('detail-review');
+
+    // route reply
+    Route::post('/add-reply/{id}/', [MenuController::class, 'add_reply'])->name('add-reply');
+    Route::put('/active-review/{id}/', [MenuController::class, 'active_review'])->name('active-review');
+    Route::put('/nonactive-review/{id}/', [MenuController::class, 'nonactive_review'])->name('nonactive-review');
 });
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 

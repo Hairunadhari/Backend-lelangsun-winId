@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/chocolat/dist/css/chocolat.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}">
 
   
   
@@ -183,7 +185,7 @@
             <img alt="image" src="{{asset('assets/img/avatar/avatar-1.png')}}" class="rounded-circle mr-1">
             <div class="d-sm-none d-lg-inline-block">SuperAdmin</div></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <a href="features-profile.html" class="dropdown-item has-icon">
+              <a href="{{ route('profil',['id' => Auth::user()->id]) }}" class="dropdown-item has-icon">
                 <i class="far fa-user"></i> Profile
               </a>
               <div class="dropdown-divider"></div>
@@ -213,29 +215,28 @@
             </li>
             <li class="menu-header">Menu SuperAdmin</li>
             <li class="dropdown {{ request()->routeIs(['banner-utama','banner-diskon','banner-spesial']) ? 'active' : '' }}">
-              <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-large"></i> <span>Publikasi</span></a>
+              <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-large"></i> <span>Banner</span></a>
               <ul class="dropdown-menu">
                 <li class="{{ request()->routeIs('banner-utama') ? 'active' : '' }}"><a class="nav-link " href="{{route('banner-utama')}}">Banner Utama</a></li>
                 <li class="{{ request()->routeIs('banner-diskon') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-diskon')}}">Banner Diskon</a></li>
                 <li class="{{ request()->routeIs('banner-spesial') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-spesial')}}">Banner Spesial</a></li>
               </ul>
             </li>
-            <li class="dropdown {{ request()->routeIs(['toko', 'kategori-produk', 'produk', 'pesanan', 'pembayaran', 'pengiriman','promosi','detail-pesanan']) ? 'active' : '' }}">
+            <li class="dropdown {{ request()->routeIs(['toko', 'kategori-produk', 'produk', 'pembayaran', 'pengiriman','promosi','detail-pesanan']) ? 'active' : '' }}">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-shopping-cart"></i> <span>E-commerce</span></a>
               <ul class="dropdown-menu">
                 <li class="{{ request()->routeIs('toko') ? 'active' : '' }}"><a class="nav-link " href="{{route('toko')}}">Toko</a></li>
                 <li class="{{ request()->routeIs('kategori-produk') ? 'active' : '' }}"><a class="nav-link" href="{{route('kategori-produk')}}">Kategori Produk</a></li>
                 <li class="{{ request()->routeIs('produk') ? 'active' : '' }}"><a class="nav-link" href="{{route('produk')}}">Produk</a></li>
                 <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a class="nav-link" href="{{route('promosi')}}">Promo Produk</a></li>
-                <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a class="nav-link " href="{{route('pesanan')}}">Pesanan</a></li>
-                {{-- <li class="{{ request()->routeIs('pembayaran') ? 'active' : '' }}"><a class="nav-link" href="{{route('pembayaran')}}">Pembayaran</a></li> --}}
-                {{-- <li class="{{ request()->routeIs('pengiriman') ? 'active' : '' }}"><a class="nav-link" href="{{route('pengiriman')}}">Pengiriman</a></li> --}}
               </ul>
             </li>
-            {{-- <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('list-review') ? 'active' : '' }}"><a class="nav-link " href="{{route('list-review')}}"><i class="fa fa-comment-dots"></i>Review</a></li>
+            <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a class="nav-link " href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i>Pesanan</a></li>
+            <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-gavel"></i> <span>Lelang</span></a>
               <ul class="dropdown-menu">
-                <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('kategori-lelang')}}">Kategori Barang Lelang</a></li>
+                <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('kategori-lelang')}}">Kategori Lelang</a></li>
                 <li class="{{ request()->routeIs('barang-lelang') ? 'active' : '' }}"><a class="nav-link " href="{{route('barang-lelang')}}">Barang Lelang</a></li>
                 {{-- <li class="{{ request()->routeIs('pembelian-npl') ? 'active' : '' }}"><a class="nav-link " href="{{route('pembelian-npl')}}">Pembelian NPL</a></li>
                 <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a class="nav-link" href="{{route('lot')}}">Lot</a></li>
@@ -283,10 +284,14 @@
   <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
   <script src="{{ asset('assets/modules/chocolat/dist/js/jquery.chocolat.min.js')}}"></script>
   <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/jquery-selectric/jquery.selectric.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/upload-preview/assets/js/jquery.uploadPreview.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
 
   <!-- Page Specific JS File -->
   <script src="{{ asset('assets/js/page/modules-datatables.js')}}"></script>
   <script src="{{ asset('assets/js/page/index.js')}}"></script>
+  <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script>
 
   <!-- Template JS File -->
   <script src="{{ asset('assets/js/scripts.js')}}"></script>

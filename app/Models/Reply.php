@@ -5,19 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Wishlist extends Model
+class Reply extends Model
 {
     use HasFactory;
     protected $guarded = [''];
 
-    public function user()
+    public function review()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Review::class);
     }
-
-    public function produk()
-    {
-        return $this->belongsTo(Produk::class);
-    }
-
 }

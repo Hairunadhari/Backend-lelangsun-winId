@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use DataTables;
 use App\Models\Toko;
+use App\Models\User;
 use App\Models\Order;
+use App\Models\Reply;
 use App\Models\Produk;
+use App\Models\Review;
 use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\OrderItem;
@@ -118,7 +121,6 @@ class MenuController extends Controller
     public function add_kategori_produk(Request $request){
 
         $this->validate($request, [
-            'kategori'     => 'required|unique:kategori_produks,kategori',
             'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
             
         ]);
@@ -155,7 +157,6 @@ class MenuController extends Controller
     public function update_kategori_produk(Request $request, $id)
     {
         $this->validate($request, [
-            'kategori'     => 'required',
             'gambar'     => 'image|mimes:jpeg,jpg,png,webp',
             
         ]);
@@ -435,10 +436,6 @@ class MenuController extends Controller
     }
     public function update_event_lelang(Request $request, $id)
     {
-        //validate form
-        $this->validate($request, [
-            'event'     => 'required|unique:event_lelangs,event',
-        ]);
 
         $data = EventLelang::find($id);
         $data->update([
@@ -649,16 +646,14 @@ class MenuController extends Controller
     }
 
     public function list_kategori_lelang(){
-        $data = KategoriBarang::paginate(10);
-        return view('lelang/list_kategori', compact('data'));
+        if (request()->ajax()) {
+            $data = KategoriBarang::all();
+            return DataTables::of($data)->make();
+        }
+        return view('lelang/kategori_lelang');
     }
 
     public function add_kategori_lelang(Request $request){
-
-        $this->validate($request, [
-            'kategori'     => 'unique:kategori_barangs,kategori',
-            
-        ]);
 
         KategoriBarang::create([
             'kategori'     => $request->kategori,
@@ -667,37 +662,20 @@ class MenuController extends Controller
         return redirect('/kategori-lelang')->with('success', 'Data Berhasil Ditambahkan');
     }
 
-    public function detail_kategori_lelang($id)
-    {
-        $data = KategoriBarang::find($id);
-        // dd($produk);
-
-        return view('lelang.detail_kategorilelang', compact('data'));
-    }
-
     public function edit_kategori_lelang($id)
     {
         $data = KategoriBarang::findOrFail($id);
 
-        //render view with post
         return view('lelang.edit_kategorilelang', compact('data'));
     }
 
     public function update_kategori_lelang(Request $request, $id)
     {
-        $this->validate($request, [
-            'kategori'     => 'unique:kategori_barangs,kategori',
-            
-        ], [
-            'kategori.unique' => 'Kategori sudah digunakan. Silahkan gunakan kategori lain.',
-        ]);
-        
         $data = KategoriBarang::findOrFail($id);
             $data->update([
                 'kategori'     => $request->kategori,
             ]);
 
-        //redirect to index
         return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
@@ -709,9 +687,12 @@ class MenuController extends Controller
     }
     
     public function list_barang_lelang(){
-        $data = BarangLelang::with('kategoribarang')->paginate(10);
         $kategori = KategoriBarang::all();
-        return view('lelang/list_baranglelang', compact('data','kategori'));
+        if (request()->ajax()) {
+            $data = BarangLelang::with('kategoribarang')->get();
+            return DataTables::of($data)->make();
+        }
+        return view('lelang/list_baranglelang', compact('kategori'));
     }
 
     public function add_barang_lelang(Request $request){
@@ -950,12 +931,117 @@ class MenuController extends Controller
     }
 
     public function detail_pesanan($id){
-        $tes = 'null';
         $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
         $pengiriman = Pengiriman::where('order_id', $id)->first();
         $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
         // dd($tagihan);
         return view('e-commerce.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
+    }
+
+    public function profil($id){
+        $data = User::find($id);
+        return view('profile.profil_akun', compact('data'));
+    }
+
+    public function update_akun(Request $request, $id){
+        // dd($request->foto);
+        $data = User::find($id);
+
+        if ($request->hasFile('foto')) {
+
+            //upload new image
+            $foto = $request->file('foto');
+            $foto->storeAs('public/image', $foto->hashName());
+
+            Storage::delete('public/image/'.$data->foto);
+
+            $data->update([
+                'name'     => $request->name,
+                'foto'     => $foto->hashName(),
+            ]);
+
+        } else {
+            $data->update([
+                'name'     => $request->name,
+            ]);
+        }
+
+        //redirect to index
+        return redirect()->back()->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function list_review()
+    {
+        if (request()->ajax()) {
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = Review::with('user', 'produk')->where('status', 'active')->get();
+            } elseif ($status == 'not-active') {
+                $data = Review::with('user', 'produk')->where('status', 'not-active')->get();
+            }
+
+            return DataTables::of($data)->make();
+        }
+
+        return view('e-commerce.list_review');
+    }
+
+
+    public function detail_review($id){
+        $data = Review::with('user','produk.gambarproduk','reply')->find($id);
+        return view('e-commerce.detail_review',compact('data'));
+    }
+
+    public function add_reply(Request $request,$id){
+        $hapusData = Reply::where('review_id', $id)->delete();
+        Reply::create([
+            'reply' => $request->reply,
+            'review_id' => $id,
+        ]);
+        return redirect()->route('list-review')->with(['success' => 'Data Berhasil Diupdate!']);
+    }
+
+    public function active_review($id){
+        $ambilDataUserLama = Review::find($id);
+        $dataUserlama = Review::where('user_id', $ambilDataUserLama->user_id)->where('status','active')->first();
+        
+        // kalo ada data $dataUserlama
+        if ($dataUserlama) {
+            $dataReply = Reply::where('review_id',$dataUserlama->id)->first();
+            if ($dataReply) {
+                $dataReply->delete();
+                $dataUserlama->delete();
+
+                $data = Review::find($id);
+                $data->update([
+                    'status' => 'active'
+                ]);
+
+            } else {
+                $dataUserlama->delete();
+                $data = Review::find($id);
+                $data->update([
+                    'status' => 'active'
+                ]);
+            }
+
+        // kalo gada data $dataUserlama
+        }else {
+            
+            $data = Review::find($id);
+            $data->update([
+                'status' => 'active'
+            ]);
+        }
+        return redirect()->route('list-review')->with(['success' => 'Data Berhasil Diaktifkan!']);
+    }
+    public function nonactive_review($id){
+        $data = Review::find($id);
+        $data->update([
+            'status' => 'not-active'
+        ]);
+        return redirect()->route('list-review')->with(['success' => 'Data Berhasil Dinonaktifkan!']);
     }
 
 }   

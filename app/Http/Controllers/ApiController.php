@@ -11,9 +11,11 @@ use App\Models\Toko;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Produk;
+use App\Models\Review;
 use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\TLogApi;
+use App\Models\Wishlist;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
@@ -111,9 +113,18 @@ class ApiController extends Controller
         $gambarproduk->each(function ($item) {
             $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
         });
+
+        $review = Review::with('user')->where('produk_id', $id)->where('status','active')->get();
+        $review->each(function ($item){
+            $item->user->foto = url('https://backendwin.spero-lab.id/storage/image/' . $item->user->foto);
+        });
+        $totalreview = Review::where('produk_id', $id)->where('status','active')->count();
+
         return response()->json([
             'produk' => $produk,
-            'gambarproduk' => $gambarproduk
+            'gambarproduk' => $gambarproduk,
+            'total_review' => $totalreview,
+            'reviews' => $review,
         ]);
     }
 
@@ -640,6 +651,63 @@ class ApiController extends Controller
         ]);
     }
 
+
+    /**
+     * @OA\Put(
+     *      path="/api/update-akun/{id}",
+    *      tags={"Akun"},
+    *      summary="Update Akun",
+    *      description="Mengupdate data akun berdasarkan ID",
+     *      @OA\RequestBody(
+    *          required=true,
+    *          description="form edit",
+    *          @OA\JsonContent(
+    *              required={"name", "no_telp","alamat"},
+    *              @OA\Property(property="name", type="string"),
+    *              @OA\Property(property="no_telp", type="integer"),
+    *              @OA\Property(property="alamat", type="string"),
+    *              @OA\Property(property="foto", type="string"),
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function update_akun(Request $request, $id){
+        $data = User::find($id);
+
+        if ($request->hasFile('foto')) {
+
+            //upload new image
+            $foto = $request->file('foto');
+            $foto->storeAs('public/image', $foto->hashName());
+
+            Storage::delete('public/image/'.$data->foto);
+
+            $data->update([
+                'name' => $request->name,
+                'no_telp' => $request->no_telp,
+                'alamat' => $request->alamat,
+                'foto'     => $foto->hashName(),
+            ]);
+
+        } else {
+            $data->update([
+                'name'     => $request->name,
+                'no_telp' => $request->no_telp,
+                'alamat' => $request->alamat,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $data
+        ]);
+    }
+
+
      /**
      * @OA\Get(
      *      path="/api/list-banner-utama",
@@ -711,7 +779,7 @@ class ApiController extends Controller
     /**
      * @OA\Get(
      *      path="/api/list-pesanan/{id}",
-     *      tags={"List Pesanan"},
+     *      tags={"Pesanan"},
      *      summary="id user",
      *      description="Menampilkan list pesanan berdasarkan user yg login",
      *      operationId="ListPesanan",
@@ -731,16 +799,27 @@ class ApiController extends Controller
      * )
      */
     public function list_pesanan($userid){
-        $data = Order::with('user', 'orderitem', 'tagihan')->where('user_id', $userid)->get();
+        $data = Order::with('user', 'orderitem.produk', 'tagihan')->where('user_id', $userid)->get();
+
+        $data->each(function ($item) {
+            $thumbnail = $item->orderitem->produk->thumbnail;
+            $url = 'https://backendwin.spero-lab.id/storage/image/';
+
+            $item->orderitem->produk->thumbnail = str_replace($url, '', $thumbnail);
+            $item->orderitem->produk->thumbnail = $url . $item->orderitem->produk->thumbnail;
+        });
+
         return response()->json([
             'order' => $data
         ]);
+
+
     }
 
     /**
      * @OA\Get(
      *      path="/api/detail-pesanan/{id}",
-     *      tags={"Detail Pesanan"},
+     *      tags={"Pesanan"},
      *      summary="order id",
      *      description="Menampilkan detail pesanan berdasrkan order id",
      *      operationId="DetailPesanan",
@@ -786,17 +865,59 @@ class ApiController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *      path="/api/add-wishlist",
+     *      tags={"Wishlist"},
+     *      summary="Wishlist",
+     *      description="masukkan user id, produk id",
+     *      operationId="Wishlist",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\JsonContent(
+     *              required={"user_id","produk_id"},
+     *              @OA\Property(property="user_id", type="integer"),
+     *              @OA\Property(property="produk_id", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+
+    public function add_wishlist(Request $request){
+        $this->validate($request, [
+            'user_id'     => 'required',
+            'produk_id'     => 'required',
+        ]);
+
+        Wishlist::where('produk_id', $request->produk_id)->where('user_id', $request->user_id)->delete();
+
+        $data = Wishlist::create([
+            'user_id' => $request->user_id,
+            'produk_id' => $request->produk_id,
+        ]);
+
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+    /**
      * @OA\Get(
-     *      path="/api/detail-toko/{id}",
-     *      tags={"Detail Toko"},
-     *      summary="id toko",
-     *      description="Menampilkan detail toko berdasrkan id toko",
-     *      operationId="DetailToko",
+     *      path="/api/list-wishlist/{id}",
+     *      tags={"Wishlist"},
+     *      summary="user id",
+     *      description="menampilkan semua data wishlist berdasrkan user id",
+     *      operationId="ListWishlist",
      *       @OA\Parameter(
     *          name="id",
     *          in="path",
     *          required=true,
-    *          description="id toko",
+    *          description="user id",
     *          @OA\Schema(
     *              type="integer"
     *          )
@@ -807,19 +928,77 @@ class ApiController extends Controller
      *      )
      * )
      */
-    public function detail_toko($id){
-        $toko = Toko::with('produk.kategoriproduk')->find($id);
-        $toko->logo = url('https://backendwin.spero-lab.id/storage/image/' . $toko->logo);
-        
-        $toko->produk->each(function ($item) {
-            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+    public function list_wishlist($id){
+        $data = Wishlist::with('produk')->where('user_id', $id)->get();
+        $data->each(function ($item){
+            $item->produk->thumbnail =  'https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail;
         });
-        
         return response()->json([
-            'toko' => $toko
-        ]);        
-        
+            'data' => $data
+        ]);
+    }
 
+     /**
+     * @OA\Post(
+     *      path="/api/add-review",
+     *      tags={"Review"},
+     *      summary="Review",
+     *      description="masukkan user id, produk id, review, rating, rating maksimal 5",
+     *      operationId="Review",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\JsonContent(
+     *              required={"user_id","produk_id"},
+     *              @OA\Property(property="user_id", type="integer"),
+     *              @OA\Property(property="produk_id", type="integer"),
+     *              @OA\Property(property="review", type="string"),
+     *              @OA\Property(property="rating", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function add_review(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required',
+            'produk_id'     => 'required',
+            'review'     => 'required',
+            'rating'     => 'required|numeric|between:1,5',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'VALIDASI GAGAL'
+            ]);
+        }
+
+        Review::where('produk_id', $request->produk_id)->where('user_id', $request->user_id)->delete();
+        $data = Review::create([
+            'user_id' => $request->user_id,
+            'produk_id' => $request->produk_id,
+            'review' => $request->review,
+            'rating' => $request->rating,
+            'status' => 'active',
+        ]);
+
+        $totalRating = Review::where('produk_id', $request->produk_id)->sum('rating');
+        $totalUser = Review::where('produk_id', $request->produk_id)->count('user_id');
+        // dd($totalUser);
+        $hasil = $totalRating / $totalUser;
+        $rating = number_format($hasil, 1, ',','');
+        $ambilProduk = Produk::find($request->produk_id);
+        $ambilProduk->update([
+            'rating'=> $rating
+        ]);
+
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $data
+        ]);
     }
 
  
