@@ -131,13 +131,16 @@
                         <input type="text" class="form-control" name="toko" required id="exampleInputEmail1">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Logo</label>
-                        <input type="file" class="form-control" name="logo" required id="gambar">
+                        <label class="">Logo</label>
+                        <div class="col-sm-12 col-md-7">
+                            <div id="image-preview" class="image-preview">
+                                <label for="image-upload" id="image-label">Choose File</label>
+                                <input type="file" name="logo" id="image-upload">
+                            </div>
+                        </div>
                     </div>
-                    <div id="preview"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-warning" id="resetButton">Reset</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>

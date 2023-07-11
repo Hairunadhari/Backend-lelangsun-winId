@@ -133,12 +133,16 @@
                         <input type="text" class="form-control" name="kategori" required>
                     </div>
                     <div class="form-group">
-                        <label>Gambar</label>
-                        <input type="file" class="form-control" name="gambar" id="gambar" required>
+                        <label class="">Logo</label>
+                        <div class="col-sm-12 col-md-7">
+                            <div id="image-preview" class="image-preview">
+                                <label for="image-upload" id="image-label">Choose File</label>
+                                <input type="file" name="gambar" id="image-upload">
+                            </div>
+                        </div>
                     </div>
                     <div id="preview"></div>
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-warning" id="resetButton">Reset</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
@@ -146,31 +150,3 @@
         </div>
     </div>
 </div>
-<script>
-    // function previewImages() {
-    //     var preview = document.querySelector('#preview');
-    //     if (this.files) {
-    //         [].forEach.call(this.files, readAndPreview);
-    //     }
-    //     function readAndPreview(file) {
-    //         if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-    //             return alert(file.name + " is not an image");
-    //         }
-    //         var reader = new FileReader();
-    //         reader.addEventListener("load", function () {
-    //             var image = new Image();
-    //             image.width = 200;
-    //             image.title = file.name;
-    //             image.src = this.result;
-    //             preview.appendChild(image);
-    //         }, false);
-    //         reader.readAsDataURL(file);
-    //     }
-    // }
-    // document.querySelector('#gambar').addEventListener("change", previewImages);
-    
-    // document.querySelector('#resetButton').addEventListener('click', function() {
-    //     document.querySelector('#preview').innerHTML = '';
-    // });
-</script>
-<!-- /.container-fluid -->

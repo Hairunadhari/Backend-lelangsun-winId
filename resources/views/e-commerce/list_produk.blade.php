@@ -147,7 +147,6 @@
       
       input.value = num;
     }
-
 </script>
 @endsection
 <!-- Modal -->
@@ -165,18 +164,18 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Pilih Nama Toko:</label>
-                        <select class="form-control" name="toko_id" required>
-                            @foreach ($dataToko as $item)
-                            <option value="{{ $item->id }}">{{ strtoupper($item->toko) }}</option>
+                        <label>Nama Toko:</label>
+                        <select class="form-control selectric" name="toko_id" required>
+                            @foreach ($toko as $item)
+                            <option value="{{ $item->id }}">{{ $item->toko }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Pilih Kategori Produk</label>
-                        <select class="form-control" name="kategoriproduk_id" required>
-                            @foreach ($dataKategoriproduk as $item)
-                            <option value="{{ $item->id }}">{{ strtoupper($item->kategori) }}</option>
+                        <label>Kategori Produk</label>
+                        <select class="form-control selectric" name="kategoriproduk_id" required>
+                            @foreach ($kategori as $item)
+                            <option value="{{ $item->id }}">{{ $item->kategori }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -201,8 +200,13 @@
                         <input type="text" class="form-control" name="video" required placeholder="">
                     </div>
                     <div class="form-group">
-                        <label>Cover Produk:</label>
-                        <input type="file" class="form-control" name="thumbnail" required placeholder="">
+                        <label class="">Cover Produk</label>
+                        <div class="col-sm-12 col-md-7">
+                            <div id="image-preview" class="image-preview">
+                                <label for="image-upload" id="image-label">Choose File</label>
+                                <input type="file" name="thumbnail" id="image-upload">
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar)</small></label>
@@ -211,7 +215,6 @@
                         <div id="preview" class="review"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-warning" id="resetButton">Reset</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
