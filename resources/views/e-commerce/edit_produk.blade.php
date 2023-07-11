@@ -74,8 +74,13 @@
                         <input type="text" class="form-control" name="video" value="{{$data->video}}">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Cover Produk:</label>
-                        <input type="file" class="form-control" name="thumbnail" value="{{$data->thumbnail}}">
+                        <label class="">Cover Produk</label>
+                        <div class="col-sm-12 col-md-7">
+                            <div id="image-preview" class="image-preview">
+                                <label for="image-upload" id="image-label">Choose File</label>
+                                <input type="file" name="thumbnail" id="image-upload" value="{{$data->thumbnail}}">
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group" >
                         <label for="">Gambar Detail Produk:</label>

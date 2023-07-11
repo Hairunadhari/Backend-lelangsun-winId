@@ -97,7 +97,6 @@
                     <div id="preview"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-warning" id="resetButton">Reset</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>

@@ -42,7 +42,7 @@ class MenuController extends Controller
     }
 
     public function add_toko(Request $request){
-
+        // dd($request->logo);
         $this->validate($request, [
             'toko'     => 'required|min:3',
             'logo'     => 'required|image|mimes:jpeg,jpg,png,webp',
@@ -211,13 +211,13 @@ class MenuController extends Controller
     }
 
     public function list_produk(){
-        $dataToko = Toko::all();
-        $dataKategoriproduk = KategoriProduk::all();
+        $toko = Toko::orderBy('toko','asc')->get();
+        $kategori = KategoriProduk::orderBy('kategori','asc')->get();
         if (request()->ajax()) {
             $data = Produk::all();
             return DataTables::of($data)->make();
         }
-        return view('e-commerce/list_produk', compact('dataToko','dataKategoriproduk'));
+        return view('e-commerce/list_produk', compact('toko','kategori'));
     }
 
     public function add_produk(Request $request){
