@@ -19,7 +19,7 @@
                         </button>
                     </div>
                     @endif
-                        <table class="table table-striped" id="kategori-produk">
+                        <table class="table table-striped w-100" id="kategori-produk">
                             <thead>
                                 <tr>
                                     <th>No</th>

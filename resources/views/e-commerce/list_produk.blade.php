@@ -26,7 +26,7 @@
                         </button>
                     </div>
                     @endif
-                        <table class="table table-striped" id="t-produk">
+                        <table class="table table-striped w-100" id="t-produk">
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>

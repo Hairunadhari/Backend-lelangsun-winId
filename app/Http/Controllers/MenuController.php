@@ -686,14 +686,6 @@ class MenuController extends Controller
         return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
     
-    public function list_barang_lelang(){
-        $kategori = KategoriBarang::all();
-        if (request()->ajax()) {
-            $data = BarangLelang::with('kategoribarang')->get();
-            return DataTables::of($data)->make();
-        }
-        return view('lelang/list_baranglelang', compact('kategori'));
-    }
 
     public function add_barang_lelang(Request $request){
 
@@ -1042,6 +1034,15 @@ class MenuController extends Controller
             'status' => 'not-active'
         ]);
         return redirect()->route('list-review')->with(['success' => 'Data Berhasil Dinonaktifkan!']);
+    }
+
+    public function list_barang_lelang(){
+        $kategori = KategoriBarang::all();
+        if (request()->ajax()) {
+            $data = BarangLelang::with('kategoribarang')->get();
+            return DataTables::of($data)->make();
+        }
+        return view('lelang/list_baranglelang', compact('kategori'));
     }
 
 }   

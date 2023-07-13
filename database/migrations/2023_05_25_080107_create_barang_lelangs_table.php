@@ -13,32 +13,34 @@ return new class extends Migration
     {
         Schema::create('barang_lelangs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kategoribarang_id')->constrained('kategori_barangs')->onDelete('cascade');
+            $table->unsignedBigInteger('kategoribarang_id')->nullable();
             $table->string('barang');
-            $table->string('nama_pemilik');
             $table->string('brand');
             $table->string('warna');
             $table->string('lokasi_barang');
-            $table->bigInteger('nomer_rangka');
-            $table->bigInteger('nomer_mesin');
-            $table->string('tipe_mobil');
-            $table->string('transisi_mobil');
-            $table->string('bahan_bakar');
-            $table->bigInteger('odometer');
-            $table->string('grade_utama');
-            $table->string('grade_mesin');
-            $table->string('grade_interior');
-            $table->string('grade_exterior');
-            $table->bigInteger('no_polisi');
-            $table->string('stnk');
-            $table->date('stnk_berlaku');
-            $table->bigInteger('tahun_produksi');
-            $table->string('bpkb');
-            $table->string('faktur');
-            $table->string('sph');
-            $table->string('kir');
-            $table->text('keterangan');
+            $table->bigInteger('nomer_rangka')->nullable();
+            $table->bigInteger('nomer_mesin')->nullable();
+            $table->string('tipe_mobil')->nullable();
+            $table->string('transisi_mobil')->nullable();
+            $table->string('bahan_bakar')->nullable();
+            $table->bigInteger('odometer')->nullable();
+            $table->string('grade_utama')->nullable();
+            $table->string('grade_mesin')->nullable();
+            $table->string('grade_interior')->nullable();
+            $table->string('grade_exterior')->nullable();
+            $table->bigInteger('no_polisi')->nullable();
+            $table->string('stnk')->nullable();
+            $table->date('stnk_berlaku')->nullable();
+            $table->bigInteger('tahun_produksi')->nullable();
+            $table->string('bpkb')->nullable();
+            $table->string('faktur')->nullable();
+            $table->string('sph')->nullable();
+            $table->string('kir')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
+
+            $table->foreign('kategoribarang_id')->references('id')->on('kategori_barangs');
+
         });
     }
 
