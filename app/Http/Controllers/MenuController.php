@@ -220,7 +220,8 @@ class MenuController extends Controller
         return view('e-commerce/list_produk', compact('toko','kategori'));
     }
 
-    public function add_produk(Request $request){
+    public function add_produk(Request $request){ 
+        dd($request->gambar);
         $this->validate($request, [
             'toko_id'     => 'required',
             'kategoriproduk_id'     => 'required',
@@ -229,6 +230,7 @@ class MenuController extends Controller
             'stok'     => 'required',
             'harga'     => 'required',
             'video'     => 'required',
+            'gambar'     => 'required',
 
         ]);
 

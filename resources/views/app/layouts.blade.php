@@ -21,7 +21,6 @@
   <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css')}}">
-
   
   
 
@@ -73,7 +72,6 @@
   
   <!-- JS Libraies -->
   <script src="{{ asset('assets/modules/jquery.sparkline.min.js')}}"></script>
-  <script src="{{ asset('assets/modules/chart.min.js')}}"></script>
   <script src="{{ asset('assets/modules/owlcarousel2/dist/owl.carousel.min.js')}}"></script>
   <script src="{{ asset('assets/modules/summernote/summernote-bs4.js')}}"></script>
   <script src="{{ asset('assets/modules/datatables/datatables.min.js')}}"></script>
@@ -90,6 +88,7 @@
   <script src="{{ asset('assets/js/page/index.js')}}"></script>
   <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script>
   <script src="{{ asset('assets/js/page/forms-advanced-forms.js')}}"></script>
+
 
   <!-- Template JS File -->
   <script src="{{ asset('assets/js/scripts.js')}}"></script>

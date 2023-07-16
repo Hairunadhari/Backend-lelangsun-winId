@@ -1,16 +1,12 @@
 @extends('app.layouts')
 @section('content')
-<style>
-    .review img{
-        margin-bottom: 20px;
-        margin-left: 20px;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    }
-</style>
 <div class="section-body">
     <div class="row">
         <div class="col-12">
             <div class="card">
+
+                <div class="container">
+                </div>
                 <div class="card-header">
                     <h4 class="w-100">Daftar Produk</h4>
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#produkmodal">
@@ -26,20 +22,20 @@
                         </button>
                     </div>
                     @endif
-                        <table class="table table-striped w-100" id="t-produk">
-                            <thead>
-                                <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Nama Produk</th>
-                                    <th scope="col">Cover Produk</th>
-                                    <th scope="col">Harga</th>
-                                    <th scope="col">Stok</th>
-                                    <th scope="col">Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                    <table class="table table-striped w-100" id="t-produk">
+                        <thead>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Nama Produk</th>
+                                <th scope="col">Cover Produk</th>
+                                <th scope="col">Harga</th>
+                                <th scope="col">Stok</th>
+                                <th scope="col">Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -51,8 +47,6 @@
             // responsive: true,
             processing: true,
             ordering: false,
-            fixedColumns: true,
-            // fixedHeader: true,
             ajax: '{{ url()->current() }}',
             columns: [{
                     render: function (data, type, row, meta) {
@@ -77,12 +71,12 @@
                     data: "stok",
                 },
                 {
-                data: null,
-                render: function (data) {
-                    var deleteUrl = '/deleteproduk/' + data.id;
-                    var editUrl = '/editproduk/' + data.id;
-                    var detailUrl = '/detailproduk/' + data.id;
-                    return `
+                    data: null,
+                    render: function (data) {
+                        var deleteUrl = '/deleteproduk/' + data.id;
+                        var editUrl = '/editproduk/' + data.id;
+                        var detailUrl = '/detailproduk/' + data.id;
+                        return `
                     <div class="dropdown d-inline">
                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
@@ -98,60 +92,15 @@
                         </form>
                     </div>
                     `;
+                    },
                 },
-            },
             ],
         });
     });
 
-    function previewImages() {
-        var preview = document.querySelector('#preview');
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-        function readAndPreview(file) {
-            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-                return alert(file.name + " is not an image");
-            }
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-    document.querySelector('#gambar').addEventListener("change", previewImages);
-    
-    document.querySelector('#resetButton').addEventListener('click', function() {
-        document.querySelector('#preview').innerHTML = '';
-    });
-
-    function formatNumber(input) {
-      // Menghilangkan karakter selain angka
-      var num = input.value.replace(/[^0-9]/g, '');
-      
-      // Memformat angka menjadi format ribuan dan desimal
-      var formattedNum = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
-    
-      // Memasukkan nilai format ke dalam input
-      input.value = formattedNum;
-    }
-
-    function formatStok(input) {
-      // Menghilangkan karakter selain angka
-      var num = input.value.replace(/[^0-9]/g, '');
-      
-      input.value = num;
-    }
 </script>
 @endsection
-<!-- Modal -->
-<div class="modal fade" id="produkmodal" tabindex="-1" role="dialog" aria-labelledby="produkLabel"
-    aria-hidden="true">
+<div class="modal fade" id="produkmodal" tabindex="-1" role="dialog" aria-labelledby="produkLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -160,6 +109,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <form action="{{route('addproduk')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -181,7 +131,7 @@
                     </div>
                     <div class="form-group">
                         <label>Nama Produk</label>
-                        <input type="text" class="form-control" name="nama" required >
+                        <input type="text" class="form-control" name="nama" required>
                     </div>
                     <div class="form-group">
                         <label>Keterangan</label>
@@ -193,7 +143,7 @@
                     </div>
                     <div class="form-group">
                         <label>Stok</label>
-                        <input type="number" class="form-control" name="stok" required onkeyup="formatStok(this)" >
+                        <input type="number" class="form-control" name="stok" required onkeyup="formatStok(this)">
                     </div>
                     <div class="form-group">
                         <label>Link Video:</label>
@@ -210,9 +160,8 @@
                     </div>
                     <div class="form-group">
                         <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar)</small></label>
-                        <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
-                    </div>
                         <div id="preview" class="review"></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -221,3 +170,38 @@
         </div>
     </div>
 </div>
+<script>
+    function formatNumber(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+
+        // Memformat angka menjadi format ribuan dan desimal
+        var formattedNum = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(num);
+
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    }
+
+    function formatStok(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+
+        input.value = num;
+    }
+
+    // Mengakses elemen input file
+var fileInput = document.querySelector('input[name="gambar[]"]');
+
+// Menampilkan nilai file yang dipilih
+fileInput.addEventListener('change', function() {
+  console.log(fileInput.files); // Menampilkan objek FileList
+  console.log(fileInput.files[0]); // Menampilkan objek File pertama dalam daftar
+});
+
+
+</script>
+
