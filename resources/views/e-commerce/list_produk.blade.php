@@ -103,7 +103,7 @@
             ],
         });
     });
-
+    
     function previewImages() {
         var preview = document.querySelector('#preview');
         if (this.files) {
