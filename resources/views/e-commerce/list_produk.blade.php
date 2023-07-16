@@ -1,5 +1,13 @@
 @extends('app.layouts')
 @section('content')
+
+<style>
+    .review img{
+        margin-bottom: 20px;
+        margin-left: 20px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
+</style>
 <div class="section-body">
     <div class="row">
         <div class="col-12">
@@ -171,6 +179,32 @@
     </div>
 </div>
 <script>
+
+    function previewImages() {
+        var preview = document.querySelector('#preview');
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+        function readAndPreview(file) {
+            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
+                return alert(file.name + " is not an image");
+            }
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#gambar').addEventListener("change", previewImages);
+    
+    document.querySelector('#resetButton').addEventListener('click', function() {
+        document.querySelector('#preview').innerHTML = '';
+    });
     function formatNumber(input) {
         // Menghilangkan karakter selain angka
         var num = input.value.replace(/[^0-9]/g, '');
