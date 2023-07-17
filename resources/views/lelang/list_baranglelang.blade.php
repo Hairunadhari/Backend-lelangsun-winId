@@ -52,7 +52,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Pilih Kategori Barang Lelang</label>
-                        <select class="form-control" name="kategoribarang_id" required>
+                        <select class="form-control selectric" name="kategoribarang_id" required>
                             @foreach ($kategori as $item)
                             <option value="{{ $item->id }}">{{ $item->kategori }}</option>
                             @endforeach
@@ -61,10 +61,6 @@
                     <div class="form-group">
                         <label>Nama Barang</label>
                         <input type="text" class="form-control" name="barang" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Nama Pemilik Barang</label>
-                        <input type="text" class="form-control" name="nama_pemilik" required>
                     </div>
                     <div class="form-group">
                         <label>Brand</label>
@@ -80,154 +76,191 @@
                     </div>
                     <hr>
                     <h5>Spesifikasi Kendaraan</h5>
-                    <div class="form-group">
-                        <label>Nomer Rangka</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Nomer Mesin</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Tipe Mobil</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Transmisi Mobil</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Bahan Bakar</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Odometer</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label>Nomer Rangka</label>
+                            <input type="text" class="form-control" name="nomer_rangka" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Nomer Mesin</label>
+                            <input type="text" class="form-control" name="nomer_rangka" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Tipe Mobil</label>
+                            <input type="text" class="form-control" name="nomer_rangka" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Transmisi Mobil</label>
+                            <select class="form-control selectric" name="kategoribarang_id" required>
+                                <option value="Automatic Transmission">Automatic Transmission</option>
+                                <option value="Manual Transmission">Manual Transmission</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Bahan Bakar</label>
+                            <select class="form-control selectric" name="kategoribarang_id" required>
+                                <option value="Bensin">Bensin</option>
+                                <option value="Solar">Solar</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Odometer</label>
+                            <input type="number" class="form-control" name="nomer_rangka" required>
+                        </div>
                     </div>
                     <hr>
                     <h5>Dokumen Kendaraan</h5>
-                    <div class="form-group">
-                        <label>Grade Utama</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Grade Mesin</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Grade Interior</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Grade Exterior</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>No Polisi</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="d-block">STNK</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios1">
-                                Ada
-                            </label>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label>Grade Utama</label>
+                            <select class="form-control selectric" name="kategoribarang_id" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                            </select>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios2">
-                                Tidak Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label>Grade Mesin</label>
+                            <select class="form-control selectric" name="kategoribarang_id" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                            </select>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>STNK Berlaku</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Tahun Produksi</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="d-block">BPKB</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios1">
-                                Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label>Grade Interior</label>
+                            <select class="form-control selectric" name="kategoribarang_id" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                            </select>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios2">
-                                Tidak Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label>Grade Exterior</label>
+                            <select class="form-control selectric" name="kategoribarang_id" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                            </select>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="d-block">Faktur</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios1">
-                                Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label>No Polisi</label>
+                            <input type="text" class="form-control" name="nomer_rangka" required>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios2">
-                                Tidak Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label class="d-block">STNK</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="stnk" id="stnk-ada"
+                                    checked="">
+                                <label class="form-check-label" for="stnk-ada">
+                                    Ada
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="stnk" id="stnk-tidakada"
+                                    checked="">
+                                <label class="form-check-label" for="stnk-tidakada">
+                                    Tidak Ada
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="d-block">SPH</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios1">
-                                Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label>STNK Berlaku</label>
+                            <input type="text" class="form-control" name="nomer_rangka" required>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios2">
-                                Tidak Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label>Tahun Produksi</label>
+                            <input type="text" class="form-control" name="nomer_rangka" required>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="d-block">KIR</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios1">
-                                Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label class="d-block">BPKB</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="bpkb" id="bpkb-ada"
+                                    checked="">
+                                <label class="form-check-label" for="bpkb-ada">
+                                    Ada
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="bpkb" id="bpkb-tdkada"
+                                    checked="">
+                                <label class="form-check-label" for="bpkb-tdkada">
+                                    Tidak Ada
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
-                                checked="">
-                            <label class="form-check-label" for="exampleRadios2">
-                                Tidak Ada
-                            </label>
+                        <div class="form-group col-6">
+                            <label class="d-block">Faktur</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="faktur" id="faktur-ada"
+                                    checked="">
+                                <label class="form-check-label" for="faktur-ada">
+                                    Ada
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="faktur" id="faktur-tdkada"
+                                    checked="">
+                                <label class="form-check-label" for="faktur-tdkada">
+                                    Tidak Ada
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="d-block">SPH</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sph" id="sph-ada"
+                                    checked="">
+                                <label class="form-check-label" for="sph-ada">
+                                    Ada
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sph" id="sph-tdkada"
+                                    checked="">
+                                <label class="form-check-label" for="sph-tdkada">
+                                    Tidak Ada
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="d-block">KIR</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="kir" id="kir-ada"
+                                    checked="">
+                                <label class="form-check-label" for="kir-ada">
+                                    Ada
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="kir" id="kir-tdkada"
+                                    checked="">
+                                <label class="form-check-label" for="kir-tdkada">
+                                    Tidak Ada
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <hr>
-                    <h5>media</h5>
                     <div class="form-group">
                         <label>gambar barang</label>
                         <input type="text" class="form-control" name="nomer_rangka" required>
                     </div>
                     <div class="form-group">
                         <label>deskripsi</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
+                        <textarea class="summernote-simple"></textarea>
                     </div>
                     <div class="selectgroup w-100">
                         <label class="selectgroup-item">
@@ -248,63 +281,3 @@
         </div>
     </div>
 </div>
-<script>
-    function previewImages() {
-        var preview = document.querySelector('#preview');
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-                return alert(file.name + " is not an image");
-            }
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-    document.querySelector('#gambar').addEventListener("change", previewImages);
-
-    document.querySelector('#resetButton').addEventListener('click', function () {
-        document.querySelector('#preview').innerHTML = '';
-    });
-
-    function formatNumber(input) {
-        // Menghilangkan karakter selain angka
-        var num = input.value.replace(/[^0-9]/g, '');
-
-        // Memformat angka menjadi format ribuan dan desimal
-        var formattedNum = new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0
-        }).format(num);
-
-        // Memasukkan nilai format ke dalam input
-        input.value = formattedNum;
-    }
-
- 
-    function validateform(){
-        validate=true;
-        var validate_form=document.querySelectorAll(".main.active input");
-        validate_form.forEach(function(val){
-            val.classList.remove('warning');
-            if(val.hasAttribute('require')){
-                if(val.value.length==0){
-                    validate=false;
-                    val.classList.add('warning');
-                }
-            }
-        });
-        return validate;
-}
-
-</script>

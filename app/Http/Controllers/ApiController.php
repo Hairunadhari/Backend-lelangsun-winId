@@ -353,7 +353,7 @@ class ApiController extends Controller
      * @OA\Get(
      *      path="/api/detailpromosi/{id}",
      *      tags={"Promosi"},
-     *      summary="Mendapatkan detail promo produk berdasarkan ID",
+     *      summary="menampilkan detail promo produk berdasarkan ID",
      *      description="menampilkan semua produk yg sedang diskon berdasarkan ID Promosi yg diberikan",
      *      operationId="DetailPromosi",
      *       @OA\Parameter(
@@ -374,6 +374,7 @@ class ApiController extends Controller
     public function detail_promosi($id){
         $datapromosi = Promosi::find($id);
         $datapromosi->gambar =  url('https://backendwin.spero-lab.id/storage/image/' . $datapromosi->gambar);
+        $datapromosi->diskon =  $datapromosi->diskon . '%';
 
         $detailproduk = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
         $detailproduk->each(function ($item){

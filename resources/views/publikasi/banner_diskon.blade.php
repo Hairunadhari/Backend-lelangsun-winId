@@ -19,7 +19,7 @@
                 </button>
             </div>
             @endif
-              <table class="table table-striped" id="tablebanner-2">
+              <table class="table table-striped w-100" id="tablebanner-2">
                 <thead>                                 
                   <tr>
                     <th>No</th>
@@ -108,9 +108,16 @@
 <script>
     function previewImages() {
         var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
         if (this.files) {
             [].forEach.call(this.files, readAndPreview);
         }
+
         function readAndPreview(file) {
             var reader = new FileReader();
             reader.addEventListener("load", function () {

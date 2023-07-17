@@ -8,7 +8,7 @@
                     <h4 class="">Daftar Pesanan</h4>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped" id="tablepesanan">
+                    <table class="table table-striped w-100" id="tablepesanan">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -48,13 +48,13 @@
                 },
                 {
                     data: "tagihan.status",
-                    render: function (data, type, row, meta) {
+                    render: function(data, type, row, meta) {
                         if (data == "PENDING") {
-                            badge = `<span class="badge badge-primary">PENDING</span>`
+                            badge = `<span class="badge badge-warning">PENDING</span>`
                         } else if (data == "PAID") {
                             badge = `<span class="badge badge-success">PAID</span>`
                         } else if(data == "EXPIRED"){
-                            badge = `<span class="badge badge-light">EXPIRED</span>`
+                            badge = `<span class="badge badge-dark">EXPIRED</span>`
                         } else if(data == "FAILED"){
                             badge = `<span class="badge badge-danger">ERROR</span>`
                         } else if(data == "ERROR"){
@@ -67,17 +67,18 @@
                     data: "tagihan.exp_date",
                 },
                 {
-                    data: null,
-                    render: function (data) {
-                        var detailUrl = '/detail-pesanan/' + data.id;
-                        return `
-                        <span><a class="btn btn-primary" href="${detailUrl}"><i class="fas fa-info-circle"></i>Detail</a></span>
+                data: null,
+                render: function (data) {
+                    var detailUrl = '/detail-pesanan/' + data.id;
+                    return `
+                        <span><a class="btn btn-primary" href="${detailUrl}"><i class="fas fa-search"></i> Detail</a></span>
                     `;
-                    },
                 },
+            },
             ],
         });
     });
+
 
 </script>
 @endsection

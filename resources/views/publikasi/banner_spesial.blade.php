@@ -19,7 +19,7 @@
                 </button>
             </div>
             @endif
-              <table class="table table-striped" id="tablebanner-3">
+              <table class="table table-striped w-100" id="tablebanner-3">
                 <thead>                                 
                   <tr>
                     <th>No</th>
@@ -108,13 +108,17 @@
 <script>
     function previewImages() {
         var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
         if (this.files) {
             [].forEach.call(this.files, readAndPreview);
         }
+
         function readAndPreview(file) {
-            if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
-                return alert(file.name + " is not an image");
-            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();

@@ -5,8 +5,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="w-100">Daftar Toko</h4>
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#tokomodal">
+                    <h4 class="w-100">Daftar Event</h4>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#eventmodal">
                         <span class="text">+ Tambah</span>
                     </button>
                 </div>
@@ -19,12 +19,13 @@
                         </button>
                     </div>
                     @endif
-                    <table class="table table-striped w-100" id="toko">
+                    <table class="table table-striped w-100" id="event">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Toko</th>
-                                <th>Logo</th>
+                                <th>Gambar</th>
+                                <th>Judul</th>
+                                <th>Link</th>
                                 <th>Opsi</th>
                             </tr>
                         </thead>
@@ -38,11 +39,9 @@
 </div>
 <script>
     $(document).ready(function () {
-        $('#toko').DataTable({
+        $('#event').DataTable({
             processing: true,
             ordering: false,
-            fixedColumns: true,
-            // fixedHeader: true,
             ajax: '{{ url()->current() }}',
             columns: [{
                     render: function (data, type, row, meta) {
@@ -50,21 +49,24 @@
                     },
                 },
                 {
-                    data: "toko",
-                },
-                {
-                    data: "logo",
+                    data: "gambar",
                     render: function (data) {
                         return '<img src="/storage/image/' + data +
-                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
+                        '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
                     },
+                },
+                {
+                    data: "judul",
+                },
+                {
+                    data: "link",
                 },
                 {
                 data: null,
                 render: function (data) {
-                    var deleteUrl = '/deletetoko/' + data.id;
-                    var editUrl = '/edittoko/' + data.id;
-                    var detailUrl = '/detailtoko/' + data.id;
+                    var deleteUrl = '/delete-event/' + data.id;
+                    var editUrl = '/edit-event/' + data.id;
+                    var detailUrl = '/detail-event/' + data.id;
                     return `
                     <div class="dropdown d-inline">
                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
@@ -87,12 +89,52 @@
         });
     });
 
-    function previewImages() {
+</script>
+@endsection
+<!-- Modal -->
+<div class="modal fade" id="eventmodal" tabindex="-1" role="dialog" aria-labelledby="eventlabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventlabel">Form Input Toko</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{route('add-event')}}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Gambar</label>
+                        <input type="file" class="form-control" name="gambar" required id="gambar">
+                    </div>
+                    <div id="preview" class="mb-3"></div>
+                    <div class="form-group">
+                        <label>Judul</label>
+                        <input type="text" class="form-control" name="judul" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <input type="text" class="form-control" name="deskripsi" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Link</label>
+                        <input type="text" class="form-control" name="link" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+     function previewImages() {
         var preview = document.querySelector('#preview');
         if (this.files) {
             [].forEach.call(this.files, readAndPreview);
         }
-
         function readAndPreview(file) {
             var reader = new FileReader();
             reader.addEventListener("load", function () {
@@ -106,47 +148,6 @@
         }
     }
     document.querySelector('#gambar').addEventListener("change", previewImages);
-
-    document.querySelector('#resetButton').addEventListener('click', function () {
-        document.querySelector('#preview').innerHTML = '';
-    });
-
 </script>
-@endsection
-<!-- Modal -->
-<div class="modal fade" id="tokomodal" tabindex="-1" role="dialog" aria-labelledby="tokoLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tokoLabel">Form Input Toko</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{route('addtoko')}}" method="post" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Toko</label>
-                        <input type="text" class="form-control" name="toko" required id="exampleInputEmail1">
-                    </div>
-                    <div class="form-group">
-                        <label class="">Logo</label>
-                        <div class="col-sm-12 col-md-7">
-                            <div id="image-preview" class="image-preview">
-                                <label for="image-upload" id="image-label">Choose File</label>
-                                <input type="file" name="logo" id="image-upload">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 
 <!-- /.container-fluid -->

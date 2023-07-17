@@ -26,7 +26,7 @@
               </ul>
               <div class="tab-content" id="myTabContent2">
                 <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
-                    <table class="table table-striped" id="review">
+                    <table class="table table-striped w-100" id="review">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -41,7 +41,7 @@
                     </table>
                 </div>
                 <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                    <table class="table table-striped" id="review-notactive" style="width:100% !important;">
+                    <table class="table table-striped w-100" id="review-notactive" style="width:100% !important;">
                         <thead>
                             <tr>
                                 <th>No</th>
