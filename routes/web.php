@@ -157,11 +157,19 @@ Route::middleware('auth')->group(function () {
     // ruote review
     Route::get('/list-review', [MenuController::class, 'list_review'])->name('list-review');
     Route::get('/detail-review/{id}/', [MenuController::class, 'detail_review'])->name('detail-review');
-
+    
     // route reply
     Route::post('/add-reply/{id}/', [MenuController::class, 'add_reply'])->name('add-reply');
     Route::put('/active-review/{id}/', [MenuController::class, 'active_review'])->name('active-review');
     Route::put('/nonactive-review/{id}/', [MenuController::class, 'nonactive_review'])->name('nonactive-review');
+    
+    // route event
+    Route::get('/event', [MenuController::class, 'list_event'])->name('event');
+    Route::post('/add-event', [MenuController::class, 'add_event'])->name('add-event');
+    Route::get('/detail-event/{id}/', [MenuController::class, 'detail_event'])->name('detail-event');
+    Route::get('/edit-event/{id}/', [MenuController::class, 'edit_event'])->name('edit-event');
+    Route::put('/update-event/{id}/', [MenuController::class, 'update_event'])->name('update-event');
+    Route::delete('/delete-event/{id}/', [MenuController::class, 'delete_event'])->name('delete-event');
 });
 
  

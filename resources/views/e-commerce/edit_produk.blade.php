@@ -87,7 +87,7 @@
                         <br>
                         @foreach ($gambar as $item)
                         <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}"
-                            style="width:200px;box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                            style="width:100px;box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
                         @endforeach
                     </div>
                     <div class="form-group gambar">
@@ -104,16 +104,19 @@
 </div>
 </div>
 <script>
-    function previewImages() {
+   function previewImages() {
         var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
         if (this.files) {
             [].forEach.call(this.files, readAndPreview);
         }
 
         function readAndPreview(file) {
-            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-                return alert(file.name + " is not an image");
-            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();
@@ -125,6 +128,7 @@
             reader.readAsDataURL(file);
         }
     }
+
     document.querySelector('#gambar').addEventListener("change", previewImages);
 
     document.querySelector('#resetButton').addEventListener('click', function () {

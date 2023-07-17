@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DataTables;
 use App\Models\Toko;
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Order;
 use App\Models\Reply;
 use App\Models\Produk;
@@ -198,16 +199,7 @@ class MenuController extends Controller
             $data = Order::with('user','orderitem','tagihan')->get();
             return DataTables::of($data)->make();
         }
-        return view('e-commerce/list_pesanan');
-    }
-    
-    public function list_pembayaran(){
-        $data = Pembayaran::all();
-        return view('e-commerce/list_pembayaran', compact('data'));
-    }
-    public function list_pengiriman(){
-        $data = Pengiriman::all();
-        return view('e-commerce/list_pengiriman', compact('data'));
+        return view('pesanan/list_pesanan');
     }
 
     public function list_produk(){
@@ -221,7 +213,6 @@ class MenuController extends Controller
     }
 
     public function add_produk(Request $request){ 
-        dd($request->gambar);
         $this->validate($request, [
             'toko_id'     => 'required',
             'kategoriproduk_id'     => 'required',
@@ -230,8 +221,6 @@ class MenuController extends Controller
             'stok'     => 'required',
             'harga'     => 'required',
             'video'     => 'required',
-            'gambar'     => 'required',
-
         ]);
 
         $harga = preg_replace('/\D/', '', $request->harga); 
@@ -929,7 +918,7 @@ class MenuController extends Controller
         $pengiriman = Pengiriman::where('order_id', $id)->first();
         $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
         // dd($tagihan);
-        return view('e-commerce.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
+        return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
     }
 
     public function profil($id){
@@ -978,13 +967,13 @@ class MenuController extends Controller
             return DataTables::of($data)->make();
         }
 
-        return view('e-commerce.list_review');
+        return view('review.list_review');
     }
 
 
     public function detail_review($id){
         $data = Review::with('user','produk.gambarproduk','reply')->find($id);
-        return view('e-commerce.detail_review',compact('data'));
+        return view('review.detail_review',compact('data'));
     }
 
     public function add_reply(Request $request,$id){
@@ -1045,6 +1034,74 @@ class MenuController extends Controller
             return DataTables::of($data)->make();
         }
         return view('lelang/list_baranglelang', compact('kategori'));
+    }
+
+    public function list_event(){
+        if (request()->ajax()) {
+            $data = Event::all();
+            return DataTables::of($data)->make();
+        }
+        return view('event/list_event');
+    }
+
+    public function add_event(Request $request){
+
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
+        Event::create([
+            'gambar'     => $gambar->hashName(),
+            'judul'     => $request->judul,
+            'deskripsi'     => $request->deskripsi,
+            'link'     => $request->link,
+        ]);
+
+        return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_event($id)
+    {
+        $data = Event::findOrFail($id);
+        return view('event.edit_event', compact('data'));
+    }
+    public function detail_event($id)
+    {
+        $data = Event::findOrFail($id);
+        return view('event.detail_event', compact('data'));
+    }
+
+    public function update_event(Request $request, $id)
+    {
+        $data = Event::findOrFail($id);
+
+        if ($request->hasFile('gambar')) {
+
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+
+            Storage::delete('public/image/'.$data->gambar);
+
+            $data->update([
+                'judul'     => $request->judul,
+                'deskripsi'     => $request->deskripsi,
+                'link'     => $request->link,
+                'gambar'     => $gambar->hashName(),
+            ]);
+
+        } else {
+            $data->update([
+                'judul'     => $request->judul,
+                'deskripsi'     => $request->deskripsi,
+                'link'     => $request->link,
+            ]);
+        }
+
+        //redirect to index
+        return redirect()->route('event')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function delete_event($id){
+        Event::find($id)->delete();
+        return redirect()->route('event')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
 }   

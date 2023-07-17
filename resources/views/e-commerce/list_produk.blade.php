@@ -168,8 +168,9 @@
                     </div>
                     <div class="form-group">
                         <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar)</small></label>
-                        <div id="preview" class="review"></div>
+                        <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
                     </div>
+                        <div id="preview" class="review"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -182,13 +183,17 @@
 
     function previewImages() {
         var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
         if (this.files) {
             [].forEach.call(this.files, readAndPreview);
         }
+
         function readAndPreview(file) {
-            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-                return alert(file.name + " is not an image");
-            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();
@@ -200,7 +205,9 @@
             reader.readAsDataURL(file);
         }
     }
+
     document.querySelector('#gambar').addEventListener("change", previewImages);
+
     
     document.querySelector('#resetButton').addEventListener('click', function() {
         document.querySelector('#preview').innerHTML = '';
