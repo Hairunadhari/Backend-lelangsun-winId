@@ -1,5 +1,24 @@
 @extends('app.layouts')
 @section('content')
+<style>
+    /* Warna hijau saat "ADA" dipilih */
+    .selectgroup-item input[value="ada"]:checked~.selectgroup-button {
+        background-color: #63ED7A;
+    }
+
+    /* Warna merah saat "TIDAK ADA" dipilih */
+    .selectgroup-item input[value="tidak ada"]:checked~.selectgroup-button {
+        background-color: #FC5448;
+    }
+
+    #preview img,
+    .form-group img {
+        margin-bottom: 20px;
+        margin-left: 20px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
+
+</style>
 <div class="section-body">
     <div class="row">
         <div class="col-12">
@@ -19,22 +38,270 @@
                         </button>
                     </div>
                     @endif
-                        <table class="table table-striped" id="kategori-lelang">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>testing</th>
-                                    <th>Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
+                                aria-controls="home" aria-selected="true">Data Aktif</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
+                                aria-controls="profile" aria-selected="false">Data Tidak Aktif</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent2">
+                        <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
+                            <table class="table table-striped w-100" id="barang-lelang" >
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Kategori</th>
+                                        <th>Gambar Barang</th>
+                                        <th>Kelengkapan Dokumen</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
+                            <table class="table table-striped w-100" id="barang-lelang-notactive" >
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Kategori</th>
+                                        <th>Gambar Barang</th>
+                                        <th>Kelengkapan Dokumen</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#barang-lelang').DataTable({
+            processing: true,
+            ordering: false,
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'active';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "barang",
+                },
+                {
+                    data: "kategoribarang.kategori",
+                },
+                {
+                    data: "gambarlelang",
+                    render: function (data) {
+                            return '<img src="/storage/image/' + data[0].gambar +
+                                '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                    },
+                },
+                
+                {
+                // This column displays STNK and BPKB data
+                data: null,
+                render: function (data) {
+                    if (data.kategoribarang_id == 1 || data.kategoribarang_id == 2) {
+                        let output = ''; // Initialize the output variable
+
+                        // Check STNK status and add corresponding information to the output
+                        if (data.stnk === 'ada') {
+                            output += `<div>1. STNK: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.stnk === 'tidak ada') {
+                            output += `<div>1. STNK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+
+                        if (data.bpkb === 'ada') {
+                            output += `<div>2. BPKB: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.bpkb === 'tidak ada') {
+                            output += `<div>2. BPKB: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+
+                        if (data.faktur === 'ada') {
+                            output += `<div>3. Faktur: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.faktur === 'tidak ada') {
+                            output += `<div>3. Faktur: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+
+                        if (data.ktp === 'ada') {
+                            output += `<div>4. KTP PEMILIK: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.ktp === 'tidak ada') {
+                            output += `<div>4. KTP PEMILIK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+                        
+                        if (data.kwitansi === 'ada') {
+                            output += `<div>5. KWITANSI: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.kwitansi === 'tidak ada') {
+                            output += `<div>5. KWITANSI: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+                        
+                        if (data.sph === 'ada') {
+                            output += `<div>6. SPH: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.sph === 'tidak ada') {
+                            output += `<div>6. SPH: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+                        if (data.kir === 'ada') {
+                            output += `<div>7. KIR: <span class="badge badge-success">Ada</span></div>`;
+                        } else if (data.kir === 'tidak ada') {
+                            output += `<div>7. KIR: <span class="badge badge-danger">Tidak Ada</span></div>`;
+                        }
+
+                        // Return the final output
+                        return output;
+                    } else {
+                        return '-'; // Display '-' if kategoribarang_id is neither 1 nor 2
+                    }
+                }
+            },
+                
+
+                {
+                    data: null,
+                    render: function (data) {
+                    var deleteUrl = '/delete-barang-lelang/' + data.id;
+                    var editUrl = '/edit-barang-lelang/' + data.id;
+                    return `
+                        <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                        <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i></a></span>
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
+                        </form>
+                    `;
+                    },
+                },
+                
+            ],
+        });
+    });
+
+    $(document).ready(function () {
+        $('#barang-lelang-notactive').DataTable({
+            processing: true,
+            ordering: false,
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'notactive';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "barang",
+                },
+                {
+                    data: "kategoribarang.kategori",
+                },
+                {
+                    data: "gambarlelang",
+                    render: function (data) {
+                            return '<img src="/storage/image/' + data[0].gambar +
+                                '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                    },
+                },
+                
+                {
+                // This column displays STNK and BPKB data
+                data: null,
+                render: function (data) {
+                    if (data.kategoribarang_id == 1 || data.kategoribarang_id == 2) {
+                        let output = ''; // Initialize the output variable
+
+                        // Check STNK status and add corresponding information to the output
+                        if (data.stnk === 'ada') {
+                            output += `<div>1. STNK: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.stnk === 'tidak ada') {
+                            output += `<div>1. STNK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+
+                        if (data.bpkb === 'ada') {
+                            output += `<div>2. BPKB: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.bpkb === 'tidak ada') {
+                            output += `<div>2. BPKB: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+                        if (data.faktur === 'ada') {
+                            output += `<div>3. Faktur: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.faktur === 'tidak ada') {
+                            output += `<div>3. Faktur: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+                       
+                        if (data.ktp === 'ada') {
+                            output += `<div>4. KTP PEMILIK: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.ktp === 'tidak ada') {
+                            output += `<div>4. KTP PEMILIK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+                        
+                        if (data.kwitansi === 'ada') {
+                            output += `<div>5. KWITANSI: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.kwitansi === 'tidak ada') {
+                            output += `<div>5. KWITANSI: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+
+                        
+                        if (data.sph === 'ada') {
+                            output += `<div>6. SPH: <span class="badge badge-success mb-1">Ada</span></div>`;
+                        } else if (data.sph === 'tidak ada') {
+                            output += `<div>6. SPH: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                        }
+                        if (data.kir === 'ada') {
+                            output += `<div>7. KIR: <span class="badge badge-success">Ada</span></div>`;
+                        } else if (data.kir === 'tidak ada') {
+                            output += `<div>7. KIR: <span class="badge badge-danger">Tidak Ada</span></div>`;
+                        }
+
+                        // Return the final output
+                        return output;
+                    } else {
+                        return '-'; // Display '-' if kategoribarang_id is neither 1 nor 2
+                    }
+                }
+            },
+                
+
+                {
+                    data: null,
+                    render: function (data) {
+                    var activeurl = '/active-barang-lelang/' + data.id;
+                    var editUrl = '/edit-barang-lelang/' + data.id;
+                    return `
+                        <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button class="btn btn-success" type="submit"><i class="fas fa-sync-alt"></i></button>
+                        </form>
+                    `;
+                    },
+                },
+                
+            ],
+        });
+    });
+</script>
+</script>
 @endsection
 <!-- Modal -->
 <div class="modal fade" id="baranglelangmodal" tabindex="-1" role="dialog" aria-labelledby="baranglelangmodalLabel"
@@ -51,233 +318,294 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Pilih Kategori Barang Lelang</label>
-                        <select class="form-control selectric" name="kategoribarang_id" required>
+                        <label>Pilih Kategori Barang Lelang <span style="color: red">*</span></label>
+                        <select class="form-control selectric" name="kategoribarang_id" id="id_kategoribarang"
+                            onchange="toggleDiv(this.value)">
                             @foreach ($kategori as $item)
-                            <option value="{{ $item->id }}">{{ $item->kategori }}</option>
+                            <option value="{{ $item->id }}">{{ strtoupper($item->kategori) }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Nama Barang</label>
+                        <label>Nama Barang <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="barang" required>
                     </div>
                     <div class="form-group">
-                        <label>Brand</label>
+                        <label>Brand <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="brand" required>
                     </div>
                     <div class="form-group">
-                        <label>Warna</label>
+                        <label>Warna <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="warna" required>
                     </div>
                     <div class="form-group">
-                        <label>Lokasi Barang</label>
+                        <label>Lokasi Barang <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="lokasi_barang" required>
                     </div>
-                    <hr>
-                    <h5>Spesifikasi Kendaraan</h5>
-                    <div class="row">
-                        <div class="form-group col-6">
-                            <label>Nomer Rangka</label>
-                            <input type="text" class="form-control" name="nomer_rangka" required>
+                    <div id="inpKendaraan" style="display:none;">
+                        <hr>
+                        <h5>Spesifikasi Kendaraan</h5>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label>Nomer Rangka <span style="color: red">*</span></label>
+                                <input type="text" class="form-control" name="nomer_rangka" required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Nomer Mesin <span style="color: red">*</span></label>
+                                <input type="text" class="form-control" name="nomer_mesin" required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Tipe Mobil <span style="color: red">*</span></label>
+                                <input type="text" class="form-control" name="tipe_mobil" required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Transmisi Mobil <span style="color: red">*</span></label>
+                                <select class="form-control selectric" name="transisi_mobil" required>
+                                    <option value="Automatic Transmission">Automatic Transmission</option>
+                                    <option value="Manual Transmission">Manual Transmission</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Bahan Bakar <span style="color: red">*</span></label>
+                                <select class="form-control selectric" name="bahan_bakar" required>
+                                    <option value="Bensin">Bensin</option>
+                                    <option value="Solar">Solar</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Odometer <span style="color: red">*</span></label>
+                                <input type="number" class="form-control" name="odometer" required>
+                            </div>
                         </div>
-                        <div class="form-group col-6">
-                            <label>Nomer Mesin</label>
-                            <input type="text" class="form-control" name="nomer_rangka" required>
+                        <hr>
+                        <h5>Dokumen Kendaraan</h5>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label>Grade Utama <span style="color: red">*</span></label>
+                                <select class="form-control selectric" name="grade_utama" required>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Grade Mesin <span style="color: red">*</span></label>
+                                <select class="form-control selectric" name="grade_mesin" required>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Grade Interior <span style="color: red">*</span></label>
+                                <select class="form-control selectric" name="grade_interior" required>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Grade Exterior <span style="color: red">*</span></label>
+                                <select class="form-control selectric" name="grade_exterior" required>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>No Polisi <span style="color: red">*</span></label>
+                                <input type="text" class="form-control" name="no_polisi" required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>STNK <span style="color: red">*</span></label>
+                                <div class="selectgroup w-100" id="adaTidakada">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="stnk" value="ada" class="selectgroup-input">
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="stnk" value="tidak ada" class="selectgroup-input" checked>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>STNK Berlaku <span style="color: red">*</span></label>
+                                <input type="date" class="form-control" name="stnk_berlaku" required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Tahun Produksi <span style="color: red">*</span></label>
+                                <select class="form-control selectric" name="tahun_produksi">
+                                    <?php for($i = 1900; $i <= date('Y') + 10; $i++) { ?>
+                                        <option value="<?= $i ?>" <?php if($i == date('Y')) echo 'selected'; ?>><?= $i; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>                                                       
+                            <div class="form-group col-6">
+                                <label>BPKB <span style="color: red">*</span></label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="bpkb" value="ada" class="selectgroup-input">
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="bpkb" value="tidak ada" class="selectgroup-input" checked>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>FAKTUR <span style="color: red">*</span></label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="faktur" value="ada" class="selectgroup-input">
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="faktur" value="tidak ada" class="selectgroup-input" checked>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>SPH <span style="color: red">*</span></label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="sph" value="ada" class="selectgroup-input">
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="sph" value="tidak ada" class="selectgroup-input" checked>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>KIR <span style="color: red">*</span></label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="kir" value="ada" class="selectgroup-input">
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="kir" value="tidak ada" class="selectgroup-input" checked>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>KTP Pemilik <span style="color: red">*</span></label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="ktp" value="ada" class="selectgroup-input">
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="ktp" value="tidak ada" class="selectgroup-input" checked>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Kwitansi <span style="color: red">*</span></label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="kwitansi" value="ada" class="selectgroup-input">
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="kwitansi" value="tidak ada" class="selectgroup-input" checked>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group col-6">
-                            <label>Tipe Mobil</label>
-                            <input type="text" class="form-control" name="nomer_rangka" required>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>Transmisi Mobil</label>
-                            <select class="form-control selectric" name="kategoribarang_id" required>
-                                <option value="Automatic Transmission">Automatic Transmission</option>
-                                <option value="Manual Transmission">Manual Transmission</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>Bahan Bakar</label>
-                            <select class="form-control selectric" name="kategoribarang_id" required>
-                                <option value="Bensin">Bensin</option>
-                                <option value="Solar">Solar</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>Odometer</label>
-                            <input type="number" class="form-control" name="nomer_rangka" required>
-                        </div>
+                        <hr>
                     </div>
-                    <hr>
-                    <h5>Dokumen Kendaraan</h5>
-                    <div class="row">
-                        <div class="form-group col-6">
-                            <label>Grade Utama</label>
-                            <select class="form-control selectric" name="kategoribarang_id" required>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                                <option value="F">F</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>Grade Mesin</label>
-                            <select class="form-control selectric" name="kategoribarang_id" required>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                                <option value="F">F</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>Grade Interior</label>
-                            <select class="form-control selectric" name="kategoribarang_id" required>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                                <option value="F">F</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>Grade Exterior</label>
-                            <select class="form-control selectric" name="kategoribarang_id" required>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                                <option value="F">F</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>No Polisi</label>
-                            <input type="text" class="form-control" name="nomer_rangka" required>
-                        </div>
-                        <div class="form-group col-6">
-                            <label class="d-block">STNK</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="stnk" id="stnk-ada"
-                                    checked="">
-                                <label class="form-check-label" for="stnk-ada">
-                                    Ada
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="stnk" id="stnk-tidakada"
-                                    checked="">
-                                <label class="form-check-label" for="stnk-tidakada">
-                                    Tidak Ada
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>STNK Berlaku</label>
-                            <input type="text" class="form-control" name="nomer_rangka" required>
-                        </div>
-                        <div class="form-group col-6">
-                            <label>Tahun Produksi</label>
-                            <input type="text" class="form-control" name="nomer_rangka" required>
-                        </div>
-                        <div class="form-group col-6">
-                            <label class="d-block">BPKB</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="bpkb" id="bpkb-ada"
-                                    checked="">
-                                <label class="form-check-label" for="bpkb-ada">
-                                    Ada
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="bpkb" id="bpkb-tdkada"
-                                    checked="">
-                                <label class="form-check-label" for="bpkb-tdkada">
-                                    Tidak Ada
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group col-6">
-                            <label class="d-block">Faktur</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="faktur" id="faktur-ada"
-                                    checked="">
-                                <label class="form-check-label" for="faktur-ada">
-                                    Ada
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="faktur" id="faktur-tdkada"
-                                    checked="">
-                                <label class="form-check-label" for="faktur-tdkada">
-                                    Tidak Ada
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group col-6">
-                            <label class="d-block">SPH</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sph" id="sph-ada"
-                                    checked="">
-                                <label class="form-check-label" for="sph-ada">
-                                    Ada
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sph" id="sph-tdkada"
-                                    checked="">
-                                <label class="form-check-label" for="sph-tdkada">
-                                    Tidak Ada
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group col-6">
-                            <label class="d-block">KIR</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="kir" id="kir-ada"
-                                    checked="">
-                                <label class="form-check-label" for="kir-ada">
-                                    Ada
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="kir" id="kir-tdkada"
-                                    checked="">
-                                <label class="form-check-label" for="kir-tdkada">
-                                    Tidak Ada
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
                     <div class="form-group">
-                        <label>gambar barang</label>
-                        <input type="text" class="form-control" name="nomer_rangka" required>
+                        <label>Gambar <span style="color: red">*</span><small>(bisa pilih lebih dari satu gambar)</small></label>
+                        <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
                     </div>
+                    <div id="preview" class="review"></div>
                     <div class="form-group">
-                        <label>deskripsi</label>
-                        <textarea class="summernote-simple"></textarea>
+                        <label>deskripsi <span style="color: red">*</span></label>
+                        <textarea class="summernote-simple" placeholder="keterangan..." required
+                            name="keterangan"></textarea>
                     </div>
-                    <div class="selectgroup w-100">
-                        <label class="selectgroup-item">
-                          <input type="radio" name="value" value="developer" class="selectgroup-input">
-                          <span class="selectgroup-button">Developer</span>
-                        </label>
-                        <label class="selectgroup-item">
-                          <input type="radio" name="value" value="ceo" class="selectgroup-input">
-                          <span class="selectgroup-button">CEO</span>
-                        </label>
-                      </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-warning" id="resetButton">Reset</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    window.onload = function () {
+        const selectElement = document.getElementById("id_kategoribarang");
+        const inpKendaraan = document.getElementById("inpKendaraan");
+
+        if (selectElement.value == 1) {
+            inpKendaraan.style.display = "block";
+        } else if (selectElement.value == 2) {
+            inpKendaraan.style.display = "block";
+        } else {
+            inpKendaraan.style.display = "none";
+        }
+    };
+
+    function toggleDiv(value) {
+        const inpKendaraan = document.getElementById("inpKendaraan");
+        const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
+        const selectgroup = inpKendaraan.querySelector(".selectgroup");
+        if (value == 1 || value == 2) {
+            inpKendaraan.style.display = "block";
+        } else {
+            inpKendaraan.style.display = "none";
+            inputsInpKendaraan.forEach(input => {
+                input.removeAttribute("required");
+            });
+        }
+    }
+
+    function previewImages() {
+        var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.height = 200;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+
+    document.querySelector('#gambar').addEventListener("change", previewImages);
+
+</script>

@@ -20,6 +20,7 @@ use App\Models\EventLelang;
 use App\Models\ProdukPromo;
 use App\Models\BannerDiskon;
 use App\Models\BarangLelang;
+use App\Models\GambarLelang;
 use App\Models\GambarProduk;
 use App\Models\PembelianNpl;
 use Illuminate\Http\Request;
@@ -638,7 +639,14 @@ class MenuController extends Controller
 
     public function list_kategori_lelang(){
         if (request()->ajax()) {
-            $data = KategoriBarang::all();
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = KategoriBarang::where('status', 1)->get();
+            } elseif ($status == 'not-active') {
+                $data = KategoriBarang::where('status', 0)->get();
+            }
+
             return DataTables::of($data)->make();
         }
         return view('lelang/kategori_lelang');
@@ -648,6 +656,7 @@ class MenuController extends Controller
 
         KategoriBarang::create([
             'kategori'     => $request->kategori,
+            'status'     => 1,
         ]);
 
         return redirect('/kategori-lelang')->with('success', 'Data Berhasil Ditambahkan');
@@ -673,19 +682,108 @@ class MenuController extends Controller
     public function delete_kategori_lelang($id)
     {
         $data = KategoriBarang::findOrFail($id);
-        $data->delete();
+        $data->update([
+            'status' => 0
+        ]);
         return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function active_kategori_lelang($id)
+    {
+        $data = KategoriBarang::findOrFail($id);
+        $data->update([
+            'status' => 1
+        ]);
+        return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Aktifkan Kembali!']);
     }
     
 
     public function add_barang_lelang(Request $request){
 
-        $produk = BarangLelang::create([
+        if ($request->nomer_rangka == null) {
+            $lelang = BarangLelang::create([
                 'kategoribarang_id'     => $request->kategoribarang_id,
                 'barang'     => $request->barang,
-                'nama_pemilik'     => $request->nama_pemilik,
+                'brand'     => $request->brand,
+                'warna'     => $request->warna,
+                'lokasi_barang'     => $request->lokasi_barang,
+                'nomer_rangka'     => null,
+                'nomer_mesin'     => null,
+                'tipe_mobil'     => null,
+                'transisi_mobil'     => null, 
+                'bahan_bakar'     => null,
+                'odometer'     => null,
+                'grade_utama'     => null,
+                'grade_mesin'     => null,
+                'grade_interior'     => null,
+                'grade_exterior'     => null,
+                'no_polisi'     => null,
+                'stnk'     => null,
+                'stnk_berlaku'     => null,
+                'tahun_produksi'     => null,
+                'bpkb'     => null,
+                'faktur'     => null,
+                'sph'     => null,
+                'kir'     => null,
+                'ktp'     => null,
+                'kwitansi'     => null,
                 'keterangan'     => $request->keterangan,
+                'status'     => 1,
             ]);
+
+            $gambar = $request->file('gambar');    
+
+            foreach ($gambar as $file) {                
+                $file->storeAs('public/image', $file->hashName());
+                GambarLelang::create([
+                    'barang_lelang_id' => $lelang->id,
+                    'gambar' => $file->hashName(),
+                ]);
+            }
+
+        } else {
+
+            $lelang = BarangLelang::create([
+                'kategoribarang_id'     => $request->kategoribarang_id,
+                'barang'     => $request->barang,
+                'brand'     => $request->brand,
+                'warna'     => $request->warna,
+                'lokasi_barang'     => $request->lokasi_barang,
+                'nomer_rangka'     => $request->nomer_rangka,
+                'nomer_mesin'     => $request->nomer_mesin,
+                'tipe_mobil'     => $request->tipe_mobil,
+                'transisi_mobil'     => $request->transisi_mobil, 
+                'bahan_bakar'     => $request->bahan_bakar,
+                'odometer'     => $request->odometer,
+                'grade_utama'     => $request->grade_utama,
+                'grade_mesin'     => $request->grade_mesin,
+                'grade_interior'     => $request->grade_interior,
+                'grade_exterior'     => $request->grade_exterior,
+                'no_polisi'     => $request->no_polisi,
+                'stnk'     => $request->stnk,
+                'stnk_berlaku'     => $request->stnk_berlaku,
+                'tahun_produksi'     => $request->tahun_produksi,
+                'bpkb'     => $request->bpkb,
+                'faktur'     => $request->faktur,
+                'sph'     => $request->sph,
+                'kir'     => $request->kir,
+                'ktp'     => $request->ktp,
+                'kwitansi'     => $request->kwitansi,
+                'keterangan'     => $request->keterangan,
+                'status'     => 1,
+            ]);
+
+            $gambar = $request->file('gambar');    
+
+            foreach ($gambar as $file) {                
+                $file->storeAs('public/image', $file->hashName());
+                GambarLelang::create([
+                    'barang_lelang_id' => $lelang->id,
+                    'gambar' => $file->hashName(),
+                ]);
+            }
+        }
+
         return redirect('/barang-lelang')->with('success', 'Data Berhasil Ditambahkan');
     }
 
@@ -697,7 +795,7 @@ class MenuController extends Controller
     }
     public function edit_barang_lelang($id)
     {
-        $data = BarangLelang::with('kategoribarang')->find($id);
+        $data = BarangLelang::with('kategoribarang','gambarlelang')->find($id);
         $kategori = KategoriBarang::all();
         //render view with post
         return view('lelang.edit_baranglelang', compact('data','kategori'));
@@ -705,15 +803,164 @@ class MenuController extends Controller
 
     public function update_barang_lelang(Request $request, $id)
     {
-        
         $barang = BarangLelang::find($id);
+        $gambarlelang = GambarLelang::where('barang_lelang_id', $id)->get();
 
-            $barang->update([
-                'kategoribarang_id'     => $request->kategoribarang_id,
-                'barang'     => $request->barang,
-                'nama_pemilik'     => $request->nama_pemilik,
-                'keterangan'     => $request->keterangan,
-            ]);
+        if ($request->kategoribarang_id == 1 || $request->kategoribarang_id == 2) {
+            if ($request->hasFile('gambar')) {
+                $barang->update([
+                    'kategoribarang_id'     => $request->kategoribarang_id,
+                    'barang'     => $request->barang,
+                    'brand'     => $request->brand,
+                    'warna'     => $request->warna,
+                    'lokasi_barang'     => $request->lokasi_barang,
+                    'nomer_rangka'     => $request->nomer_rangka,
+                    'nomer_mesin'     => $request->nomer_mesin,
+                    'tipe_mobil'     => $request->tipe_mobil,
+                    'transisi_mobil'     => $request->transisi_mobil, 
+                    'bahan_bakar'     => $request->bahan_bakar,
+                    'odometer'     => $request->odometer,
+                    'grade_utama'     => $request->grade_utama,
+                    'grade_mesin'     => $request->grade_mesin,
+                    'grade_interior'     => $request->grade_interior,
+                    'grade_exterior'     => $request->grade_exterior,
+                    'no_polisi'     => $request->no_polisi,
+                    'stnk'     => $request->stnk,
+                    'stnk_berlaku'     => $request->stnk_berlaku,
+                    'tahun_produksi'     => $request->tahun_produksi,
+                    'bpkb'     => $request->bpkb,
+                    'faktur'     => $request->faktur,
+                    'sph'     => $request->sph,
+                    'kir'     => $request->kir,
+                    'ktp'     => $request->ktp,
+                    'kwitansi'     => $request->kwitansi,
+                    'keterangan'     => $request->keterangan,
+                ]);
+
+                foreach ($gambarlelang as $gambar) {
+                    Storage::delete('public/image/'.$gambar->gambar);
+                    $gambar->delete();  
+                }
+                
+                $gambars = $request->file('gambar');
+                foreach ($gambars as $file) {
+                    $filename = $file->hashName();
+                    $file->storeAs('public/image', $filename);
+                    GambarLelang::create([
+                        'barang_lelang_id' => $barang->id,
+                        'gambar' => $filename
+                    ]);
+                }
+
+            } else {
+                $barang->update([
+                    'kategoribarang_id'     => $request->kategoribarang_id,
+                    'barang'     => $request->barang,
+                    'brand'     => $request->brand,
+                    'warna'     => $request->warna,
+                    'lokasi_barang'     => $request->lokasi_barang,
+                    'nomer_rangka'     => $request->nomer_rangka,
+                    'nomer_mesin'     => $request->nomer_mesin,
+                    'tipe_mobil'     => $request->tipe_mobil,
+                    'transisi_mobil'     => $request->transisi_mobil, 
+                    'bahan_bakar'     => $request->bahan_bakar,
+                    'odometer'     => $request->odometer,
+                    'grade_utama'     => $request->grade_utama,
+                    'grade_mesin'     => $request->grade_mesin,
+                    'grade_interior'     => $request->grade_interior,
+                    'grade_exterior'     => $request->grade_exterior,
+                    'no_polisi'     => $request->no_polisi,
+                    'stnk'     => $request->stnk,
+                    'stnk_berlaku'     => $request->stnk_berlaku,
+                    'tahun_produksi'     => $request->tahun_produksi,
+                    'bpkb'     => $request->bpkb,
+                    'faktur'     => $request->faktur,
+                    'sph'     => $request->sph,
+                    'kir'     => $request->kir,
+                    'ktp'     => $request->ktp,
+                    'kwitansi'     => $request->kwitansi,
+                    'keterangan'     => $request->keterangan,
+                ]);
+            }
+
+        } else {
+            if ($request->hasFile('gambar')) {
+                $barang->update([
+                    'kategoribarang_id'     => $request->kategoribarang_id,
+                    'barang'     => $request->barang,
+                    'brand'     => $request->brand,
+                    'warna'     => $request->warna,
+                    'lokasi_barang'     => $request->lokasi_barang,
+                    'nomer_rangka'     => null,
+                    'nomer_mesin'     => null,
+                    'tipe_mobil'     => null,
+                    'transisi_mobil'     => null, 
+                    'bahan_bakar'     => null,
+                    'odometer'     => null,
+                    'grade_utama'     => null,
+                    'grade_mesin'     => null,
+                    'grade_interior'     => null,
+                    'grade_exterior'     => null,
+                    'no_polisi'     => null,
+                    'stnk'     => null,
+                    'stnk_berlaku'     => null,
+                    'tahun_produksi'     => null,
+                    'bpkb'     => null,
+                    'faktur'     => null,
+                    'sph'     => null,
+                    'kir'     => null,
+                    'ktp'     => null,
+                    'kwitansi'     => null,
+                    'keterangan'     => $request->keterangan,
+                ]);
+    
+                foreach ($gambarlelang as $gambar) {
+                    Storage::delete('public/image/'.$gambar->gambar);
+                    $gambar->delete();  
+                }
+                
+                $gambars = $request->file('gambar');
+                foreach ($gambars as $file) {
+                    $filename = $file->hashName();
+                    $file->storeAs('public/image', $filename);
+                    GambarLelang::create([
+                        'barang_lelang_id' => $barang->id,
+                        'gambar' => $filename
+                    ]);
+                }
+
+            } else {
+                $barang->update([
+                    'kategoribarang_id'     => $request->kategoribarang_id,
+                    'barang'     => $request->barang,
+                    'brand'     => $request->brand,
+                    'warna'     => $request->warna,
+                    'lokasi_barang'     => $request->lokasi_barang,
+                    'nomer_rangka'     => null,
+                    'nomer_mesin'     => null,
+                    'tipe_mobil'     => null,
+                    'transisi_mobil'     => null, 
+                    'bahan_bakar'     => null,
+                    'odometer'     => null,
+                    'grade_utama'     => null,
+                    'grade_mesin'     => null,
+                    'grade_interior'     => null,
+                    'grade_exterior'     => null,
+                    'no_polisi'     => null,
+                    'stnk'     => null,
+                    'stnk_berlaku'     => null,
+                    'tahun_produksi'     => null,
+                    'bpkb'     => null,
+                    'faktur'     => null,
+                    'sph'     => null,
+                    'kir'     => null,
+                    'ktp'     => null,
+                    'kwitansi'     => null,
+                    'keterangan'     => $request->keterangan,
+                ]);
+            }
+            
+        }
 
 
         return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Diubah!']);
@@ -722,8 +969,19 @@ class MenuController extends Controller
 
     public function delete_barang_lelang($id)
     {
-        $produk = Produk::find($id);
-        $produk->delete();
+        $barang = BarangLelang::find($id);
+        $barang->update([
+            'status' => 0
+        ]);
+        return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function active_barang_lelang($id)
+    {
+        $barang = BarangLelang::find($id);
+        $barang->update([
+            'status' => 1
+        ]);
         return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
@@ -1030,7 +1288,14 @@ class MenuController extends Controller
     public function list_barang_lelang(){
         $kategori = KategoriBarang::all();
         if (request()->ajax()) {
-            $data = BarangLelang::with('kategoribarang')->get();
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = BarangLelang::with('kategoribarang','gambarlelang')->where('status', 1)->get();
+            } elseif ($status == 'notactive') {
+                $data = BarangLelang::with('kategoribarang','gambarlelang')->where('status', 0)->get();
+            }
+
             return DataTables::of($data)->make();
         }
         return view('lelang/list_baranglelang', compact('kategori'));

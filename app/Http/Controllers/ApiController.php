@@ -619,6 +619,9 @@ class ApiController extends Controller
      */
     public function cari_produk($name){
         $produk = Produk::where('nama','Like','%'.$name.'%')->get();
+        $produk->each(function ($data){
+            $data->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $data->thumbnail);
+        });
         return response()->json([
             'data' => $produk
         ]);

@@ -1,10 +1,25 @@
 @extends('app.layouts')
 @section('content')
 <style>
+    #preview img,
+    .form-group img {
+        margin-bottom: 20px;
+        margin-left: 20px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
+
+    /* Warna hijau saat "ADA" dipilih */
+    .selectgroup-item input[value="ada"]:checked~.selectgroup-button {
+        background-color: #63ED7A;
+    }
+
+    /* Warna merah saat "TIDAK ADA" dipilih */
+    .selectgroup-item input[value="tidak ada"]:checked~.selectgroup-button {
+        background-color: #FC5448;
+    }
+
+
 </style>
-<div class="section-header">
-    <h1>Data Lelang</h1>
-</div>
 <div class="section-body">
     <div class="container-fluid">
         <form action="{{route('update-barang-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
@@ -17,9 +32,10 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label>Pilih Kategori Barang Lelang</label>
-                        <select class="form-control" name="kategoribarang_id" >
+                        <select class="form-control selectric" name="kategoribarang_id" id="id_kategoribarangs" onchange="toggleDiv(this.value)">
                             @foreach ($kategori as $item)
-                            <option value="{{ $item->id }}" {{ $item->id == $data->kategoribarang->id ? 'selected' : '' }}>
+                            <option value="{{ $item->id }}"
+                                {{ $item->id == $data->kategoribarang->id ? 'selected' : '' }}>
                                 {{ $item->kategori }}
                             </option>
                             @endforeach
@@ -27,15 +43,230 @@
                     </div>
                     <div class="form-group">
                         <label>Nama Barang</label>
-                        <input type="text" class="form-control" name="barang" value="{{ $data->barang }}" >
+                        <input type="text" class="form-control" name="barang" value="{{ $data->barang }}">
                     </div>
                     <div class="form-group">
-                        <label>Nama Pemilik Barang Lelang</label>
-                        <input type="text" class="form-control" name="nama_pemilik" value="{{ $data->nama_pemilik }}" >
+                        <label>Brand</label>
+                        <input type="text" class="form-control" name="brand" value="{{ $data->brand}}" >
                     </div>
                     <div class="form-group">
-                        <label>Keterangan</label>
-                        <textarea class="form-control" name="keterangan" >{{$data->keterangan}}</textarea>
+                        <label>Warna</label>
+                        <input type="text" class="form-control" name="warna" value="{{ $data->warna}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Lokasi Barang</label>
+                        <input type="text" class="form-control" name="lokasi_barang" value="{{ $data->lokasi_barang}}">
+                    </div>
+                    <div id="editinpKendaraan" style="display:none;">
+                        <hr>
+                        <h5>Spesifikasi Kendaraan</h5>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label>Nomer Rangka</label>
+                                <input type="text" class="form-control" name="nomer_rangka" value="{{$data->nomer_rangka}}">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Nomer Mesin</label>
+                                <input type="text" class="form-control" name="nomer_mesin" value="{{$data->nomer_mesin}}">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Tipe Mobil</label>
+                                <input type="text" class="form-control" name="tipe_mobil" value="{{$data->tipe_mobil}}">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Transmisi Mobil</label>
+                                <select class="form-control selectric" name="transisi_mobil" >
+                                    <option value="Automatic Transmission">Automatic Transmission</option>
+                                    <option value="Manual Transmission">Manual Transmission</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Bahan Bakar</label>
+                                <select class="form-control selectric" name="bahan_bakar" >
+                                    <option value="Bensin">Bensin</option>
+                                    <option value="Solar">Solar</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Odometer</label>
+                                <input type="number" class="form-control" name="odometer" value="{{$data->odometer}}">
+                            </div>
+                        </div>
+                        <hr>
+                        <h5>Dokumen Kendaraan</h5>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label>Grade Utama</label>
+                                <select class="form-control selectric" name="grade_utama">
+                                    <option value="A" <?php echo ($data->grade_utama === 'A') ? 'selected' : ''; ?>>A</option>
+                                    <option value="B" <?php echo ($data->grade_utama === 'B') ? 'selected' : ''; ?>>B</option>
+                                    <option value="C" <?php echo ($data->grade_utama === 'C') ? 'selected' : ''; ?>>C</option>
+                                    <option value="D" <?php echo ($data->grade_utama === 'D') ? 'selected' : ''; ?>>D</option>
+                                    <option value="E" <?php echo ($data->grade_utama === 'E') ? 'selected' : ''; ?>>E</option>
+                                    <option value="F" <?php echo ($data->grade_utama === 'F') ? 'selected' : ''; ?>>F</option>
+                                </select>
+                            </div>                            
+                            <div class="form-group col-6">
+                                <label>Grade Mesin</label>
+                                <select class="form-control selectric" name="grade_mesin" >
+                                    <option value="A" <?php echo ($data->grade_utama === 'A') ? 'selected' : ''; ?>>A</option>
+                                    <option value="B" <?php echo ($data->grade_utama === 'B') ? 'selected' : ''; ?>>B</option>
+                                    <option value="C" <?php echo ($data->grade_utama === 'C') ? 'selected' : ''; ?>>C</option>
+                                    <option value="D" <?php echo ($data->grade_utama === 'D') ? 'selected' : ''; ?>>D</option>
+                                    <option value="E" <?php echo ($data->grade_utama === 'E') ? 'selected' : ''; ?>>E</option>
+                                    <option value="F" <?php echo ($data->grade_utama === 'F') ? 'selected' : ''; ?>>F</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Grade Interior</label>
+                                <select class="form-control selectric" name="grade_interior" >
+                                    <option value="A" <?php echo ($data->grade_utama === 'A') ? 'selected' : ''; ?>>A</option>
+                                    <option value="B" <?php echo ($data->grade_utama === 'B') ? 'selected' : ''; ?>>B</option>
+                                    <option value="C" <?php echo ($data->grade_utama === 'C') ? 'selected' : ''; ?>>C</option>
+                                    <option value="D" <?php echo ($data->grade_utama === 'D') ? 'selected' : ''; ?>>D</option>
+                                    <option value="E" <?php echo ($data->grade_utama === 'E') ? 'selected' : ''; ?>>E</option>
+                                    <option value="F" <?php echo ($data->grade_utama === 'F') ? 'selected' : ''; ?>>F</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Grade Exterior</label>
+                                <select class="form-control selectric" name="grade_exterior" >
+                                    <option value="A" <?php echo ($data->grade_utama === 'A') ? 'selected' : ''; ?>>A</option>
+                                    <option value="B" <?php echo ($data->grade_utama === 'B') ? 'selected' : ''; ?>>B</option>
+                                    <option value="C" <?php echo ($data->grade_utama === 'C') ? 'selected' : ''; ?>>C</option>
+                                    <option value="D" <?php echo ($data->grade_utama === 'D') ? 'selected' : ''; ?>>D</option>
+                                    <option value="E" <?php echo ($data->grade_utama === 'E') ? 'selected' : ''; ?>>E</option>
+                                    <option value="F" <?php echo ($data->grade_utama === 'F') ? 'selected' : ''; ?>>F</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>No Polisi</label>
+                                <input type="text" class="form-control" name="no_polisi" value="{{$data->no_polisi}}">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>STNK</label>
+                                <div class="selectgroup w-100" id="adaTidakada">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="stnk" value="ada" class="selectgroup-input" <?php echo ($data->stnk === 'ada') ? 'checked' : ''; ?>>
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="stnk" value="tidak ada" class="selectgroup-input" <?php echo !isset($data->stnk) ? 'checked' : (($data->stnk === 'tidak ada') ? 'checked' : ''); ?>>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>STNK Berlaku</label>
+                                <input type="date" class="form-control" name="stnk_berlaku" value="{{$data->stnk_berlaku}}">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Tahun Produksi</label>
+                                <select class="form-control selectric" name="tahun_produksi">
+                                    <?php for($i = 1900; $i <= date('Y') + 10; $i++) { ?>
+                                        <option value="<?= $i ?>" <?php if($i == $data->tahun_produksi) echo 'selected'; ?>><?= $i; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>BPKB</label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="bpkb" value="ada" class="selectgroup-input" <?php echo ($data->bpkb === 'ada') ? 'checked' : ''; ?>>
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="bpkb" value="tidak ada" class="selectgroup-input" <?php echo !isset($data->bpkb) ? 'checked' : (($data->bpkb === 'tidak ada') ? 'checked' : ''); ?>>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>FAKTUR</label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="faktur" value="ada" class="selectgroup-input" <?php echo ($data->faktur === 'ada') ? 'checked' : ''; ?>>
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="faktur" value="tidak ada" class="selectgroup-input" <?php echo !isset($data->faktur) ? 'checked' : (($data->faktur === 'tidak ada') ? 'checked' : ''); ?>>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>SPH</label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="sph" value="ada" class="selectgroup-input" <?php echo ($data->sph === 'ada') ? 'checked' : ''; ?>>
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="sph" value="tidak ada" class="selectgroup-input" <?php echo !isset($data->sph) ? 'checked' : (($data->sph === 'tidak ada') ? 'checked' : ''); ?>>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>KIR</label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="kir" value="ada" class="selectgroup-input" <?php echo ($data->kir === 'ada') ? 'checked' : ''; ?>>
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="kir" value="tidak ada" class="selectgroup-input" <?php echo !isset($data->kir) ? 'checked' : (($data->kir === 'tidak ada') ? 'checked' : ''); ?>>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>KTP Pemilik</label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="ktp" value="ada" class="selectgroup-input" <?php echo ($data->ktp === 'ada') ? 'checked' : ''; ?>>
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="ktp" value="tidak ada" class="selectgroup-input" <?php echo !isset($data->ktp) ? 'checked' : (($data->ktp === 'tidak ada') ? 'checked' : ''); ?>>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Kwitansi</label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="kwitansi" value="ada" class="selectgroup-input" <?php echo ($data->kwitansi === 'ada') ? 'checked' : ''; ?>>
+                                        <span class="selectgroup-button">ADA</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="kwitansi" value="tidak ada" class="selectgroup-input" <?php echo !isset($data->kwitansi) ? 'checked' : (($data->kwitansi === 'tidak ada') ? 'checked' : ''); ?>>
+                                        <span class="selectgroup-button">TIDAK ADA</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>deskripsi</label>
+                        <textarea class="summernote-simple" placeholder="keterangan..." 
+                            name="keterangan">{{$data->keterangan}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Gambar Detail Produk:</label>
+                        <br>
+                        @foreach ($data->gambarlelang as $item)
+                        <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}"
+                            style="width:150px; height:150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                        @endforeach
+                    </div>
+                    <div class="form-group gambar">
+                        <label>Ganti Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar)</small></label>
+                        <br>
+                        <input type="file" name="gambar[]" class="form-control mb-2" id="gambar" multiple>
+                        <div id="preview"></div>
                     </div>
                 </div>
                 <div class="card-footer text-right">
@@ -45,4 +276,55 @@
         </form>
     </div>
 </div>
+<script>
+    window.onload = function () {
+        const selectElement = document.getElementById("id_kategoribarangs");
+        const editinpKendaraan = document.getElementById("editinpKendaraan");
+
+        if (selectElement.value == 1) {
+            editinpKendaraan.style.display = "block";
+        } else if (selectElement.value == 2) {
+            editinpKendaraan.style.display = "block";
+        } else {
+            editinpKendaraan.style.display = "none";
+        }
+    };
+
+    function toggleDiv(value) {
+        const editinpKendaraan = document.getElementById("editinpKendaraan");
+        if (value == 1 || value == 2) {
+            editinpKendaraan.style.display = "block";
+        } else {
+            editinpKendaraan.style.display = "none";
+        }
+    }
+
+    function previewImages() {
+        var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.height = 200;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+
+    document.querySelector('#gambar').addEventListener("change", previewImages);
+</script>
 @endsection

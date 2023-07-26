@@ -32,7 +32,6 @@
         $('#tablepesanan').DataTable({
             processing: true,
             ordering: false,
-            fixedColumns: true,
             // fixedHeader: true,
             ajax: '{{ url()->current() }}',
             columns: [{

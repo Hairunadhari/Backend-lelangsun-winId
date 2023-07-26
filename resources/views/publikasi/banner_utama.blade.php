@@ -40,7 +40,6 @@
         $('#tablebanner-1').DataTable({
             processing: true,
             ordering: false,
-            fixedColumns: true,
             searching: false,
             // fixedHeader: true,
         ajax: '{{ url()->current() }}',
@@ -130,7 +129,4 @@
     }
     document.querySelector('#gambar').addEventListener("change", previewImages);
     
-    document.querySelector('#resetButton').addEventListener('click', function() {
-        document.querySelector('#preview').innerHTML = '';
-    });
 </script>

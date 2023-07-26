@@ -22,14 +22,6 @@
                         <label>Nama Barang Lelang</label>
                         <input type="text" class="form-control" value="{{ $data->barang }}" readonly>
                     </div>
-                    <div class="form-group">
-                        <label>Nama Pemilik Barang Lelang</label>
-                        <input type="text" class="form-control" value="{{ $data->nama_pemilik }}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Keterangan</label>
-                        <textarea class="form-control" readonly>{{$data->keterangan}}</textarea>
-                    </div>
                 </div>
             </div>
         </form>
