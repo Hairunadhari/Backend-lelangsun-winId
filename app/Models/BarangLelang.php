@@ -9,4 +9,13 @@ class BarangLelang extends Model
 {
     use HasFactory;
     protected $guarded = [''];
+
+    public function kategoribarang()
+    {
+        return $this->belongsTo(KategoriBarang::class);
+    }
+    public function gambarlelang()
+    {
+        return $this->hasMany(GambarLelang::class);
+    }
 }

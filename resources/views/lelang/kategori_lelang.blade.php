@@ -19,17 +19,45 @@
                         </button>
                     </div>
                     @endif
-                        <table class="table table-striped" id="kategori-lelang">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kategori</th>
-                                    <th>Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
+                                aria-controls="home" aria-selected="true">Aktif</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
+                                aria-controls="profile" aria-selected="false">Tidak Aktif</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent2">
+                        <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
+                            <table class="table table-striped w-100" id="kategori-lelang">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kategori</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
+                            <table class="table table-striped w-100" id="kategorilelang-notactive"
+                                style="width:100% !important;">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kategori</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -41,9 +69,13 @@
             // responsive: true,
             processing: true,
             ordering: false,
-            fixedColumns: true,
             // fixedHeader: true,
-            ajax: '{{ url()->current() }}',
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'active';
+                }
+            },
             columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
@@ -61,8 +93,46 @@
                         <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
                         <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_method" value="PUT">
                         <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+                        </form>
+                    `;
+                    },
+                },
+            ],
+        });
+    });
+
+    $(document).ready(function () {
+        $('#kategorilelang-notactive').DataTable({
+            // responsive: true,
+            processing: true,
+            ordering: false,
+            // fixedHeader: true,
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'not-active';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "kategori",
+                },
+                {
+                data: null,
+                    render: function (data) {
+                    var activeurl = '/active-kategori-lelang/' + data.id;
+                    var editUrl = '/edit-kategori-lelang/' + data.id;
+                    return `
+                        <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button class="btn btn-success" type="submit">Aktifkan</button>
                         </form>
                     `;
                     },

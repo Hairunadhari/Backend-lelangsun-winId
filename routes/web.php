@@ -100,7 +100,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-barang-lelang/{id}/', [MenuController::class, 'detail_barang_lelang'])->name('detail-barang-lelang');
     Route::get('/edit-barang-lelang/{id}/', [MenuController::class, 'edit_barang_lelang'])->name('edit-barang-lelang');
     Route::put('/update-barang-lelang/{id}/', [MenuController::class, 'update_barang_lelang'])->name('update-barang-lelang');
-    Route::delete('/delete-barang-lelang/{id}/', [MenuController::class, 'delete_barang_lelang'])->name('delete-barang-lelang');
+    Route::put('/delete-barang-lelang/{id}/', [MenuController::class, 'delete_barang_lelang'])->name('delete-barang-lelang');
+    Route::put('/active-barang-lelang/{id}/', [MenuController::class, 'active_barang_lelang'])->name('active-barang-lelang');
 
     // route event lelang
     Route::get('/event-lelang', [MenuController::class, 'list_event_lelang'])->name('event-lelang');
@@ -117,7 +118,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/add-kategori-lelang', [MenuController::class, 'add_kategori_lelang'])->name('add-kategori-lelang');
     Route::get('/edit-kategori-lelang/{id}/', [MenuController::class, 'edit_kategori_lelang'])->name('edit-kategori-lelang');
     Route::put('/update-kategori-lelang/{id}/', [MenuController::class, 'update_kategori_lelang'])->name('update-kategori-lelang');
-    Route::delete('/delete-kategori-lelang/{id}/', [MenuController::class, 'delete_kategori_lelang'])->name('delete-kategori-lelang');
+    Route::put('/delete-kategori-lelang/{id}/', [MenuController::class, 'delete_kategori_lelang'])->name('delete-kategori-lelang');
+    Route::put('/active-kategori-lelang/{id}/', [MenuController::class, 'active_kategori_lelang'])->name('active-kategori-lelang');
 
     // route barang-lelang
     Route::get('/barang-lelang', [MenuController::class, 'list_barang_lelang'])->name('barang-lelang');

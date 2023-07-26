@@ -11,7 +11,6 @@
   <script src="https://code.jquery.com/jquery-3.6.4.slim.js" integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4=" crossorigin="anonymous"></script>
   
   <!-- CSS Libraries -->
-  <link rel="stylesheet" href="{{ asset('assets/modules/jqvmap/dist/jqvmap.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/owlcarousel2/dist/assets/owl.carousel.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/owlcarousel2/dist/assets/owl.theme.default.min.css')}}">
@@ -22,11 +21,11 @@
   <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css')}}">
   
-  
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/css/components.css')}}">
+  
 <!-- Start GA -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
 <script>
@@ -87,7 +86,6 @@
   <script src="{{ asset('assets/js/page/modules-datatables.js')}}"></script>
   <script src="{{ asset('assets/js/page/index.js')}}"></script>
   <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script>
-  <script src="{{ asset('assets/js/page/forms-advanced-forms.js')}}"></script>
 
 
   <!-- Template JS File -->

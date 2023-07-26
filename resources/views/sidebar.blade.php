@@ -25,8 +25,8 @@
             <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a class="nav-link" href="{{route('promosi')}}">Promo Produk</a></li>
           </ul>
         </li>
-        <li><a class="nav-link {{ request()->routeIs('list-review') ? 'active' : '' }}" href="{{route('list-review')}}"><i class="fas fa-comment-alt"></i><span>Review</span></a></li>
         <li><a class="nav-link {{ request()->routeIs('pesanan') ? 'active' : '' }}" href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
+        {{-- <li><a class="nav-link {{ request()->routeIs('list-review') ? 'active' : '' }}" href="{{route('list-review')}}"><i class="fas fa-comment-alt"></i><span>Review</span></a></li> --}}
         {{-- <li><a class="nav-link {{ request()->routeIs('event') ? 'active' : '' }}" href="{{route('event')}}"><i class="fas fa-calendar-alt"></i><span>Event</span></a></li> --}}
         {{-- <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
           <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-gavel"></i> <span>Lelang</span></a>

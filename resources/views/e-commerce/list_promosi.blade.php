@@ -11,7 +11,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="w-100">Daftar Toko</h4>
+                    <h4 class="w-100">Daftar Promo</h4>
                     <a href="{{route('form-input-promosi')}}" class="btn btn-success">+ Tambah</a>
                 </div>
                 <div class="card-body">
@@ -47,7 +47,6 @@
         $('#tablepromo-produk').DataTable({
             processing: true,
             ordering: false,
-            fixedColumns: true,
             // fixedHeader: true,
             ajax: '{{ url()->current() }}',
             columns: [{

@@ -41,7 +41,6 @@
         $('#toko').DataTable({
             processing: true,
             ordering: false,
-            fixedColumns: true,
             // fixedHeader: true,
             ajax: '{{ url()->current() }}',
             columns: [{
@@ -86,31 +85,6 @@
             ],
         });
     });
-
-    function previewImages() {
-        var preview = document.querySelector('#preview');
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-    document.querySelector('#gambar').addEventListener("change", previewImages);
-
-    document.querySelector('#resetButton').addEventListener('click', function () {
-        document.querySelector('#preview').innerHTML = '';
-    });
-
 </script>
 @endsection
 <!-- Modal -->
@@ -147,6 +121,3 @@
         </div>
     </div>
 </div>
-
-
-<!-- /.container-fluid -->
