@@ -171,7 +171,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-event/{id}/', [MenuController::class, 'detail_event'])->name('detail-event');
     Route::get('/edit-event/{id}/', [MenuController::class, 'edit_event'])->name('edit-event');
     Route::put('/update-event/{id}/', [MenuController::class, 'update_event'])->name('update-event');
-    Route::delete('/delete-event/{id}/', [MenuController::class, 'delete_event'])->name('delete-event');
+    Route::put('/delete-event/{id}/', [MenuController::class, 'delete_event'])->name('delete-event');
+    Route::put('/active-event/{id}/', [MenuController::class, 'active_event'])->name('active-event');
 });
 
  

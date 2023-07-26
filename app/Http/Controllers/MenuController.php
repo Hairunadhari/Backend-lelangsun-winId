@@ -1302,8 +1302,31 @@ class MenuController extends Controller
     }
 
     public function list_event(){
+        $events = Event::all();
+
+        foreach ($events as $event) {
+            $tgl_mulai = $event->tanggal_mulai;
+            $tgl_selesai = $event->tanggal_selesai;
+            $today = now()->toDateString();
+            
+            if ($tgl_mulai <= $today && $tgl_selesai >= $today) {
+                $event->update([
+                    'status' => 'sedang berlangsung',
+                ]);
+            } elseif ($tgl_mulai < $today && $tgl_selesai < $today) {
+                $event->update([
+                    'status' => 'selesai',
+                ]);
+            }
+        }
         if (request()->ajax()) {
-            $data = Event::all();
+            $status = request('status_data');
+
+            if ($status == 'active') {
+                $data = Event::where('status_data', 1)->get();
+            } elseif ($status == 'not-active') {
+                $data = Event::where('status_data', 0)->get();
+            }
             return DataTables::of($data)->make();
         }
         return view('event/list_event');
@@ -1318,6 +1341,14 @@ class MenuController extends Controller
             'judul'     => $request->judul,
             'deskripsi'     => $request->deskripsi,
             'link'     => $request->link,
+            'penyelenggara'     => $request->penyelenggara,
+            'alamat_lokasi'     => $request->alamat_lokasi,
+            'jenis'     => $request->jenis,
+            'tiket'     => $request->tiket,
+            'tgl_mulai'     => $request->tgl_mulai,
+            'tgl_selesai'     => $request->tgl_selesai,
+            'link_lokasi'     => $request->link_lokasi,
+            'status'     => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
         ]);
 
         return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
@@ -1346,10 +1377,18 @@ class MenuController extends Controller
             Storage::delete('public/image/'.$data->gambar);
 
             $data->update([
+                'gambar'     => $gambar->hashName(),
                 'judul'     => $request->judul,
                 'deskripsi'     => $request->deskripsi,
                 'link'     => $request->link,
-                'gambar'     => $gambar->hashName(),
+                'penyelenggara'     => $request->penyelenggara,
+                'alamat_lokasi'     => $request->alamat_lokasi,
+                'jenis'     => $request->jenis,
+                'tiket'     => $request->tiket,
+                'tgl_mulai'     => $request->tgl_mulai,
+                'tgl_selesai'     => $request->tgl_selesai,
+                'link_lokasi'     => $request->link_lokasi,
+                'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
             ]);
 
         } else {
@@ -1357,6 +1396,14 @@ class MenuController extends Controller
                 'judul'     => $request->judul,
                 'deskripsi'     => $request->deskripsi,
                 'link'     => $request->link,
+                'penyelenggara'     => $request->penyelenggara,
+                'alamat_lokasi'     => $request->alamat_lokasi,
+                'jenis'     => $request->jenis,
+                'tiket'     => $request->tiket,
+                'tgl_mulai'     => $request->tgl_mulai,
+                'tgl_selesai'     => $request->tgl_selesai,
+                'link_lokasi'     => $request->link_lokasi,
+                'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
             ]);
         }
 
@@ -1364,9 +1411,35 @@ class MenuController extends Controller
         return redirect()->route('event')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
+    private function getStatusevent($tanggalMulai, $tanggalSelesai)
+    {
+        $today = now()->toDateString();
+        $mulaiPromo = date('Y-m-d', strtotime($tanggalMulai));
+        $selesaiPromo = date('Y-m-d', strtotime($tanggalSelesai));
+
+        if ($mulaiPromo > $today && $selesaiPromo > $today) {
+            return 'akan datang';
+        } elseif ($mulaiPromo <= $today && $selesaiPromo >= $today) {
+            return 'sedang berlangsung';
+        } else {
+            return 'selesai';
+        }
+    }
+
     public function delete_event($id){
-        Event::find($id)->delete();
+        $data = Event::find($id);
+        $data->update([
+            'status_data' => 0
+        ]);
         return redirect()->route('event')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function active_event($id){
+        $data = Event::find($id);
+        $data->update([
+            'status_data' => 1
+        ]);
+        return redirect()->route('event')->with(['success' => 'Data Berhasil Diaktifkan!']);
     }
 
 }   
