@@ -36,7 +36,6 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Gambar</th>
-                                        <th>Penyelenggara</th>
                                         <th>Judul</th>
                                         <th>Jenis</th>
                                         <th>Tiket</th>
@@ -55,7 +54,6 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Gambar</th>
-                                        <th>Penyelenggara</th>
                                         <th>Judul</th>
                                         <th>Jenis</th>
                                         <th>Tiket</th>
@@ -96,9 +94,6 @@
                         return '<img src="/storage/image/' + data +
                             '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
                     },
-                },
-                {
-                    data: "penyelenggara",
                 },
                 {
                     data: "judul",
@@ -175,9 +170,6 @@
                         return '<img src="/storage/image/' + data +
                             '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
                     },
-                },
-                {
-                    data: "penyelenggara",
                 },
                 {
                     data: "judul",
@@ -267,10 +259,16 @@
                         </div>
                         <div class="form-group col-6">
                             <label>Tiket <span style="color: red">*</span></label>
-                            <select class="form-control selectric" name="tiket" required>
-                                <option value="Berbayar">Berbayar</option>
+                            <select class="form-control selectric" name="tiket" id="tiket" required onchange="toggleDiv(this.value)">
                                 <option value="Gratis">Gratis</option>
+                                <option value="Berbayar">Berbayar</option>
                             </select>
+                        </div>
+                    </div>
+                    <div id="inpharga" style="display: none;">
+                        <div class="form-group">
+                            <label>Harga <span style="color: red">*</span></label>
+                            <input type="text" class="form-control" id="hargaInput" name="harga" required onkeyup="formatNumber(this)">
                         </div>
                     </div>
                     <div class="row">
@@ -307,6 +305,20 @@
     </div>
 </div>
 <script>
+
+    window.onload = function () {
+        const tiket = document.getElementById("tiket");
+        const inpharga = document.getElementById("inpharga");
+        const atr = inpharga.querySelectorAll("input[required]");
+
+        if (tiket.value == "Gratis") {
+            tiket.style.display = "none";
+            atr.forEach(input => {
+                input.removeAttribute("required");
+            });
+        }
+    };
+
     function previewImages() {
         var preview = document.querySelector('#preview');
         if (this.files) {
@@ -324,8 +336,38 @@
             }, false);
             reader.readAsDataURL(file);
         }
-    }
+    };
     document.querySelector('#gambar').addEventListener("change", previewImages);
+
+    function formatNumber(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+
+        // Memformat angka menjadi format ribuan dan desimal
+        var formattedNum = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(num);
+
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    };
+
+    function toggleDiv(value) {
+        const inpharga = document.getElementById("inpharga");
+        const hargaInput = inpharga.querySelectorAll("input[required]");
+
+        if (value === "Berbayar") {
+            inpharga.style.display = "block";
+            hargaInput.required = true;
+        } else {
+            inpharga.style.display = "none";
+            hargaInput.forEach(input => {
+                input.removeAttribute("required");
+            });
+        }
+    };
 
 </script>
 

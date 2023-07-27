@@ -1305,8 +1305,8 @@ class MenuController extends Controller
         $events = Event::all();
 
         foreach ($events as $event) {
-            $tgl_mulai = $event->tanggal_mulai;
-            $tgl_selesai = $event->tanggal_selesai;
+            $tgl_mulai = $event->tgl_mulai;
+            $tgl_selesai = $event->tgl_selesai;
             $today = now()->toDateString();
             
             if ($tgl_mulai <= $today && $tgl_selesai >= $today) {
@@ -1333,23 +1333,49 @@ class MenuController extends Controller
     }
 
     public function add_event(Request $request){
-
+        
         $gambar = $request->file('gambar');
         $gambar->storeAs('public/image', $gambar->hashName());
-        Event::create([
-            'gambar'     => $gambar->hashName(),
-            'judul'     => $request->judul,
-            'deskripsi'     => $request->deskripsi,
-            'link'     => $request->link,
-            'penyelenggara'     => $request->penyelenggara,
-            'alamat_lokasi'     => $request->alamat_lokasi,
-            'jenis'     => $request->jenis,
-            'tiket'     => $request->tiket,
-            'tgl_mulai'     => $request->tgl_mulai,
-            'tgl_selesai'     => $request->tgl_selesai,
-            'link_lokasi'     => $request->link_lokasi,
-            'status'     => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
-        ]);
+
+        if ($request->tiket == 'Berbayar') {
+            $harga = preg_replace('/\D/', '', $request->harga); 
+            $hargaProduk = trim($harga);
+            Event::create([
+                'gambar'     => $gambar->hashName(),
+                'judul'     => $request->judul,
+                'deskripsi'     => $request->deskripsi,
+                'link'     => $request->link,
+                'penyelenggara'     => $request->penyelenggara,
+                'alamat_lokasi'     => $request->alamat_lokasi,
+                'jenis'     => $request->jenis,
+                'tiket'     => $request->tiket,
+                'tgl_mulai'     => $request->tgl_mulai,
+                'tgl_selesai'     => $request->tgl_selesai,
+                'link_lokasi'     => $request->link_lokasi,
+                'status'     => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                'harga'     => $hargaProduk,
+                'status_data'     => 1,
+            ]);
+        } else {
+            Event::create([
+                'gambar'     => $gambar->hashName(),
+                'judul'     => $request->judul,
+                'deskripsi'     => $request->deskripsi,
+                'link'     => $request->link,
+                'penyelenggara'     => $request->penyelenggara,
+                'alamat_lokasi'     => $request->alamat_lokasi,
+                'jenis'     => $request->jenis,
+                'tiket'     => $request->tiket,
+                'tgl_mulai'     => $request->tgl_mulai,
+                'tgl_selesai'     => $request->tgl_selesai,
+                'link_lokasi'     => $request->link_lokasi,
+                'status'     => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                'harga'     => null,
+                'status_data'     => 1,
+            ]);
+
+        }
+
 
         return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
     }
@@ -1368,43 +1394,88 @@ class MenuController extends Controller
     public function update_event(Request $request, $id)
     {
         $data = Event::findOrFail($id);
+        $harga = preg_replace('/\D/', '', $request->harga); 
+        $hargaProduk = trim($harga);
+        if ($request->tiket == 'Berbayar') {
+            if ($request->hasFile('gambar')) {
 
-        if ($request->hasFile('gambar')) {
-
-            $gambar = $request->file('gambar');
-            $gambar->storeAs('public/image', $gambar->hashName());
-
-            Storage::delete('public/image/'.$data->gambar);
-
-            $data->update([
-                'gambar'     => $gambar->hashName(),
-                'judul'     => $request->judul,
-                'deskripsi'     => $request->deskripsi,
-                'link'     => $request->link,
-                'penyelenggara'     => $request->penyelenggara,
-                'alamat_lokasi'     => $request->alamat_lokasi,
-                'jenis'     => $request->jenis,
-                'tiket'     => $request->tiket,
-                'tgl_mulai'     => $request->tgl_mulai,
-                'tgl_selesai'     => $request->tgl_selesai,
-                'link_lokasi'     => $request->link_lokasi,
-                'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
-            ]);
-
+                $gambar = $request->file('gambar');
+                $gambar->storeAs('public/image', $gambar->hashName());
+    
+                Storage::delete('public/image/'.$data->gambar);
+    
+                $data->update([
+                    'gambar'     => $gambar->hashName(),
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                    'harga'     => $hargaProduk,
+                ]);
+    
+            } else {
+                $data->update([
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                    'harga'     => $hargaProduk,
+                ]);
+            }
         } else {
-            $data->update([
-                'judul'     => $request->judul,
-                'deskripsi'     => $request->deskripsi,
-                'link'     => $request->link,
-                'penyelenggara'     => $request->penyelenggara,
-                'alamat_lokasi'     => $request->alamat_lokasi,
-                'jenis'     => $request->jenis,
-                'tiket'     => $request->tiket,
-                'tgl_mulai'     => $request->tgl_mulai,
-                'tgl_selesai'     => $request->tgl_selesai,
-                'link_lokasi'     => $request->link_lokasi,
-                'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
-            ]);
+            if ($request->hasFile('gambar')) {
+
+                $gambar = $request->file('gambar');
+                $gambar->storeAs('public/image', $gambar->hashName());
+    
+                Storage::delete('public/image/'.$data->gambar);
+    
+                $data->update([
+                    'gambar'     => $gambar->hashName(),
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                    'harga'     => null,
+                ]);
+    
+            } else {
+                $data->update([
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                    'harga'     => null,
+                ]);
+            }
         }
 
         //redirect to index

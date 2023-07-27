@@ -15,60 +15,66 @@
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-6">
-                        <label>Penyelenggara <span style="color: red">*</span></label>
+                        <label>Penyelenggara</label>
                         <input type="text" class="form-control" name="penyelenggara" value="{{$data->penyelenggara}}" >
                     </div>
                     <div class="form-group col-6">
-                        <label>Judul <span style="color: red">*</span></label>
+                        <label>Judul</label>
                         <input type="text" class="form-control" name="judul" value="{{$data->judul}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Deskripsi <span style="color: red">*</span></label>
+                    <label>Deskripsi</label>
                     <textarea class="summernote-simple" placeholder="keterangan..."
                         name="deskripsi">{{$data->deskripsi}}</textarea>
                 </div>
                 <div class="form-group">
-                    <label>Alamat Lokasi <span style="color: red">*</span></label>
+                    <label>Alamat Lokasi</label>
                     <textarea class="form-control" name="alamat_lokasi">{{$data->alamat_lokasi}}</textarea>
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
-                        <label>Jenis <span style="color: red">*</span></label>
+                        <label>Jenis</label>
                         <select class="form-control selectric" name="jenis" >
                             <option value="Offline" <?= ($data->jenis == 'Offline' ? 'selected' : '')?>>Offline</option>
                         </select>
                     </div>
                     <div class="form-group col-6">
-                        <label>Tiket <span style="color: red">*</span></label>
-                        <select class="form-control selectric" name="tiket" <?php echo ($data->tiket === 'ada') ? 'checked' : ''; ?>>
+                        <label>Tiket</label>
+                        <select id="tiket" class="form-control selectric" name="tiket" onchange="toggleDiv(this.value)">
                             <option value="Berbayar" <?= ($data->tiket == 'Berbayar' ? 'selected' : '')?>>Berbayar</option>
                             <option value="Gratis" <?= ($data->tiket == 'Gratis' ? 'selected' : '')?>>Gratis</option>
                         </select>
                     </div>
                 </div>
+                <div id="editinpharga" style="display: none;">
+                    <div class="form-group">
+                        <label>Harga</label>
+                        <input type="text" class="form-control" name="harga" onkeyup="formatNumber(this)" value="{{$data->harga}}">
+                    </div>
+                </div>
                 <div class="row">
                     <div class="form-group col-6">
-                        <label>Tanggal Mulai <span style="color: red">*</span></label>
+                        <label>Tanggal Mulai</label>
                         <input type="date" class="form-control" name="tgl_mulai" value="{{$data->tgl_mulai}}">
                     </div>
                     <div class="form-group col-6">
-                        <label>Tanggal Selesai <span style="color: red">*</span></label>
+                        <label>Tanggal Selesai</label>
                         <input type="date" class="form-control" name="tgl_selesai" value="{{$data->tgl_selesai}}">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
-                        <label>Link Registrasi <span style="color: red">*</span></label>
+                        <label>Link Registrasi</label>
                         <input type="text" class="form-control" name="link" value="{{$data->link}}">
                     </div>
                     <div class="form-group col-6">
-                        <label>Link Lokasi <span style="color: red">*</span></label>
+                        <label>Link Lokasi</label>
                         <input type="text" class="form-control" name="link_lokasi" value="{{$data->link_lokasi}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Image <span style="color: red">*</span></label>
+                    <label>Image</label>
                     <input type="file" class="form-control" name="gambar"  id="gambar">
                 <div id="preview" class="mt-3"></div>
                 </div>
@@ -79,6 +85,18 @@
         </form>
     </div>
 <script>
+    
+    window.onload = function () {
+        const selectElement = document.getElementById("tiket");
+        const editinpharga = document.getElementById("editinpharga");
+        
+        if (selectElement.value == "Berbayar") {
+            editinpharga.style.display = "block";
+        } else {
+            editinpharga.style.display = "none";
+        }
+    };
+    
     function previewImages() {
         var preview = document.querySelector('#preview');
 
@@ -108,5 +126,31 @@
     document.querySelector('#resetButton').addEventListener('click', function() {
         document.querySelector('#preview').innerHTML = '';
     });
+
+    
+
+    function toggleDiv(value) {
+        const editinpharga = document.getElementById("editinpharga");
+        if (value == "Berbayar") {
+            editinpharga.style.display = "block";
+        } else {
+            editinpharga.style.display = "none";
+        }
+    };
+
+    function formatNumber(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+
+        // Memformat angka menjadi format ribuan dan desimal
+        var formattedNum = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(num);
+
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    }
 </script>
 @endsection
