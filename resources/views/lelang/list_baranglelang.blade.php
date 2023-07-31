@@ -569,7 +569,7 @@
     function toggleDiv(value) {
         const inpKendaraan = document.getElementById("inpKendaraan");
         const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
-        const selectgroup = inpKendaraan.querySelector(".selectgroup");
+        // const selectgroup = inpKendaraan.querySelector(".selectgroup");
         if (value == 1 || value == 2) {
             inpKendaraan.style.display = "block";
         } else {

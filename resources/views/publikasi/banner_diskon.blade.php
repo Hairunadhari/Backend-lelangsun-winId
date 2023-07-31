@@ -92,7 +92,7 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Gambar</label>
+                        <label for="exampleInputEmail1">Gambar <span style="color: red">*</span></label>
                         <input type="file" class="form-control" name="gambar" required id="gambar">
                     </div>
                     <div id="preview"></div>

@@ -24,30 +24,30 @@
                 @csrf
                 <div class="table-responsive">
                     <div class="form-group">
-                        <label>Nama Promo</label>
+                        <label>Nama Promo <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="promosi" required>
                     </div>
                     <div class="form-group">
-                        <label>Deksripsi Promo</label>
+                        <label>Deksripsi Promo <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="deskripsi" required>
                     </div>
                     <div class="form-group">
-                        <label>Diskon</label>
+                        <label>Diskon <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="diskon" required onkeyup="formatPromo(this)">
                     </div>
                     <div class="form-group">
-                        <label>Tanggal Mulai</label>
+                        <label>Tanggal Mulai <span style="color: red">*</span></label>
                         <input type="date" class="form-control" name="tanggal_mulai">
                     </div>
                     <div class="form-group">
-                        <label>Tanggal Selesai</label>
+                        <label>Tanggal Selesai <span style="color: red">*</span></label>
                         <input type="date" class="form-control" name="tanggal_selesai">
                     </div>
                     <div class="form-group">
-                        <label>Gambar Promo</label>
+                        <label>Gambar Promo <span style="color: red">*</span></label>
                         <input type="file" class="form-control" name="gambar" required>
                     </div>
-                    <label for="">Pilih Produk :</label>
+                    <label for="">Pilih Produk <span style="color: red">*</span></label>
                     <div class="scroll">
                         <table class="table table-bordered" id="tabel1">
                             <thead style="position: sticky; top: 0; background-color: white;">

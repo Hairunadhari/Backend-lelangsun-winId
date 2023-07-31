@@ -9,7 +9,7 @@
       <ul class="sidebar-menu">
         <li class="menu-header">Menu SuperAdmin</li>
         <li class="dropdown {{ request()->routeIs(['banner-utama','banner-diskon','banner-spesial']) ? 'active' : '' }}">
-          <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-large"></i> <span>Banner</span></a>
+          <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-large"></i> <span>Banner E-commerce</span></a>
           <ul class="dropdown-menu">
             <li class="{{ request()->routeIs('banner-utama') ? 'active' : '' }}"><a class="nav-link " href="{{route('banner-utama')}}">Banner Utama</a></li>
             <li class="{{ request()->routeIs('banner-diskon') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-diskon')}}">Banner Diskon</a></li>
@@ -25,9 +25,11 @@
             <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a class="nav-link" href="{{route('promosi')}}">Promo Produk</a></li>
           </ul>
         </li>
-        <li><a class="nav-link {{ request()->routeIs('pesanan') ? 'active' : '' }}" href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
+        <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
         {{-- <li><a class="nav-link {{ request()->routeIs('list-review') ? 'active' : '' }}" href="{{route('list-review')}}"><i class="fas fa-comment-alt"></i><span>Review</span></a></li> --}}
-        {{-- <li><a class="nav-link {{ request()->routeIs('event') ? 'active' : '' }}" href="{{route('event')}}"><i class="fas fa-calendar-alt"></i><span>Event</span></a></li> --}}
+        <li class="{{ request()->routeIs('event') ? 'active' : '' }}"><a href="{{route('event')}}"><i class="fas fa-calendar-alt"></i><span>Event</span></a></li>
+        <li class="{{ request()->routeIs('banner-lelang') ? 'active' : '' }}"><a href="{{route('banner-lelang')}}"><i class="fas fa-th-large"></i><span>Banner Lelang</span></a></li>
+        {{-- <li class="{{ request()->routeIs('user-cms') ? 'active' : '' }}"><a href="{{route('user-cms')}}"><i class="fas fa-users"></i><span>User CMS</span></a></li> --}}
         {{-- <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
           <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-gavel"></i> <span>Lelang</span></a>
           <ul class="dropdown-menu">

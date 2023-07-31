@@ -122,7 +122,7 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Nama Toko:</label>
+                        <label>Nama Toko <span style="color: red">*</span></label>
                         <select class="form-control selectric" name="toko_id" required>
                             @foreach ($toko as $item)
                             <option value="{{ $item->id }}">{{ $item->toko }}</option>
@@ -130,7 +130,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Kategori Produk</label>
+                        <label>Kategori Produk <span style="color: red">*</span></label>
                         <select class="form-control selectric" name="kategoriproduk_id" required>
                             @foreach ($kategori as $item)
                             <option value="{{ $item->id }}">{{ $item->kategori }}</option>
@@ -138,36 +138,36 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Nama Produk</label>
+                        <label>Nama Produk <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="nama" required>
                     </div>
                     <div class="form-group">
-                        <label>Keterangan</label>
+                        <label>Keterangan <span style="color: red">*</span></label>
                         <textarea class="form-control" name="keterangan" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Harga</label>
+                        <label>Harga <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="harga" onkeyup="formatNumber(this)" required>
                     </div>
                     <div class="form-group">
-                        <label>Stok</label>
+                        <label>Stok <span style="color: red">*</span></label>
                         <input type="number" class="form-control" name="stok" required onkeyup="formatStok(this)">
                     </div>
                     <div class="form-group">
-                        <label>Link Video:</label>
+                        <label>Link Video <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="video" required placeholder="">
                     </div>
                     <div class="form-group">
-                        <label class="">Cover Produk</label>
+                        <label class="">Cover Produk <span style="color: red">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <div id="image-preview" class="image-preview">
                                 <label for="image-upload" id="image-label">Choose File</label>
-                                <input type="file" name="thumbnail" id="image-upload">
+                                <input type="file" name="thumbnail" id="image-upload" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar)</small></label>
+                        <label>Gambar Detail Produk <small>(Multiple Upload) </small><span style="color: red">*</span></label>
                         <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
                     </div>
                         <div id="preview" class="review"></div>

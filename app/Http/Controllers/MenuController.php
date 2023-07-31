@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DataTables;
+use App\Models\Role;
 use App\Models\Toko;
 use App\Models\User;
 use App\Models\Event;
@@ -19,6 +20,7 @@ use App\Models\BannerUtama;
 use App\Models\EventLelang;
 use App\Models\ProdukPromo;
 use App\Models\BannerDiskon;
+use App\Models\BannerLelang;
 use App\Models\BarangLelang;
 use App\Models\GambarLelang;
 use App\Models\GambarProduk;
@@ -27,6 +29,7 @@ use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
@@ -1302,23 +1305,80 @@ class MenuController extends Controller
     }
 
     public function list_event(){
+        $events = Event::all();
+
+        foreach ($events as $event) {
+            $tgl_mulai = $event->tgl_mulai;
+            $tgl_selesai = $event->tgl_selesai;
+            $today = now()->toDateString();
+            
+            if ($tgl_mulai <= $today && $tgl_selesai >= $today) {
+                $event->update([
+                    'status' => 'sedang berlangsung',
+                ]);
+            } elseif ($tgl_mulai < $today && $tgl_selesai < $today) {
+                $event->update([
+                    'status' => 'selesai',
+                ]);
+            }
+        }
         if (request()->ajax()) {
-            $data = Event::all();
+            $status = request('status_data');
+
+            if ($status == 'active') {
+                $data = Event::where('status_data', 1)->get();
+            } elseif ($status == 'not-active') {
+                $data = Event::where('status_data', 0)->get();
+            }
             return DataTables::of($data)->make();
         }
         return view('event/list_event');
     }
 
     public function add_event(Request $request){
-
+        
         $gambar = $request->file('gambar');
         $gambar->storeAs('public/image', $gambar->hashName());
-        Event::create([
-            'gambar'     => $gambar->hashName(),
-            'judul'     => $request->judul,
-            'deskripsi'     => $request->deskripsi,
-            'link'     => $request->link,
-        ]);
+
+        if ($request->tiket == 'Berbayar') {
+            $harga = preg_replace('/\D/', '', $request->harga); 
+            $hargaProduk = trim($harga);
+            Event::create([
+                'gambar'     => $gambar->hashName(),
+                'judul'     => $request->judul,
+                'deskripsi'     => $request->deskripsi,
+                'link'     => $request->link,
+                'penyelenggara'     => $request->penyelenggara,
+                'alamat_lokasi'     => $request->alamat_lokasi,
+                'jenis'     => $request->jenis,
+                'tiket'     => $request->tiket,
+                'tgl_mulai'     => $request->tgl_mulai,
+                'tgl_selesai'     => $request->tgl_selesai,
+                'link_lokasi'     => $request->link_lokasi,
+                'status'     => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                'harga'     => $hargaProduk,
+                'status_data'     => 1,
+            ]);
+        } else {
+            Event::create([
+                'gambar'     => $gambar->hashName(),
+                'judul'     => $request->judul,
+                'deskripsi'     => $request->deskripsi,
+                'link'     => $request->link,
+                'penyelenggara'     => $request->penyelenggara,
+                'alamat_lokasi'     => $request->alamat_lokasi,
+                'jenis'     => $request->jenis,
+                'tiket'     => $request->tiket,
+                'tgl_mulai'     => $request->tgl_mulai,
+                'tgl_selesai'     => $request->tgl_selesai,
+                'link_lokasi'     => $request->link_lokasi,
+                'status'     => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                'harga'     => null,
+                'status_data'     => 1,
+            ]);
+
+        }
+
 
         return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
     }
@@ -1337,36 +1397,252 @@ class MenuController extends Controller
     public function update_event(Request $request, $id)
     {
         $data = Event::findOrFail($id);
+        $harga = preg_replace('/\D/', '', $request->harga); 
+        $hargaProduk = trim($harga);
+        if ($request->tiket == 'Berbayar') {
+            if ($request->hasFile('gambar')) {
 
-        if ($request->hasFile('gambar')) {
-
-            $gambar = $request->file('gambar');
-            $gambar->storeAs('public/image', $gambar->hashName());
-
-            Storage::delete('public/image/'.$data->gambar);
-
-            $data->update([
-                'judul'     => $request->judul,
-                'deskripsi'     => $request->deskripsi,
-                'link'     => $request->link,
-                'gambar'     => $gambar->hashName(),
-            ]);
-
+                $gambar = $request->file('gambar');
+                $gambar->storeAs('public/image', $gambar->hashName());
+    
+                Storage::delete('public/image/'.$data->gambar);
+    
+                $data->update([
+                    'gambar'     => $gambar->hashName(),
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                    'harga'     => $hargaProduk,
+                ]);
+    
+            } else {
+                $data->update([
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                    'harga'     => $hargaProduk,
+                ]);
+            }
         } else {
-            $data->update([
-                'judul'     => $request->judul,
-                'deskripsi'     => $request->deskripsi,
-                'link'     => $request->link,
-            ]);
+            if ($request->hasFile('gambar')) {
+
+                $gambar = $request->file('gambar');
+                $gambar->storeAs('public/image', $gambar->hashName());
+    
+                Storage::delete('public/image/'.$data->gambar);
+    
+                $data->update([
+                    'gambar'     => $gambar->hashName(),
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                    'harga'     => null,
+                ]);
+    
+            } else {
+                $data->update([
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
+                    'harga'     => null,
+                ]);
+            }
         }
 
         //redirect to index
         return redirect()->route('event')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
+    private function getStatusevent($tanggalMulai, $tanggalSelesai)
+    {
+        $today = now()->toDateString();
+        $mulaiPromo = date('Y-m-d', strtotime($tanggalMulai));
+        $selesaiPromo = date('Y-m-d', strtotime($tanggalSelesai));
+
+        if ($mulaiPromo > $today && $selesaiPromo > $today) {
+            return 'akan datang';
+        } elseif ($mulaiPromo <= $today && $selesaiPromo >= $today) {
+            return 'sedang berlangsung';
+        } else {
+            return 'selesai';
+        }
+    }
+
     public function delete_event($id){
-        Event::find($id)->delete();
+        $data = Event::find($id);
+        $data->update([
+            'status_data' => 0
+        ]);
         return redirect()->route('event')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
+    public function active_event($id){
+        $data = Event::find($id);
+        $data->update([
+            'status_data' => 1
+        ]);
+        return redirect()->route('event')->with(['success' => 'Data Berhasil Diaktifkan!']);
+    }
+
+    public function list_banner_lelang(){
+        if (request()->ajax()) {
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = BannerLelang::where('status', 1)->get();
+            } elseif ($status == 'not-active') {
+                $data = BannerLelang::where('status', 0)->get();
+            }
+            return DataTables::of($data)->make();
+        }
+        return view('publikasi.banner_lelang');
+    }
+
+    public function add_banner_lelang(Request $request){
+
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
+        BannerLelang::create([
+            'gambar' => $gambar->hashName(),
+            'status' => 1
+        ]);
+
+        return redirect('/banner-lelang')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_banner_lelang($id)
+    {
+        $data = BannerLelang::findOrFail($id);
+
+        //render view with post
+        return view('publikasi.edit_banner_lelang', compact('data'));
+    }
+
+    public function update_banner_lelang(Request $request, $id)
+    {
+        $data = BannerLelang::findOrFail($id);
+
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
+            
+        Storage::delete('public/image/'.$data->gambar);
+        $data->update([
+            'gambar'     => $gambar->hashName(),
+        ]);
+
+        return redirect()->route('banner-lelang')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function delete_banner_lelang($id)
+    {
+        $data = BannerLelang::findOrFail($id);
+        $data->update([
+            'status' => 0
+        ]);
+        return redirect()->route('banner-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+    public function active_banner_lelang($id)
+    {
+        $data = BannerLelang::findOrFail($id);
+        $data->update([
+            'status' => 1
+        ]);
+        return redirect()->route('banner-lelang')->with(['success' => 'Data Berhasil Diaktifkan!']);
+    }
+
+    public function list_user(){
+        if (request()->ajax()) {
+            $data = User::with('role')->whereNotNull('role_id', )->get();
+            return DataTables::of($data)->make();
+        }
+        return view('user-cms.list');
+    }
+    
+    public function tambah_user(){
+        $role = Role::all();
+        return view('user-cms.input',compact('role'));
+    }
+
+    public function add_user(Request $request){
+        $this->validate($request, [
+            'name' => 'max:280',
+            'email' => ['string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => 'min:10',
+            'password_confirmation' => 'same:password',
+            
+        ]);
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role_id,
+            'password' => Hash::make($request->password)
+        ]);
+
+        return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_user($id)
+    {
+        $data = User::findOrFail($id);
+        $role = Role::all();
+        //render view with post
+        return view('user-cms.edit', compact('data','role'));
+    }
+
+    public function update_user(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:280',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            
+        ]);
+
+        $data = User::findOrFail($id);
+        $data->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role_id,
+        ]);
+
+        return redirect()->route('user-cms')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+
+    public function delete_user($id)
+    {
+        $data = User::findOrFail($id);
+        $data->delete();
+        return redirect()->route('user-cms')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
 }   

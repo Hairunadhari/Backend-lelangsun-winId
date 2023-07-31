@@ -171,7 +171,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-event/{id}/', [MenuController::class, 'detail_event'])->name('detail-event');
     Route::get('/edit-event/{id}/', [MenuController::class, 'edit_event'])->name('edit-event');
     Route::put('/update-event/{id}/', [MenuController::class, 'update_event'])->name('update-event');
-    Route::delete('/delete-event/{id}/', [MenuController::class, 'delete_event'])->name('delete-event');
+    Route::put('/delete-event/{id}/', [MenuController::class, 'delete_event'])->name('delete-event');
+    Route::put('/active-event/{id}/', [MenuController::class, 'active_event'])->name('active-event');
+
+    // banner lelang
+    Route::get('/banner-lelang', [MenuController::class, 'list_banner_lelang'])->name('banner-lelang');
+    Route::post('/add-banner-lelang', [MenuController::class, 'add_banner_lelang'])->name('add-banner-lelang');
+    Route::get('/edit-banner-lelang/{id}/', [MenuController::class, 'edit_banner_lelang'])->name('edit-banner-lelang');
+    Route::put('/update-banner-lelang/{id}/', [MenuController::class, 'update_banner_lelang'])->name('update-banner-lelang');
+    Route::put('/delete-banner-lelang/{id}/', [MenuController::class, 'delete_banner_lelang'])->name('delete-banner-lelang');
+    Route::put('/active-banner-lelang/{id}/', [MenuController::class, 'active_banner_lelang'])->name('active-banner-lelang');
+    
+    // route user cms
+    Route::get('/user', [MenuController::class, 'list_user'])->name('user-cms');
+    Route::get('/tambah-user', [MenuController::class, 'tambah_user'])->name('tambah-user');
+    Route::post('/add-user', [MenuController::class, 'add_user'])->name('add-user');
+    Route::get('/edit-user/{id}/', [MenuController::class, 'edit_user'])->name('edit-user');
+    Route::put('/update-user/{id}/', [MenuController::class, 'update_user'])->name('update-user');
+    Route::delete('/delete-user/{id}/', [MenuController::class, 'delete_user'])->name('delete-user');
+    Route::put('/active-user/{id}/', [MenuController::class, 'active_user'])->name('active-user');
 });
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 
