@@ -104,15 +104,15 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Kategori</label>
+                        <label>Kategori <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="kategori" required>
                     </div>
                     <div class="form-group">
-                        <label class="">Logo</label>
+                        <label class="">Logo <span style="color: red">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <div id="image-preview" class="image-preview">
                                 <label for="image-upload" id="image-label">Choose File</label>
-                                <input type="file" name="gambar" id="image-upload">
+                                <input type="file" name="gambar" id="image-upload" required>
                             </div>
                         </div>
                     </div>

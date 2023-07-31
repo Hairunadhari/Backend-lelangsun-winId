@@ -39,7 +39,7 @@
                                         <th>Judul</th>
                                         <th>Jenis</th>
                                         <th>Tiket</th>
-                                        <th>Alamat Lokasi</th>
+                                        <th>Link Meet</th>
                                         <th>Status</th>
                                         <th>Opsi</th>
                                     </tr>
@@ -57,7 +57,7 @@
                                         <th>Judul</th>
                                         <th>Jenis</th>
                                         <th>Tiket</th>
-                                        <th>Alamat Lokasi</th>
+                                        <th>Link Meet</th>
                                         <th>Status</th>
                                         <th>Opsi</th>
                                     </tr>
@@ -77,6 +77,7 @@
         $('#event').DataTable({
             processing: true,
             ordering: false,
+            responsive: true,
             ajax: {
                 url: '{{ url()->current() }}',
                 data: function (data) {
@@ -107,7 +108,7 @@
                 {
                     data: null,
                     render: function (data) {
-                        return `<a href="${data.link_lokasi}">${data.alamat_lokasi}</a>`
+                        return `<a href="${data.link}">${data.link}</a>`
                     }
                 },
                 {
@@ -153,6 +154,7 @@
         $('#event-notactive').DataTable({
             processing: true,
             ordering: false,
+            responsive: true,
             ajax: {
                 url: '{{ url()->current() }}',
                 data: function (data) {
@@ -183,7 +185,7 @@
                 {
                     data: null,
                     render: function (data) {
-                        return `<a href="${data.link_lokasi}">${data.alamat_lokasi}</a>`
+                        return `<a href="${data.link}">${data.link}</a>`
                     }
                 },
                 {
@@ -283,7 +285,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-6">
-                            <label>Link Registrasi <span style="color: red">*</span></label>
+                            <label>Link Meeting <span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="link" required>
                         </div>
                         <div class="form-group col-6">
@@ -321,6 +323,12 @@
 
     function previewImages() {
         var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
         if (this.files) {
             [].forEach.call(this.files, readAndPreview);
         }
@@ -336,7 +344,7 @@
             }, false);
             reader.readAsDataURL(file);
         }
-    };
+    }
     document.querySelector('#gambar').addEventListener("change", previewImages);
 
     function formatNumber(input) {

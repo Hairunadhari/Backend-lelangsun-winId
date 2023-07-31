@@ -65,7 +65,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
-                        <label>Link Registrasi</label>
+                        <label>Link Meeting</label>
                         <input type="text" class="form-control" name="link" value="{{$data->link}}">
                     </div>
                     <div class="form-group col-6">
