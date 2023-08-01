@@ -24,7 +24,6 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Toko</th>
-                                    <th>Logo</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -53,33 +52,17 @@
                     data: "kategori",
                 },
                 {
-                    data: "gambar",
-                    render: function (data) {
-                        return '<img src="/storage/image/' + data +
-                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
-                    },
-                },
-                {
                 data: null,
                 render: function (data) {
                     var deleteUrl = '/delete-kategori-produk/' + data.id;
                     var editUrl = '/edit-kategori-produk/' + data.id;
-                    var detailUrl = '/detail-kategori-produk/' + data.id;
                     return `
-                    <div class="dropdown d-inline">
-                        <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                        <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                            <div class="dropdown-menu" x-placement="bottom-start"
-                                style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item has-icon" href="${detailUrl}"><i class="fas fa-info-circle"></i>Detail</a>
-                                <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
-                            </div>
-                        </form>
-                    </div>
+                    <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                        <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+                    </form>
                     `;
                 },
             },
@@ -107,16 +90,6 @@
                         <label>Kategori <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="kategori" required>
                     </div>
-                    <div class="form-group">
-                        <label class="">Logo <span style="color: red">*</span></label>
-                        <div class="col-sm-12 col-md-7">
-                            <div id="image-preview" class="image-preview">
-                                <label for="image-upload" id="image-label">Choose File</label>
-                                <input type="file" name="gambar" id="image-upload" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="preview"></div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>

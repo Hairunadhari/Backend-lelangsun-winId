@@ -12,6 +12,7 @@ use App\Models\Reply;
 use App\Models\Produk;
 use App\Models\Review;
 use App\Models\Promosi;
+use App\Models\Setting;
 use App\Models\Tagihan;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
@@ -40,8 +41,8 @@ class MenuController extends Controller
 
     public function list_toko(){
         if (request()->ajax()) {
-            $data = Toko::all();
-            return DataTables::of($data)->make();
+            $data = Toko::select('id','toko','logo')->latest();
+            return DataTables::of($data)->make(true);
         }
         return view('e-commerce/list_toko');
     }
@@ -125,66 +126,26 @@ class MenuController extends Controller
 
     public function add_kategori_produk(Request $request){
 
-        $this->validate($request, [
-            'gambar'     => 'required|image|mimes:jpeg,jpg,png,webp',
-            
-        ]);
-
-        $gambar = $request->file('gambar');
-        $gambar->storeAs('public/image', $gambar->hashName());
-
         KategoriProduk::create([
             'kategori'     => $request->kategori,
-            'gambar'     => $gambar->hashName(),
-
         ]);
 
         return redirect('/kategori-produk')->with('success', 'Data Berhasil Ditambahkan');
-    }
-
-    public function detail_kategori_produk($id)
-    {
-        $data = KategoriProduk::find($id);
-        // dd($produk);
-
-        //render view with post
-        return view('e-commerce.detail_kategori_produk', compact('data'));
     }
 
     public function edit_kategori_produk($id)
     {
         $data = KategoriProduk::findOrFail($id);
 
-        //render view with post
         return view('e-commerce.edit_kategori_produk', compact('data'));
     }
 
     public function update_kategori_produk(Request $request, $id)
     {
-        $this->validate($request, [
-            'gambar'     => 'image|mimes:jpeg,jpg,png,webp',
-            
-        ]);
-        
         $data = KategoriProduk::findOrFail($id);
-        if ($request->hasFile('gambar')) {
-
-            $gambar = $request->file('gambar');
-            $gambar->storeAs('public/image', $gambar->hashName());
-
-            Storage::delete('public/image/'.$data->gambar);
-
-            $data->update([
-                'kategori'     => $request->kategori,
-                'gambar'     => $gambar->hashName(),
-            ]);
-
-        } else {
             $data->update([
                 'kategori'     => $request->kategori,
             ]);
-    
-        }
 
         //redirect to index
         return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
@@ -193,7 +154,6 @@ class MenuController extends Controller
     public function delete_kategori_produk($id)
     {
         $data = KategoriProduk::findOrFail($id);
-        Storage::delete('public/image/'.$data->gambar);
         $data->delete();
         return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -210,8 +170,8 @@ class MenuController extends Controller
         $toko = Toko::orderBy('toko','asc')->get();
         $kategori = KategoriProduk::orderBy('kategori','asc')->get();
         if (request()->ajax()) {
-            $data = Produk::all();
-            return DataTables::of($data)->make();
+            $data = Produk::select('id','nama','thumbnail','harga','stok');
+            return DataTables::of($data)->make(true);
         }
         return view('e-commerce/list_produk', compact('toko','kategori'));
     }
@@ -1645,4 +1605,35 @@ class MenuController extends Controller
         $data->delete();
         return redirect()->route('user-cms')->with(['success' => 'Data Berhasil Dihapus!']);
     }
+
+    public function setting(){
+        $data = Setting::first();
+        return view('setting.view', compact('data'));
+    }
+
+    public function update_setting_metadata(Request $request, $id){
+        $data = Setting::find($id);
+        $data->update([
+            'title' => $request->title,
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
+    }
+    public function update_setting_kontak(Request $request, $id){
+        $data = Setting::find($id);
+        $data->update([
+            'no_telp' => $request->no_telp,
+            'wa' => $request->wa,
+            'email' => $request->email,
+            'alamat' => $request->alamat,
+            'ig' => $request->ig,
+            'fb' => $request->fb,
+            'twitter' => $request->twitter,
+            'yt' => $request->yt,
+        ]);
+
+        return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
+    }
+    
 }   

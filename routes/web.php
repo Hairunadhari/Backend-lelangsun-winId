@@ -190,6 +190,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-user/{id}/', [MenuController::class, 'update_user'])->name('update-user');
     Route::delete('/delete-user/{id}/', [MenuController::class, 'delete_user'])->name('delete-user');
     Route::put('/active-user/{id}/', [MenuController::class, 'active_user'])->name('active-user');
+
+    // rute setting
+    Route::get('/setting', [MenuController::class, 'setting'])->name('setting');
+    Route::put('/update-setting-metadata/{id}/', [MenuController::class, 'update_setting_metadata'])->name('update-setting-metadata');
+    Route::put('/update-setting-kontak/{id}/', [MenuController::class, 'update_setting_kontak'])->name('update-setting-kontak');
+    Route::put('/update-setting-lelang/{id}/', [MenuController::class, 'update_setting_lelang'])->name('update-setting-lelang');
 });
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 

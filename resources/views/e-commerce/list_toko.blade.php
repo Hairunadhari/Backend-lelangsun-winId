@@ -41,7 +41,7 @@
         $('#toko').DataTable({
             processing: true,
             ordering: false,
-            // fixedHeader: true,
+            serverSide: true,
             ajax: '{{ url()->current() }}',
             columns: [{
                     render: function (data, type, row, meta) {
@@ -63,7 +63,6 @@
                 render: function (data) {
                     var deleteUrl = '/deletetoko/' + data.id;
                     var editUrl = '/edittoko/' + data.id;
-                    var detailUrl = '/detailtoko/' + data.id;
                     return `
                     <div class="dropdown d-inline">
                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
@@ -71,7 +70,6 @@
                         <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
                             <div class="dropdown-menu" x-placement="bottom-start"
                                 style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item has-icon" href="${detailUrl}"><i class="fas fa-info-circle"></i>Detail</a>
                                 <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="DELETE">

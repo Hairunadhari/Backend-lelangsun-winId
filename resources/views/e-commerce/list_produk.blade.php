@@ -55,6 +55,7 @@
             // responsive: true,
             processing: true,
             ordering: false,
+            serverSide: true,
             ajax: '{{ url()->current() }}',
             columns: [{
                     render: function (data, type, row, meta) {
