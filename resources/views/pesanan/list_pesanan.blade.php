@@ -12,7 +12,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Invoice IDa</th>
+                                <th>Invoice ID</th>
                                 <th>Nama Pemesan</th>
                                 <th>Status</th>
                                 <th>Exp Date</th>
