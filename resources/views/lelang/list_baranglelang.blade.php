@@ -92,6 +92,7 @@
         $('#barang-lelang').DataTable({
             processing: true,
             ordering: false,
+            serverSide: true,
             ajax: {
                 url: '{{ url()->current() }}',
                 data: function (data) {
@@ -199,6 +200,7 @@
         $('#barang-lelang-notactive').DataTable({
             processing: true,
             ordering: false,
+            serverSide: true,
             ajax: {
                 url: '{{ url()->current() }}',
                 data: function (data) {
