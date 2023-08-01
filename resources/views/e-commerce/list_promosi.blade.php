@@ -47,7 +47,7 @@
         $('#tablepromo-produk').DataTable({
             processing: true,
             ordering: false,
-            // fixedHeader: true,
+            serverSide: true,
             ajax: '{{ url()->current() }}',
             columns: [{
                     render: function (data, type, row, meta) {

@@ -23,7 +23,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Toko</th>
+                                    <th>Kategori</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -41,7 +41,7 @@
             // responsive: true,
             processing: true,
             ordering: false,
-            // fixedHeader: true,
+            serverSide: true,
             ajax: '{{ url()->current() }}',
             columns: [{
                     render: function (data, type, row, meta) {

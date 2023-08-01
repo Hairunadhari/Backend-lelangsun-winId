@@ -41,7 +41,7 @@ class MenuController extends Controller
 
     public function list_toko(){
         if (request()->ajax()) {
-            $data = Toko::select('id','toko','logo')->latest();
+            $data = Toko::select('id','toko','logo')->limit(10);
             return DataTables::of($data)->make(true);
         }
         return view('e-commerce/list_toko');
@@ -118,7 +118,7 @@ class MenuController extends Controller
 
     public function kategori_produk(){
         if (request()->ajax()) {
-            $data = KategoriProduk::all();
+            $data = KategoriProduk::select('id','kategori')->limit(10);
             return DataTables::of($data)->make();
         }
         return view('e-commerce/kategori_produk');
@@ -160,17 +160,17 @@ class MenuController extends Controller
    
     public function list_pesanan(){
         if (request()->ajax()) {
-            $data = Order::with('user','orderitem','tagihan')->get();
+            $data = Order::with('user','orderitem','tagihan')->limit(10);
             return DataTables::of($data)->make();
         }
         return view('pesanan/list_pesanan');
     }
 
     public function list_produk(){
-        $toko = Toko::orderBy('toko','asc')->get();
-        $kategori = KategoriProduk::orderBy('kategori','asc')->get();
+        $toko = Toko::select('toko','id')->orderBy('toko','asc')->get();
+        $kategori = KategoriProduk::select('kategori','id')->orderBy('kategori','asc')->get();
         if (request()->ajax()) {
-            $data = Produk::select('id','nama','thumbnail','harga','stok');
+            $data = Produk::select('id','nama','thumbnail','harga','stok')->limit(10);
             return DataTables::of($data)->make(true);
         }
         return view('e-commerce/list_produk', compact('toko','kategori'));
@@ -428,14 +428,14 @@ class MenuController extends Controller
         }
 
         if (request()->ajax()) {
-            $data = Promosi::all();
+            $data = Promosi::select('promosi','gambar','diskon','status')->limit(10);
             return DataTables::of($data)->make();
         }
         return view('e-commerce/list_promosi');
     }
 
     public function form_input_promosi(){
-        $produk = Produk::orderBy('nama', 'asc')->get();
+        $produk = Produk::select('id','nama','thumbnail')->orderBy('nama', 'asc')->get();
         return view('e-commerce.tambah_promosi', compact('produk'));
     }
 

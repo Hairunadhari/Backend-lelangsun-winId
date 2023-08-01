@@ -42,6 +42,7 @@
             processing: true,
             ordering: false,
             serverSide: true,
+            // fixedHeader: true,
             ajax: '{{ url()->current() }}',
             columns: [{
                     render: function (data, type, row, meta) {
