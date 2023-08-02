@@ -48,7 +48,7 @@ class ApiController extends Controller
      * )
      */
     public function daftar_produk(){
-        $produk = Produk::where('stok', '>', 0)->get();
+        $produk = Produk::with('toko')->where('stok', '>', 0)->get();
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
