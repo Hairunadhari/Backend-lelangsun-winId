@@ -36,7 +36,7 @@
             </div>
             <div class="col-12 col-md-12 col-lg-7">
                 <div class="card">
-                    <form method="post" action="{{route('api/update-akun', $data->id)}}" class="needs-validation" enctype="multipart/form-data"
+                    <form method="post" action="{{route('update-akun', $data->id)}}" class="needs-validation" enctype="multipart/form-data"
                         novalidate="">
                         @csrf
                         @method('PUT')

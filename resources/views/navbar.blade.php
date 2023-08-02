@@ -14,10 +14,10 @@
                 <div class="d-sm-none d-lg-inline-block">{{ Auth::user()->name}},SuperAdmin</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="{{ route('profil',['id' => Auth::user()->id]) }}" class="dropdown-item has-icon">
+                {{-- <a href="{{ route('profil',['id' => Auth::user()->id]) }}" class="dropdown-item has-icon">
                 <i class="far fa-user"></i> Profile
                 </a>
-                <div class="dropdown-divider"></div>
+                <div class="dropdown-divider"></div> --}}
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="dropdown-item has-icon text-danger" style="cursor: pointer">
