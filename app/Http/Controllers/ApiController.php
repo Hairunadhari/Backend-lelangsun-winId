@@ -416,7 +416,6 @@ class ApiController extends Controller
      */
 
     public function add_order(Request $request){
-        // dd($request);
         $validator = Validator::make($request->all() , [
             'user_id'     => 'required',
             'produk_id'     => 'required',
@@ -467,8 +466,8 @@ class ApiController extends Controller
 
             $response = $data_request->object();
             $dataExipre = $response->expiry_date;
-            $dateTime = new DateTime($dataExipre);
-            $exp_date = $dateTime->format('Y-m-d H:i:s'); 
+            $expiryDate = Carbon::parse($response->expiry_date, 'UTC')->setTimezone('Asia/Jakarta');
+            $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
             $tagihan = Tagihan::create([
                 'order_id' => $order->id,
                 'user_id' => $order->user_id,
@@ -476,7 +475,7 @@ class ApiController extends Controller
                 'status' => $response->status,
                 'total_pembayaran' => $request->total_pembayaran,
                 'payment_link' => $response->invoice_url,
-                'exp_date' => $exp_date
+                'exp_date' => $formattedExpiryDate
             ]);
             $success = true;
             $message = 'Data Order Berhasil Ditambahkan';
@@ -991,7 +990,6 @@ class ApiController extends Controller
 
         $totalRating = Review::where('produk_id', $request->produk_id)->sum('rating');
         $totalUser = Review::where('produk_id', $request->produk_id)->count('user_id');
-        // dd($totalUser);
         $hasil = $totalRating / $totalUser;
         $rating = number_format($hasil, 1, ',','');
         $ambilProduk = Produk::find($request->produk_id);
