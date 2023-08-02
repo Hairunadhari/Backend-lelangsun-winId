@@ -76,7 +76,7 @@
         $('#tabeldetailpromosi').DataTable({
             processing: false,
             ordering: false,
-            fixedColumns: true,
+            serverSide: true,
             searching: false,
             ajax: '{{ url()->current() }}',
             columns: [{

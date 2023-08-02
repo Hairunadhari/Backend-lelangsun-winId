@@ -41,7 +41,7 @@
             processing: true,
             ordering: false,
             searching: false,
-            // fixedHeader: true,
+            serverSide: true,
         ajax: '{{ url()->current() }}',
         columns: [
           {

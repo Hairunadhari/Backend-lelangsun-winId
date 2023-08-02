@@ -161,7 +161,7 @@ class MenuController extends Controller
     public function list_pesanan(){
         if (request()->ajax()) {
             $data = Order::with('user','orderitem','tagihan')->limit(10);
-            return DataTables::of($data)->make();
+            return DataTables::of($data)->make(true);
         }
         return view('pesanan/list_pesanan');
     }
@@ -409,7 +409,7 @@ class MenuController extends Controller
 
     public function list_promosi(){
 
-        $datapromosi = Promosi::all();
+        $datapromosi = Promosi::select('id','tanggal_mulai','tanggal_selesai','status')->get();
 
         foreach ($datapromosi as $datapromo) {
             $tgl_mulai = $datapromo->tanggal_mulai;
@@ -428,8 +428,8 @@ class MenuController extends Controller
         }
 
         if (request()->ajax()) {
-            $data = Promosi::select('promosi','gambar','diskon','status')->limit(10);
-            return DataTables::of($data)->make();
+            $data = Promosi::select('id','promosi','gambar','diskon','status')->limit(10);
+            return DataTables::of($data)->make(true);
         }
         return view('e-commerce/list_promosi');
     }
@@ -481,8 +481,8 @@ class MenuController extends Controller
     {
         $data = Promosi::find($id);
         if (request()->ajax()) {
-            $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->get();
-            return DataTables::of($produkPromo)->make();
+            $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->limit(10);
+            return DataTables::of($produkPromo)->make(true);
         }
         return view('e-commerce.detail_promosi', compact('data'));
     }
@@ -610,7 +610,7 @@ class MenuController extends Controller
                 $data = KategoriBarang::where('status', 0)->get();
             }
 
-            return DataTables::of($data)->make();
+            return DataTables::of($data)->make(true);
         }
         return view('lelang/kategori_lelang');
     }
@@ -950,8 +950,8 @@ class MenuController extends Controller
 
     public function list_banner_utama(){
         if (request()->ajax()) {
-            $data = BannerUtama::all();
-            return DataTables::of($data)->make();
+            $data = BannerUtama::select('id','gambar')->limit(10);
+            return DataTables::of($data)->make(true);
         }
         return view('publikasi.banner_utama');
     }
@@ -1012,8 +1012,8 @@ class MenuController extends Controller
 
     public function list_banner_diskon(){
         if (request()->ajax()) {
-            $data = BannerDiskon::all();
-            return DataTables::of($data)->make();
+            $data = BannerDiskon::select('id','gambar')->limit(10);
+            return DataTables::of($data)->make(true);
         }
         return view('publikasi.banner_diskon');
     }
@@ -1074,7 +1074,7 @@ class MenuController extends Controller
 
     public function list_banner_spesial(){
         if (request()->ajax()) {
-            $data = BannerSpesial::all();
+            $data = BannerSpesial::select('id','gambar')->limit(10);
             return DataTables::of($data)->make();
         }
         return view('publikasi.banner_spesial');
@@ -1185,7 +1185,7 @@ class MenuController extends Controller
                 $data = Review::with('user', 'produk')->where('status', 'not-active')->get();
             }
 
-            return DataTables::of($data)->make();
+            return DataTables::of($data)->make(true);
         }
 
         return view('review.list_review');
@@ -1249,7 +1249,7 @@ class MenuController extends Controller
     }
 
     public function list_barang_lelang(){
-        $kategori = KategoriBarang::all();
+        $kategori = KategoriBarang::select('id','kategori')->get();
         if (request()->ajax()) {
             $status = request('status');
 

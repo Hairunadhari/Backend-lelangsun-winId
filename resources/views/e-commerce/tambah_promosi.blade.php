@@ -45,7 +45,8 @@
                     </div>
                     <div class="form-group">
                         <label>Gambar Promo <span style="color: red">*</span></label>
-                        <input type="file" class="form-control" name="gambar" required>
+                        <input type="file" class="form-control" name="gambar" required id="gambar">
+                        <div id="preview" class="mt-2"></div>
                     </div>
                     <label for="">Pilih Produk <span style="color: red">*</span></label>
                     <div class="scroll">
@@ -107,6 +108,32 @@
         // Memasukkan nilai format ke dalam input
         input.value = formattedNum;
     }   
+
+    function previewImages() {
+        var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#gambar').addEventListener("change", previewImages);
 
 </script>
 @endsection
