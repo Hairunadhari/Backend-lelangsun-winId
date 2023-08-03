@@ -1,111 +1,218 @@
 @extends('app.layouts')
 @section('content')
-<style>
-    nav {
-        margin-left: auto;
-    }
-
-</style>
-<div class="section-header">
-    <h1>Data Lelang</h1>
-</div>
 <div class="section-body">
-    <div class="card">
-        <div class="card-header">
-            <h4>Daftar Pembelian Npl</h4>
-        </div>
-        <div class="card-body">
-            @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>{{ session('success') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="w-100">Daftar Event</h4>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#pembeliannplmodal">
+                        <span class="text">+ Tambah</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if(session('success'))
+                    <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
+                        <strong>{{ session('success') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
+                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
+                                aria-controls="home" aria-selected="true">Peserta Aktif</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
+                                aria-controls="profile" aria-selected="false">Peserta Tidak Aktif</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="verif-tab3" data-toggle="tab" href="#verif3" role="tab"
+                                aria-controls="verif" aria-selected="false">Verifikasi NPL</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent2">
+                        <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
+                            <table class="table table-striped w-100" >
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Telpon</th>
+                                        <th>Alamat</th>
+                                        <th>NPL</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
+                            <table class="table table-striped w-100">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Telpon</th>
+                                        <th>Alamat</th>
+                                        <th>NPL</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="verif3" role="tabpanel" aria-labelledby="verif-tab3">
+                            <table class="table table-striped w-100">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Telpon</th>
+                                        <th>Alamat</th>
+                                        <th>NPL</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-            @endif
-            <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#exampleModal">
-                <span class="text">+ Tambah</span>
-            </button>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Toko</th>
-                            <th scope="col">Logo</th>
-                            <th scope="col">Opsi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      
-                        @forelse ($data as $d)
-                        <tr>
-                            <td>{{$no++}}</td>
-                            <td>{{$d->toko}}</td>
-                            <td>
-                                <img src="{{ asset('/storage/image/'.$d->logo) }}" class="rounded" style="width: 100px">
-                            </td>
-                            <td>
-                                <div class="dropdown d-inline">
-                                    <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer"
-                                        id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false"></i>
-                                    <form action="{{route('deletetoko', $d->id)}}" method="POST"
-                                        onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                                        <div class="dropdown-menu" x-placement="bottom-start"
-                                            style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                            <a class="dropdown-item has-icon" href="{{route('detailtoko',$d->id)}}"><i
-                                                    class="fas fa-info-circle"></i>Detail</a>
-                                            <a class="dropdown-item has-icon" href="{{ route('edittoko', $d->id) }}"><i
-                                                    class="far fa-edit"></i>Edit</a>
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-danger " style="margin-left: 20px;" type="submit"><i
-                                                    class="far fa-trash-alt"></i> Hapus</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">{{ $data->links() }} </div>
         </div>
     </div>
 </div>
 @endsection
+<style>
+    .form-group img {
+        padding: 0rem;
+        border:1px solid #dee2e6;
+    }
+</style>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="pembeliannplmodal" tabindex="-1" role="dialog" aria-labelledby="pembeliannpllabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Form Input Toko</h5>
+                <h5 class="modal-title" id="pembeliannpllabel">Form Input Event</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('addtoko')}}" method="post" enctype="multipart/form-data">
+            <form action="#" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Toko</label>
-                        <input type="text" class="form-control" name="toko" required id="exampleInputEmail1">
+                        <div class="form-group">
+                            <label>Nama <span style="color: red">*</span></label>
+                            <input type="text" class="form-control" name="penyelenggara" required>
+                        </div>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label>Email <span style="color: red">*</span></label>
+                            <input type="text" class="form-control" name="penyelenggara" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Telepon <span style="color: red">*</span></label>
+                            <input type="text" class="form-control" name="penyelenggara" required>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Logo</label>
-                        <input type="file" class="form-control" name="logo" required id="exampleInputEmail1">
+                        <label>Alamat <span style="color: red">*</span></label>
+                        <textarea class="form-control" name="alamat_lokasi"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label>NIK <span style="color: red">*</span></label>
+                            <input type="text" class="form-control" name="tgl_mulai" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>NPWP <span style="color: red">*</span></label>
+                            <input type="text" class="form-control" name="tgl_selesai" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label>Foto KTP</label>
+                            <input type="file" class="form-control" name="gambar" required id="gambarktp">
+                        <div id="previewktp" class="mt-3"></div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Foto NPWP</label>
+                            <input type="file" class="form-control" name="gambar" required id="gambarnpwp">
+                        <div id="previewnpwp" class="mt-3"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+
+    function previewgambarktp() {
+        var preview = document.querySelector('#previewktp');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#gambarktp').addEventListener("change", previewgambarktp);
+
+    function previewgambarnpwp() {
+        var preview = document.querySelector('#previewnpwp');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#gambarnpwp').addEventListener("change", previewgambarnpwp);
+
+</script>
+
 <!-- /.container-fluid -->

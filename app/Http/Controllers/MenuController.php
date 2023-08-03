@@ -1635,5 +1635,13 @@ class MenuController extends Controller
 
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
     }
+
+    public function list_lot(){
+        return view('lelang.list_lot');
+    }
+
+    public function list_pembelian_npl(){
+        return view('lelang.list_pembelian_npl');
+    }
     
 }   
