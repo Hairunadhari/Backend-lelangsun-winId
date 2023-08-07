@@ -52,6 +52,13 @@ class ApiController extends Controller
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
+        $produk->each(function ($item) {
+            $logo = $item->toko->logo;
+            $url = 'https://backendwin.spero-lab.id/storage/image/';
+
+            $item->toko->logo = str_replace($url, '', $logo);
+            $item->toko->logo = $url . $item->toko->logo;
+        });
         return response()->json([
             'produk' => $produk,
         ]);
@@ -107,7 +114,6 @@ class ApiController extends Controller
         $produk = Produk::with('toko','kategoriproduk')->find($id);
             $produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $produk->thumbnail);
             $produk->toko->logo = url('https://backendwin.spero-lab.id/storage/image/' . $produk->toko->logo);
-            $produk->kategoriproduk->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $produk->kategoriproduk->gambar);
 
         $gambarproduk = GambarProduk::where('produk_id', $id)->get();
         $gambarproduk->each(function ($item) {
@@ -152,7 +158,6 @@ class ApiController extends Controller
      */
      public function daftar_produk_berdasarkan_kategori($id){
         $kategoriproduk = KategoriProduk::find($id);
-        $kategoriproduk->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $kategoriproduk->gambar);
         
         $produk = Produk::where('kategoriproduk_id',$id)->get();
         $produk->each(function ($item) {
@@ -179,9 +184,7 @@ class ApiController extends Controller
      */
     public function daftar_kategori(){
         $kategoriproduk = KategoriProduk::all();
-        $kategoriproduk->each(function ($item) {
-            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
-        });
+       
         return response()->json([
             'kategoriproduk' => $kategoriproduk
             
@@ -406,6 +409,7 @@ class ApiController extends Controller
      *              @OA\Property(property="lokasi_pengiriman", type="string"),
      *              @OA\Property(property="nama_pengirim", type="string"),
      *              @OA\Property(property="total_pembayaran", type="integer"),
+     *              @OA\Property(property="id_promo", type="integer"),
      *          )
      *      ),
      *      @OA\Response(
@@ -433,13 +437,16 @@ class ApiController extends Controller
                 'user_id' => $request->user_id ?? null
             ]);
 
+            $produk = Produk::find($request->produk_id);
+
             $orderitem = OrderItem::create([
                 'order_id' => $order->id ?? null,
                 'produk_id' => $request->produk_id ?? null,
                 'qty' => $request->qty ?? null,
+                'harga' => $produk->harga ?? null,
+                'promosi_id' => $request->id_promo ?? null,
             ]);
-                        
-            $produk = Produk::find($request->produk_id);
+            
             $produk->update([
                 'stok' => $produk->stok - $request->qty,
             ]);
@@ -680,12 +687,15 @@ class ApiController extends Controller
      */
     public function update_akun(Request $request, $id){
         $data = User::find($id);
+        
+        if ($request->has('foto')) {
+            $base64Image = explode(";base64,", $request->foto);
 
-        if ($request->hasFile('foto')) {
-
-            //upload new image
-            $foto = $request->file('foto');
-            $foto->storeAs('public/image', $foto->hashName());
+            $explodeImage = explode("image/", $base64Image[0]);
+            $imageType = $explodeImage[1];
+            $image_base64 = base64_decode($base64Image[1]);
+            $fileName = 'public/image/' . time() . '-' . $request->name  . '.' . $imageType;
+            Storage::put($fileName, $image_base64);
 
             Storage::delete('public/image/'.$data->foto);
 
@@ -693,7 +703,7 @@ class ApiController extends Controller
                 'name' => $request->name,
                 'no_telp' => $request->no_telp,
                 'alamat' => $request->alamat,
-                'foto'     => $foto->hashName(),
+                'foto'     => $fileName,
             ]);
 
         } else {
@@ -932,7 +942,7 @@ class ApiController extends Controller
      * )
      */
     public function list_wishlist($id){
-        $data = Wishlist::with('produk')->where('user_id', $id)->get();
+        $data = Wishlist::with('produk')->where('user_id', $id)->latest()->get();
         $data->each(function ($item){
             $item->produk->thumbnail =  'https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail;
         });

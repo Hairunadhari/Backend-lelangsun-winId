@@ -15,9 +15,9 @@ use App\Http\Controllers\ApiController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::get('/produk', [ApiController::class, 'daftar_produk']);
 Route::get('/detailproduk/{id}/', [ApiController::class, 'detail_produk']);

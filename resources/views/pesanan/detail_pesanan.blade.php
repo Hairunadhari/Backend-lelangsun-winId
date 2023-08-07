@@ -59,21 +59,33 @@
           <div class="section-title">Produk Pesanan</div>
           <div class="table-responsive">
             <table class="table table-striped table-hover table-md">
-              <tr>
-                <th data-width="40">#</th>
-                <th>Produk</th>
-                <th class="text-center">Harga</th>
-                <th class="text-center">Quantity</th>
-                <th class="text-right">Total</th>
-              </tr>
+              <tbody>
+                <tr>
+                  <th data-width="40">#</th>
+                  <th>Produk</th>
+                  <th class="text-center">Harga</th>
+                  <th class="text-center">Quantity</th>
+                  <th class="text-right">Total</th>
+                </tr>
               <?php $no = 1 ?>
+              @if ($hargaPromo != null)
+              <tr>
                 <td>{{$no++}}</td>
-                <td>{{$itemproduk->produk->nama}}</td>
-                <td class="text-center">{{number_format($itemproduk->produk->harga)}}</td>
+                <td>{{$itemproduk->produk->nama}} (Promo)</td>
+                <td class="text-center">Rp. {{number_format($hargaPromo->total_diskon)}}</td>
                 <td class="text-center">{{$itemproduk->qty}}</td>
                 <td class="text-right">Rp. {{number_format($tagihan->total_pembayaran)}}</td>
               </tr>
-            </table>
+              @else
+              <tr>
+                <td>{{$no++}}</td>
+                <td>{{$itemproduk->produk->nama}}</td>
+                <td class="text-center">Rp. {{number_format($itemproduk->harga)}}</td>
+                <td class="text-center">{{$itemproduk->qty}}</td>
+                <td class="text-right">Rp. {{number_format($tagihan->total_pembayaran)}}</td>
+              </tr>
+              @endif
+            </tbody></table>
           </div>
           <div class="row mt-4">
             <div class="col-lg-8">

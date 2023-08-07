@@ -18,4 +18,9 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Produk::class);
     }
+    
+    public function promosi()
+    {
+        return $this->belongsTo(Promosi::class);
+    }
 }
