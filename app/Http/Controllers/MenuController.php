@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use DataTables;
 use App\Models\Role;
 use App\Models\Toko;
@@ -1135,11 +1136,19 @@ class MenuController extends Controller
     }
 
     public function detail_pesanan($id){
-        $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
-        $pengiriman = Pengiriman::where('order_id', $id)->first();
-        $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
-        // dd($tagihan);
-        return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
+        try {
+            //code...
+            $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
+            $pengiriman = Pengiriman::where('order_id', $id)->first();
+            $itemproduk = OrderItem::with('produk','promosi.produkpromo')->where('order_id', $id)->first();
+                $hargaPromo = $itemproduk->promosi->produkpromo->where('produk_id', $itemproduk->produk->id)->first();
+                
+                return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','hargaPromo'));
+            } catch (Exception $e) {
+            $hargaPromo = null;
+            return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','hargaPromo'));
+            
+        }
     }
 
     public function profil($id){
