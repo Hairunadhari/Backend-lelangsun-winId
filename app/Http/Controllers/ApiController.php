@@ -688,6 +688,10 @@ class ApiController extends Controller
      * )
      */
     public function update_akun(Request $request, $id){
+        $this->validate($request, [
+            'foto' => 'required|image|mimes:jpeg,jpg,png',
+        ]);
+        
         $data = User::find($id);
         
         if ($request->has('foto')) {

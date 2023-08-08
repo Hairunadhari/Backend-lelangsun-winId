@@ -1324,7 +1324,6 @@ class MenuController extends Controller
                 'tgl_mulai'     => $request->tgl_mulai,
                 'tgl_selesai'     => $request->tgl_selesai,
                 'link_lokasi'     => $request->link_lokasi,
-                'status'     => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
                 'harga'     => $hargaProduk,
                 'status_data'     => 1,
             ]);
@@ -1341,7 +1340,6 @@ class MenuController extends Controller
                 'tgl_mulai'     => $request->tgl_mulai,
                 'tgl_selesai'     => $request->tgl_selesai,
                 'link_lokasi'     => $request->link_lokasi,
-                'status'     => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
                 'harga'     => null,
                 'status_data'     => 1,
             ]);
@@ -1388,7 +1386,6 @@ class MenuController extends Controller
                     'tgl_mulai'     => $request->tgl_mulai,
                     'tgl_selesai'     => $request->tgl_selesai,
                     'link_lokasi'     => $request->link_lokasi,
-                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
                     'harga'     => $hargaProduk,
                 ]);
     
@@ -1404,7 +1401,6 @@ class MenuController extends Controller
                     'tgl_mulai'     => $request->tgl_mulai,
                     'tgl_selesai'     => $request->tgl_selesai,
                     'link_lokasi'     => $request->link_lokasi,
-                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
                     'harga'     => $hargaProduk,
                 ]);
             }
@@ -1428,7 +1424,6 @@ class MenuController extends Controller
                     'tgl_mulai'     => $request->tgl_mulai,
                     'tgl_selesai'     => $request->tgl_selesai,
                     'link_lokasi'     => $request->link_lokasi,
-                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
                     'harga'     => null,
                 ]);
     
@@ -1444,7 +1439,6 @@ class MenuController extends Controller
                     'tgl_mulai'     => $request->tgl_mulai,
                     'tgl_selesai'     => $request->tgl_selesai,
                     'link_lokasi'     => $request->link_lokasi,
-                    'status' => $this->getStatusevent($request->tgl_mulai, $request->tgl_selesai),
                     'harga'     => null,
                 ]);
             }
@@ -1452,21 +1446,6 @@ class MenuController extends Controller
 
         //redirect to index
         return redirect()->route('event')->with(['success' => 'Data Berhasil Diubah!']);
-    }
-
-    private function getStatusevent($tanggalMulai, $tanggalSelesai)
-    {
-        $today = now()->toDateString();
-        $mulaiPromo = date('Y-m-d', strtotime($tanggalMulai));
-        $selesaiPromo = date('Y-m-d', strtotime($tanggalSelesai));
-
-        if ($mulaiPromo > $today && $selesaiPromo > $today) {
-            return 'akan datang';
-        } elseif ($mulaiPromo <= $today && $selesaiPromo >= $today) {
-            return 'sedang berlangsung';
-        } else {
-            return 'selesai';
-        }
     }
 
     public function delete_event($id){
