@@ -40,7 +40,6 @@
                                         <th>Jenis</th>
                                         <th>Tiket</th>
                                         <th>Link Meet</th>
-                                        <th>Status</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -58,7 +57,6 @@
                                         <th>Jenis</th>
                                         <th>Tiket</th>
                                         <th>Link Meet</th>
-                                        <th>Status</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -109,19 +107,6 @@
                     data: null,
                     render: function (data) {
                         return `<a href="${data.link}">${data.link}</a>`
-                    }
-                },
-                {
-                    data: "status",
-                    render: function(data, type, row, meta) {
-                        if (data == "akan datang") {
-                            badge = `<span class="badge badge-primary">Coming Soon</span>`
-                        } else if (data == "sedang berlangsung") {
-                            badge = `<span class="badge badge-success">Sedang Berlangsung</span>`
-                        } else if (data == "selesai") {
-                            badge = `<span class="badge badge-light">Selesai</span>`
-                        } 
-                        return badge;
                     }
                 },
                 {
@@ -186,19 +171,6 @@
                     data: null,
                     render: function (data) {
                         return `<a href="${data.link}">${data.link}</a>`
-                    }
-                },
-                {
-                    data: "status",
-                    render: function(data, type, row, meta) {
-                        if (data == "akan datang") {
-                            badge = `<span class="badge badge-primary">Coming Soon</span>`
-                        } else if (data == "sedang berlangsung") {
-                            badge = `<span class="badge badge-success">Sedang Berlangsung</span>`
-                        } else if (data == "selesai") {
-                            badge = `<span class="badge badge-light">Selesai</span>`
-                        } 
-                        return badge;
                     }
                 },
                 {
