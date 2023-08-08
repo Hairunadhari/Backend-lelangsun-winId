@@ -1169,6 +1169,9 @@ class ApiController extends Controller
      */
     public function list_event(){
         $data = Event::all();
+        $data->each(function ($item) {
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
         return response()->json([
             'message' => 'SUCCESS',
             'data' => $data,
