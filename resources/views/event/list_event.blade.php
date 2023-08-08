@@ -229,6 +229,7 @@
                             <label>Jenis <span style="color: red">*</span></label>
                             <select class="form-control selectric" name="jenis" required>
                                 <option value="Offline">Offline</option>
+                                <option value="Online">Online</option>
                             </select>
                         </div>
                         <div class="form-group col-6">
