@@ -30,7 +30,7 @@
                                 <th scope="col">Nama Promosi</th>
                                 <th scope="col">Gambar Promo</th>
                                 <th scope="col">Diskon</th>
-                                {{-- <th scope="col">Status Promo</th> --}}
+                                <th scope="col">Status Promo</th>
                                 <th scope="col">Opsi</th>
                             </tr>
                         </thead>
@@ -70,24 +70,26 @@
                         return data + '%';
                     }
                 },
-                // {
-                //     data: null,
-                //     render: function(data, type, row, meta) {
-                //         const today = new Date(); // Mendapatkan tanggal hari ini
-                //         const tanggalMulai = new Date(row.tanggal_mulai); // Mendapatkan tanggal_mulai dari baris data
-                //         const tanggalSelesai = new Date(row.tanggal_selesai); // Mendapatkan tanggal_mulai dari baris data
-                //         console.log(tanggalMulai);
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        const today = new Date(); // Mendapatkan tanggal hari ini
+                        const tanggalMulai = new Date(row.tanggal_mulai); // Mendapatkan tanggal_mulai dari baris data
+                        const tanggalSelesai = new Date(row.tanggal_selesai); // Mendapatkan tanggal_mulai dari baris data
+                        // console.log(tanggalSelesai);
                         
-                //         if (tanggalSelesai < today) {
-                //             badge = `<span class="badge badge-primary">Selesai</span>`;
-                //         } else if (tanggalSelesai == today) {
-                //             badge = `<span class="badge badge-success">Sedang Berlangsung</span>`;
-                //         } else {
-                //             badge = `<span class="badge badge-light">Coming Soon</span>`;
-                //         } 
-                //         return badge;
-                //     }
-                // },
+                        if (tanggalMulai <= today && tanggalSelesai >= today) {
+                            badge = `<span class="badge badge-success">Sedang Berlangsung</span>`;
+                        } else if (tanggalMulai > today && tanggalSelesai > today) {
+                            badge = `<span class="badge badge-primary">Coming Soon</span>`;
+                        } else if (tanggalMulai < today && tanggalSelesai < today ) {
+                            badge = `<span class="badge badge-light">Selesai</span>`;
+                        } else {
+                            badge = `<span class="badge badge-danger">Tidak Diketahui</span>`;
+                        }
+                        return badge;
+                    }
+                },
                 {
                 data: null,
                 render: function (data) {

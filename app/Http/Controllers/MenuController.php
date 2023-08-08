@@ -445,6 +445,12 @@ class MenuController extends Controller
             ]);
             
             $dataProduk = Produk::whereIn('id', $produkId)->get();
+            // $dataProduk->each(function ($prdk){
+            //     $prdk->update([
+            //         'status_promo' => 1
+            //     ]);
+            // });
+
             foreach ($dataProduk as $produk) {
                 $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
                 ProdukPromo::create([
@@ -472,15 +478,16 @@ class MenuController extends Controller
     {
         $data = Promosi::find($id);
         $produk = Produk::orderBy('nama', 'asc')->get();
-        $produkPromo = ProdukPromo::where('promosi_id',$id)->get();
+        $produkPromo = ProdukPromo::where('promosi_id', $id)->get();
         $produkTerpilih = [];
 
         foreach ($produkPromo as $item) {
             $produkTerpilih[$item->produk_id] = $item->produk_id;
         }
 
-        //render view with post
-        return view('e-commerce.edit_promosi', compact('data','produk','produkTerpilih'));
+        // Render view with post
+        return view('e-commerce.edit_promosi', compact('data', 'produk', 'produkTerpilih'));
+
     }
 
     public function update_promosi(Request $request, $id)
@@ -524,6 +531,20 @@ class MenuController extends Controller
                         'total_diskon' => $hargadiskon,
                     ]);
                 }
+                // $ambilprodukidpromoproduk = ProdukPromo::select('produk_id')->get();
+
+                // // Ambil daftar produk_id dari objek Collection dan konversi menjadi array
+                // $produkIdsPromo = $ambilprodukidpromoproduk->pluck('produk_id')->toArray();
+
+                // // Ambil data produk yang tidak termasuk dalam daftar produkIdsPromo
+                // $produkSebelumnya = Produk::whereNotIn('id', $produkIdsPromo)->get();
+
+                // // Ubah status_promo menjadi NULL untuk produk yang tidak dipilih kembali
+                // $produkSebelumnya->each(function ($produk) {
+                //     $produk->update([
+                //         'status_promo' => null
+                //     ]);
+                // });
 
             } else {
                 $data->update([
@@ -537,7 +558,7 @@ class MenuController extends Controller
 
                 ProdukPromo::where('promosi_id',$id)->delete();
                 $dataProduk = Produk::whereIn('id', $produkId)->get();
-
+                    
                 foreach ($dataProduk as $produk) {
                     $hargadiskon = $produk->harga - ($diskon / 100 * $produk->harga);
                 
@@ -547,6 +568,22 @@ class MenuController extends Controller
                         'total_diskon' => $hargadiskon,
                     ]);
                 }
+
+                // $ambilprodukidpromoproduk = ProdukPromo::select('produk_id')->get();
+
+                // // Ambil daftar produk_id dari objek Collection dan konversi menjadi array
+                // $produkIdsPromo = $ambilprodukidpromoproduk->pluck('produk_id')->toArray();
+
+                // // Ambil data produk yang tidak termasuk dalam daftar produkIdsPromo
+                // $produkSebelumnya = Produk::whereNotIn('id', $produkIdsPromo)->get();
+
+                // // Ubah status_promo menjadi NULL untuk produk yang tidak dipilih kembali
+                // $produkSebelumnya->each(function ($produk) {
+                //     $produk->update([
+                //         'status_promo' => null
+                //     ]);
+                // });
+
             }
         }
 
@@ -557,9 +594,25 @@ class MenuController extends Controller
     public function delete_promosi($id)
     {
         $data = Promosi::findOrFail($id);
+        // dd($data);
         Storage::delete('public/image/'. $data->gambar);
         ProdukPromo::where('promosi_id', $id)->delete();
         $data->delete();
+
+        // $ambilprodukidpromoproduk = ProdukPromo::select('produk_id')->get();
+
+        // // Ambil daftar produk_id dari objek Collection dan konversi menjadi array
+        // $produkIdsPromo = $ambilprodukidpromoproduk->pluck('produk_id')->toArray();
+
+        // // Ambil data produk yang tidak termasuk dalam daftar produkIdsPromo
+        // $produkSebelumnya = Produk::whereNotIn('id', $produkIdsPromo)->get();
+
+        // // Ubah status_promo menjadi NULL untuk produk yang tidak dipilih kembali
+        // $produkSebelumnya->each(function ($produk) {
+        //     $produk->update([
+        //         'status_promo' => null
+        //     ]);
+        // });
         return redirect()->route('promosi')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 

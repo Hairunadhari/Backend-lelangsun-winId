@@ -69,7 +69,7 @@
                     data: "thumbnail",
                     render: function (data) {
                         return '<img src="/storage/image/' + data +
-                            '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
+                            '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
                     },
                 },
                 {
