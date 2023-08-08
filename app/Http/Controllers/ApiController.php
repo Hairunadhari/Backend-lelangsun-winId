@@ -9,6 +9,7 @@ use DateTimeZone;
 use Carbon\Carbon;
 use App\Models\Toko;
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Review;
@@ -16,6 +17,7 @@ use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\TLogApi;
 use App\Models\Wishlist;
+use App\Models\Keranjang;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
@@ -1010,6 +1012,161 @@ class ApiController extends Controller
         return response()->json([
             'message' => 'SUCCESS',
             'data' => $data
+        ]);
+    }
+    
+     /**
+     * @OA\Delete(
+     *      path="/delete-wishlist/{id}",
+     *      tags={"Wishlist"},
+     *      summary="wishlist id",
+     *      description="menghapus wishlist berdasarkan id wishlist",
+     *      operationId="DeleteWishlist",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function delete_wishlist($id){
+        $data = Wishlist::find($id)->delete();
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+     /**
+     * @OA\Post(
+     *      path="/api/add-keranjang",
+     *      tags={"Keranjang"},
+     *      summary="Keranjang",
+     *      description="masukkan user id, produk id",
+     *      operationId="Keranjang",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\JsonContent(
+     *              required={"user_id","produk_id"},
+     *              @OA\Property(property="user_id", type="integer"),
+     *              @OA\Property(property="produk_id", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function add_keranjang(Request $request){
+        $data = Keranjang::create([
+            'user_id' => $request->user_id,
+            'produk_id' => $request->produk_id,
+        ]);
+        return response()->json([
+            'message' => 'SUUCCESS',
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *      path="/api/list-keranjang/{id}",
+     *      tags={"Keranjang"},
+     *      summary="user id",
+     *      description="menampilkan semua data keranjang berdasarkan user id",
+     *      operationId="ListKeranjang",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="user id",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function list_keranjang($id){
+        $data = Keranjang::where('user_id', $id)->latest()->get();
+        return response()->json([
+            'message' => 'SUCCESS',
+            'keranjang' => $data
+        ]);
+    }
+
+     /**
+     * @OA\Delete(
+     *      path="/delete-keranjang/{id}",
+     *      tags={"Keranjang"},
+     *      summary="Keranjang id",
+     *      description="menghapus keranjang berdasarkan id keranjang",
+     *      operationId="DeleteKeranjang",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function delete_keranjang($id){
+        $data = Keranjang::find($id)->delete();
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *      path="/api/detail-toko/{id}",
+     *      tags={"Toko"},
+     *      summary="toko id",
+     *      description="Menampilkan detail toko berdasarkan ID yg diberikan",
+     *      operationId="DetailToko",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID toko yang akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model produk"
+     *      )
+     * )
+     */
+    public function detail_toko($id){
+        $data = Toko::find($id);
+        return response()->json([
+            'massage' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/list-event",
+     *      tags={"Event"},
+     *      description="menampilkan semua event",
+     *      operationId="ListEvent",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function list_event(){
+        $data = Event::all();
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $data,
         ]);
     }
 

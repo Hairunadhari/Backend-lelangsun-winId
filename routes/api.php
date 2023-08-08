@@ -47,10 +47,15 @@ Route::get('/list-banner-spesial', [ApiController::class, 'daftar_banner_spesial
 
 Route::get('/list-pesanan/{id}/', [ApiController::class, 'list_pesanan']);
 Route::get('/detail-pesanan/{id}/', [ApiController::class, 'detail_pesanan']);
-Route::get('/detail-toko/{id}/', [ApiController::class, 'detail_toko']);
 
 Route::post('/add-wishlist', [ApiController::class, 'add_wishlist']);
 Route::get('/list-wishlist/{id}/', [ApiController::class, 'list_wishlist']);
 
 Route::put('/update-akun/{id}/', [ApiController::class, 'update_akun']);
 Route::post('/add-review', [ApiController::class, 'add_review']);
+Route::delete('/delete-wishlist/{id}/', [ApiController::class, 'delete_wishlist']);
+Route::get('/list-keranjang/{id}/', [ApiController::class, 'list_keranjang']);
+Route::post('/add-keranjang', [ApiController::class, 'add_keranjang']);
+Route::delete('/delete-keranjang/{id}/', [ApiController::class, 'delete_keranjang']);
+Route::get('/list-event', [ApiController::class, 'list_event']);
+Route::get('/detail-toko/{id}/', [ApiController::class, 'detail_toko']);

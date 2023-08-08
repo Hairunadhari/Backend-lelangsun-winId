@@ -698,6 +698,140 @@
                     }
                 }
             }
+        },
+        "/delete-wishlist/{id}": {
+            "delete": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "wishlist id",
+                "description": "menghapus wishlist berdasarkan id wishlist",
+                "operationId": "DeleteWishlist",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/add-keranjang": {
+            "post": {
+                "tags": [
+                    "Keranjang"
+                ],
+                "summary": "Keranjang",
+                "description": "masukkan user id, produk id",
+                "operationId": "Keranjang",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "produk_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "produk_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/list-keranjang/{id}": {
+            "get": {
+                "tags": [
+                    "Keranjang"
+                ],
+                "summary": "user id",
+                "description": "menampilkan semua data keranjang berdasarkan user id",
+                "operationId": "ListKeranjang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "user id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/delete-keranjang/{id}": {
+            "delete": {
+                "tags": [
+                    "Keranjang"
+                ],
+                "summary": "Keranjang id",
+                "description": "menghapus keranjang berdasarkan id keranjang",
+                "operationId": "DeleteKeranjang",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/detail-toko/{id}": {
+            "get": {
+                "tags": [
+                    "Toko"
+                ],
+                "summary": "toko id",
+                "description": "Menampilkan detail toko berdasarkan ID yg diberikan",
+                "operationId": "DetailToko",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID toko yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/list-event": {
+            "get": {
+                "tags": [
+                    "Event"
+                ],
+                "description": "menampilkan semua event",
+                "operationId": "ListEvent",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }
