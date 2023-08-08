@@ -52,12 +52,12 @@ class ApiController extends Controller
     public function daftar_produk(){
         $now = Carbon::now(); // Tanggal sekarang
 
-        $produk = Produk::with(['toko', 'produkpromo.promosi' => function ($query) use ($now) {
-            $query->where('tanggal_mulai', '<=', $now)
-                ->where('tanggal_selesai', '>=', $now);
-        }])->where('stok', '>', 0)->get();
+        // $produk = Produk::with(['toko', 'produkpromo.promosi' => function ($query) use ($now) {
+        //     $query->where('tanggal_mulai', '<=', $now)
+        //         ->where('tanggal_selesai', '>=', $now);
+        // }])->where('stok', '>', 0)->get();
 
-        // $produk = Produk::with('toko','produkpromo.promosi')->where('stok', '>', 0)->get();
+        $produk = Produk::with('toko','produkpromo.promosi')->where('stok', '>', 0)->get();
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
