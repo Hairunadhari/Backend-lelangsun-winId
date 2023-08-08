@@ -50,7 +50,7 @@ class ApiController extends Controller
      * )
      */
     public function daftar_produk(){
-        $produk = Produk::with('toko')->where('stok', '>', 0)->get();
+        $produk = Produk::with('toko','produkpromo.promosi')->where('stok', '>', 0)->get();
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
@@ -345,7 +345,10 @@ class ApiController extends Controller
      * )
      */
     public function daftar_promo(){
-        $promosi = Promosi::where('status', 'sedang berlangsung')->get();
+        $today = Carbon::today();
+        $promosi = Promosi::whereDate('tanggal_mulai', '<=', $today)
+        ->whereDate('tanggal_selesai','>=', $today)
+        ->get();
         $promosi->each(function ($item) {
             $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
         });

@@ -409,27 +409,8 @@ class MenuController extends Controller
     }
 
     public function list_promosi(){
-
-        $datapromosi = Promosi::select('id','tanggal_mulai','tanggal_selesai','status')->get();
-
-        foreach ($datapromosi as $datapromo) {
-            $tgl_mulai = $datapromo->tanggal_mulai;
-            $tgl_selesai = $datapromo->tanggal_selesai;
-            $today = now()->toDateString();
-            
-            if ($tgl_mulai <= $today && $tgl_selesai >= $today) {
-                $datapromo->update([
-                    'status' => 'sedang berlangsung',
-                ]);
-            } elseif ($tgl_mulai < $today && $tgl_selesai < $today) {
-                $datapromo->update([
-                    'status' => 'selesai',
-                ]);
-            }
-        }
-
         if (request()->ajax()) {
-            $data = Promosi::select('id','promosi','gambar','diskon','status')->limit(10);
+            $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->limit(10);
             return DataTables::of($data)->make(true);
         }
         return view('e-commerce/list_promosi');
@@ -460,7 +441,6 @@ class MenuController extends Controller
                 'diskon'     => $diskon,
                 'tanggal_mulai'     => $request->tanggal_mulai,
                 'tanggal_selesai'     => $request->tanggal_selesai,
-                'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
                 'gambar'     => $gambar->hashName(),
             ]);
             
@@ -529,7 +509,6 @@ class MenuController extends Controller
                     'diskon'     => $diskon,
                     'tanggal_mulai'     => $request->tanggal_mulai,
                     'tanggal_selesai'     => $request->tanggal_selesai,
-                    'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
                     'gambar'     => $gambar->hashName(),
                 ]);
 
@@ -553,7 +532,6 @@ class MenuController extends Controller
                     'diskon' => $diskon,
                     'tanggal_mulai' => $request->tanggal_mulai,
                     'tanggal_selesai' => $request->tanggal_selesai,
-                    'status' => $this->getStatusPromo($request->tanggal_mulai, $request->tanggal_selesai),
                 ]);
                 
 
@@ -575,22 +553,6 @@ class MenuController extends Controller
         //redirect to index
         return redirect()->route('promosi')->with(['success' => 'Data Berhasil Diubah!']);
     }
-
-    private function getStatusPromo($tanggalMulai, $tanggalSelesai)
-    {
-        $today = now()->toDateString();
-        $mulaiPromo = date('Y-m-d', strtotime($tanggalMulai));
-        $selesaiPromo = date('Y-m-d', strtotime($tanggalSelesai));
-
-        if ($mulaiPromo > $today && $selesaiPromo > $today) {
-            return 'akan datang';
-        } elseif ($mulaiPromo <= $today && $selesaiPromo >= $today) {
-            return 'sedang berlangsung';
-        } else {
-            return 'selesai';
-        }
-    }
-
 
     public function delete_promosi($id)
     {

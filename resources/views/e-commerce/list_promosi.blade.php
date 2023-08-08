@@ -30,7 +30,7 @@
                                 <th scope="col">Nama Promosi</th>
                                 <th scope="col">Gambar Promo</th>
                                 <th scope="col">Diskon</th>
-                                <th scope="col">Status Promo</th>
+                                {{-- <th scope="col">Status Promo</th> --}}
                                 <th scope="col">Opsi</th>
                             </tr>
                         </thead>
@@ -61,7 +61,7 @@
                     data: "gambar",
                     render: function (data) {
                         return '<img src="/storage/image/' + data +
-                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
+                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
                     },
                 },
                 {
@@ -70,19 +70,24 @@
                         return data + '%';
                     }
                 },
-                {
-                    data: "status",
-                    render: function(data, type, row, meta) {
-                        if (data == "akan datang") {
-                            badge = `<span class="badge badge-primary">Coming Soon</span>`
-                        } else if (data == "sedang berlangsung") {
-                            badge = `<span class="badge badge-success">Sedang Berlangsung</span>`
-                        } else if (data == "selesai") {
-                            badge = `<span class="badge badge-light">Selesai</span>`
-                        } 
-                        return badge;
-                    }
-                },
+                // {
+                //     data: null,
+                //     render: function(data, type, row, meta) {
+                //         const today = new Date(); // Mendapatkan tanggal hari ini
+                //         const tanggalMulai = new Date(row.tanggal_mulai); // Mendapatkan tanggal_mulai dari baris data
+                //         const tanggalSelesai = new Date(row.tanggal_selesai); // Mendapatkan tanggal_mulai dari baris data
+                //         console.log(tanggalMulai);
+                        
+                //         if (tanggalSelesai < today) {
+                //             badge = `<span class="badge badge-primary">Selesai</span>`;
+                //         } else if (tanggalSelesai == today) {
+                //             badge = `<span class="badge badge-success">Sedang Berlangsung</span>`;
+                //         } else {
+                //             badge = `<span class="badge badge-light">Coming Soon</span>`;
+                //         } 
+                //         return badge;
+                //     }
+                // },
                 {
                 data: null,
                 render: function (data) {
