@@ -1148,6 +1148,7 @@ class ApiController extends Controller
      */
     public function detail_toko($id){
         $data = Toko::find($id);
+        $produk->logo = url('https://backendwin.spero-lab.id/storage/image/' . $produk->logo);
         return response()->json([
             'massage' => 'SUCCESS',
             'data' => $data,
