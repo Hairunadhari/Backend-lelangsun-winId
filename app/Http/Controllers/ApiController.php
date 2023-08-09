@@ -456,6 +456,7 @@ class ApiController extends Controller
                 'produk_id' => $request->produk_id ?? null,
                 'qty' => $request->qty ?? null,
                 'harga' => $produk->harga ?? null,
+                'nama_produk' => $produk->nama ?? null,
                 'promosi_id' => $request->id_promo ?? null,
             ]);
             

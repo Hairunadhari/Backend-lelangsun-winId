@@ -68,19 +68,19 @@
                   <th class="text-right">Total</th>
                 </tr>
               <?php $no = 1 ?>
-              @if ($hargaPromo != null)
+              @if ($hargaPromo == null)
               <tr>
                 <td>{{$no++}}</td>
-                <td>{{$itemproduk->produk->nama}} (Promo)</td>
-                <td class="text-center">Rp. {{number_format($hargaPromo->total_diskon)}}</td>
+                <td>{{$itemproduk->nama_produk}}</td>
+                <td class="text-center">Rp. {{number_format($itemproduk->harga)}}</td>
                 <td class="text-center">{{$itemproduk->qty}}</td>
                 <td class="text-right">Rp. {{number_format($tagihan->total_pembayaran)}}</td>
               </tr>
               @else
               <tr>
                 <td>{{$no++}}</td>
-                <td>{{$itemproduk->produk->nama}}</td>
-                <td class="text-center">Rp. {{number_format($itemproduk->harga)}}</td>
+                <td>{{$itemproduk->nama_produk}} (Promo)</td>
+                <td class="text-center">Rp. {{number_format($hargaPromo->total_diskon)}}</td>
                 <td class="text-center">{{$itemproduk->qty}}</td>
                 <td class="text-right">Rp. {{number_format($tagihan->total_pembayaran)}}</td>
               </tr>

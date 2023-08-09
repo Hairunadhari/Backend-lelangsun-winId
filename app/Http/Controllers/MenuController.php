@@ -1156,10 +1156,12 @@ class MenuController extends Controller
             $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
             $pengiriman = Pengiriman::where('order_id', $id)->first();
             $itemproduk = OrderItem::with('produk','promosi.produkpromo')->where('order_id', $id)->first();
-                $hargaPromo = $itemproduk->promosi->produkpromo->where('produk_id', $itemproduk->produk->id)->first();
+            $hargaPromo = $itemproduk->promosi->produkpromo->where('produk_id', $itemproduk->produk->id)->first();
                 
-                return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','hargaPromo'));
-            } catch (Exception $e) {
+            return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','hargaPromo'));
+
+        } catch (Exception $e) {
+            
             $hargaPromo = null;
             return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','hargaPromo'));
             

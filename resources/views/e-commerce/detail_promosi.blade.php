@@ -26,10 +26,6 @@
                     <label>Tanggal Selesai</label>
                     <input type="text" class="form-control" name="promosi" value="{{$data->tanggal_selesai}}" readonly>
                 </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <input type="text" class="form-control" name="promosi" value="{{$data->status}}" readonly>
-                </div>
                 <label for="">Produk :</label>
                 <table class="table table-striped" id="tabeldetailpromosi">
                     <thead >
