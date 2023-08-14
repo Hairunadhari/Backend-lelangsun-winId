@@ -858,22 +858,23 @@ class ApiController extends Controller
      * )
      */
     public function list_pesanan($userid){
-        $data = Order::with('user', 'orderitem.produk', 'tagihan')->where('user_id', $userid)->get();
-
+        $data = Order::with('orderitem.produk', 'tagihan')->where('user_id', $userid)->get();
+    
         $data->each(function ($item) {
-            $thumbnail = $item->orderitem->produk->thumbnail;
-            $url = 'https://backendwin.spero-lab.id/storage/image/';
-
-            $item->orderitem->produk->thumbnail = str_replace($url, '', $thumbnail);
-            $item->orderitem->produk->thumbnail = $url . $item->orderitem->produk->thumbnail;
+            $item->orderitem->each(function ($orderItem) {
+                $thumbnail = $orderItem->produk->thumbnail;
+                $url = 'https://backendwin.spero-lab.id/storage/image/';
+                
+                $orderItem->produk->thumbnail = str_replace($url, '', $thumbnail);
+                $orderItem->produk->thumbnail = $url . $orderItem->produk->thumbnail;
+            });
         });
-
+    
         return response()->json([
             'order' => $data
         ]);
-
-
     }
+    
 
     /**
      * @OA\Get(

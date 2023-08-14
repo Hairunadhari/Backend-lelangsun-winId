@@ -21,7 +21,7 @@ class Order extends Model
     }
     public function orderitem()
     {
-        return $this->hasOne(OrderItem::class);
+        return $this->hasMany(OrderItem::class);
     }
     
 }
