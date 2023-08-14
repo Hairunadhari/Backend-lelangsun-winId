@@ -407,21 +407,29 @@ class ApiController extends Controller
      *      path="/api/add-order",
      *      tags={"Order"},
      *      summary="Order",
-     *      description="masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, nama pengirim/kurir, total pembayaran",
+     *      description="masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, sub_total",
      *      operationId="Order",
      *      @OA\RequestBody(
      *          required=true,
      *          description="form data",
      *          @OA\JsonContent(
-     *              required={"user_id","produk_id", "qty","pengiriman","lokasi_pengiriman","nama_pengirim","metode_pembayaran","total_pembayaran"},
+     *              required={"user_id","produk_id", "qty","pengiriman","lokasi_pengiriman","sub_total","id_promo"},
      *              @OA\Property(property="user_id", type="integer"),
-     *              @OA\Property(property="produk_id", type="integer"),
-     *              @OA\Property(property="qty", type="integer"),
+     *              @OA\Property(
+    *                  property="items",
+    *                  type="array",
+    *                  @OA\Items(
+    *                      @OA\Property(property="produk_id", type="integer"),
+    *                      @OA\Property(property="qty", type="integer"),
+    *                      @OA\Property(property="harga", type="integer"),
+    *                      @OA\Property(property="total_harga", type="integer"),
+    *                      @OA\Property(property="nama_produk", type="integer"),
+    *                      @OA\Property(property="id_promo", type="integer"),
+    *                  )
+    *              ),
      *              @OA\Property(property="pengiriman", type="string"),
      *              @OA\Property(property="lokasi_pengiriman", type="string"),
-     *              @OA\Property(property="nama_pengirim", type="string"),
-     *              @OA\Property(property="total_pembayaran", type="integer"),
-     *              @OA\Property(property="id_promo", type="integer"),
+     *              @OA\Property(property="sub_total", type="integer"),
      *          )
      *      ),
      *      @OA\Response(
@@ -438,10 +446,17 @@ class ApiController extends Controller
             'qty'     => 'required',
             'pengiriman'     => 'required',
             'lokasi_pengiriman'     => 'required',
-            'nama_pengirim'     => 'required',
-            'total_pembayaran'     => 'required',
+            'sub_total'     => 'required',
         ]);
 
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada Kesalahan',
+                'data' =>$validator->errors()
+            ], 401);
+        }
+        
         try {
            
             $user = User::where('id', $request->user_id)->first();
@@ -449,26 +464,40 @@ class ApiController extends Controller
                 'user_id' => $request->user_id ?? null
             ]);
 
-            $produk = Produk::find($request->produk_id);
+            $items = $request->items;
 
-            $orderitem = OrderItem::create([
-                'order_id' => $order->id ?? null,
-                'produk_id' => $request->produk_id ?? null,
-                'qty' => $request->qty ?? null,
-                'harga' => $produk->harga ?? null,
-                'nama_produk' => $produk->nama ?? null,
-                'promosi_id' => $request->id_promo ?? null,
-            ]);
+            $produkIds = array_column($items, 'produk_id');
+
+            $produks = Produk::whereIn('id', $produkIds)->get();
             
-            $produk->update([
-                'stok' => $produk->stok - $request->qty,
-            ]);
-                        
+            
+            // fungsi untuk looping orderan
+            foreach ($items as $item) {
+
+                if ($produks) {
+                    $orderitem = OrderItem::create([
+                        'order_id' => $order->id ?? null,
+                        'produk_id' => $item['produk_id'] ?? null,
+                        'qty' => $item['qty'] ?? null,
+                        'harga' => $item['harga'] ?? null,
+                        'nama_produk' => $item['nama_produk'] ?? null,
+                        'promosi_id' => $item['promosi_id'] ?? null,
+                        'harga_x_qty' => $item['total_harga'] ?? null,
+                    ]);
+                    
+                    foreach ($produks as $p ) {
+                        $p->update([
+                            'stok' => $p->stok - $item['qty'],
+                        ]);
+                    }
+                }
+            }
+            
             $pengiriman = Pengiriman::create([
                 'order_id' => $order->id ?? null,
                 'pengiriman' => $request->pengiriman ?? null,
                 'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
-                'nama_pengirim' => $request->nama_pengirim ?? null
+                'nama_pengirim' => '-'
             ]);
             
             $secret_key = 'Basic '.config('xendit.key_auth');
@@ -480,7 +509,7 @@ class ApiController extends Controller
                 'Authorization' => $secret_key
             ])->post('https://api.xendit.co/v2/invoices', [
                 'external_id' => $external_id,
-                'amount' => $request->total_pembayaran,
+                'amount' => $request->sub_total,
                 'payer_email' => $user->email
             ]);
 
@@ -493,7 +522,7 @@ class ApiController extends Controller
                 'user_id' => $order->user_id,
                 'external_id' => $external_id,
                 'status' => $response->status,
-                'total_pembayaran' => $request->total_pembayaran,
+                'total_pembayaran' => $request->sub_total,
                 'payment_link' => $response->invoice_url,
                 'exp_date' => $formattedExpiryDate
             ]);
@@ -1056,7 +1085,7 @@ class ApiController extends Controller
      *      path="/api/add-keranjang",
      *      tags={"Keranjang"},
      *      summary="Keranjang",
-     *      description="masukkan user id, produk id",
+     *      description="masukkan user id, produk id, qty",
      *      operationId="Keranjang",
      *      @OA\RequestBody(
      *          required=true,
@@ -1065,6 +1094,7 @@ class ApiController extends Controller
      *              required={"user_id","produk_id"},
      *              @OA\Property(property="user_id", type="integer"),
      *              @OA\Property(property="produk_id", type="integer"),
+     *              @OA\Property(property="qty", type="integer"),
      *          )
      *      ),
      *      @OA\Response(
@@ -1078,6 +1108,7 @@ class ApiController extends Controller
         $data = Keranjang::create([
             'user_id' => $request->user_id,
             'produk_id' => $request->produk_id,
+            'qty' => $request->qty,
         ]);
         return response()->json([
             'message' => 'SUUCCESS',

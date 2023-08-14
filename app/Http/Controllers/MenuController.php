@@ -1200,8 +1200,8 @@ class MenuController extends Controller
             //code...
             $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
             $pengiriman = Pengiriman::where('order_id', $id)->first();
-            $itemproduk = OrderItem::with('produk','promosi.produkpromo')->where('order_id', $id)->first();
-            $hargaPromo = $itemproduk->promosi->produkpromo->where('produk_id', $itemproduk->produk->id)->first();
+            $itemproduk = OrderItem::with('produk','promosi.produkpromo')->where('order_id', $id)->get();
+            $hargaPromo = $itemproduk->promosi->produkpromo->whereIn('produk_id', $itemproduk->produk->id)->get();
                 
             return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','hargaPromo'));
 

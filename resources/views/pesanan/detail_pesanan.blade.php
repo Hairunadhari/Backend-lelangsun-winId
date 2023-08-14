@@ -69,23 +69,28 @@
                 </tr>
               <?php $no = 1 ?>
               @if ($hargaPromo == null)
-              <tr>
-                <td>{{$no++}}</td>
-                <td>{{$itemproduk->nama_produk}}</td>
-                <td class="text-center">Rp. {{number_format($itemproduk->harga)}}</td>
-                <td class="text-center">{{$itemproduk->qty}}</td>
-                <td class="text-right">Rp. {{number_format($tagihan->total_pembayaran)}}</td>
-              </tr>
+                @foreach ($itemproduk as $ip)
+                <tr>
+                  <td>{{$no++}}</td>
+                  <td>{{$ip->nama_produk}}</td>
+                  <td class="text-center">Rp. {{number_format($ip->harga)}}</td>
+                  <td class="text-center">{{$ip->qty}}</td>
+                  <td class="text-right">Rp. {{number_format($ip->harga_x_qty)}}</td>
+                </tr>
+                @endforeach
               @else
-              <tr>
-                <td>{{$no++}}</td>
-                <td>{{$itemproduk->nama_produk}} (Promo)</td>
-                <td class="text-center">Rp. {{number_format($hargaPromo->total_diskon)}}</td>
-                <td class="text-center">{{$itemproduk->qty}}</td>
-                <td class="text-right">Rp. {{number_format($tagihan->total_pembayaran)}}</td>
-              </tr>
+                @foreach ($itemproduk as $ip)
+                <tr>
+                  <td>{{$no++}}</td>
+                  <td>{{$ip->nama_produk}} (Promo)</td>
+                  <td class="text-center">Rp. {{number_format($hargaPromo->total_diskon)}}</td>
+                  <td class="text-center">{{$ip->qty}}</td>
+                  <td class="text-right">Rp. {{number_format($ip->harga_x_qty)}}</td>
+                </tr>
+                @endforeach
               @endif
-            </tbody></table>
+            </tbody>
+          </table>
           </div>
           <div class="row mt-4">
             <div class="col-lg-8">
@@ -93,7 +98,7 @@
             <div class="col-lg-4 text-right">
               <hr class="mt-2 mb-2">
               <div class="invoice-detail-item">
-                <div class="invoice-detail-name">Total</div>
+                <div class="invoice-detail-name">SubTotal</div>
                 <div class="invoice-detail-value invoice-detail-value-lg">Rp. {{number_format($tagihan->total_pembayaran)}}</div>
               </div>
             </div>

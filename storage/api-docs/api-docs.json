@@ -341,7 +341,7 @@
                     "Order"
                 ],
                 "summary": "Order",
-                "description": "masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, nama pengirim/kurir, total pembayaran",
+                "description": "masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, sub_total",
                 "operationId": "Order",
                 "requestBody": {
                     "description": "form data",
@@ -355,19 +355,38 @@
                                     "qty",
                                     "pengiriman",
                                     "lokasi_pengiriman",
-                                    "nama_pengirim",
-                                    "metode_pembayaran",
-                                    "total_pembayaran"
+                                    "sub_total",
+                                    "id_promo"
                                 ],
                                 "properties": {
                                     "user_id": {
                                         "type": "integer"
                                     },
-                                    "produk_id": {
-                                        "type": "integer"
-                                    },
-                                    "qty": {
-                                        "type": "integer"
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "produk_id": {
+                                                    "type": "integer"
+                                                },
+                                                "qty": {
+                                                    "type": "integer"
+                                                },
+                                                "harga": {
+                                                    "type": "integer"
+                                                },
+                                                "total_harga": {
+                                                    "type": "integer"
+                                                },
+                                                "nama_produk": {
+                                                    "type": "integer"
+                                                },
+                                                "id_promo": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
                                     },
                                     "pengiriman": {
                                         "type": "string"
@@ -375,13 +394,7 @@
                                     "lokasi_pengiriman": {
                                         "type": "string"
                                     },
-                                    "nama_pengirim": {
-                                        "type": "string"
-                                    },
-                                    "total_pembayaran": {
-                                        "type": "integer"
-                                    },
-                                    "id_promo": {
+                                    "sub_total": {
                                         "type": "integer"
                                     }
                                 },
@@ -720,7 +733,7 @@
                     "Keranjang"
                 ],
                 "summary": "Keranjang",
-                "description": "masukkan user id, produk id",
+                "description": "masukkan user id, produk id, qty",
                 "operationId": "Keranjang",
                 "requestBody": {
                     "description": "",
@@ -737,6 +750,9 @@
                                         "type": "integer"
                                     },
                                     "produk_id": {
+                                        "type": "integer"
+                                    },
+                                    "qty": {
                                         "type": "integer"
                                     }
                                 },
