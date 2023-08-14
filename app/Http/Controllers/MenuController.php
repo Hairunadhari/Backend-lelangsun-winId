@@ -42,9 +42,17 @@ class MenuController extends Controller
 
     public function list_toko(){
         if (request()->ajax()) {
-            $data = Toko::select('id','toko','logo')->limit(10);
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = Toko::select('id','toko','logo')->where('status','active')->orderBy('created_at', 'desc')->limit(10);
+            } elseif ($status == 'not-active') {
+                $data = Toko::select('id','toko','logo')->where('status','not-active')->orderBy('created_at', 'desc')->limit(10);
+            }
+
             return DataTables::of($data)->make(true);
         }
+
         return view('e-commerce/list_toko');
     }
 
@@ -60,6 +68,7 @@ class MenuController extends Controller
         Toko::create([
             'toko'     => $request->toko,
             'logo'     => $logo->hashName(),
+            'status'     => 'active',
         ]);
 
         return redirect('/toko')->with('success', 'Data Berhasil Ditambahkan');
@@ -112,15 +121,31 @@ class MenuController extends Controller
     public function delete_toko($id)
     {
         $data = Toko::findOrFail($id);
-        Storage::delete('public/image/'. $data->logo);
-        $data->delete();
+        $data->update([
+            'status' => 'not-active'
+        ]);
         return redirect()->route('toko')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+    public function active_toko($id)
+    {
+        $data = Toko::findOrFail($id);
+        $data->update([
+            'status' => 'active'
+        ]);
+        return redirect()->route('toko')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
     }
 
     public function kategori_produk(){
         if (request()->ajax()) {
-            $data = KategoriProduk::select('id','kategori')->limit(10);
-            return DataTables::of($data)->make();
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = KategoriProduk::select('id','kategori')->where('status','active')->orderBy('created_at', 'desc')->limit(10);
+            } elseif ($status == 'not-active') {
+                $data = KategoriProduk::select('id','kategori')->where('status','not-active')->orderBy('created_at', 'desc')->limit(10);
+            }
+
+            return DataTables::of($data)->make(true);
         }
         return view('e-commerce/kategori_produk');
     }
@@ -129,6 +154,7 @@ class MenuController extends Controller
 
         KategoriProduk::create([
             'kategori'     => $request->kategori,
+            'status'     => 'active',
         ]);
 
         return redirect('/kategori-produk')->with('success', 'Data Berhasil Ditambahkan');
@@ -155,8 +181,19 @@ class MenuController extends Controller
     public function delete_kategori_produk($id)
     {
         $data = KategoriProduk::findOrFail($id);
-        $data->delete();
+        $data->update([
+            'status' => 'not-active'
+        ]);
         return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function active_kategori_produk($id)
+    {
+        $data = KategoriProduk::findOrFail($id);
+        $data->update([
+            'status' => 'active'
+        ]);
+        return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
     }
    
     public function list_pesanan(){
@@ -171,7 +208,14 @@ class MenuController extends Controller
         $toko = Toko::select('toko','id')->orderBy('toko','asc')->get();
         $kategori = KategoriProduk::select('kategori','id')->orderBy('kategori','asc')->get();
         if (request()->ajax()) {
-            $data = Produk::select('id','nama','thumbnail','harga','stok')->limit(10);
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'active')->limit(10);
+            } elseif ($status == 'not-active') {
+                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'not-active')->limit(10);
+            }
+
             return DataTables::of($data)->make(true);
         }
         return view('e-commerce/list_produk', compact('toko','kategori'));
@@ -190,10 +234,6 @@ class MenuController extends Controller
 
         $harga = preg_replace('/\D/', '', $request->harga); 
         $hargaProduk = trim($harga);
-        // dd($hargaProduk);
-
-
-        if ($request->hasFile('gambar') && $request->hasFile('thumbnail')) {
 
             $gambar = $request->file('gambar');
             $thumbnail = $request->file('thumbnail');
@@ -208,6 +248,7 @@ class MenuController extends Controller
                 'harga'     => $hargaProduk,
                 'video'     => $request->video,
                 'thumbnail'     => $thumbnail->hashName(),
+                'status'     => 'active',
             ]);
 
             
@@ -220,7 +261,6 @@ class MenuController extends Controller
                     'gambar' => $file->hashName(),
                 ]);
             }
-        }
 
         return redirect('/produk')->with('success', 'Data Berhasil Ditambahkan');
     }
@@ -351,13 +391,18 @@ class MenuController extends Controller
     public function delete_produk($id)
     {
         $produk = Produk::find($id);
-        $gambarProduk = GambarProduk::where('produk_id',$id);
-        foreach ($gambarProduk as $gambar) {
-            Storage::delete('public/image/'.$gambar->gambar);
-        }
-        Storage::delete('public/video/'.$produk->video);
-        $produk->delete();
+        $produk->update([
+            'status' => 'not-active'
+        ]);
         return redirect()->route('produk')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+    public function active_produk($id)
+    {
+        $produk = Produk::find($id);
+        $produk->update([
+            'status' => 'active'
+        ]);
+        return redirect()->route('produk')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
     }
 
     public function list_event_lelang(){

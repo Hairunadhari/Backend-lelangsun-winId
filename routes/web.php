@@ -47,7 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/edittoko/{id}/', [MenuController::class, 'edit_toko'])->name('edittoko');
     Route::get('/detailtoko/{id}/', [MenuController::class, 'detail_toko'])->name('detailtoko');
     Route::put('/updatetoko/{id}/', [MenuController::class, 'update_toko'])->name('updatetoko');
-    Route::delete('/deletetoko/{id}/', [MenuController::class, 'delete_toko'])->name('deletetoko');
+    Route::put('/deletetoko/{id}/', [MenuController::class, 'delete_toko'])->name('deletetoko');
+    Route::put('/activetoko/{id}/', [MenuController::class, 'active_toko'])->name('activetoko');
 
     // route kategori produk
     Route::get('/kategori-produk', [MenuController::class, 'kategori_produk'])->name('kategori-produk');
@@ -55,7 +56,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-kategori-produk/{id}/', [MenuController::class, 'detail_kategori_produk'])->name('detail-kategori-produk');
     Route::get('/edit-kategori-produk/{id}/', [MenuController::class, 'edit_kategori_produk'])->name('edit-kategori-produk');
     Route::put('/update-kategori-produk/{id}/', [MenuController::class, 'update_kategori_produk'])->name('update-kategori-produk');
-    Route::delete('/delete-kategori-produk/{id}/', [MenuController::class, 'delete_kategori_produk'])->name('delete-kategori-produk');
+    Route::put('/delete-kategori-produk/{id}/', [MenuController::class, 'delete_kategori_produk'])->name('delete-kategori-produk');
+    Route::put('/active-kategori-produk/{id}/', [MenuController::class, 'active_kategori_produk'])->name('active-kategori-produk');
 
     // route produk
     Route::get('/produk', [MenuController::class, 'list_produk'])->name('produk');
@@ -63,7 +65,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/detailproduk/{id}/', [MenuController::class, 'detail_produk'])->name('detailproduk');
     Route::get('/editproduk/{id}/', [MenuController::class, 'edit_produk'])->name('editproduk');
     Route::put('/updateproduk/{id}/', [MenuController::class, 'update_produk'])->name('updateproduk');
-    Route::delete('/deleteproduk/{id}/', [MenuController::class, 'delete_produk'])->name('deleteproduk');
+    Route::put('/deleteproduk/{id}/', [MenuController::class, 'delete_produk'])->name('deleteproduk');
+    Route::put('/activeproduk/{id}/', [MenuController::class, 'active_produk'])->name('activeproduk');
 
     // route promo produk
     Route::get('/promosi', [MenuController::class, 'list_promosi'])->name('promosi');

@@ -2,11 +2,12 @@
 @section('content')
 
 <style>
-    .review img{
+    .review img {
         margin-bottom: 20px;
         margin-left: 20px;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     }
+
 </style>
 <div class="section-body">
     <div class="row">
@@ -30,20 +31,50 @@
                         </button>
                     </div>
                     @endif
-                    <table class="table table-striped w-100" id="t-produk">
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Nama Produk</th>
-                                <th scope="col">Cover Produk</th>
-                                <th scope="col">Harga</th>
-                                <th scope="col">Stok</th>
-                                <th scope="col">Opsi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
+                                aria-controls="home" aria-selected="true">Produk Aktif</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
+                                aria-controls="profile" aria-selected="false">Produk Tidak Aktif</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent2">
+                        <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
+                            <table class="table table-striped w-100" id="t-produk-active">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Produk</th>
+                                        <th scope="col">Cover Produk</th>
+                                        <th scope="col">Harga</th>
+                                        <th scope="col">Stok</th>
+                                        <th scope="col">Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
+                            <table class="table table-striped w-100" id="t-produk-notactive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama Produk</th>
+                                        <th scope="col">Cover Produk</th>
+                                        <th scope="col">Harga</th>
+                                        <th scope="col">Stok</th>
+                                        <th scope="col">Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,12 +82,17 @@
 </div>
 <script>
     $(document).ready(function () {
-        $('#t-produk').DataTable({
+        $('#t-produk-active').DataTable({
             // responsive: true,
             processing: true,
             ordering: false,
             serverSide: true,
-            ajax: '{{ url()->current() }}',
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'active';
+                }
+            },
             columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
@@ -95,11 +131,61 @@
                                 <a class="dropdown-item has-icon" href="${detailUrl}"><i class="fas fa-info-circle"></i>Detail</a>
                                 <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_method" value="PUT">
                                 <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
                             </div>
                         </form>
                     </div>
+                    `;
+                    },
+                },
+            ],
+        });
+    });
+    $(document).ready(function () {
+        $('#t-produk-notactive').DataTable({
+            // responsive: true,
+            processing: true,
+            ordering: false,
+            serverSide: true,
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'not-active';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "nama",
+                },
+                {
+                    data: "thumbnail",
+                    render: function (data) {
+                        return '<img src="/storage/image/' + data +
+                            '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
+                    },
+                },
+                {
+                    data: "harga",
+                    render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
+                },
+                {
+                    data: "stok",
+                },
+                {
+                    data: null,
+                    render: function (data) {
+                        var activeUrl = '/activeproduk/' + data.id;
+                        return `
+                        <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button class="btn btn-success" type="submit">Aktifkan</button>
+                        </form>
                     `;
                     },
                 },
@@ -168,10 +254,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Gambar Detail Produk <small>(Multiple Upload) </small><span style="color: red">*</span></label>
+                        <label>Gambar Detail Produk <small>(Multiple Upload) </small><span
+                                style="color: red">*</span></label>
                         <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
                     </div>
-                        <div id="preview" class="review"></div>
+                    <div id="preview" class="review"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -181,7 +268,6 @@
     </div>
 </div>
 <script>
-
     function previewImages() {
         var preview = document.querySelector('#preview');
 
@@ -209,7 +295,7 @@
 
     document.querySelector('#gambar').addEventListener("change", previewImages);
 
-    
+
     function formatNumber(input) {
         // Menghilangkan karakter selain angka
         var num = input.value.replace(/[^0-9]/g, '');
@@ -233,14 +319,12 @@
     }
 
     // Mengakses elemen input file
-var fileInput = document.querySelector('input[name="gambar[]"]');
+    var fileInput = document.querySelector('input[name="gambar[]"]');
 
-// Menampilkan nilai file yang dipilih
-fileInput.addEventListener('change', function() {
-  console.log(fileInput.files); // Menampilkan objek FileList
-  console.log(fileInput.files[0]); // Menampilkan objek File pertama dalam daftar
-});
-
+    // Menampilkan nilai file yang dipilih
+    fileInput.addEventListener('change', function () {
+        console.log(fileInput.files); // Menampilkan objek FileList
+        console.log(fileInput.files[0]); // Menampilkan objek File pertama dalam daftar
+    });
 
 </script>
-

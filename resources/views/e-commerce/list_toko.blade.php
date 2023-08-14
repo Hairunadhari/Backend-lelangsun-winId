@@ -19,18 +19,46 @@
                         </button>
                     </div>
                     @endif
-                    <table class="table table-striped w-100" id="toko">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Toko</th>
-                                <th>Logo</th>
-                                <th>Opsi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
+                                aria-controls="home" aria-selected="true">Aktif</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
+                                aria-controls="profile" aria-selected="false">Tidak Aktif</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent2">
+                        <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
+                            <table class="table table-striped w-100" id="toko">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Toko</th>
+                                        <th>Logo</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
+                            <table class="table table-striped w-100" id="toko-notactive">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Toko</th>
+                                        <th>Logo</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +71,12 @@
             ordering: false,
             serverSide: true,
             // fixedHeader: true,
-            ajax: '{{ url()->current() }}',
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'active';
+                }
+            },
             columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
@@ -73,11 +106,55 @@
                                 style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
                                 <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_method" value="PUT">
                                 <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
                             </div>
                         </form>
                     </div>
+                    `;
+                },
+            },
+            ],
+        });
+    });
+
+    $(document).ready(function () {
+        $('#toko-notactive').DataTable({
+            processing: true,
+            ordering: false,
+            serverSide: true,
+            // fixedHeader: true,
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'not-active';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "toko",
+                },
+                {
+                    data: "logo",
+                    render: function (data) {
+                        return '<img src="/storage/image/' + data +
+                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
+                    },
+                },
+                {
+                data: null,
+                render: function (data) {
+                    var activeUrl = '/activetoko/' + data.id;
+                    return `
+                    <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button class="btn btn-success" type="submit">Aktifkan</button>
+                        </form>
                     `;
                 },
             },
