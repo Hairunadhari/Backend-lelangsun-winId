@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->string('metode_pembayaran');
             $table->bigInteger('total_pembayaran');
             $table->string('status');

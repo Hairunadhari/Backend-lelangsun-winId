@@ -60,7 +60,7 @@ class User extends Authenticatable
     }
     public function review()
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(Review::class);
     }
     public function role()
     {

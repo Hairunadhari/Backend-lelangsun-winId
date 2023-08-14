@@ -9,4 +9,9 @@ class Keranjang extends Model
 {
     use HasFactory;
     protected $guarded = [''];
+
+    public function produk()
+    {
+        return $this->belongsTo(produk::class);
+    }
 }

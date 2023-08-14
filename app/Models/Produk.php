@@ -38,4 +38,8 @@ class Produk extends Model
     {
         return $this->hasMany(Review::class);
     }
+    public function keranjang()
+    {
+        return $this->hasMany(Keranjang::class);
+    }
 }

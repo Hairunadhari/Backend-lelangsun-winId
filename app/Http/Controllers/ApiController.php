@@ -1074,6 +1074,7 @@ class ApiController extends Controller
      * )
      */
     public function add_keranjang(Request $request){
+        Keranjang::where('produk_id', $request->produk_id)->where('user_id', $request->user_id)->delete();
         $data = Keranjang::create([
             'user_id' => $request->user_id,
             'produk_id' => $request->produk_id,
@@ -1107,7 +1108,10 @@ class ApiController extends Controller
      * )
      */
     public function list_keranjang($id){
-        $data = Keranjang::where('user_id', $id)->latest()->get();
+        $data = Keranjang::with('produk')->where('user_id', $id)->latest()->get();
+        $data->each(function ($item) {
+            $item->produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail);
+        });
         return response()->json([
             'message' => 'SUCCESS',
             'keranjang' => $data
