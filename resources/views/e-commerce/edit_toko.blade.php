@@ -23,7 +23,7 @@
                     <img src="{{ asset('storage/image/'.$data->logo) }}" width="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
                 </div>
                 <div class="form-group">
-                    <label>Ganti Logo</label>
+                    <label>Ganti Logo <small>(png, jpg, jpeg)</small></label>
                     <input type="file" class="form-control mb-4" name="logo" id="gambar">
                     <div id="preview"></div>
                 </div>

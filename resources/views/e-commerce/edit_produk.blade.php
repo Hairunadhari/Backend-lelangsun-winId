@@ -27,7 +27,7 @@
                     @endif
                     <div class="form-group">
                         <label>Nama Toko:</label>
-                        <select class="form-control" name="toko_id" required>
+                        <select class="form-control selectric" name="toko_id" required>
                             @foreach ($dataToko as $item)
                             <option value="{{ $item->id }}" {{ $item->id == $data->toko->id ? 'selected' : '' }}>
                                 {{ $item->toko }}
@@ -37,7 +37,7 @@
                     </div>
                     <div class="form-group">
                         <label>Kategori Produk:</label>
-                        <select class="form-control" name="kategoriproduk_id" required>
+                        <select class="form-control selectric" name="kategoriproduk_id" required>
                             @foreach ($dataKategoriproduk as $item)
                             <option value="{{ $item->id }}"
                                 {{ $item->id == $data->kategoriproduk->id ? 'selected' : '' }}>
@@ -70,7 +70,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Link Video:</label>
+                        <label for="exampleInputEmail1">Link Video: <small>(isi - (strip) jika tidak punya link video)</small></label>
                         <input type="text" class="form-control" name="video" value="{{$data->video}}">
                     </div>
                     <div class="form-group">

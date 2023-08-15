@@ -198,22 +198,22 @@ class MenuController extends Controller
    
     public function list_pesanan(){
         if (request()->ajax()) {
-            $data = Order::with('user','orderitem','tagihan')->limit(10);
+            $data = Order::with('user','orderitem','tagihan')->orderBy('created_at', 'desc')->limit(10);
             return DataTables::of($data)->make(true);
         }
         return view('pesanan/list_pesanan');
     }
 
     public function list_produk(){
-        $toko = Toko::select('toko','id')->orderBy('toko','asc')->get();
-        $kategori = KategoriProduk::select('kategori','id')->orderBy('kategori','asc')->get();
+        $toko = Toko::select('toko','id')->where('status','active')->orderBy('toko','asc')->get();
+        $kategori = KategoriProduk::select('kategori','id')->where('status','active')->orderBy('kategori','asc')->get();
         if (request()->ajax()) {
             $status = request('status');
 
             if ($status == 'active') {
-                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'active')->limit(10);
+                $data = Produk::select('id','nama','thumbnail','harga','stok')->orderBy('created_at', 'desc')->where('status', 'active')->limit(10);
             } elseif ($status == 'not-active') {
-                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'not-active')->limit(10);
+                $data = Produk::select('id','nama','thumbnail','harga','stok')->orderBy('created_at', 'desc')->where('status', 'not-active')->limit(10);
             }
 
             return DataTables::of($data)->make(true);
@@ -1011,7 +1011,7 @@ class MenuController extends Controller
 
     public function list_banner_utama(){
         if (request()->ajax()) {
-            $data = BannerUtama::select('id','gambar')->limit(10);
+            $data = BannerUtama::select('id','gambar')->orderBy('created_at', 'desc')->limit(10);
             return DataTables::of($data)->make(true);
         }
         return view('publikasi.banner_utama');
@@ -1073,7 +1073,7 @@ class MenuController extends Controller
 
     public function list_banner_diskon(){
         if (request()->ajax()) {
-            $data = BannerDiskon::select('id','gambar')->limit(10);
+            $data = BannerDiskon::select('id','gambar')->orderBy('created_at', 'desc')->limit(10);
             return DataTables::of($data)->make(true);
         }
         return view('publikasi.banner_diskon');
@@ -1135,7 +1135,7 @@ class MenuController extends Controller
 
     public function list_banner_spesial(){
         if (request()->ajax()) {
-            $data = BannerSpesial::select('id','gambar')->limit(10);
+            $data = BannerSpesial::select('id','gambar')->orderBy('created_at', 'desc')->limit(10);
             return DataTables::of($data)->make();
         }
         return view('publikasi.banner_spesial');
@@ -1336,23 +1336,7 @@ class MenuController extends Controller
     }
 
     public function list_event(){
-        $events = Event::all();
-
-        foreach ($events as $event) {
-            $tgl_mulai = $event->tgl_mulai;
-            $tgl_selesai = $event->tgl_selesai;
-            $today = now()->toDateString();
-            
-            if ($tgl_mulai <= $today && $tgl_selesai >= $today) {
-                $event->update([
-                    'status' => 'sedang berlangsung',
-                ]);
-            } elseif ($tgl_mulai < $today && $tgl_selesai < $today) {
-                $event->update([
-                    'status' => 'selesai',
-                ]);
-            }
-        }
+        
         if (request()->ajax()) {
             $status = request('status_data');
 
@@ -1541,7 +1525,7 @@ class MenuController extends Controller
     }
 
     public function add_banner_lelang(Request $request){
-
+        
         $gambar = $request->file('gambar');
         $gambar->storeAs('public/image', $gambar->hashName());
         BannerLelang::create([

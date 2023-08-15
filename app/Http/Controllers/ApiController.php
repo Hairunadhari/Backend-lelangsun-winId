@@ -57,7 +57,7 @@ class ApiController extends Controller
         //         ->where('tanggal_selesai', '>=', $now);
         // }])->where('stok', '>', 0)->get();
 
-        $produk = Produk::with('toko','produkpromo.promosi')->where('stok', '>', 0)->get();
+        $produk = Produk::with('toko','produkpromo.promosi')->where('stok', '>', 0)->where('status','active')->get();
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
@@ -168,7 +168,7 @@ class ApiController extends Controller
      public function daftar_produk_berdasarkan_kategori($id){
         $kategoriproduk = KategoriProduk::find($id);
         
-        $produk = Produk::where('kategoriproduk_id',$id)->get();
+        $produk = Produk::where('kategoriproduk_id',$id)->where('status','active')->get();
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
@@ -192,7 +192,7 @@ class ApiController extends Controller
      * )
      */
     public function daftar_kategori(){
-        $kategoriproduk = KategoriProduk::all();
+        $kategoriproduk = KategoriProduk::where('status','active')->get();
        
         return response()->json([
             'kategoriproduk' => $kategoriproduk
@@ -1205,7 +1205,12 @@ class ApiController extends Controller
      * )
      */
     public function list_event(){
-        $data = Event::all();
+        $now = Carbon::now(); 
+        $data = Event::where('status_data', 1)
+        ->where('tgl_mulai','<=', $now)
+        ->where('tgl_selesai', '>=', $now)
+        ->get();
+
         $data->each(function ($item) {
             $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
         });

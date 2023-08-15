@@ -20,7 +20,7 @@
                     <img src="{{ asset('storage/image/'.$data->gambar) }}" width="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
                 </div>
                 <div class="form-group">
-                    <label>Ganti Gambar</label>
+                    <label>Ganti Gambar <small>(png, jpg, jpeg)</small></label>
                     <input type="file" class="form-control mb-4" name="gambar" id="gambar">
                     <div id="preview"></div>
                 </div>
@@ -37,9 +37,9 @@
             [].forEach.call(this.files, readAndPreview);
         }
         function readAndPreview(file) {
-            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-                return alert(file.name + " is not an image");
-            }
+            // if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
+            //     return alert(file.name + " is not an image");
+            // }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();

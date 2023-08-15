@@ -241,7 +241,7 @@
                         <input type="number" class="form-control" name="stok" required onkeyup="formatStok(this)">
                     </div>
                     <div class="form-group">
-                        <label>Link Video <span style="color: red">*</span></label>
+                        <label>Link Video <small>(isi - (strip) jika tidak punya link video)</small><span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="video" required placeholder="">
                     </div>
                     <div class="form-group">
@@ -254,7 +254,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Gambar Detail Produk <small>(Multiple Upload) </small><span
+                        <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar) </small><span
                                 style="color: red">*</span></label>
                         <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
                     </div>

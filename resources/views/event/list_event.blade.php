@@ -35,10 +35,11 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Gambar</th>
+                                        <th>Poster</th>
                                         <th>Judul</th>
                                         <th>Jenis</th>
                                         <th>Tiket</th>
+                                        <th>Status</th>
                                         <th>Link Meet</th>
                                         <th>Opsi</th>
                                     </tr>
@@ -52,7 +53,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Gambar</th>
+                                        <th>Poster</th>
                                         <th>Judul</th>
                                         <th>Jenis</th>
                                         <th>Tiket</th>
@@ -102,6 +103,24 @@
                 },
                 {
                     data: "tiket",
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        const today = new Date(); // Mendapatkan tanggal hari ini
+                        const tanggalMulai = new Date(row.tgl_mulai); // Mendapatkan tanggal_mulai dari baris data
+                        const tanggalSelesai = new Date(row.tgl_selesai); // Mendapatkan tanggal_mulai dari baris data
+                        // console.log(tanggalSelesai);
+                        
+                        if (tanggalSelesai < today) {
+                            badge = `<span class="badge badge-light">Selesai</span>`;
+                        } else if (tanggalMulai <= today) {
+                            badge = `<span class="badge badge-success">Sedang Berlangsung</span>`;
+                        } else {
+                            badge = `<span class="badge badge-primary">Coming Soon</span>`;
+                        }
+                        return badge;
+                    }
                 },
                 {
                     data: null,
