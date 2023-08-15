@@ -448,14 +448,6 @@ class ApiController extends Controller
             'lokasi_pengiriman'     => 'required',
             'sub_total'     => 'required',
         ]);
-
-        if($validator->fails()){
-            return response()->json([
-                'success' => false,
-                'message' => 'Ada Kesalahan',
-                'data' =>$validator->errors()
-            ], 401);
-        }
         
         try {
            
