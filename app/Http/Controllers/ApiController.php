@@ -423,7 +423,7 @@ class ApiController extends Controller
     *                      @OA\Property(property="qty", type="integer"),
     *                      @OA\Property(property="harga", type="integer"),
     *                      @OA\Property(property="total_harga", type="integer"),
-    *                      @OA\Property(property="nama_produk", type="integer"),
+    *                      @OA\Property(property="nama_produk", type="string"),
     *                      @OA\Property(property="id_promo", type="integer"),
     *                  )
     *              ),

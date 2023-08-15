@@ -376,7 +376,7 @@
                                                     "type": "integer"
                                                 },
                                                 "nama_produk": {
-                                                    "type": "integer"
+                                                    "type": "string"
                                                 },
                                                 "id_promo": {
                                                     "type": "integer"
