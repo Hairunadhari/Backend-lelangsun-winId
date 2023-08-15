@@ -351,14 +351,9 @@
                             "schema": {
                                 "required": [
                                     "user_id",
-                                    "produk_id",
-                                    "qty",
                                     "pengiriman",
-                                    "harga",
-                                    "total_harga",
                                     "lokasi_pengiriman",
-                                    "sub_total",
-                                    "id_promo"
+                                    "sub_total"
                                 ],
                                 "properties": {
                                     "user_id": {

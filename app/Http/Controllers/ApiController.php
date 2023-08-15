@@ -413,7 +413,7 @@ class ApiController extends Controller
      *          required=true,
      *          description="form data",
      *          @OA\JsonContent(
-     *              required={"user_id","produk_id", "qty","pengiriman","harga","total_harga","lokasi_pengiriman","sub_total","id_promo"},
+     *              required={"user_id","pengiriman","lokasi_pengiriman","sub_total"},
      *              @OA\Property(property="user_id", type="integer"),
      *              @OA\Property(
     *                  property="items",
