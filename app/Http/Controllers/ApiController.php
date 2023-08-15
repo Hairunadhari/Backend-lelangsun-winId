@@ -413,7 +413,7 @@ class ApiController extends Controller
      *          required=true,
      *          description="form data",
      *          @OA\JsonContent(
-     *              required={"user_id","produk_id", "qty","pengiriman","lokasi_pengiriman","sub_total","id_promo"},
+     *              required={"user_id","produk_id", "qty","pengiriman","harga","total_harga","lokasi_pengiriman","sub_total","id_promo"},
      *              @OA\Property(property="user_id", type="integer"),
      *              @OA\Property(
     *                  property="items",
@@ -442,8 +442,6 @@ class ApiController extends Controller
     public function add_order(Request $request){
         $validator = Validator::make($request->all() , [
             'user_id'     => 'required',
-            'produk_id'     => 'required',
-            'qty'     => 'required',
             'pengiriman'     => 'required',
             'lokasi_pengiriman'     => 'required',
             'sub_total'     => 'required',
@@ -453,7 +451,7 @@ class ApiController extends Controller
            
             $user = User::where('id', $request->user_id)->first();
             $order = Order::create([
-                'user_id' => $request->user_id ?? null
+                'user_id' => $user->id
             ]);
 
             $items = $request->items;

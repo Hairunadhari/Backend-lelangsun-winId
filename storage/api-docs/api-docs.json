@@ -354,6 +354,8 @@
                                     "produk_id",
                                     "qty",
                                     "pengiriman",
+                                    "harga",
+                                    "total_harga",
                                     "lokasi_pengiriman",
                                     "sub_total",
                                     "id_promo"
