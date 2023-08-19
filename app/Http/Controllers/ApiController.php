@@ -58,8 +58,7 @@ class ApiController extends Controller
         ->where('stok', '>', 0)
         ->where('status', 'active')
         ->get();
-    
-
+        
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
