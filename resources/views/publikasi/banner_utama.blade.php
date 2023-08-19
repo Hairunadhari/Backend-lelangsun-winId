@@ -116,6 +116,11 @@
         }
 
         function readAndPreview(file) {
+          if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                alert(file.name + " format tidak sesuai");
+                document.querySelector('#gambar').value = '';
+                return;
+            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();

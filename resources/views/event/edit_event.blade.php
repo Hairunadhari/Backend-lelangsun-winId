@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Image</label>
+                    <label>Image <small>(png, jpg, jpeg)</small></label>
                     <input type="file" class="form-control" name="gambar"  id="gambar">
                 <div id="preview" class="mt-3"></div>
                 </div>
@@ -110,6 +110,11 @@
         }
 
         function readAndPreview(file) {
+            if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                alert(file.name + " format tidak sesuai");
+                document.querySelector('#gambar').value = '';
+                return;
+            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();

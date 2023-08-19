@@ -37,13 +37,16 @@
             [].forEach.call(this.files, readAndPreview);
         }
         function readAndPreview(file) {
-            // if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)) {
-            //     return alert(file.name + " is not an image");
-            // }
+            if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                alert(file.name + " format tidak sesuai");
+                document.querySelector('#gambar').value = '';
+                preview.removeChild(preview.firstChild);
+                return;
+            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();
-                image.width = 200;
+                image.width = 150;
                 image.title = file.name; 
                 image.src = this.result;
                 preview.appendChild(image);

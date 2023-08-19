@@ -50,14 +50,16 @@ class ApiController extends Controller
      * )
      */
     public function daftar_produk(){
-        $now = Carbon::now(); // Tanggal sekarang
+        $now = Carbon::now();
 
-        // $produk = Produk::with(['toko', 'produkpromo.promosi' => function ($query) use ($now) {
-        //     $query->where('tanggal_mulai', '<=', $now)
-        //         ->where('tanggal_selesai', '>=', $now);
-        // }])->where('stok', '>', 0)->get();
+        $produk = Produk::with(['toko', 'produkpromo' => function ($query) use ($now){
+            $query->orderBy('created_at', 'desc')->where('tanggal_mulai','<=',$now);
+        }])
+        ->where('stok', '>', 0)
+        ->where('status', 'active')
+        ->get();
+    
 
-        $produk = Produk::with('toko','produkpromo.promosi')->where('stok', '>', 0)->where('status','active')->get();
         $produk->each(function ($item) {
             $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
         });
@@ -353,9 +355,7 @@ class ApiController extends Controller
      */
     public function daftar_promo(){
         $today = Carbon::today();
-        $promosi = Promosi::whereDate('tanggal_mulai', '<=', $today)
-        ->whereDate('tanggal_selesai','>=', $today)
-        ->get();
+        $promosi = Promosi::where('tanggal_mulai', '<=', $today)->get();
         $promosi->each(function ($item) {
             $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
         });
@@ -597,7 +597,8 @@ class ApiController extends Controller
     }
 
     public function callback_xendit(Request $request){
-        $invoice = Tagihan::with('user')->where('external_id', $request->external_id)->first();
+        $invoice = Tagihan::with('user','order')->where('external_id', $request->external_id)->first();
+       
         if ($invoice == null) {
             $failed = [
                 'message' => 'FAILED'
@@ -607,6 +608,14 @@ class ApiController extends Controller
         $invoice->update([
             'status' => $request->status,
         ]);
+
+        if ($invoice->status == 'PAID') {
+            $ambilOrderIds = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
+            $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambilOrderIds)->get();
+            $ambil_produkid_berdasarkan_userid->each->delete();
+
+        }
+
         Pembayaran::create([
             'external_id' => $request->external_id,
             'metode_pembayaran' => $request->payment_method,
@@ -614,7 +623,7 @@ class ApiController extends Controller
             'status' => $request->status,
             'total_pembayaran' => $request->paid_amount,
             'bank_code' => $request->bank_code,
-            'tagihan_id' => $invoice->id,
+            'tagihan_id' => '1',
         ]);
 
         $res = [
@@ -622,12 +631,12 @@ class ApiController extends Controller
             'data' => json_encode($request->all())
         ];
         
-        TLogApi::create([
-            'k_t' => 'terima',
-            'object' => 'xendit',
-            'data' => json_encode($request->all()),
-            'result' => json_encode($res)
-        ]);
+        // TLogApi::create([
+        //     'k_t' => 'terima',
+        //     'object' => 'xendit',
+        //     'data' => json_encode($request->all()),
+        //     'result' => json_encode($res)
+        // ]);
         return response()->json($res);
 
     }
@@ -1207,8 +1216,7 @@ class ApiController extends Controller
     public function list_event(){
         $now = Carbon::now(); 
         $data = Event::where('status_data', 1)
-        ->where('tgl_mulai','<=', $now)
-        ->where('tgl_selesai', '>=', $now)
+        ->whereNot('tgl_selesai','<', $now)
         ->get();
 
         $data->each(function ($item) {
@@ -1217,6 +1225,15 @@ class ApiController extends Controller
         return response()->json([
             'message' => 'SUCCESS',
             'data' => $data,
+        ]);
+    }
+
+    public function detail_event($id){
+        $event = Event::find($id);
+        $event->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $event->gambar);
+
+        return response()->json([
+            'event' => $event
         ]);
     }
 

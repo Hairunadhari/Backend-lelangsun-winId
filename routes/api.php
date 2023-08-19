@@ -59,3 +59,4 @@ Route::post('/add-keranjang', [ApiController::class, 'add_keranjang']);
 Route::delete('/delete-keranjang/{id}/', [ApiController::class, 'delete_keranjang']);
 Route::get('/list-event', [ApiController::class, 'list_event']);
 Route::get('/detail-toko/{id}/', [ApiController::class, 'detail_toko']);
+Route::get('/detail-event/{id}/', [ApiController::class, 'detail_event']);

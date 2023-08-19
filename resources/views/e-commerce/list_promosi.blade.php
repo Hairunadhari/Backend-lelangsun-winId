@@ -78,14 +78,12 @@
                         const tanggalSelesai = new Date(row.tanggal_selesai); // Mendapatkan tanggal_mulai dari baris data
                         // console.log(tanggalSelesai);
                         
-                        if (tanggalMulai <= today && tanggalSelesai >= today) {
-                            badge = `<span class="badge badge-success">Sedang Berlangsung</span>`;
-                        } else if (tanggalMulai > today && tanggalSelesai > today) {
-                            badge = `<span class="badge badge-primary">Coming Soon</span>`;
-                        } else if (tanggalMulai < today && tanggalSelesai < today ) {
+                        if (tanggalSelesai < today) {
                             badge = `<span class="badge badge-light">Selesai</span>`;
+                        } else if (tanggalMulai <= today) {
+                            badge = `<span class="badge badge-success">Sedang Berlangsung</span>`;
                         } else {
-                            badge = `<span class="badge badge-danger">Tidak Diketahui</span>`;
+                            badge = `<span class="badge badge-primary">Coming Soon</span>`;
                         }
                         return badge;
                     }

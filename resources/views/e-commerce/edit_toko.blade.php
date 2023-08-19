@@ -52,9 +52,5 @@
         }
     }
     document.querySelector('#gambar').addEventListener("change", previewImages);
-    
-    document.querySelector('#resetButton').addEventListener('click', function() {
-        document.querySelector('#preview').innerHTML = '';
-    });
 </script>
 @endsection
