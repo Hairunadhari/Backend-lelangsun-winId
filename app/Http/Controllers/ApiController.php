@@ -52,8 +52,12 @@ class ApiController extends Controller
     public function daftar_produk(){
         $now = Carbon::now();
 
-        $produk = Produk::with(['toko', 'produkpromo' => function ($query) use ($now){
-            $query->orderBy('created_at', 'desc')->where('tanggal_mulai','<=',$now);
+        $produk = Produk::with([
+            'toko' => function ($querytoko) use ($now){
+                $querytoko->select('id','toko','logo','status');
+            }, 
+            'produkpromo' => function ($query) use ($now){
+            $query->select('id','promosi_id','produk_id','total_diskon','diskon')->orderBy('created_at','desc')->where('tanggal_mulai','<=', $now)->where('tanggal_selesai','>',$now);
         }])
         ->where('stok', '>', 0)
         ->where('status', 'active')
@@ -631,12 +635,12 @@ class ApiController extends Controller
             'data' => json_encode($request->all())
         ];
         
-        // TLogApi::create([
-        //     'k_t' => 'terima',
-        //     'object' => 'xendit',
-        //     'data' => json_encode($request->all()),
-        //     'result' => json_encode($res)
-        // ]);
+        TLogApi::create([
+            'k_t' => 'terima',
+            'object' => 'xendit',
+            'data' => json_encode($request->all()),
+            'result' => json_encode($res)
+        ]);
         return response()->json($res);
 
     }
