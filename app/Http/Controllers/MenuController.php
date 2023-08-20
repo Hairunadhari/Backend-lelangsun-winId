@@ -497,6 +497,7 @@ class MenuController extends Controller
                     'total_diskon' => $hargadiskon,
                     'tanggal_mulai'     => $request->tanggal_mulai,
                     'tanggal_selesai'     => $request->tanggal_selesai,
+                    'diskon'     => $promosi->diskon,
                 ]);
             }
             
@@ -571,6 +572,7 @@ class MenuController extends Controller
                         'total_diskon' => $hargadiskon,
                         'tanggal_mulai'     => $request->tanggal_mulai,
                         'tanggal_selesai'     => $request->tanggal_selesai,
+                        'diskon'     => $data->diskon,
                     ]);
                 }
 
@@ -596,6 +598,7 @@ class MenuController extends Controller
                         'total_diskon' => $hargadiskon,
                         'tanggal_mulai'     => $request->tanggal_mulai,
                         'tanggal_selesai'     => $request->tanggal_selesai,
+                        'diskon'     => $data->diskon,
                     ]);
                 }
             }
