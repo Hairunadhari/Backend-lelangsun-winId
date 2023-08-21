@@ -27,12 +27,12 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $user = User::where('email', $request->email)->first();
-        if ($user->role_id == null) {
-             return redirect('login');            
-        } else {
+        if ($user->role_id != null && $user->status == 'active') {
             $request->authenticate();
             $request->session()->regenerate();
             return redirect()->intended(RouteServiceProvider::HOME);
+        } else {
+            return redirect('login')->with(['pesan' => 'Ada Kesalahan']);            
         }
     }
 

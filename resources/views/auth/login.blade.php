@@ -52,6 +52,13 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
+                                @elseif(session('pesan'))
+                                <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
+                                    <strong>{{ session('pesan') }}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                                 @endif
                                 <form method="POST" action="{{ route('login') }}" class="needs-validation"
                                     novalidate="">

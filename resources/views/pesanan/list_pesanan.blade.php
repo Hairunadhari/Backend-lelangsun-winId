@@ -15,7 +15,7 @@
                                 <th>Invoice ID</th>
                                 <th>Nama Pemesan</th>
                                 <th>Status</th>
-                                <th>Exp Date</th>
+                                <th>Sub Total</th>
                                 <th>Opsi</th>
                             </tr>
                         </thead>
@@ -63,7 +63,17 @@
                     }
                 },
                 {
-                    data: "tagihan.exp_date",
+                    data: "tagihan.total_pembayaran",
+                    render: function(data, type, row, meta) {
+                        if (type === 'display') {
+                            return parseInt(data).toLocaleString('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                minimumFractionDigits: 0
+                            });
+                        }
+                        return data;
+                    }
                 },
                 {
                 data: null,

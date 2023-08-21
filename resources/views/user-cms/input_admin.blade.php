@@ -5,16 +5,32 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="w-100">Input UserCMS</h4>
+                    <h4 class="w-100">Input User Admin</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{route('add-user')}}" method="post" enctype="multipart/form-data">
+                    <form action="{{route('add-admin')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="name">Nama<span style="color: red">*</span></label>
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}"
+                                <label>Nama Toko <span style="color: red">*</span></label>
+                                <input type="text" class="form-control" name="toko" value="{{ old('toko') }}"
                                     autofocus required>
+                                    @if ($errors->has('toko'))
+                                <small class="text-danger">Max 280 karakter!</small>
+                                @endif
+                            </div>
+                            <div class="form-group">
+                                <label class="">Logo <span style="color: red">*</span></label>
+                                <div class="col-sm-12 col-md-7">
+                                    <div id="image-preview" class="image-preview">
+                                        <label for="image-upload" id="image-label">Choose File</label>
+                                        <input type="file" name="logo" id="image-upload" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Nama Pemilik<span style="color: red">*</span></label>
+                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" autofocus required>
                                 @if ($errors->has('name'))
                                 <small class="text-danger">Max 280 karakter!</small>
                                 @endif
