@@ -1173,28 +1173,6 @@ class ApiController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/detail-toko/{id}",
-     *      tags={"Toko"},
-     *      summary="toko id",
-     *      description="Menampilkan detail toko berdasarkan ID yg diberikan",
-     *      operationId="DetailToko",
-     *       @OA\Parameter(
-    *          name="id",
-    *          in="path",
-    *          required=true,
-    *          description="ID toko yang akan ditampilkan",
-    *          @OA\Schema(
-    *              type="integer"
-    *          )
-    *      ),
-     *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
-     *      )
-     * )
-     */
     public function detail_toko($id){
         $data = Toko::find($id);
         $data->logo = url('https://backendwin.spero-lab.id/storage/image/' . $data->logo);
@@ -1231,6 +1209,28 @@ class ApiController extends Controller
         ]);
     }
 
+      /**
+     * @OA\Get(
+     *      path="/api/detail-event/{id}",
+     *      tags={"Event"},
+     *      summary="Menampilkan detail event berdasarkan ID",
+     *      description="Menampilkan detail event berdasarkan ID yg diberikan",
+     *      operationId="DetailEvent",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID event yang akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model produk"
+     *      )
+     * )
+     */
     public function detail_event($id){
         $event = Event::find($id);
         $event->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $event->gambar);
@@ -1240,5 +1240,5 @@ class ApiController extends Controller
         ]);
     }
 
- 
+    
 }

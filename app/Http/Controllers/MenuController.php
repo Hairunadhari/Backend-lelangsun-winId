@@ -33,6 +33,7 @@ use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
@@ -41,6 +42,8 @@ class MenuController extends Controller
     }
 
     public function list_toko(){
+        // $id = Auth::user()->id;
+        // dd($id);
         if (request()->ajax()) {
             $status = request('status');
 

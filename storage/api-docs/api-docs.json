@@ -806,32 +806,6 @@
                 }
             }
         },
-        "/api/detail-toko/{id}": {
-            "get": {
-                "tags": [
-                    "Toko"
-                ],
-                "summary": "toko id",
-                "description": "Menampilkan detail toko berdasarkan ID yg diberikan",
-                "operationId": "DetailToko",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID toko yang akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
         "/api/list-event": {
             "get": {
                 "tags": [
@@ -842,6 +816,32 @@
                 "responses": {
                     "default": {
                         "description": ""
+                    }
+                }
+            }
+        },
+        "/api/detail-event/{id}": {
+            "get": {
+                "tags": [
+                    "Event"
+                ],
+                "summary": "Menampilkan detail event berdasarkan ID",
+                "description": "Menampilkan detail event berdasarkan ID yg diberikan",
+                "operationId": "DetailEvent",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID event yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
                     }
                 }
             }
