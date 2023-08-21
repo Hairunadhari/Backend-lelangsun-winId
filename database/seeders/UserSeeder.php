@@ -18,7 +18,10 @@ class UserSeeder extends Seeder
         ]);
 
         \App\Models\Role::create([
-            'role' => 'User Admin',
+            'role' => 'User',
+        ]);
+        \App\Models\Role::create([
+            'role' => 'Admin',
         ]);
     }
 }

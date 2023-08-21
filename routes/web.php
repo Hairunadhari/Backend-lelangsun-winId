@@ -185,13 +185,13 @@ Route::middleware('auth')->group(function () {
     Route::put('/delete-banner-lelang/{id}/', [MenuController::class, 'delete_banner_lelang'])->name('delete-banner-lelang');
     Route::put('/active-banner-lelang/{id}/', [MenuController::class, 'active_banner_lelang'])->name('active-banner-lelang');
     
-    // route user cms
+    // route user superadmin
     Route::get('/user', [MenuController::class, 'list_user'])->name('user-cms');
     Route::get('/tambah-user', [MenuController::class, 'tambah_user'])->name('tambah-user');
     Route::post('/add-user', [MenuController::class, 'add_user'])->name('add-user');
     Route::get('/edit-user/{id}/', [MenuController::class, 'edit_user'])->name('edit-user');
     Route::put('/update-user/{id}/', [MenuController::class, 'update_user'])->name('update-user');
-    Route::delete('/delete-user/{id}/', [MenuController::class, 'delete_user'])->name('delete-user');
+    Route::put('/delete-user/{id}/', [MenuController::class, 'delete_user'])->name('delete-user');
     Route::put('/active-user/{id}/', [MenuController::class, 'active_user'])->name('active-user');
 
     // rute setting
@@ -199,6 +199,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-setting-metadata/{id}/', [MenuController::class, 'update_setting_metadata'])->name('update-setting-metadata');
     Route::put('/update-setting-kontak/{id}/', [MenuController::class, 'update_setting_kontak'])->name('update-setting-kontak');
     Route::put('/update-setting-lelang/{id}/', [MenuController::class, 'update_setting_lelang'])->name('update-setting-lelang');
+
+     // route user admin
+     Route::get('/tambah-admin', [MenuController::class, 'tambah_admin'])->name('tambah-admin');
+     Route::post('/add-admin', [MenuController::class, 'add_admin'])->name('add-admin');
+     Route::get('/edit-admin/{id}/', [MenuController::class, 'edit_admin'])->name('edit-admin');
 });
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 

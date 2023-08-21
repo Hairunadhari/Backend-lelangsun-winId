@@ -45,9 +45,9 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = Toko::select('id','toko','logo')->where('status','active')->limit(10);
+                $data = Toko::select('id','toko','logo')->where('status','active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
-                $data = Toko::select('id','toko','logo')->where('status','not-active')->limit(10);
+                $data = Toko::select('id','toko','logo')->where('status','not-active')->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -121,6 +121,7 @@ class MenuController extends Controller
     public function delete_toko($id)
     {
         $data = Toko::findOrFail($id);
+        $produk = Produk::where('toko');
         $data->update([
             'status' => 'not-active'
         ]);
@@ -140,9 +141,9 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = KategoriProduk::select('id','kategori')->where('status','active')->limit(10);
+                $data = KategoriProduk::select('id','kategori')->where('status','active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
-                $data = KategoriProduk::select('id','kategori')->where('status','not-active')->limit(10);
+                $data = KategoriProduk::select('id','kategori')->where('status','not-active')->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -198,7 +199,7 @@ class MenuController extends Controller
    
     public function list_pesanan(){
         if (request()->ajax()) {
-            $data = Order::with('user','orderitem','tagihan')->limit(10);
+            $data = Order::with('user','orderitem','tagihan')->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('pesanan/list_pesanan');
@@ -211,9 +212,9 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'active')->limit(10);
+                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
-                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'not-active')->limit(10);
+                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'not-active')->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -455,7 +456,7 @@ class MenuController extends Controller
 
     public function list_promosi(){
         if (request()->ajax()) {
-            $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->limit(10);
+            $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('e-commerce/list_promosi');
@@ -969,7 +970,7 @@ class MenuController extends Controller
 
     public function list_banner_utama(){
         if (request()->ajax()) {
-            $data = BannerUtama::select('id','gambar')->limit(10);
+            $data = BannerUtama::select('id','gambar')->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('publikasi.banner_utama');
@@ -1031,7 +1032,7 @@ class MenuController extends Controller
 
     public function list_banner_diskon(){
         if (request()->ajax()) {
-            $data = BannerDiskon::select('id','gambar')->limit(10);
+            $data = BannerDiskon::select('id','gambar')->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('publikasi.banner_diskon');
@@ -1093,7 +1094,7 @@ class MenuController extends Controller
 
     public function list_banner_spesial(){
         if (request()->ajax()) {
-            $data = BannerSpesial::select('id','gambar')->limit(10);
+            $data = BannerSpesial::select('id','gambar')->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make();
         }
         return view('publikasi.banner_spesial');
@@ -1299,9 +1300,9 @@ class MenuController extends Controller
             $status = request('status_data');
 
             if ($status == 'active') {
-                $data = Event::where('status_data', 1)->get();
+                $data = Event::where('status_data', 1)->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
-                $data = Event::where('status_data', 0)->get();
+                $data = Event::where('status_data', 0)->orderBy('created_at','desc')->get();
             }
             return DataTables::of($data)->make();
         }
@@ -1536,14 +1537,20 @@ class MenuController extends Controller
 
     public function list_user(){
         if (request()->ajax()) {
-            $data = User::with('role')->whereNotNull('role_id', )->get();
-            return DataTables::of($data)->make();
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = User::with('role')->whereNotNull('role_id', )->where('status','active')->get();
+            } elseif ($status == 'not-active') {
+                $data = User::with('role')->whereNotNull('role_id', )->where('status','not-active')->get();
+            }
+            return DataTables::of($data)->make(true);
         }
         return view('user-cms.list');
     }
     
     public function tambah_user(){
-        $role = Role::all();
+        $role = Role::where('role','Super Admin')->get();
         return view('user-cms.input',compact('role'));
     }
 
@@ -1568,24 +1575,23 @@ class MenuController extends Controller
     public function edit_user($id)
     {
         $data = User::findOrFail($id);
-        $role = Role::all();
-        //render view with post
-        return view('user-cms.edit', compact('data','role'));
+        return view('user-cms.edit', compact('data'));
     }
 
     public function update_user(Request $request, $id)
     {
         $this->validate($request, [
             'name' => 'required|max:280',
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-            
+            'email' => ['string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => 'min:10',
+            'password_confirmation' => 'same:password',
         ]);
 
         $data = User::findOrFail($id);
         $data->update([
             'name' => $request->name,
             'email' => $request->email,
-            'role_id' => $request->role_id,
+            'password' => Hash::make($request->password)
         ]);
 
         return redirect()->route('user-cms')->with(['success' => 'Data Berhasil Diubah!']);
@@ -1594,8 +1600,18 @@ class MenuController extends Controller
     public function delete_user($id)
     {
         $data = User::findOrFail($id);
-        $data->delete();
+        $data->update([
+            'status' => 'not-active'
+        ]);
         return redirect()->route('user-cms')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+    public function active_user($id)
+    {
+        $data = User::findOrFail($id);
+        $data->update([
+            'status' => 'active'
+        ]);
+        return redirect()->route('user-cms')->with(['success' => 'Data Berhasil DiAktifkan!']);
     }
 
     public function setting(){
@@ -1635,5 +1651,40 @@ class MenuController extends Controller
     public function list_pembelian_npl(){
         return view('lelang.list_pembelian_npl');
     }
+
+    public function tambah_admin(){
+        $role = Role::where('role','Admin')->get();
+        return view('user-cms.input_admin',compact('role'));
+    }
+
+    public function add_admin(Request $request){
+        $this->validate($request, [
+            'toko'     => 'required|min:3',
+            'logo'     => 'required|image|mimes:jpeg,jpg,png,webp',
+            'name' => 'max:280',
+            'email' => ['string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => 'min:10',
+            'password_confirmation' => 'same:password',
+            
+        ]);
+
+        $logo = $request->file('logo');
+        $logo->storeAs('public/image', $logo->hashName());
+        Toko::create([
+            'toko'     => $request->toko,
+            'logo'     => $logo->hashName(),
+            'status'     => 'active',
+        ]);
+        
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role_id,
+            'password' => Hash::make($request->password)
+        ]);
+
+        return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
     
 }   
