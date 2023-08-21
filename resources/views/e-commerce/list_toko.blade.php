@@ -1,6 +1,7 @@
 @extends('app.layouts')
 @section('content')
 <div class="section-body">
+    @if (Auth::user()->role_id == 1)
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -63,6 +64,7 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
 <script>
     $(document).ready(function () {
