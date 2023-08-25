@@ -845,6 +845,44 @@
                     }
                 }
             }
+        },
+        "/api/bukti-pembayaran-event": {
+            "post": {
+                "tags": [
+                    "Event"
+                ],
+                "summary": "Event",
+                "description": "masukkan user id, event id, bukti bayar",
+                "operationId": "event",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "event_id": {
+                                        "type": "integer"
+                                    },
+                                    "bukti_bayar": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }

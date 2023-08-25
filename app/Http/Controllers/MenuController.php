@@ -33,6 +33,7 @@ use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
+use App\Models\PembayaranEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -1863,6 +1864,11 @@ class MenuController extends Controller
     public function form_input_produk(){
         $toko = Toko::select('toko','id')->where('status','active')->orderBy('toko','asc')->orderBy('toko','asc')->get();
         return view('e-commerce.tambah_produk',compact('toko'));
+    }
+
+    public function detail_pembayaran_event($id){
+        $event = PembayaranEvent::where('user_id', $id)->get();
+        return view('abc',compact('event'));
     }
     
 }   

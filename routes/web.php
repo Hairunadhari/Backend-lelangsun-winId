@@ -205,10 +205,12 @@ Route::middleware('auth')->group(function () {
      Route::get('/tambah-admin', [MenuController::class, 'tambah_admin'])->name('tambah-admin');
      Route::post('/add-admin', [MenuController::class, 'add_admin'])->name('add-admin');
      Route::get('/edit-admin/{id}/', [MenuController::class, 'edit_admin'])->name('edit-admin');
-
+     
      Route::get('/profil-toko', [MenuController::class, 'profil_toko'])->name('profil-toko');
      Route::put('/update-akun-toko/{id}/', [MenuController::class, 'update_akun_toko'])->name('update-akun-toko');
      Route::get('get-kategori-by-toko/{id}/', [MenuController::class, 'getKategoriByToko']);
+
+     Route::get('/detail-pembayaran-event/{id}/', [MenuController::class, 'detail_pembayaran_event'])->name('detail-pembayaran-event');
 });
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 

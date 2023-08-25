@@ -29,6 +29,7 @@ use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
 use App\Models\KategoriProduk;
+use App\Models\PembayaranEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -1248,6 +1249,55 @@ class ApiController extends Controller
 
         return response()->json([
             'event' => $event
+        ]);
+    }
+
+   /**
+ * @OA\Post(
+ *      path="/api/bukti-pembayaran-event",
+ *      tags={"Event"},
+ *      summary="Event",
+ *      description="masukkan user id, event id, bukti bayar",
+ *      operationId="event",
+ *      @OA\RequestBody(
+ *          required=true,
+ *          description="",
+ *          @OA\MediaType(
+ *              mediaType="multipart/form-data",
+ *              @OA\Schema(
+ *                  @OA\Property(property="user_id", type="integer"),
+ *                  @OA\Property(property="event_id", type="integer"),
+ *                  @OA\Property(property="bukti_bayar", type="file", format="binary"),
+ *              )
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response="default",
+ *          description=""
+ *      )
+ * )
+ */
+
+    public function bukti_pembayaran_event(Request $request){
+        $bukti_bayar = $request->file('bukti_bayar');
+        $bukti_bayar->storeAs('public/image', $bukti_bayar->hashName());
+        $event = PembayaranEvent::create([
+            'user_id' => $request->user_id,
+            'event_id' => $request->event_id,
+            'bukti_bayar' => $request->bukti_bayar->hashName(),
+        ]);
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $event 
+        ]);
+    }
+
+     
+    public function detail_pembayaran_event($id){
+        $event = PembayaranEvent::where('user_id', $id)->get();
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $event 
         ]);
     }
 
