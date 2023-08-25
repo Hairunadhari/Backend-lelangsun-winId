@@ -478,12 +478,6 @@ class ApiController extends Controller
                         'promosi_id' => $item['promosi_id'] ?? null,
                         'harga_x_qty' => $item['total_harga'] ?? null,
                     ]);
-                    
-                    foreach ($produks as $p ) {
-                        $p->update([
-                            'stok' => $p->stok - $item['qty'],
-                        ]);
-                    }
                 }
             }
             
@@ -601,26 +595,29 @@ class ApiController extends Controller
     }
 
     public function callback_xendit(Request $request){
-        $invoice = Tagihan::with('user','order')->where('external_id', $request->external_id)->first();
-       
-        if ($invoice == null) {
-            $failed = [
-                'message' => 'FAILED'
-            ];
-            return response()->json($failed);
-        }
+        
+        $invoice = Tagihan::with('user', 'order')->where('external_id', $request->external_id)->first();
         $invoice->update([
             'status' => $request->status,
         ]);
-
+            
+        // ambil id produk berasrkan order id
+        $ambil_produk_id = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
+        // ambil qty orderan 
+        $qty_order = OrderItem::where('order_id', $invoice->order->id)->pluck('qty');
+        $produks = Produk::whereIn('id', $ambil_produk_id)->get();
+        $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
+        
         if ($invoice->status == 'PAID') {
-            $ambilOrderIds = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
-            $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambilOrderIds)->get();
+            foreach ($produks as $index => $p) {
+                $p->update([
+                    'stok' => $p->stok - $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
+                ]);
+            }
             $ambil_produkid_berdasarkan_userid->each->delete();
-
         }
 
-        Pembayaran::create([
+        $bayar = Pembayaran::create([
             'external_id' => $request->external_id,
             'metode_pembayaran' => $request->payment_method,
             'email_user' => $invoice->user->email,
@@ -632,7 +629,7 @@ class ApiController extends Controller
 
         $res = [
             'message' => 'success',
-            'data' => json_encode($request->all())
+            'data' => $bayar
         ];
         
         TLogApi::create([

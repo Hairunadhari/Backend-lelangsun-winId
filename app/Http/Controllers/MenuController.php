@@ -160,9 +160,11 @@ class MenuController extends Controller
         $data->update([
             'status' => 'active'
         ]);
-        $data->user->update([
+        if ($data->user !== null) {
+            $data->user->update([
             'status' => 'active'
-        ]);
+            ]);
+        }
 
         return redirect()->route('toko')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
     }
