@@ -18,6 +18,13 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    @elseif(session('error'))
+                    <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
+                        <strong>{{ session('error') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     @endif
                     <ul class="nav nav-pills" id="myTab3" role="tablist">
                         <li class="nav-item">
@@ -89,7 +96,7 @@
                     var deleteUrl = '/delete-kategori-produk/' + data.id;
                     var editUrl = '/edit-kategori-produk/' + data.id;
                     return `
-                    <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                    <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus kategori ini ? jika ya maka semua produk yang ada di kategori ini akan terhapus');">
                         <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="PUT">
@@ -154,6 +161,14 @@
             <form action="{{route('add-kategori-produk')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nama Toko <span style="color: red">*</span></label>
+                        <select class="form-control selectric" name="toko_id" required>
+                            @foreach ($toko as $item)
+                            <option value="{{ $item->id }}">{{ $item->toko }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>Kategori <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="kategori" required>

@@ -54,7 +54,7 @@ class ApiController extends Controller
 
         $produk = Produk::with([
             'toko' => function ($querytoko) use ($now){
-                $querytoko->select('id','toko','logo','status');
+                $querytoko->select('id','toko','logo','status')->where('status','active');
             }, 
             'produkpromo' => function ($query) use ($now){
             $query->select('id','promosi_id','produk_id','total_diskon','diskon')->orderBy('created_at','desc')->where('tanggal_mulai','<=', $now)->where('tanggal_selesai','>',$now);
@@ -992,7 +992,9 @@ class ApiController extends Controller
      * )
      */
     public function list_wishlist($id){
-        $data = Wishlist::with('produk')->where('user_id', $id)->latest()->get();
+        $data = Wishlist::with(['produk' => function ($query){
+            $query->orderBy('created_at','desc');
+        }])->where('user_id', $id)->latest()->get();
         $data->each(function ($item){
             $item->produk->thumbnail =  'https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail;
         });
@@ -1143,7 +1145,10 @@ class ApiController extends Controller
      * )
      */
     public function list_keranjang($id){
-        $data = Keranjang::with('produk')->where('user_id', $id)->latest()->get();
+        $data = Keranjang::with(['produk' => function($query) {
+            $query->orderBy('created_at','desc');
+        }])->where('user_id', $id)->latest()->get();
+        
         $data->each(function ($item) {
             $item->produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail);
         });
@@ -1175,11 +1180,19 @@ class ApiController extends Controller
     }
 
     public function detail_toko($id){
-        $data = Toko::find($id);
-        $data->logo = url('https://backendwin.spero-lab.id/storage/image/' . $data->logo);
+        $toko = Toko::find($id);
+        $kategori = KategoriProduk::select('id','kategori')->where('toko_id',$id)->get();
+        $produk = Produk::where('toko_id',$id)->get();
+
+        $toko->logo = url('https://backendwin.spero-lab.id/storage/image/' . $toko->logo);
+        $produk->each(function ($item) {
+            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+        });
         return response()->json([
             'massage' => 'SUCCESS',
-            'data' => $data,
+            'toko' => $toko,
+            'kategori' => $kategori,
+            'produk' => $produk,
         ]);
     }
 

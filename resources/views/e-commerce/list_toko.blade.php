@@ -1,7 +1,6 @@
 @extends('app.layouts')
 @section('content')
 <div class="section-body">
-    @if (Auth::user()->role_id == 1)
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -64,7 +63,6 @@
             </div>
         </div>
     </div>
-    @endif
 </div>
 <script>
     $(document).ready(function () {
@@ -95,15 +93,15 @@
                     },
                 },
                 {
-                data: null,
-                render: function (data) {
-                    var deleteUrl = '/deletetoko/' + data.id;
-                    var editUrl = '/edittoko/' + data.id;
-                    return `
+                    data: null,
+                    render: function (data) {
+                        var deleteUrl = '/deletetoko/' + data.id;
+                        var editUrl = '/edittoko/' + data.id;
+                        return `
                     <div class="dropdown d-inline">
                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                        <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                        <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus Toko ini? jika ya maka semua kategori dan produk yg ada di toko ini akan terhapus');">
                             <div class="dropdown-menu" x-placement="bottom-start"
                                 style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
                                 <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
@@ -114,8 +112,8 @@
                         </form>
                     </div>
                     `;
+                    },
                 },
-            },
             ],
         });
     });
@@ -148,21 +146,22 @@
                     },
                 },
                 {
-                data: null,
-                render: function (data) {
-                    var activeUrl = '/activetoko/' + data.id;
-                    return `
-                    <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
+                    data: null,
+                    render: function (data) {
+                        var activeUrl = '/activetoko/' + data.id;
+                        return `
+                    <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengAktifkan Kembali Toko ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="PUT">
                         <button class="btn btn-success" type="submit">Aktifkan</button>
                         </form>
                     `;
+                    },
                 },
-            },
             ],
         });
     });
+
 </script>
 @endsection
 <!-- Modal -->

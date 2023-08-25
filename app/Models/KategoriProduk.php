@@ -13,4 +13,8 @@ class KategoriProduk extends Model
     {
         return $this->hasMany(Produk::class);
     }
+    public function toko()
+    {
+        return $this->belongsTo(Toko::class);
+    }
 }

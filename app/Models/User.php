@@ -67,4 +67,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+    public function toko()
+    {
+        return $this->hasOne(Toko::class);
+    }
 }

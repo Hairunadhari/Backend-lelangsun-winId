@@ -28,17 +28,15 @@
                     <div class="form-group">
                         <label>Nama Toko:</label>
                         <select class="form-control selectric" name="toko_id" required>
-                            @foreach ($dataToko as $item)
-                            <option value="{{ $item->id }}" {{ $item->id == $data->toko->id ? 'selected' : '' }}>
-                                {{ $item->toko }}
+                            <option value="{{ $toko->id }}">
+                                {{ $toko->toko }}
                             </option>
-                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Kategori Produk:</label>
-                        <select class="form-control selectric" name="kategoriproduk_id" required>
-                            @foreach ($dataKategoriproduk as $item)
+                        <select class="form-control select2" name="kategoriproduk_id" required>
+                            @foreach ($kategori as $item)
                             <option value="{{ $item->id }}"
                                 {{ $item->id == $data->kategoriproduk->id ? 'selected' : '' }}>
                                 {{ $item->kategori }}

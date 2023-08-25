@@ -55,9 +55,9 @@
 //   drops: 'down',
 //   opens: 'right'
 // });
-$('.datepicker').daterangepicker({
-  locale: {format: 'YYYY'},
-});
+// $('.datepicker').daterangepicker({
+//   locale: {format: 'YYYY'},
+// });
 // $('.daterange-btn').daterangepicker({
 //   ranges: {
 //     'Today'       : [moment(), moment()],
