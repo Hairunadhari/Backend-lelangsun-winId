@@ -29,6 +29,7 @@ use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
 use App\Models\KategoriProduk;
+use App\Models\PembayaranEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -54,7 +55,7 @@ class ApiController extends Controller
 
         $produk = Produk::with([
             'toko' => function ($querytoko) use ($now){
-                $querytoko->select('id','toko','logo','status');
+                $querytoko->select('id','toko','logo','status')->where('status','active');
             }, 
             'produkpromo' => function ($query) use ($now){
             $query->select('id','promosi_id','produk_id','total_diskon','diskon')->orderBy('created_at','desc')->where('tanggal_mulai','<=', $now)->where('tanggal_selesai','>',$now);
@@ -477,12 +478,6 @@ class ApiController extends Controller
                         'promosi_id' => $item['promosi_id'] ?? null,
                         'harga_x_qty' => $item['total_harga'] ?? null,
                     ]);
-                    
-                    foreach ($produks as $p ) {
-                        $p->update([
-                            'stok' => $p->stok - $item['qty'],
-                        ]);
-                    }
                 }
             }
             
@@ -600,26 +595,29 @@ class ApiController extends Controller
     }
 
     public function callback_xendit(Request $request){
-        $invoice = Tagihan::with('user','order')->where('external_id', $request->external_id)->first();
-       
-        if ($invoice == null) {
-            $failed = [
-                'message' => 'FAILED'
-            ];
-            return response()->json($failed);
-        }
+        
+        $invoice = Tagihan::with('user', 'order')->where('external_id', $request->external_id)->first();
         $invoice->update([
             'status' => $request->status,
         ]);
-
+            
+        // ambil id produk berasrkan order id
+        $ambil_produk_id = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
+        // ambil qty orderan 
+        $qty_order = OrderItem::where('order_id', $invoice->order->id)->pluck('qty');
+        $produks = Produk::whereIn('id', $ambil_produk_id)->get();
+        $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
+        
         if ($invoice->status == 'PAID') {
-            $ambilOrderIds = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
-            $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambilOrderIds)->get();
+            foreach ($produks as $index => $p) {
+                $p->update([
+                    'stok' => $p->stok - $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
+                ]);
+            }
             $ambil_produkid_berdasarkan_userid->each->delete();
-
         }
 
-        Pembayaran::create([
+        $bayar = Pembayaran::create([
             'external_id' => $request->external_id,
             'metode_pembayaran' => $request->payment_method,
             'email_user' => $invoice->user->email,
@@ -631,7 +629,7 @@ class ApiController extends Controller
 
         $res = [
             'message' => 'success',
-            'data' => json_encode($request->all())
+            'data' => $bayar
         ];
         
         TLogApi::create([
@@ -991,7 +989,9 @@ class ApiController extends Controller
      * )
      */
     public function list_wishlist($id){
-        $data = Wishlist::with('produk')->where('user_id', $id)->latest()->get();
+        $data = Wishlist::with(['produk' => function ($query){
+            $query->orderBy('created_at','desc');
+        }])->where('user_id', $id)->latest()->get();
         $data->each(function ($item){
             $item->produk->thumbnail =  'https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail;
         });
@@ -1142,7 +1142,10 @@ class ApiController extends Controller
      * )
      */
     public function list_keranjang($id){
-        $data = Keranjang::with('produk')->where('user_id', $id)->latest()->get();
+        $data = Keranjang::with(['produk' => function($query) {
+            $query->orderBy('created_at','desc');
+        }])->where('user_id', $id)->latest()->get();
+        
         $data->each(function ($item) {
             $item->produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail);
         });
@@ -1173,12 +1176,43 @@ class ApiController extends Controller
         ]);
     }
 
+     /**
+     * @OA\Get(
+     *      path="/api/detail-toko/{id}",
+     *      tags={"Toko"},
+     *      summary="Menampilkan detail Toko berdasarkan ID",
+     *      description="Menampilkan detail Toko berdasarkan ID yg diberikan",
+     *      operationId="DetailToko",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID Toko yang akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model Toko"
+     *      )
+     * )
+     */
+
     public function detail_toko($id){
-        $data = Toko::find($id);
-        $data->logo = url('https://backendwin.spero-lab.id/storage/image/' . $data->logo);
+        $toko = Toko::find($id);
+        $kategori = KategoriProduk::select('id','kategori')->where('toko_id',$id)->get();
+        $produk = Produk::where('toko_id',$id)->get();
+
+        $toko->logo = url('https://backendwin.spero-lab.id/storage/image/' . $toko->logo);
+        $produk->each(function ($item) {
+            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+        });
         return response()->json([
             'massage' => 'SUCCESS',
-            'data' => $data,
+            'toko' => $toko,
+            'kategori' => $kategori,
+            'produk' => $produk,
         ]);
     }
 
@@ -1237,6 +1271,55 @@ class ApiController extends Controller
 
         return response()->json([
             'event' => $event
+        ]);
+    }
+
+   /**
+ * @OA\Post(
+ *      path="/api/bukti-pembayaran-event",
+ *      tags={"Event"},
+ *      summary="Event",
+ *      description="masukkan user id, event id, bukti bayar",
+ *      operationId="event",
+ *      @OA\RequestBody(
+ *          required=true,
+ *          description="",
+ *          @OA\MediaType(
+ *              mediaType="multipart/form-data",
+ *              @OA\Schema(
+ *                  @OA\Property(property="user_id", type="integer"),
+ *                  @OA\Property(property="event_id", type="integer"),
+ *                  @OA\Property(property="bukti_bayar", type="file", format="binary"),
+ *              )
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response="default",
+ *          description=""
+ *      )
+ * )
+ */
+
+    public function bukti_pembayaran_event(Request $request){
+        $bukti_bayar = $request->file('bukti_bayar');
+        $bukti_bayar->storeAs('public/image', $bukti_bayar->hashName());
+        $event = PembayaranEvent::create([
+            'user_id' => $request->user_id,
+            'event_id' => $request->event_id,
+            'bukti_bayar' => $request->bukti_bayar->hashName(),
+        ]);
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $event 
+        ]);
+    }
+
+     
+    public function detail_pembayaran_event($id){
+        $event = PembayaranEvent::where('user_id', $id)->get();
+        return response()->json([
+            'message' => 'SUCCESS',
+            'data' => $event 
         ]);
     }
 

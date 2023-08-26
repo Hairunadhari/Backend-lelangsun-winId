@@ -9,4 +9,9 @@ class Event extends Model
 {
     use HasFactory;
     protected $guarded = [''];
+
+    public function pembayaran_event()
+    {
+        return $this->hasMany(PembayaranEvent::class);
+    }
 }

@@ -67,4 +67,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+    public function toko()
+    {
+        return $this->hasOne(Toko::class);
+    }
+    public function pembayaran_event()
+    {
+        return $this->hasMany(PembayaranEvent::class);
+    }
 }

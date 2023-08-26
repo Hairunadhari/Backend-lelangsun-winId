@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KategoriProduk extends Model
+class PembayaranEvent extends Model
 {
     use HasFactory;
     protected $guarded = [''];
-    public function produk()
+
+    public function user()
     {
-        return $this->hasMany(Produk::class);
+        return $this->belongsTo(User::class);
     }
-    public function toko()
+    public function event()
     {
-        return $this->belongsTo(Toko::class);
+        return $this->belongsTo(Event::class);
     }
 }

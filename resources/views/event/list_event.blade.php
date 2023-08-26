@@ -41,6 +41,7 @@
                                         <th>Tiket</th>
                                         <th>Status</th>
                                         <th>Link Meet</th>
+                                        <th>List Member</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -91,8 +92,7 @@
                 {
                     data: "gambar",
                     render: function (data) {
-                        return '<img src="/storage/image/' + data +
-                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                        return '<img src="/storage/image/' + data +'"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
                     },
                 },
                 {
@@ -126,6 +126,13 @@
                     data: null,
                     render: function (data) {
                         return `<a href="${data.link}">${data.link}</a>`
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data) {
+                        var list = '/list-member-event/' + data.id;
+                        return `<a class="btn btn-success" href="${list}"><i class="fas fa-users"></i></a>`
                     }
                 },
                 {

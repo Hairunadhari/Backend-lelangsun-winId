@@ -15,6 +15,8 @@ use App\Models\Review;
 use App\Models\Promosi;
 use App\Models\Setting;
 use App\Models\Tagihan;
+use App\Models\Wishlist;
+use App\Models\Keranjang;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
@@ -31,9 +33,10 @@ use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
+use App\Models\PembayaranEvent;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
@@ -42,8 +45,8 @@ class MenuController extends Controller
     }
 
     public function list_toko(){
-        // $id = Auth::user()->id;
-        // dd($id);
+        $id = Auth::user()->id;
+        $toko = Toko::with('user')->where('user_id',$id)->first();
         if (request()->ajax()) {
             $status = request('status');
 
@@ -56,7 +59,7 @@ class MenuController extends Controller
             return DataTables::of($data)->make(true);
         }
 
-        return view('e-commerce/list_toko');
+        return view('e-commerce/list_toko',compact('toko'));
     }
 
     public function add_toko(Request $request){
@@ -123,43 +126,97 @@ class MenuController extends Controller
 
     public function delete_toko($id)
     {
-        $data = Toko::findOrFail($id);
-        $produk = Produk::where('toko');
+        $data = Toko::with('user')->find($id);
+        $kategori = KategoriProduk::where('toko_id',$id)->get();
+        $produk = Produk::where('toko_id',$id)->get();
+        $array_id_produk = Produk::where('toko_id',$id)->pluck('id');
+        $promo_produk = ProdukPromo::whereIn('produk_id', $array_id_produk)->get();
         $data->update([
             'status' => 'not-active'
         ]);
+        if ($data->user !== null) {
+            $data->user->update([
+            'status' => 'not-active'
+            ]);
+        }
+        $produk->each->update([
+            'status' => 'not-active'
+        ]);
+        $kategori->each->update([
+            'status' => 'not-active'
+        ]);
+        $promo_produk->each->delete();
+        $keranjang = Keranjang::whereIn('produk_id',$array_id_produk)->get();
+        $keranjang->each->delete();
+        $wishlist =     Wishlist::whereIn('produk_id',$array_id_produk)->get();
+        $wishlist->each->delete();
+
         return redirect()->route('toko')->with(['success' => 'Data Berhasil Dihapus!']);
     }
     public function active_toko($id)
     {
-        $data = Toko::findOrFail($id);
+        $data = Toko::with('user')->find($id);
+        $kategori = KategoriProduk::where('toko_id',$id)->get();
+        $produk = Produk::where('toko_id',$id)->get();
         $data->update([
             'status' => 'active'
         ]);
+        if ($data->user !== null) {
+            $data->user->update([
+            'status' => 'active'
+            ]);
+        }
+
         return redirect()->route('toko')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
     }
 
     public function kategori_produk(){
+        $idAdmin = Auth::user()->id;
+        $idToko = Toko::where('user_id',$idAdmin)->first();
+        $toko = Toko::select('id','toko')->where('status','active')->orderBy('toko','asc')->get();
         if (request()->ajax()) {
             $status = request('status');
 
-            if ($status == 'active') {
-                $data = KategoriProduk::select('id','kategori')->where('status','active')->orderBy('created_at','desc')->get();
-            } elseif ($status == 'not-active') {
-                $data = KategoriProduk::select('id','kategori')->where('status','not-active')->orderBy('created_at','desc')->get();
+            // get data khusu superadmin
+            if (Auth::user()->role->role == 'Super Admin') {
+                if ($status == 'active') {
+                    $data = KategoriProduk::select('id','kategori')->where('status','active')->orderBy('created_at','desc')->get();
+                } elseif ($status == 'not-active') {
+                    $data = KategoriProduk::select('id','kategori')->where('status','not-active')->orderBy('created_at','desc')->get();
+                }
+            // get data khusus admin
+            } elseif (Auth::user()->role->role == 'Admin') {
+                if ($status == 'active') {
+                    $data = KategoriProduk::select('id','kategori')->where('toko_id',$idToko->id)->where('status','active')->orderBy('created_at','desc')->get();
+                } elseif ($status == 'not-active') {
+                    $data = KategoriProduk::select('id','kategori')->where('toko_id',$idToko->id)->where('status','not-active')->orderBy('created_at','desc')->get();
+                }
             }
+            
+
 
             return DataTables::of($data)->make(true);
         }
-        return view('e-commerce/kategori_produk');
+        return view('e-commerce/kategori_produk',compact('toko'));
     }
 
     public function add_kategori_produk(Request $request){
-
-        KategoriProduk::create([
-            'kategori'     => $request->kategori,
-            'status'     => 'active',
-        ]);
+       
+        // Periksa apakah kategori sudah ada sebelumnya
+        $Kategori = KategoriProduk::where('toko_id', $request->toko_id)->where('kategori', $request->kategori)->first();
+        
+        // Kategori belum ada, maka buat entri baru
+        if (!$Kategori) {
+            KategoriProduk::create([
+                'kategori' => $request->kategori,
+                'status' => 'active',
+                'toko_id' => $request->toko_id,
+            ]);
+        } else {
+            // Kategori sudah ada, berikan pesan error atau lakukan tindakan yang sesuai
+            return redirect()->back()->with(['error' => "Kategori '$request->kategori' Sudah ada diToko ini"]);
+        }
+        
 
         return redirect('/kategori-produk')->with('success', 'Data Berhasil Ditambahkan');
     }
@@ -177,6 +234,7 @@ class MenuController extends Controller
             $data->update([
                 'kategori'     => $request->kategori,
             ]);
+            
 
         //redirect to index
         return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
@@ -185,9 +243,22 @@ class MenuController extends Controller
     public function delete_kategori_produk($id)
     {
         $data = KategoriProduk::findOrFail($id);
+        $produk = Produk::where('kategoriproduk_id',$id)->get();
+        $array_id_produk = Produk::where('kategoriproduk_id',$id)->pluck('id');
+        $promo_produk = ProdukPromo::whereIn('produk_id', $array_id_produk)->get();
+        $array_promo_produk = ProdukPromo::whereIn('produk_id', $array_id_produk)->pluck('promosi_id');
+        $keranjang = Keranjang::whereIn('produk_id',$array_id_produk)->get();
+        $wishlist =     Wishlist::whereIn('produk_id',$array_id_produk)->get();
         $data->update([
             'status' => 'not-active'
         ]);
+        
+        $produk->each->update([
+            'status' => 'not-active'
+        ]);
+        $promo_produk->each->delete();
+        $keranjang->each->delete();
+        $wishlist->each->delete();
         return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
@@ -197,33 +268,62 @@ class MenuController extends Controller
         $data->update([
             'status' => 'active'
         ]);
+        
         return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
     }
    
     public function list_pesanan(){
+        $idAdmin = Auth::user()->id;
+        $toko = Toko::where('user_id',$idAdmin)->first();
+        // $id = $toko->id;
+        $data = Order::with('user','orderitem.produk','tagihan')->orderBy('created_at','desc')->get();
+        // $data = OrderItem::with('order')->orderBy('created_at','desc')->get();
+        // dd($data);
         if (request()->ajax()) {
-            $data = Order::with('user','orderitem','tagihan')->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('pesanan/list_pesanan');
     }
 
     public function list_produk(){
-        $toko = Toko::select('toko','id')->where('status','active')->orderBy('toko','asc')->get();
-        $kategori = KategoriProduk::select('kategori','id')->where('status','active')->orderBy('kategori','asc')->get();
+        $idAdmin = Auth::user()->id;
+        $ambilidtoko = Toko::where('user_id', $idAdmin)->first();
+        $idToko = $ambilidtoko->id ?? null;
+        $toko = Toko::select('toko','id')->where('status','active')->orderBy('toko','asc')->orderBy('toko','asc')->get();
+        $semuakategori = KategoriProduk::select('kategori','id')->where('status','active')->orderBy('kategori','asc')->get();
+        $kategori_bedasarkan_toko = KategoriProduk::select('kategori','id')->where('toko_id',$idToko)->where('status','active')->orderBy('kategori','asc')->get();
+
         if (request()->ajax()) {
             $status = request('status');
 
-            if ($status == 'active') {
-                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'active')->orderBy('created_at','desc')->get();
-            } elseif ($status == 'not-active') {
-                $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'not-active')->orderBy('created_at','desc')->get();
+            // get data role superadmin
+            if (Auth::user()->role->role == 'Super Admin') {
+                if ($status == 'active') {
+                    $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'active')->orderBy('created_at','desc')->get();
+                } elseif ($status == 'not-active') {
+                    $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'not-active')->orderBy('created_at','desc')->get();
+                }
+
+            // get data role admin
+            } elseif (Auth::user()->role->role == 'Admin') {
+                if ($status == 'active') {
+                    $data = Produk::select('id','nama','thumbnail','harga','stok')->where('toko_id',$idToko)->where('status', 'active')->orderBy('created_at','desc')->get();
+                } elseif ($status == 'not-active') {
+                    $data = Produk::select('id','nama','thumbnail','harga','stok')->where('toko_id',$idToko)->where('status', 'not-active')->orderBy('created_at','desc')->get();
+                }
             }
+            
 
             return DataTables::of($data)->make(true);
         }
-        return view('e-commerce/list_produk', compact('toko','kategori'));
+        return view('e-commerce/list_produk');
     }
+
+    public function getKategoriByToko($id) {
+        $kategori_bedasarkan_toko = KategoriProduk::where('toko_id', $id)->where('status', 'active')->orderBy('kategori', 'asc')->get();
+        return response()->json($kategori_bedasarkan_toko);
+    }
+    
 
     public function add_produk(Request $request){ 
         $this->validate($request, [
@@ -280,11 +380,12 @@ class MenuController extends Controller
     {
         $data = Produk::with('toko','kategoriproduk')->find($id);
         $gambar = GambarProduk::where('produk_id', $id)->get();
-        $dataToko = Toko::all();
-        $dataKategoriproduk = KategoriProduk::all();
+        $toko = Toko::where('id',$data->toko_id)->first();
+        // dd($dataToko);
+        $kategori = KategoriProduk::where('toko_id', $toko->id)->get();
 
         //render view with post
-        return view('e-commerce.edit_produk', compact('data','dataToko','dataKategoriproduk','gambar'));
+        return view('e-commerce.edit_produk', compact('data','toko','kategori','gambar'));
     }
 
     public function update_produk(Request $request, $id)
@@ -398,6 +499,12 @@ class MenuController extends Controller
         $produk->update([
             'status' => 'not-active'
         ]);
+        $item_promo = ProdukPromo::where('produk_id',$id)->get();
+        $item_promo->each->delete();
+        $keranjang = Keranjang::where('produk_id', $id)->get();
+        $keranjang->each->delete();
+        $wishlist = Wishlist::where('produk_id', $id)->get();
+        $wishlist->each->delete();
         return redirect()->route('produk')->with(['success' => 'Data Berhasil Dihapus!']);
     }
     public function active_produk($id)
@@ -458,9 +565,20 @@ class MenuController extends Controller
     }
 
     public function list_promosi(){
+        $id = Auth::user()->id;
+        $toko = Toko::with('user')->where('user_id',$id)->first();
         if (request()->ajax()) {
-            $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->orderBy('created_at','desc')->get();
-            return DataTables::of($data)->make(true);
+            // get data khusus role super admin
+            if (Auth::user()->role->role == 'Super Admin') {
+                $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->orderBy('created_at','desc')->get();
+                return DataTables::of($data)->make(true);
+                
+            // get data khusus role admin
+            } elseif (Auth::user()->role->role == 'Admin') {
+                $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->where('toko_id',$toko->id)->orderBy('created_at','desc')->get();
+                return DataTables::of($data)->make(true);
+            }
+            
         }
         return view('e-commerce/list_promosi');
     }
@@ -475,6 +593,9 @@ class MenuController extends Controller
         if (is_null($request->produk_id)) {
             return redirect()->back()->with('error', 'Anda belum memilih produk!');
         }else {
+
+            $id = Auth::user()->id;
+            $toko = Toko::where('user_id',$id)->first();
             
             $hapuspersendiskon = preg_replace('/\D/', '', $request->diskon); 
             $diskon = trim($hapuspersendiskon);
@@ -489,6 +610,7 @@ class MenuController extends Controller
                 'tanggal_mulai'     => $request->tanggal_mulai,
                 'tanggal_selesai'     => $request->tanggal_selesai,
                 'gambar'     => $gambar->hashName(),
+                'toko_id'     => $toko->id ?? null ,
             ]);
             
             $dataProduk = Produk::whereIn('id', $produkId)->get();
@@ -1673,21 +1795,97 @@ class MenuController extends Controller
 
         $logo = $request->file('logo');
         $logo->storeAs('public/image', $logo->hashName());
-        Toko::create([
-            'toko'     => $request->toko,
-            'logo'     => $logo->hashName(),
-            'status'     => 'active',
-        ]);
         
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'role_id' => $request->role_id,
             'password' => Hash::make($request->password)
         ]);
 
+        Toko::create([
+            'toko'     => $request->toko,
+            'logo'     => $logo->hashName(),
+            'status'     => 'active',
+            'user_id'     => $user->id,
+        ]);
+
         return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
     }
 
+    public function profil_toko(){
+        $id = Auth::user()->id;
+        $toko = Toko::with('user')->where('user_id',$id)->first();
+        
+        return view('profile/profil_toko',compact('toko'));
+    }
     
+    public function update_akun_toko(Request $request){
+        $this->validate($request, [
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => 'required|min:10',
+            'password_confirmation' => 'required|same:password',
+            
+        ]);
+        $id = Auth::user()->id;
+        $toko = Toko::where('user_id',$id)->first();
+        $user = User::where('id',$id)->first();
+
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logo->storeAs('public/image', $logo->hashName());
+            $toko->update([
+                'toko' => $request->toko,
+                'logo' => $logo->hashName(),
+            ]);
+    
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+        } else {
+            $toko->update([
+                'toko' => $request->toko,
+            ]);
+    
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+        }
+        
+        
+        return redirect()->back()->with('success', 'Data Berhasil DiEdit!');
+    }
+
+    public function form_input_produk(){
+        $toko = Toko::select('toko','id')->where('status','active')->orderBy('toko','asc')->orderBy('toko','asc')->get();
+        return view('e-commerce.tambah_produk',compact('toko'));
+    }
+
+    public function detail_pembayaran_event($id){
+        $event = PembayaranEvent::where('user_id', $id)->get();
+        return view('abc',compact('event'));
+    }
+    
+    public function list_member_event($id){
+        if (request()->ajax()) {
+            $data = PembayaranEvent::with('user','event')->select('id','user_id','event_id','bukti_bayar')->where('event_id',$id)->orderBy('created_at','desc')->get();
+            return DataTables::of($data)->make(true);
+        }
+        return view('event/list_member', compact('id'));
+    }
+    public function delete_member_event($id){
+        $data = PembayaranEvent::find($id);
+        $data->delete();
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
+    }
+    public function delete_all_member_event($id){
+        $data = PembayaranEvent::where('event_id',$id)->get();
+        $data->each->delete();
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
+    }
 }   

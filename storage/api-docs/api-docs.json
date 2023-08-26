@@ -806,6 +806,32 @@
                 }
             }
         },
+        "/api/detail-toko/{id}": {
+            "get": {
+                "tags": [
+                    "Toko"
+                ],
+                "summary": "Menampilkan detail Toko berdasarkan ID",
+                "description": "Menampilkan detail Toko berdasarkan ID yg diberikan",
+                "operationId": "DetailToko",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Toko yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model Toko"
+                    }
+                }
+            }
+        },
         "/api/list-event": {
             "get": {
                 "tags": [
@@ -842,6 +868,44 @@
                 "responses": {
                     "default": {
                         "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/bukti-pembayaran-event": {
+            "post": {
+                "tags": [
+                    "Event"
+                ],
+                "summary": "Event",
+                "description": "masukkan user id, event id, bukti bayar",
+                "operationId": "event",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "event_id": {
+                                        "type": "integer"
+                                    },
+                                    "bukti_bayar": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
                     }
                 }
             }

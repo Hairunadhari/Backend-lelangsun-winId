@@ -20,6 +20,7 @@ class VerifyCsrfToken extends Middleware
         '/api/add-wishlist',
         '/api/add-review',
         '/api/add-keranjang',
+        '/api/bukti-pembayaran-event',
     ];
     
 }
