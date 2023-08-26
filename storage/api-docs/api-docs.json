@@ -806,6 +806,32 @@
                 }
             }
         },
+        "/api/detail-toko/{id}": {
+            "get": {
+                "tags": [
+                    "Toko"
+                ],
+                "summary": "Menampilkan detail Toko berdasarkan ID",
+                "description": "Menampilkan detail Toko berdasarkan ID yg diberikan",
+                "operationId": "DetailToko",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Toko yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model Toko"
+                    }
+                }
+            }
+        },
         "/api/list-event": {
             "get": {
                 "tags": [

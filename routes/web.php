@@ -211,6 +211,9 @@ Route::middleware('auth')->group(function () {
      Route::get('get-kategori-by-toko/{id}/', [MenuController::class, 'getKategoriByToko']);
 
      Route::get('/detail-pembayaran-event/{id}/', [MenuController::class, 'detail_pembayaran_event'])->name('detail-pembayaran-event');
+     Route::get('/list-member-event/{id}/', [MenuController::class, 'list_member_event'])->name('list-member-event');
+     Route::delete('/delete-member-event/{id}/', [MenuController::class, 'delete_member_event'])->name('delete-member-event');
+     Route::delete('/delete-all-member-event/{id}/', [MenuController::class, 'delete_all_member_event'])->name('delete-all-member-event');
 });
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 

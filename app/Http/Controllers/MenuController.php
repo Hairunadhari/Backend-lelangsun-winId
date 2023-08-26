@@ -1871,4 +1871,21 @@ class MenuController extends Controller
         return view('abc',compact('event'));
     }
     
+    public function list_member_event($id){
+        if (request()->ajax()) {
+            $data = PembayaranEvent::with('user','event')->select('id','user_id','event_id','bukti_bayar')->where('event_id',$id)->orderBy('created_at','desc')->get();
+            return DataTables::of($data)->make(true);
+        }
+        return view('event/list_member', compact('id'));
+    }
+    public function delete_member_event($id){
+        $data = PembayaranEvent::find($id);
+        $data->delete();
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
+    }
+    public function delete_all_member_event($id){
+        $data = PembayaranEvent::where('event_id',$id)->get();
+        $data->each->delete();
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
+    }
 }   

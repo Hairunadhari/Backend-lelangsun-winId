@@ -71,4 +71,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Toko::class);
     }
+    public function pembayaran_event()
+    {
+        return $this->hasMany(PembayaranEvent::class);
+    }
 }

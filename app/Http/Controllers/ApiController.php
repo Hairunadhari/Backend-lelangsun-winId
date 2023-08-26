@@ -1177,6 +1177,29 @@ class ApiController extends Controller
         ]);
     }
 
+     /**
+     * @OA\Get(
+     *      path="/api/detail-toko/{id}",
+     *      tags={"Toko"},
+     *      summary="Menampilkan detail Toko berdasarkan ID",
+     *      description="Menampilkan detail Toko berdasarkan ID yg diberikan",
+     *      operationId="DetailToko",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID Toko yang akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model Toko"
+     *      )
+     * )
+     */
+
     public function detail_toko($id){
         $toko = Toko::find($id);
         $kategori = KategoriProduk::select('id','kategori')->where('toko_id',$id)->get();
