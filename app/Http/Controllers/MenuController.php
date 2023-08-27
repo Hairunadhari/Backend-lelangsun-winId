@@ -1874,7 +1874,7 @@ class MenuController extends Controller
     
     public function list_member_event($id){
         if (request()->ajax()) {
-            $data = PembayaranEvent::with('user','event')->select('id','user_id','event_id','bukti_bayar')->where('event_id',$id)->orderBy('created_at','desc')->get();
+            $data = PembayaranEvent::with('user','event')->select('id','user_id','event_id','bukti_bayar','status_verif')->where('event_id',$id)->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('event/list_member', compact('id'));
