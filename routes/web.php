@@ -209,7 +209,8 @@ Route::middleware('auth')->group(function () {
      Route::get('/profil-toko', [MenuController::class, 'profil_toko'])->name('profil-toko');
      Route::put('/update-akun-toko/{id}/', [MenuController::class, 'update_akun_toko'])->name('update-akun-toko');
      Route::get('get-kategori-by-toko/{id}/', [MenuController::class, 'getKategoriByToko']);
-
+     Route::get('editproduk/get-kategori-by-toko/{id}/', [MenuController::class, 'getKategoriByToko']);
+     
      Route::get('/detail-pembayaran-event/{id}/', [MenuController::class, 'detail_pembayaran_event'])->name('detail-pembayaran-event');
      Route::get('/list-member-event/{id}/', [MenuController::class, 'list_member_event'])->name('list-member-event');
      Route::delete('/delete-member-event/{id}/', [MenuController::class, 'delete_member_event'])->name('delete-member-event');

@@ -25,7 +25,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <select class="form-control select2" id="kategoris" name="kategoriproduk_id">
+                        <select class="form-control select2" id="kategoris" name="kategoriproduk_id" required>
                           </select>
                           @if ($errors->has('kategoriproduk_id'))
                     <small class="text-danger">Kategori tidak boleh kosong!</small>
