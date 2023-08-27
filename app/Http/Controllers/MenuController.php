@@ -380,16 +380,17 @@ class MenuController extends Controller
     {
         $data = Produk::with('toko','kategoriproduk')->find($id);
         $gambar = GambarProduk::where('produk_id', $id)->get();
-        $toko = Toko::where('id',$data->toko_id)->first();
-        // dd($dataToko);
-        $kategori = KategoriProduk::where('toko_id', $toko->id)->get();
+        $toko = Toko::all();
+        $kategori = KategoriProduk::where('toko_id', $data->toko->id)->get();
 
-        //render view with post
         return view('e-commerce.edit_produk', compact('data','toko','kategori','gambar'));
     }
 
     public function update_produk(Request $request, $id)
     {
+        $this->validate($request, [
+            'kategoriproduk_id'     => 'required',
+        ]);
         
         $produk = Produk::find($id);
         $gambarProduk = GambarProduk::where('produk_id', $id)->get();
@@ -1873,7 +1874,7 @@ class MenuController extends Controller
     
     public function list_member_event($id){
         if (request()->ajax()) {
-            $data = PembayaranEvent::with('user','event')->select('id','user_id','event_id','bukti_bayar')->where('event_id',$id)->orderBy('created_at','desc')->get();
+            $data = PembayaranEvent::with('user','event')->select('id','user_id','event_id','bukti_bayar','status_verif')->where('event_id',$id)->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('event/list_member', compact('id'));

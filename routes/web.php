@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SendEmailMemberController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
@@ -209,12 +210,15 @@ Route::middleware('auth')->group(function () {
      Route::get('/profil-toko', [MenuController::class, 'profil_toko'])->name('profil-toko');
      Route::put('/update-akun-toko/{id}/', [MenuController::class, 'update_akun_toko'])->name('update-akun-toko');
      Route::get('get-kategori-by-toko/{id}/', [MenuController::class, 'getKategoriByToko']);
-
+     Route::get('editproduk/get-kategori-by-toko/{id}/', [MenuController::class, 'getKategoriByToko']);
+     
      Route::get('/detail-pembayaran-event/{id}/', [MenuController::class, 'detail_pembayaran_event'])->name('detail-pembayaran-event');
      Route::get('/list-member-event/{id}/', [MenuController::class, 'list_member_event'])->name('list-member-event');
      Route::delete('/delete-member-event/{id}/', [MenuController::class, 'delete_member_event'])->name('delete-member-event');
      Route::delete('/delete-all-member-event/{id}/', [MenuController::class, 'delete_all_member_event'])->name('delete-all-member-event');
-});
+
+    });
+    Route::post('/send-email-member/{id}/', [SendEmailMemberController::class, 'send_email_member'])->name('send-email-member');
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 
  

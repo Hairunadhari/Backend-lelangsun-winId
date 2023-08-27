@@ -29,6 +29,7 @@
                                         <th>Email</th>
                                         <th>No Telp</th>
                                         <th>Bukti Pembayaran</th>
+                                        <th>Status</th>
                                         <th>Verifikasi</th>
                                         <th>Opsi</th>
                                     </tr>
@@ -76,13 +77,23 @@
                     }
                 },
                 {
+                    data: "status_verif",
+                    render: function (data){
+                        if(data == 1){
+                            return `<span class="badge badge-success">Sudah Terverifikasi</span>`
+                        }else{
+                            return `<span class="badge badge-primary">Belum Terverifikasi</span>`
+                        }
+                    }
+                },
+                {
                     data: null,
                     render: function (data){
-                        var verif = '#' + data.id;
+                        var verif = '/send-email-member/' + data.id;
                         return `<form action="${verif}" method="POST" onsubmit="return confirm('Apakah anda yakin akan memverifikasi data ini ? jika ya member akan dikirimkan info tentang event ini');">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="PUT">
-                                <button class="btn btn-primary" style="margin-left: 20px;" disabled><i class="fas fa-paper-plane fa-lg"></i></button>
+                                <input type="hidden" name="_method" value="POST">
+                                <button class="btn btn-primary" style="margin-left: 20px;"><i class="fas fa-paper-plane fa-lg"></i></button>
                         </form>`;
                     }
                 },
