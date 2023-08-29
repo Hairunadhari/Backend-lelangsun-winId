@@ -705,7 +705,7 @@ class ApiController extends Controller
     }
 
 
-    /**
+  /**
      * @OA\Put(
      *      path="/api/update-akun/{id}",
     *      tags={"Akun"},
@@ -729,11 +729,9 @@ class ApiController extends Controller
      * )
      */
     public function update_akun(Request $request, $id){
-        $this->validate($request, [
-            'foto' => 'required|image|mimes:jpeg,jpg,png',
-        ]);
         
         $data = User::find($id);
+        // dd($data);
         
         if ($request->has('foto')) {
             $base64Image = explode(";base64,", $request->foto);
@@ -741,7 +739,7 @@ class ApiController extends Controller
             $explodeImage = explode("image/", $base64Image[0]);
             $imageType = $explodeImage[1];
             $image_base64 = base64_decode($base64Image[1]);
-            $fileName = 'public/image/' . time() . '-' . $request->name  . '.' . $imageType;
+            $fileName = time() . '-' . $request->name  . '.' . $imageType;
             Storage::put($fileName, $image_base64);
 
             Storage::delete('public/image/'.$data->foto);
@@ -767,6 +765,7 @@ class ApiController extends Controller
         ]);
     }
 
+    
 
      /**
      * @OA\Get(
@@ -1235,8 +1234,16 @@ class ApiController extends Controller
         ->whereNot('tgl_selesai','<', $now)
         ->get();
 
-        $data->each(function ($item) {
+        $data->each(function ($item) use ($now){
             $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+            if ($item->tgl_selesai < $now) {
+                $item->status_event = 1;
+            } else if ($item->tgl_mulai <= $now) {
+                $item->status_event = 'Sedang Berlangsung';
+            } else {
+                $item->status_event = 'Coming Soon';
+            }
+            
         });
         return response()->json([
             'message' => 'SUCCESS',
