@@ -909,6 +909,44 @@
                     }
                 }
             }
+        },
+        "/api/detail-kategori-toko": {
+            "post": {
+                "tags": [
+                    "Toko"
+                ],
+                "summary": "Kategori",
+                "description": "Menampilkan semua produk berdasarkan kategori toko yg dipillih",
+                "operationId": "Kategori",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "kategori_id",
+                                    "toko_id"
+                                ],
+                                "properties": {
+                                    "kategori_id": {
+                                        "type": "integer"
+                                    },
+                                    "toko_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
         }
     }
 }

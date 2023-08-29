@@ -1331,5 +1331,40 @@ class ApiController extends Controller
         ]);
     }
 
+     /**
+     * @OA\Post(
+     *      path="/api/detail-kategori-toko",
+     *      tags={"Toko"},
+     *      summary="Kategori",
+     *      description="Menampilkan semua produk berdasarkan kategori toko yg dipillih",
+     *      operationId="Kategori",
+     *        @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\JsonContent(
+     *              required={"kategori_id", "toko_id"},
+     *              @OA\Property(property="kategori_id", type="integer"),
+     *              @OA\Property(property="toko_id", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model produk"
+     *      )
+     * )
+     */
+    public function daftar_produk_berdasarkan_kategori_toko(Request $request){
+
+        $kategoriproduk = Produk::where('toko_id',$request->toko_id)->where('kategoriproduk_id',$request->kategori_id)->where('status','active')->where('stok', '>', 0)->get();
+        
+        $kategoriproduk->each(function ($item) {
+            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+        });
+        return response()->json([
+            'message' => 'SUCCESS',
+            'kategoriproduk' => $kategoriproduk
+        ]);
+    }
+
     
 }
