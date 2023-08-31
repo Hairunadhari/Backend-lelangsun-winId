@@ -1322,20 +1322,20 @@ class ApiController extends Controller
  */
 
     public function bukti_pembayaran_event(Request $request){
-        $validator = Validator::make($request->all(), [
-            'user_id'     => 'required',
-            'event_id'     => 'required',
-            'bukti_bayar'     => 'required|image|mimes:jpeg,jpg,png',
-            'peserta_id'     => 'required',
-        ]);
-        if($validator->fails()){
-            return response()->json([
-                'success' => false,
-                'message' => 'Ada Kesalahan',
-                'data' => $validator->errors()
-            ], 401);
+        // $validator = Validator::make($request->all(), [
+        //     'user_id'     => 'required',
+        //     'event_id'     => 'required',
+        //     'bukti_bayar'     => 'required|image|mimes:jpeg,jpg,png',
+        //     'peserta_id'     => 'required',
+        // ]);
+        // if($validator->fails()){
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Ada Kesalahan',
+        //         'data' => $validator->errors()
+        //     ], 401);
 
-        }
+        // }
 
         try {
             $bukti_bayar = $request->file('bukti_bayar');
