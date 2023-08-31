@@ -1337,7 +1337,7 @@ class ApiController extends Controller
 
         // }
 
-        try {
+        // try {
             $bukti_bayar = $request->file('bukti_bayar');
             $bukti_bayar->storeAs('public/image', $bukti_bayar->hashName());
             $event = PembayaranEvent::create([
@@ -1363,30 +1363,30 @@ class ApiController extends Controller
                 'result' => json_encode($res),
             ]);
 
-        } catch (Excpetion $e) {
-            $abc = PembayaranEvent::create([
-                'user_id' => $request->user_id ?? null,
-                'event_id' => $request->event_id ?? null,
-                'bukti_bayar' => $request->bukti_bayar->hashName() ?? null,
-                'peserta_event_id' => $request->peserta_id ?? null,
-            ]);
-            $success = false;
-            $message = 'error';
-            $res = [
-                'success' => $success,
-                'message' => $message,
-                'data' => $abc,
-            ];
+        // } catch (Excpetion $e) {
+        //     $abc = PembayaranEvent::create([
+        //         'user_id' => $request->user_id ?? null,
+        //         'event_id' => $request->event_id ?? null,
+        //         'bukti_bayar' => $request->bukti_bayar->hashName() ?? null,
+        //         'peserta_event_id' => $request->peserta_id ?? null,
+        //     ]);
+        //     $success = false;
+        //     $message = 'error';
+        //     $res = [
+        //         'success' => $success,
+        //         'message' => $message,
+        //         'data' => $abc,
+        //     ];
 
-            TLogApi::create([
-                'k_t' => 'terima',
-                'object' => 'mobile',
-                'data' => json_encode([
-                    'event' => $event,
-                ]),
-                'result' => json_encode($res),
-            ]);
-        }
+        //     TLogApi::create([
+        //         'k_t' => 'terima',
+        //         'object' => 'mobile',
+        //         'data' => json_encode([
+        //             'event' => $event,
+        //         ]),
+        //         'result' => json_encode($res),
+        //     ]);
+        // }
        
         return response()->json($res);
 
