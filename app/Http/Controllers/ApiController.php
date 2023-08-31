@@ -1341,10 +1341,10 @@ class ApiController extends Controller
             $bukti_bayar = $request->file('bukti_bayar');
             $bukti_bayar->storeAs('public/image', $bukti_bayar->hashName());
             $event = PembayaranEvent::create([
-                'user_id' => $request->user_id,
-                'event_id' => $request->event_id,
-                'bukti_bayar' => $request->bukti_bayar->hashName(),
-                'peserta_event_id' => $request->peserta_id,
+                'user_id' => $request->user_id ?? null,
+                'event_id' => $request->event_id ?? null,
+                'bukti_bayar' => $request->bukti_bayar->hashName() ?? null,
+                'peserta_event_id' => $request->peserta_id ?? null,
             ]);
             $success = true;
             $message = 'data berhasil disimpan';
