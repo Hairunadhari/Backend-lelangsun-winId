@@ -1899,8 +1899,10 @@ return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
         return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
     }
     public function delete_all_member_event($id){
+        $peserta = PesertaEvent::where('event_id',$id)->get();
         $data = PembayaranEvent::where('event_id',$id)->get();
         $data->each->delete();
+        $peserta->each->delete();
         return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
     }
 }   
