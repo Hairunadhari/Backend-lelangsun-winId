@@ -28,6 +28,7 @@
                                         <th>Nama</th>
                                         <th>Email</th>
                                         <th>No Telp</th>
+                                        <th>Tiket</th>
                                         <th>Bukti Pembayaran</th>
                                         <th>Status</th>
                                         <th>Verifikasi</th>
@@ -55,46 +56,54 @@
                     },
                 },
                 {
-                    data: "user.name",
+                    data: "nama",
                 },
                 {
-                    data: "user.email",
+                    data: "email",
                 },
                 {
-                    data: "user.no_telp",
-                    render: function (data){
-                        if(data == null){
-                            return `<span>-</span>`
-                        }else{
-                            return data;
-                        }
-                    }
+                    data: "no_telp",
                 },
                 {
-                    data: "bukti_bayar",
+                    data: "jumlah_tiket",
+                },
+                {
+                    data: "pembayaran_event.bukti_bayar",
                     render: function (data) {
-                        return '<a href="/storage/image/' + data + '" target="_blank"><img src="/storage/image/' + data + '" style="width: 100px; height: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin: 5px; padding: 0.25rem; border: 1px solid #dee2e6;"></a>';
-                    }
-                },
-                {
-                    data: "status_verif",
-                    render: function (data){
-                        if(data == 1){
-                            return `<span class="badge badge-success">Sudah Terverifikasi</span>`
+                        if(data){
+                            return '<a href="/storage/image/' + data + '" target="_blank"><img src="/storage/image/' + data + '" style="width: 100px; height: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin: 5px; padding: 0.25rem; border: 1px solid #dee2e6;"></a>';
                         }else{
-                            return `<span class="badge badge-primary">Belum Terverifikasi</span>`
+                            return `-`
                         }
                     }
                 },
                 {
-                    data: null,
+                    data: "pembayaran_event.status_verif",
                     render: function (data){
-                        var verif = '/send-email-member/' + data.id;
+                        if(data){
+                            if(data == 1){
+                                return `<span class="badge badge-success">Sudah Terverifikasi</span>`
+                            }else{
+                                return `<span class="badge badge-primary">Belum Terverifikasi</span>`
+                            }
+                        }else{
+                            return `-`
+                        }
+                    }
+                },
+                {
+                    data: "pembayaran_event.bukti_bayar",
+                    render: function (data, type, row, meta){
+                        if(data){
+                            var verif = '/send-email-member/' + row.id;
                         return `<form action="${verif}" method="POST" onsubmit="return confirm('Apakah anda yakin akan memverifikasi data ini ? jika ya member akan dikirimkan info tentang event ini');">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="POST">
-                                <button class="btn btn-primary" style="margin-left: 20px;"><i class="fas fa-paper-plane fa-lg"></i></button>
-                        </form>`;
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="_method" value="POST">
+                                    <button class="btn btn-primary" style="margin-left: 20px;"><i class="fas fa-paper-plane fa-lg"></i></button>
+                            </form>`;
+                        }else{
+                            return `-`
+                        }
                     }
                 },
                 {

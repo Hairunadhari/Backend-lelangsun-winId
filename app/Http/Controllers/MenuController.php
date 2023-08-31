@@ -22,6 +22,7 @@ use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\BannerUtama;
 use App\Models\EventLelang;
+use App\Models\GambarEvent;
 use App\Models\ProdukPromo;
 use App\Models\BannerDiskon;
 use App\Models\BannerLelang;
@@ -29,6 +30,7 @@ use App\Models\BarangLelang;
 use App\Models\GambarLelang;
 use App\Models\GambarProduk;
 use App\Models\PembelianNpl;
+use App\Models\PesertaEvent;
 use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
@@ -1440,50 +1442,42 @@ class MenuController extends Controller
         $gambar = $request->file('gambar');
         $gambar->storeAs('public/image', $gambar->hashName());
 
-        if ($request->tiket == 'Berbayar') {
-            $harga = preg_replace('/\D/', '', $request->harga); 
-            $hargaProduk = trim($harga);
-            Event::create([
-                'gambar'     => $gambar->hashName(),
-                'judul'     => $request->judul,
-                'deskripsi'     => $request->deskripsi,
-                'link'     => $request->link,
-                'penyelenggara'     => $request->penyelenggara,
-                'alamat_lokasi'     => $request->alamat_lokasi,
-                'jenis'     => $request->jenis,
-                'tiket'     => $request->tiket,
-                'tgl_mulai'     => $request->tgl_mulai,
-                'tgl_selesai'     => $request->tgl_selesai,
-                'link_lokasi'     => $request->link_lokasi,
-                'harga'     => $hargaProduk,
-                'status_data'     => 1,
-            ]);
-        } else {
-            Event::create([
-                'gambar'     => $gambar->hashName(),
-                'judul'     => $request->judul,
-                'deskripsi'     => $request->deskripsi,
-                'link'     => $request->link,
-                'penyelenggara'     => $request->penyelenggara,
-                'alamat_lokasi'     => $request->alamat_lokasi,
-                'jenis'     => $request->jenis,
-                'tiket'     => $request->tiket,
-                'tgl_mulai'     => $request->tgl_mulai,
-                'tgl_selesai'     => $request->tgl_selesai,
-                'link_lokasi'     => $request->link_lokasi,
-                'harga'     => null,
-                'status_data'     => 1,
-            ]);
+        $harga = $request->tiket == 'Berbayar' ? preg_replace('/\D/', '', $request->harga) : null;
+        $multigambar = $request->file('poster');
 
+        $event = Event::create([
+            'gambar' => $gambar->hashName(),
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'link' => $request->link,
+            'penyelenggara' => $request->penyelenggara,
+            'alamat_lokasi' => $request->alamat_lokasi,
+            'jenis' => $request->jenis,
+            'tiket' => $request->tiket,
+            'tgl_mulai' => $request->tgl_mulai,
+            'tgl_selesai' => $request->tgl_selesai,
+            'link_lokasi' => $request->link_lokasi,
+            'harga' => $harga,
+            'status_data' => 1,
+        ]);
+
+
+        foreach ($multigambar as $g) {
+            $g->storeAs('public/image', $g->hashName());
+
+            GambarEvent::create([
+                'event_id' => $event->id,
+                'gambar' => $g->hashName(),
+            ]);
         }
 
+return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
 
-        return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_event($id)
     {
-        $data = Event::findOrFail($id);
+        $data = Event::with('detail_gambar_event')->findOrFail($id);
         return view('event.edit_event', compact('data'));
     }
     public function detail_event($id)
@@ -1495,10 +1489,11 @@ class MenuController extends Controller
     public function update_event(Request $request, $id)
     {
         $data = Event::findOrFail($id);
-        $harga = preg_replace('/\D/', '', $request->harga); 
+        $gambarEvent = GambarEvent::where('event_id',$id)->get();
+        $harga = $request->tiket == 'Berbayar' ? preg_replace('/\D/', '', $request->harga) : null;
         $hargaProduk = trim($harga);
-        if ($request->tiket == 'Berbayar') {
-            if ($request->hasFile('gambar')) {
+            // kode uploadgambar dan poster
+            if ($request->hasFile('gambar') && $request->hasFile('poster')) {
 
                 $gambar = $request->file('gambar');
                 $gambar->storeAs('public/image', $gambar->hashName());
@@ -1517,32 +1512,27 @@ class MenuController extends Controller
                     'tgl_mulai'     => $request->tgl_mulai,
                     'tgl_selesai'     => $request->tgl_selesai,
                     'link_lokasi'     => $request->link_lokasi,
-                    'harga'     => $hargaProduk,
+                    'harga'     => $harga,
                 ]);
-    
-            } else {
-                $data->update([
-                    'judul'     => $request->judul,
-                    'deskripsi'     => $request->deskripsi,
-                    'link'     => $request->link,
-                    'penyelenggara'     => $request->penyelenggara,
-                    'alamat_lokasi'     => $request->alamat_lokasi,
-                    'jenis'     => $request->jenis,
-                    'tiket'     => $request->tiket,
-                    'tgl_mulai'     => $request->tgl_mulai,
-                    'tgl_selesai'     => $request->tgl_selesai,
-                    'link_lokasi'     => $request->link_lokasi,
-                    'harga'     => $hargaProduk,
-                ]);
-            }
-        } else {
-            if ($request->hasFile('gambar')) {
-
+                foreach ($gambarEvent as $g) {
+                    Storage::delete('public/image/'.$g->gambar);
+                    $g->delete();  
+                }
+                $multigambar = $request->file('poster');
+                foreach ($multigambar as $g) {
+                    $g->storeAs('public/image', $g->hashName());
+        
+                    GambarEvent::create([
+                        'event_id' => $data->id,
+                        'gambar' => $g->hashName(),
+                    ]);
+                }
+            // kode file gambar
+            } elseif ($request->hasFile('gambar')) {
                 $gambar = $request->file('gambar');
                 $gambar->storeAs('public/image', $gambar->hashName());
     
                 Storage::delete('public/image/'.$data->gambar);
-    
                 $data->update([
                     'gambar'     => $gambar->hashName(),
                     'judul'     => $request->judul,
@@ -1555,9 +1545,36 @@ class MenuController extends Controller
                     'tgl_mulai'     => $request->tgl_mulai,
                     'tgl_selesai'     => $request->tgl_selesai,
                     'link_lokasi'     => $request->link_lokasi,
-                    'harga'     => null,
+                    'harga'     => $harga,
                 ]);
-    
+            // kode upload poster
+            } elseif ($request->hasFile('poster')) {
+                $data->update([
+                    'judul'     => $request->judul,
+                    'deskripsi'     => $request->deskripsi,
+                    'link'     => $request->link,
+                    'penyelenggara'     => $request->penyelenggara,
+                    'alamat_lokasi'     => $request->alamat_lokasi,
+                    'jenis'     => $request->jenis,
+                    'tiket'     => $request->tiket,
+                    'tgl_mulai'     => $request->tgl_mulai,
+                    'tgl_selesai'     => $request->tgl_selesai,
+                    'link_lokasi'     => $request->link_lokasi,
+                    'harga'     => $harga,
+                ]);
+                foreach ($gambarEvent as $g) {
+                    Storage::delete('public/image/'.$g->gambar);
+                    $g->delete();  
+                }
+                $multigambar = $request->file('poster');
+                foreach ($multigambar as $g) {
+                    $g->storeAs('public/image', $g->hashName());
+        
+                    GambarEvent::create([
+                        'event_id' => $data->id,
+                        'gambar' => $g->hashName(),
+                    ]);
+                }
             } else {
                 $data->update([
                     'judul'     => $request->judul,
@@ -1570,12 +1587,9 @@ class MenuController extends Controller
                     'tgl_mulai'     => $request->tgl_mulai,
                     'tgl_selesai'     => $request->tgl_selesai,
                     'link_lokasi'     => $request->link_lokasi,
-                    'harga'     => null,
+                    'harga'     => $harga,
                 ]);
             }
-        }
-
-        //redirect to index
         return redirect()->route('event')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
@@ -1874,7 +1888,7 @@ class MenuController extends Controller
     
     public function list_member_event($id){
         if (request()->ajax()) {
-            $data = PembayaranEvent::with('user','event')->select('id','user_id','event_id','bukti_bayar','status_verif')->where('event_id',$id)->orderBy('created_at','desc')->get();
+            $data = PesertaEvent::with('pembayaran_event')->select('id','nama','no_telp','jumlah_tiket','email')->where('event_id',$id)->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('event/list_member', compact('id'));
