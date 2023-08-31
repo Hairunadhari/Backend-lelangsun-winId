@@ -1,5 +1,12 @@
 @extends('app.layouts')
 @section('content')
+<style>
+    .reviews img {
+        margin-bottom: 20px;
+        margin-left: 20px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
+</style>
 <div class="section-body">
     <div class="row">
         <div class="col-12">
@@ -40,7 +47,6 @@
                                         <th>Jenis</th>
                                         <th>Tiket</th>
                                         <th>Status</th>
-                                        <th>Link Meet</th>
                                         <th>List Member</th>
                                         <th>Opsi</th>
                                     </tr>
@@ -58,7 +64,6 @@
                                         <th>Judul</th>
                                         <th>Jenis</th>
                                         <th>Tiket</th>
-                                        <th>Link Meet</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -125,12 +130,6 @@
                 {
                     data: null,
                     render: function (data) {
-                        return `<a href="${data.link}">${data.link}</a>`
-                    }
-                },
-                {
-                    data: null,
-                    render: function (data) {
                         var list = '/list-member-event/' + data.id;
                         return `<a class="btn btn-success" href="${list}"><i class="fas fa-users"></i></a>`
                     }
@@ -192,12 +191,6 @@
                 },
                 {
                     data: "tiket",
-                },
-                {
-                    data: null,
-                    render: function (data) {
-                        return `<a href="${data.link}">${data.link}</a>`
-                    }
                 },
                 {
                     data: null,
@@ -293,10 +286,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Image <small>(png, jpg, jpeg)</small><span style="color: red">*</span></label>
+                        <label>Poster Utama<small>(format poster: png, jpg, jpeg | disarankan: width 900px, height 470px)</small><span style="color: red">*</span></label>
                         <input type="file" class="form-control" name="gambar" required id="gambar">
                     <div id="preview" class="mt-3"></div>
                     </div>
+                     <div class="form-group">
+                        <label>Poster Detail Event <small>(bisa pilih lebih dari satu gambar | format gambar: png, jpg, jpeg | disarankan: width 900px, height 470px) </small><span
+                                style="color: red">*</span></label>
+                        <input type="file" class="form-control" name="poster[]" id="gambars" required multiple>
+                    </div>
+                    <div id="previews" class="reviews"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -381,6 +380,39 @@
             });
         }
     };
+
+    function previewsImages() {
+        var previews = document.querySelector('#previews');
+
+        // Hapus semua elemen child di dalam elemen #previews
+        while (previews.firstChild) {
+            previews.removeChild(previews.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreviews);
+        }
+
+        function readAndPreviews(file) {
+            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
+                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
+                document.querySelector('#gambars').value = '';
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.title = file.name;
+                image.src = this.result;
+                previews.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+
+    document.querySelector('#gambars').addEventListener("change", previewsImages);
 
 </script>
 

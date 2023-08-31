@@ -234,7 +234,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Event <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="judul" required>
+                        <input type="text" class="form-control" name="judul" placeholder="Judul event" required>
                     </div>
                     <div class="form-group">
                         <label>Waktu Event <span style="color: red">*</span></label>

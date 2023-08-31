@@ -1,8 +1,10 @@
 @extends('app.layouts')
 @section('content')
 <style>
-    #preview img{
-            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    .reviews img {
+        margin-bottom: 20px;
+        margin-left: 20px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     }
 </style>
     <div class="card">
@@ -78,6 +80,19 @@
                     <input type="file" class="form-control" name="gambar"  id="gambar">
                 <div id="preview" class="mt-3"></div>
                 </div>
+                 <div class="form-group" >
+                        <label for="">Poster detail event sebelumnya:</label>
+                        <br>
+                        @foreach ($data->detail_gambar_event as $item)
+                        <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}"
+                            style="width:100px;box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                        @endforeach
+                    </div>
+                <div class="form-group">
+                        <label>Poster Detail Event <small>(bisa pilih lebih dari satu gambar | format gambar: png, jpg, jpeg | disarankan: width 900px, height 470px) </small></label>
+                        <input type="file" class="form-control" name="poster[]" id="gambars"  multiple>
+                    </div>
+                    <div id="previews" class="reviews"></div>
             </div>
             <div class="card-footer text-right">
                 <button class="btn btn-primary mr-1" type="submit">Submit</button>
@@ -128,11 +143,6 @@
     }
     document.querySelector('#gambar').addEventListener("change", previewImages);
     
-    document.querySelector('#resetButton').addEventListener('click', function() {
-        document.querySelector('#preview').innerHTML = '';
-    });
-
-    
 
     function toggleDiv(value) {
         const editinpharga = document.getElementById("editinpharga");
@@ -157,5 +167,38 @@
         // Memasukkan nilai format ke dalam input
         input.value = formattedNum;
     }
+
+    function previewsImages() {
+        var previews = document.querySelector('#previews');
+
+        // Hapus semua elemen child di dalam elemen #previews
+        while (previews.firstChild) {
+            previews.removeChild(previews.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreviews);
+        }
+
+        function readAndPreviews(file) {
+            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
+                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
+                document.querySelector('#gambars').value = '';
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.title = file.name;
+                image.src = this.result;
+                previews.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+
+    document.querySelector('#gambars').addEventListener("change", previewsImages);
 </script>
 @endsection

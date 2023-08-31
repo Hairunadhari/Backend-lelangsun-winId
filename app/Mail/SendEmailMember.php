@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\PesertaEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use App\Models\PembayaranEvent;
@@ -17,7 +18,7 @@ class SendEmailMember extends Mailable
 
     public $data; // Menambahkan properti $data
 
-    public function __construct(PembayaranEvent $data)
+    public function __construct(PesertaEvent $data)
     {
         $this->data = $data;
     }

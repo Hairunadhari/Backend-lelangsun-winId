@@ -385,6 +385,12 @@
                                             "type": "object"
                                         }
                                     },
+                                    "latitude": {
+                                        "type": "string"
+                                    },
+                                    "longitude": {
+                                        "type": "string"
+                                    },
                                     "pengiriman": {
                                         "type": "string"
                                     },
@@ -878,7 +884,7 @@
                     "Event"
                 ],
                 "summary": "Event",
-                "description": "masukkan user id, event id, bukti bayar",
+                "description": "masukkan user id, event id, bukti bayar, id peserta",
                 "operationId": "event",
                 "requestBody": {
                     "description": "",
@@ -893,9 +899,101 @@
                                     "event_id": {
                                         "type": "integer"
                                     },
+                                    "peserta_id": {
+                                        "type": "integer"
+                                    },
                                     "bukti_bayar": {
                                         "type": "file",
                                         "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/detail-kategori-toko": {
+            "post": {
+                "tags": [
+                    "Toko"
+                ],
+                "summary": "Kategori",
+                "description": "Menampilkan semua produk berdasarkan kategori toko yg dipillih",
+                "operationId": "Kategori",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "kategori_id",
+                                    "toko_id"
+                                ],
+                                "properties": {
+                                    "kategori_id": {
+                                        "type": "integer"
+                                    },
+                                    "toko_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/form-peserta-event": {
+            "post": {
+                "tags": [
+                    "Event"
+                ],
+                "summary": "Event",
+                "description": "masukkan nama,email,notelp,jumlahtiket,eventid",
+                "operationId": "Event",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama",
+                                    "email",
+                                    "no_telp",
+                                    "jumlah_tiket",
+                                    "event_id"
+                                ],
+                                "properties": {
+                                    "nama": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "no_telp": {
+                                        "type": "integer"
+                                    },
+                                    "jumlah_tiket": {
+                                        "type": "integer"
+                                    },
+                                    "event_id": {
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"

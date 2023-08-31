@@ -22,10 +22,12 @@ use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\BannerUtama;
+use App\Models\GambarEvent;
 use App\Models\ProdukPromo;
 use Illuminate\Support\Str;
 use App\Models\BannerDiskon;
 use App\Models\GambarProduk;
+use App\Models\PesertaEvent;
 use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
 use App\Models\KategoriProduk;
@@ -431,6 +433,8 @@ class ApiController extends Controller
     *                      @OA\Property(property="id_promo", type="integer"),
     *                  )
     *              ),
+    *               @OA\Property(property="latitude", type="string"),
+    *               @OA\Property(property="longitude", type="string"),
      *              @OA\Property(property="pengiriman", type="string"),
      *              @OA\Property(property="lokasi_pengiriman", type="string"),
      *              @OA\Property(property="sub_total", type="integer"),
@@ -485,7 +489,9 @@ class ApiController extends Controller
                 'order_id' => $order->id ?? null,
                 'pengiriman' => $request->pengiriman ?? null,
                 'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
-                'nama_pengirim' => '-'
+                'nama_pengirim' => '-',
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude
             ]);
             
             $secret_key = 'Basic '.config('xendit.key_auth');
@@ -1274,10 +1280,17 @@ class ApiController extends Controller
      */
     public function detail_event($id){
         $event = Event::find($id);
+        $detail_gambar_event = GambarEvent::where('event_id',$id)->get();
+
         $event->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $event->gambar);
 
+        $detail_gambar_event->each(function ($item){
+            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+        });
+
         return response()->json([
-            'event' => $event
+            'event' => $event,
+            'detail_gambar_event' => $detail_gambar_event
         ]);
     }
 
@@ -1286,7 +1299,7 @@ class ApiController extends Controller
  *      path="/api/bukti-pembayaran-event",
  *      tags={"Event"},
  *      summary="Event",
- *      description="masukkan user id, event id, bukti bayar",
+ *      description="masukkan user id, event id, bukti bayar, id peserta",
  *      operationId="event",
  *      @OA\RequestBody(
  *          required=true,
@@ -1296,6 +1309,7 @@ class ApiController extends Controller
  *              @OA\Schema(
  *                  @OA\Property(property="user_id", type="integer"),
  *                  @OA\Property(property="event_id", type="integer"),
+ *                  @OA\Property(property="peserta_id", type="integer"),
  *                  @OA\Property(property="bukti_bayar", type="file", format="binary"),
  *              )
  *          )
@@ -1308,17 +1322,68 @@ class ApiController extends Controller
  */
 
     public function bukti_pembayaran_event(Request $request){
-        $bukti_bayar = $request->file('bukti_bayar');
-        $bukti_bayar->storeAs('public/image', $bukti_bayar->hashName());
-        $event = PembayaranEvent::create([
-            'user_id' => $request->user_id,
-            'event_id' => $request->event_id,
-            'bukti_bayar' => $request->bukti_bayar->hashName(),
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required',
+            'event_id'     => 'required',
+            'bukti_bayar'     => 'required|image|mimes:jpeg,jpg,png',
+            'peserta_id'     => 'required',
         ]);
-        return response()->json([
-            'message' => 'SUCCESS',
-            'data' => $event 
-        ]);
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada Kesalahan',
+                'data' => $validator->errors()
+            ], 401);
+
+        }
+
+        try {
+            $bukti_bayar = $request->file('bukti_bayar');
+            $bukti_bayar->storeAs('public/image', $bukti_bayar->hashName());
+            $event = PembayaranEvent::create([
+                'user_id' => $request->user_id,
+                'event_id' => $request->event_id,
+                'bukti_bayar' => $request->bukti_bayar->hashName(),
+                'peserta_event_id' => $request->peserta_id,
+            ]);
+            $success = true;
+            $message = 'data berhasil disimpan';
+            $res = [
+                'success' => $success,
+                'message' => $message,
+                'data' => $event,
+            ];
+
+            TLogApi::create([
+                'k_t' => 'terima',
+                'object' => 'mobile',
+                'data' => json_encode([
+                    'event' => $event,
+                ]),
+                'result' => json_encode($res),
+            ]);
+
+        } catch (Excpetion $e) {
+            $success = false;
+            $message = 'error';
+            $res = [
+                'success' => $success,
+                'message' => $message,
+                'data' => $event,
+            ];
+
+            TLogApi::create([
+                'k_t' => 'terima',
+                'object' => 'mobile',
+                'data' => json_encode([
+                    'event' => $event,
+                ]),
+                'result' => json_encode($res),
+            ]);
+        }
+       
+        return response()->json($res);
+
     }
 
      
@@ -1327,6 +1392,96 @@ class ApiController extends Controller
         return response()->json([
             'message' => 'SUCCESS',
             'data' => $event 
+        ]);
+    }
+
+     /**
+     * @OA\Post(
+     *      path="/api/detail-kategori-toko",
+     *      tags={"Toko"},
+     *      summary="Kategori",
+     *      description="Menampilkan semua produk berdasarkan kategori toko yg dipillih",
+     *      operationId="Kategori",
+     *        @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\JsonContent(
+     *              required={"kategori_id", "toko_id"},
+     *              @OA\Property(property="kategori_id", type="integer"),
+     *              @OA\Property(property="toko_id", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description="return array model produk"
+     *      )
+     * )
+     */
+    public function daftar_produk_berdasarkan_kategori_toko(Request $request){
+
+        $kategoriproduk = Produk::where('toko_id',$request->toko_id)->where('kategoriproduk_id',$request->kategori_id)->where('status','active')->where('stok', '>', 0)->get();
+        
+        $kategoriproduk->each(function ($item) {
+            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+        });
+        return response()->json([
+            'message' => 'SUCCESS',
+            'kategoriproduk' => $kategoriproduk
+        ]);
+    }
+
+     /**
+     * @OA\Post(
+     *      path="/api/form-peserta-event",
+     *      tags={"Event"},
+     *      summary="Event",
+     *      description="masukkan nama,email,notelp,jumlahtiket,eventid",
+     *      operationId="Event",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\JsonContent(
+     *              required={"nama","email","no_telp","jumlah_tiket","event_id"},
+     *              @OA\Property(property="nama", type="string"),
+     *              @OA\Property(property="email", type="string", format="email"),
+     *              @OA\Property(property="no_telp", type="integer"),
+     *              @OA\Property(property="jumlah_tiket", type="integer"),
+     *              @OA\Property(property="event_id", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function form_peserta_event(Request $request){
+        $validator = Validator::make($request->all(), [
+            'nama'     => 'required',
+            'email'     => 'required|email',
+            'no_telp'     => 'required',
+            'jumlah_tiket'     => 'required',
+            'event_id'     => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada Kesalahan',
+                'data' =>$validator->errors()
+            ], 401);
+        }
+        $data = PesertaEvent::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'no_telp' => $request->no_telp,
+            'jumlah_tiket' => $request->jumlah_tiket,
+            'event_id' => $request->event_id,
+        ]);
+
+        return response()->json([
+            'message' => 'SUCCESS',
+            'peserta_event' => $data
         ]);
     }
 
