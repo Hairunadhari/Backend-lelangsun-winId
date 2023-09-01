@@ -12,7 +12,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="w-100">Daftar Event</h4>
+                    <h4 class="w-100">Daftar Event </h4>
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#eventmodal">
                         <span class="text">+ Tambah</span>
                     </button>
