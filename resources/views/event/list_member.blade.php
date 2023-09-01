@@ -80,30 +80,22 @@
                 {
                     data: "pembayaran_event.status_verif",
                     render: function (data){
-                        if(data){
                             if(data == 1){
                                 return `<span class="badge badge-success">Sudah Terverifikasi</span>`
                             }else{
                                 return `<span class="badge badge-primary">Belum Terverifikasi</span>`
                             }
-                        }else{
-                            return `-`
-                        }
                     }
                 },
                 {
                     data: "pembayaran_event.bukti_bayar",
                     render: function (data, type, row, meta){
-                        if(data){
                             var verif = '/send-email-member/' + row.id;
                         return `<form action="${verif}" method="POST" onsubmit="return confirm('Apakah anda yakin akan memverifikasi data ini ? jika ya member akan dikirimkan info tentang event ini');">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="_method" value="POST">
                                     <button class="btn btn-primary" style="margin-left: 20px;"><i class="fas fa-paper-plane fa-lg"></i></button>
                             </form>`;
-                        }else{
-                            return `-`
-                        }
                     }
                 },
                 {
