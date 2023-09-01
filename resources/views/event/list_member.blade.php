@@ -5,7 +5,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="w-100">List Member Event</h4>
+                    <div class="w-100"><h4>List Member Event "{{$event->judul}}"</h4> Status: <span class="badge {{$event->tiket == 'Gratis' ? 'badge-success' : 'badge-secondary'}} badge-sm">{{$event->tiket}}</span> </span></div>
                      <form action="{{route('delete-all-member-event', $id)}}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus semua data ini ? data yg sudah terhapus tidak dapat dikembalikan');">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="_method" value="DELETE">
