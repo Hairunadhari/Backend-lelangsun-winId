@@ -131,7 +131,7 @@
                     data: null,
                     render: function (data) {
                         var list = '/list-member-event/' + data.id;
-                        return `<a class="btn btn-success" href="${list}"><i class="fas fa-users"></i></a>`
+                        return `<a class="btn btn-warning" href="${list}"><i class="fas fa-users"></i></a>`
                     }
                 },
                 {
