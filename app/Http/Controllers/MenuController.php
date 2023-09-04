@@ -1897,7 +1897,7 @@ return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
     public function list_member_event($id){
         $event = Event::find($id);
         if (request()->ajax()) {
-            $data = PesertaEvent::with('pembayaran_event')->select('id','nama','no_telp','jumlah_tiket','email')->where('event_id',$id)->orderBy('created_at','desc')->get();
+            $data = PesertaEvent::with('pembayaran_event')->select('id','nama','no_telp','jumlah_tiket','email','status_verif')->where('event_id',$id)->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('event/list_member', compact('id', 'event'));
