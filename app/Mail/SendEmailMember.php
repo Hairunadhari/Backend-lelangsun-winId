@@ -17,12 +17,10 @@ class SendEmailMember extends Mailable
     use Queueable, SerializesModels;
 
     public $data; // Menambahkan properti $data
-    public $barcodeHTML; // Menambahkan properti $barcodeHTML
 
-    public function __construct(PesertaEvent $data, $barcodeHTML)
+    public function __construct(PesertaEvent $data)
     {
         $this->data = $data;
-        $this->barcodeHTML = $barcodeHTML;
     }
 
     /**
