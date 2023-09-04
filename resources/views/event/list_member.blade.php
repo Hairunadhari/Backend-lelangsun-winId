@@ -6,11 +6,11 @@
             <div class="card">
                 <div class="card-header">
                     <div class="w-100"><h4>List Member Event "{{$event->judul}}"</h4> Status: <span class="badge {{$event->tiket == 'Gratis' ? 'badge-success' : 'badge-secondary'}} badge-sm">{{$event->tiket}}</span> </span></div>
-                     <form action="{{route('delete-all-member-event', $id)}}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus semua data ini ? data yg sudah terhapus tidak dapat dikembalikan');">
+                     {{-- <form action="{{route('delete-all-member-event', $id)}}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus semua data ini ? data yg sudah terhapus tidak dapat dikembalikan');">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="_method" value="DELETE">
                             <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus Semua Member</button>
-                    </form>
+                    </form> --}}
                 </div>
                 <div class="card-body">
                     @if(session('success'))
@@ -78,7 +78,7 @@
                     }
                 },
                 {
-                    data: "pembayaran_event.status_verif",
+                    data: "status_verif",
                     render: function (data){
                             if(data == 1){
                                 return `<span class="badge badge-success">Sudah Terverifikasi</span>`

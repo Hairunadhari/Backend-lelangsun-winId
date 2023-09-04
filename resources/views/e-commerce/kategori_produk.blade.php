@@ -147,6 +147,7 @@
 
 </script>
 @endsection
+@section('modal')
 <!-- Modal -->
 <div class="modal fade" id="kategoriprodukmodal" tabindex="-1" role="dialog" aria-labelledby="kategoriProdukLabel"
     aria-hidden="true">
@@ -181,3 +182,4 @@
         </div>
     </div>
 </div>
+@endsection

@@ -64,6 +64,7 @@
         <section class="section">
           @yield('content')
         </section>
+          @yield('modal')
       </div>
      @include('footer')
     </div>

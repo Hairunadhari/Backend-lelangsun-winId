@@ -765,9 +765,13 @@ class MenuController extends Controller
 
     public function add_kategori_lelang(Request $request){
 
+        $npl = preg_replace('/\D/', '', $request->harga_npl);
+        $harga_npl = trim($npl);
         KategoriBarang::create([
             'kategori'     => $request->kategori,
             'status'     => 1,
+            'kelipatan_bidding'     => $request->kelipatan_bidding,
+            'harga_npl'     => $harga_npl,
         ]);
 
         return redirect('/kategori-lelang')->with('success', 'Data Berhasil Ditambahkan');
@@ -783,8 +787,12 @@ class MenuController extends Controller
     public function update_kategori_lelang(Request $request, $id)
     {
         $data = KategoriBarang::findOrFail($id);
+        $npl = preg_replace('/\D/', '', $request->harga_npl);
+        $harga_npl = trim($npl);
             $data->update([
                 'kategori'     => $request->kategori,
+                'kelipatan_bidding'     => $request->kelipatan_bidding,
+                'harga_npl'     => $harga_npl,
             ]);
 
         return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Diubah!']);
@@ -1889,7 +1897,7 @@ return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
     public function list_member_event($id){
         $event = Event::find($id);
         if (request()->ajax()) {
-            $data = PesertaEvent::with('pembayaran_event')->select('id','nama','no_telp','jumlah_tiket','email')->where('event_id',$id)->orderBy('created_at','desc')->get();
+            $data = PesertaEvent::with('pembayaran_event')->select('id','nama','no_telp','jumlah_tiket','email','status_verif')->where('event_id',$id)->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make(true);
         }
         return view('event/list_member', compact('id', 'event'));

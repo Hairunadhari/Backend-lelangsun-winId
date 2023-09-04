@@ -30,11 +30,15 @@
           <li class="{{ request()->routeIs('toko') ? 'active' : '' }}"><a href="{{route('toko')}}"><i class="fas fa-store"></i><span>Toko</span></a></li>
           <li class="{{ request()->routeIs('kategori-produk') ? 'active' : '' }}"><a href="{{route('kategori-produk')}}"><i class="fas fa-th-large"></i><span>Kategori Produk</span></a></li>
           <li class="{{ request()->routeIs('produk') ? 'active' : '' }}"><a href="{{route('produk')}}"><i class="fas fa-shopping-bag"></i><span>Produk</span></a></li>
-          <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a href="{{route('promosi')}}"><i class="fas fa-credit-card"></i><span>Promo Produk</span></a></li>
+          <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a href="{{route('promosi')}}"><i class="fas fa-tags"></i><span>Promo Produk</span></a></li>
         <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
         <!-- {{-- <li><a class="nav-link {{ request()->routeIs('list-review') ? 'active' : '' }}" href="{{route('list-review')}}"><i class="fas fa-comment-alt"></i><span>Review</span></a></li> --}} -->
         <li class="menu-header">Win Event</li>
         <li class="{{ request()->routeIs('event') ? 'active' : '' }}"><a href="{{route('event')}}"><i class="fas fa-calendar-alt"></i><span>Event Belanja</span></a></li>
+        <li class="{{ request()->routeIs('event-lelang') ? 'active' : '' }}"><a href="{{route('event-lelang')}}"><i class="fas fa-calendar-alt"></i><span>Event Lelang</span></a></li>
+            <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a href="{{route('kategori-lelang')}}"><i class="fas fa-th-large"></i><span>Kategori Lelang</span></a></li>
+
+
         <!-- {{-- <li class="{{ request()->routeIs('banner-lelang') ? 'active' : '' }}"><a href="{{route('banner-lelang')}}"><i class="fas fa-th-large"></i><span>Banner Lelang</span></a></li> --}} -->
         {{-- <li class="{{ request()->routeIs('user-cms') ? 'active' : '' }}"><a href="{{route('user-cms')}}"><i class="fas fa-users"></i><span>User</span></a></li> --}}
         <!-- {{-- <li class="dropdown  {{ request()->routeIs(['pembelian-npl', 'lot', 'barang-lelang', 'event-lelang','kategori-lelang']) ? 'active' : '' }}">
@@ -52,7 +56,7 @@
         <li class="{{ request()->routeIs('profil-toko') ? 'active' : '' }}"><a href="{{route('profil-toko')}}"><i class="fas fa-store"></i><span>Toko Saya</span></a></li>
         <li class="{{ request()->routeIs('kategori-produk') ? 'active' : '' }}"><a href="{{route('kategori-produk')}}"><i class="fas fa-th-large"></i><span>Kategori Produk</span></a></li>
         <li class="{{ request()->routeIs('produk') ? 'active' : '' }}"><a href="{{route('produk')}}"><i class="fas fa-shopping-bag"></i><span>Produk</span></a></li>
-        <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a href="{{route('promosi')}}"><i class="fas fa-credit-card"></i><span>Promo Produk</span></a></li>
+        <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a href="{{route('promosi')}}"><i class="fas fa-tags"></i><span>Promo Produk</span></a></li>
       <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
             
         @endif

@@ -77,6 +77,7 @@
     });
   </script>
 @endsection
+@section('modal')
 <!-- Modal -->
 <div class="modal fade" id="bannerdiskon" tabindex="-1" role="dialog" aria-labelledby="bannerdiskonLabel"
     aria-hidden="true">
@@ -138,5 +139,5 @@
     document.querySelector('#gambar').addEventListener("change", previewImages);
     
 </script>
+@endsection
 
-<!-- /.container-fluid -->
