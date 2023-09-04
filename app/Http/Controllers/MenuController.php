@@ -765,9 +765,13 @@ class MenuController extends Controller
 
     public function add_kategori_lelang(Request $request){
 
+        $npl = preg_replace('/\D/', '', $request->harga_npl);
+        $harga_npl = trim($npl);
         KategoriBarang::create([
             'kategori'     => $request->kategori,
             'status'     => 1,
+            'kelipatan_bidding'     => $request->kelipatan_bidding,
+            'harga_npl'     => $harga_npl,
         ]);
 
         return redirect('/kategori-lelang')->with('success', 'Data Berhasil Ditambahkan');
@@ -783,8 +787,12 @@ class MenuController extends Controller
     public function update_kategori_lelang(Request $request, $id)
     {
         $data = KategoriBarang::findOrFail($id);
+        $npl = preg_replace('/\D/', '', $request->harga_npl);
+        $harga_npl = trim($npl);
             $data->update([
                 'kategori'     => $request->kategori,
+                'kelipatan_bidding'     => $request->kelipatan_bidding,
+                'harga_npl'     => $harga_npl,
             ]);
 
         return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Diubah!']);

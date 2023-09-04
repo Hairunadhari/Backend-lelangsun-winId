@@ -68,7 +68,6 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        setTimeout(() => {
             $('#t-produk-active').DataTable({
                 // responsive: true,
                 processing: true,
@@ -97,7 +96,15 @@
                     },
                     {
                         data: "harga",
-                        render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
+                        render: function(data, type, row, meta) {
+                            if (type === 'display') {
+                                // Mengubah data menjadi format mata uang dengan simbol IDR
+                                return "Rp " + parseInt(data).toLocaleString('id-ID', {
+                                    minimumFractionDigits: 0
+                                });
+                            }
+                            return data;
+                        }
                     },
                     {
                         data: "stok",
@@ -176,7 +183,6 @@
                     },
                 ],
             });
-        }, 2500);
     });
 </script>
 @endsection

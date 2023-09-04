@@ -1,14 +1,10 @@
 @extends('app.layouts')
 @section('content')
-<!-- Begin Page Content -->
-<div class="section-header">
-    <h1>Data Lelang</h1>
-</div>
 <div class="section-body">
     <div class="container-fluid">
         <div class="card">
             <div class="card-header">
-                <h4>Edit Kategori</h4>
+                <h4>Edit Kategori Lelang</h4>
             </div>
             <form action="{{route('update-kategori-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
@@ -24,7 +20,15 @@
                     @endif
                     <div class="form-group">
                         <label>Kategori</label>
-                        <input type="text" class="form-control" value="{{ old('toko', $data->kategori) }}" name="kategori">
+                        <input type="text" class="form-control" value="{{  $data->kategori }}" name="kategori">
+                    </div>
+                     <div class="form-group">
+                        <label>Kelipatan Bidding</label>
+                        <input type="text" class="form-control" name="kelipatan_bidding" value="{{ $data->kelipatan_bidding }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Harga NPL</label>
+                        <input type="text" class="form-control" name="harga_npl" onkeyup="hargaNPL(this)" value="{{ $data->harga_npl }}">
                     </div>
                 </div>
                 <div class="card-footer text-right">
@@ -34,4 +38,20 @@
         </div>
     </div>
 </div>
+<script>
+    function hargaNPL(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+
+        // Memformat angka menjadi format ribuan dan desimal
+        var formattedNum = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(num);
+
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    }
+</script>
 @endsection

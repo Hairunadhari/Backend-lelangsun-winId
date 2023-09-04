@@ -36,6 +36,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Kategori</th>
+                                        <th>Kelipatan Bidding</th>
+                                        <th>Harga NPL</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -50,6 +52,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Kategori</th>
+                                        <th>Kelipatan Bidding</th>
+                                        <th>Harga NPL</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -83,6 +87,30 @@
                 },
                 {
                     data: "kategori",
+                },
+                {
+                    data: "kelipatan_bidding",
+                    render: function(data, type, row, meta) {
+                        if (type === 'display') {
+                            // Mengubah data menjadi format mata uang dengan simbol IDR
+                            return data.toLocaleString('id-ID', {
+                                minimumFractionDigits: 0
+                            });
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "harga_npl",
+                    render: function(data, type, row, meta) {
+                        if (type === 'display') {
+                            // Mengubah data menjadi format mata uang dengan simbol IDR
+                            return "Rp " + data.toLocaleString('id-ID', {
+                                minimumFractionDigits: 0
+                            });
+                        }
+                        return data;
+                    }
                 },
                 {
                 data: null,
@@ -124,6 +152,30 @@
                     data: "kategori",
                 },
                 {
+                    data: "kelipatan_bidding",
+                    render: function(data, type, row, meta) {
+                        if (type === 'display') {
+                            // Mengubah data menjadi format mata uang dengan simbol IDR
+                            return data.toLocaleString('id-ID', {
+                                minimumFractionDigits: 0
+                            });
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "harga_npl",
+                    render: function(data, type, row, meta) {
+                        if (type === 'display') {
+                            // Mengubah data menjadi format mata uang dengan simbol IDR
+                            return "Rp " + data.toLocaleString('id-ID', {
+                                minimumFractionDigits: 0
+                            });
+                        }
+                        return data;
+                    }
+                },
+                {
                 data: null,
                     render: function (data) {
                     var activeurl = '/active-kategori-lelang/' + data.id;
@@ -143,6 +195,7 @@
 
 </script>
 @endsection
+@section('modal')
 <!-- Modal -->
 <div class="modal fade" id="kategorilelangmodal" tabindex="-1" role="dialog" aria-labelledby="kategorilelangmodallabel"
     aria-hidden="true">
@@ -158,11 +211,18 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Kategori</label>
+                        <label>Kategori <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="kategori" required>
                     </div>
+                    <div class="form-group">
+                        <label>Kelipatan Bidding <span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="kelipatan_bidding" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Harga NPL <span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="harga_npl" onkeyup="hargaNPL(this)" required>
+                    </div>
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-warning" id="resetButton">Reset</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
@@ -170,3 +230,21 @@
         </div>
     </div>
 </div>
+<script>
+    function hargaNPL(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+
+        // Memformat angka menjadi format ribuan dan desimal
+        var formattedNum = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(num);
+
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    }
+</script>
+@endsection
+
