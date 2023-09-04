@@ -9,15 +9,14 @@ use Illuminate\Http\Request;
 use App\Mail\SendEmailMember;
 use App\Models\PembayaranEvent;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class SendEmailMemberController extends Controller
 {
     public function send_email_member($id){
         
         $data = PesertaEvent::with('pembayaran_event','event')->find($id);
-        $barcode = new DNS2D();
-        $barcodeHTML = $barcode->getBarcodeHTML($data->nama, 'QRCODE');
-        Mail::to($data->email)->send(new SendEmailMember($data, $barcodeHTML));
+        Mail::to($data->email)->send(new SendEmailMember($data));
         $data->update([
             'status_verif' => 1
         ]);
