@@ -66,6 +66,7 @@
 </div>
 <script>
     $(document).ready(function () {
+         setTimeout(() => {
         $('#toko').DataTable({
             processing: true,
             ordering: false,
@@ -116,9 +117,7 @@
                 },
             ],
         });
-    });
 
-    $(document).ready(function () {
         $('#toko-notactive').DataTable({
             processing: true,
             ordering: false,
@@ -160,10 +159,13 @@
                 },
             ],
         });
+         }, 2500);
     });
 
 </script>
 @endsection
+
+@section('modal')
 <!-- Modal -->
 <div class="modal fade" id="tokomodal" tabindex="-1" role="dialog" aria-labelledby="tokoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -198,3 +200,4 @@
         </div>
     </div>
 </div>
+@endsection

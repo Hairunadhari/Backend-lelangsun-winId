@@ -211,6 +211,7 @@
 
 </script>
 @endsection
+@section('modal')
 <!-- Modal -->
 <div class="modal fade" id="eventmodal" tabindex="-1" role="dialog" aria-labelledby="eventlabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -415,5 +416,5 @@
     document.querySelector('#gambars').addEventListener("change", previewsImages);
 
 </script>
+@endsection
 
-<!-- /.container-fluid -->

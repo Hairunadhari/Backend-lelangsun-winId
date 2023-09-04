@@ -64,4 +64,4 @@ Route::post('/bukti-pembayaran-event', [ApiController::class, 'bukti_pembayaran_
 Route::get('/detail-pembayaran-event/{id}/', [ApiController::class, 'detail_pembayaran_event'])->name('detail-pembayaran-event');
 Route::get('/detail-toko/{id}/', [ApiController::class, 'detail_toko']);
 Route::post('/detail-kategori-toko', [ApiController::class, 'daftar_produk_berdasarkan_kategori_toko']);
-Route::post('/form-peserta-event', [ApiController::class, 'form_peserta_event']);
+Route::post('/form-peserta-event', [ApiController::class, 'form_peserta_eventn ']);

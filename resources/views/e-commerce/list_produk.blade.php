@@ -68,114 +68,115 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#t-produk-active').DataTable({
-            // responsive: true,
-            processing: true,
-            ordering: false,
-            serverSide: true,
-            ajax: {
-                url: '{{ url()->current() }}',
-                data: function (data) {
-                    data.status = 'active';
-                }
-            },
-            columns: [{
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
+        setTimeout(() => {
+            $('#t-produk-active').DataTable({
+                // responsive: true,
+                processing: true,
+                ordering: false,
+                serverSide: true,
+                ajax: {
+                    url: '{{ url()->current() }}',
+                    data: function (data) {
+                        data.status = 'active';
+                    }
+                },
+                columns: [{
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
                     },
-                },
-                {
-                    data: "nama",
-                },
-                {
-                    data: "thumbnail",
-                    render: function (data) {
-                        return '<img src="/storage/image/' + data +
-                            '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
+                    {
+                        data: "nama",
                     },
-                },
-                {
-                    data: "harga",
-                    render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
-                },
-                {
-                    data: "stok",
-                },
-                {
-                    data: null,
-                    render: function (data) {
-                        var deleteUrl = '/deleteproduk/' + data.id;
-                        var editUrl = '/editproduk/' + data.id;
-                        var detailUrl = '/detailproduk/' + data.id;
-                        return `
-                    <div class="dropdown d-inline">
-                        <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini?');">
-                            <div class="dropdown-menu" x-placement="bottom-start"
-                                style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="PUT">
-                                <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
-                            </div>
-                        </form>
-                    </div>
-                    `;
+                    {
+                        data: "thumbnail",
+                        render: function (data) {
+                            return '<img src="/storage/image/' + data +
+                                '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
+                        },
                     },
-                },
-            ],
-        });
-    });
-    $(document).ready(function () {
-        $('#t-produk-notactive').DataTable({
-            // responsive: true,
-            processing: true,
-            ordering: false,
-            serverSide: true,
-            ajax: {
-                url: '{{ url()->current() }}',
-                data: function (data) {
-                    data.status = 'not-active';
-                }
-            },
-            columns: [{
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
+                    {
+                        data: "harga",
+                        render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
                     },
-                },
-                {
-                    data: "nama",
-                },
-                {
-                    data: "thumbnail",
-                    render: function (data) {
-                        return '<img src="/storage/image/' + data +
-                            '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
+                    {
+                        data: "stok",
                     },
-                },
-                {
-                    data: "harga",
-                    render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
-                },
-                {
-                    data: "stok",
-                },
-                {
-                    data: null,
-                    render: function (data) {
-                        var activeUrl = '/activeproduk/' + data.id;
-                        return `
-                        <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden" name="_method" value="PUT">
-                        <button class="btn btn-success" type="submit">Aktifkan</button>
-                        </form>
-                    `;
+                    {
+                        data: null,
+                        render: function (data) {
+                            var deleteUrl = '/deleteproduk/' + data.id;
+                            var editUrl = '/editproduk/' + data.id;
+                            var detailUrl = '/detailproduk/' + data.id;
+                            return `
+                        <div class="dropdown d-inline">
+                            <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                        <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini?');">
+                                <div class="dropdown-menu" x-placement="bottom-start"
+                                    style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                    <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+                                </div>
+                            </form>
+                        </div>
+                        `;
+                        },
                     },
+                ],
+            });
+            
+            $('#t-produk-notactive').DataTable({
+                // responsive: true,
+                processing: true,
+                ordering: false,
+                serverSide: true,
+                ajax: {
+                    url: '{{ url()->current() }}',
+                    data: function (data) {
+                        data.status = 'not-active';
+                    }
                 },
-            ],
-        });
+                columns: [{
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                    },
+                    {
+                        data: "nama",
+                    },
+                    {
+                        data: "thumbnail",
+                        render: function (data) {
+                            return '<img src="/storage/image/' + data +
+                                '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
+                        },
+                    },
+                    {
+                        data: "harga",
+                        render: $.fn.dataTable.render.number(',', '.', 0, 'Rp. ')
+                    },
+                    {
+                        data: "stok",
+                    },
+                    {
+                        data: null,
+                        render: function (data) {
+                            var activeUrl = '/activeproduk/' + data.id;
+                            return `
+                            <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="_method" value="PUT">
+                            <button class="btn btn-success" type="submit">Aktifkan</button>
+                            </form>
+                        `;
+                        },
+                    },
+                ],
+            });
+        }, 2500);
     });
 </script>
 @endsection
