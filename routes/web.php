@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\SendEmailMemberController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -22,6 +23,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::get('/', function () {
     return view('auth.login');
 });
+
+// Route::get('/', [FrontEndController::class, 'view'])->name('view');
 
 // Auth::routes(['verify' => true]);
 
@@ -114,7 +117,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-event-lelang/{id}/', [MenuController::class, 'detail_event_lelang'])->name('detail-event-lelang');
     Route::get('/edit-event-lelang/{id}/', [MenuController::class, 'edit_event_lelang'])->name('edit-event-lelang');
     Route::put('/update-event-lelang/{id}/', [MenuController::class, 'update_event_lelang'])->name('update-event-lelang');
-    Route::delete('/delete-event-lelang/{id}/', [MenuController::class, 'delete_event_lelang'])->name('delete-event-lelang');
+    Route::put('/delete-event-lelang/{id}/', [MenuController::class, 'delete_event_lelang'])->name('delete-event-lelang');
+    Route::put('/active-event-lelang/{id}/', [MenuController::class, 'active_event_lelang'])->name('active-event-lelang');
 
     Route::get('/cari-toko', [MenuController::class, 'cari_toko'])->name('cari-toko');
 

@@ -520,19 +520,29 @@ class MenuController extends Controller
     }
 
     public function list_event_lelang(){
-        $data = EventLelang::paginate(10);
-        // dd($data);
+        $data = KategoriBarang::all();
+        if (request()->ajax()) {
+            $status = request('status_data');
+
+            if ($status == 'active') {
+                $data = EventLelang::where('status_data', 1)->orderBy('created_at','desc')->get();
+            } elseif ($status == 'not-active') {
+                $data = EventLelang::where('status_data', 0)->orderBy('created_at','desc')->get();
+            }
+            return DataTables::of($data)->make();
+        }
         return view('lelang/list_eventlelang', compact('data'));
     }
 
     public function add_event_lelang(Request $request){
 
-        $this->validate($request, [
-            'event'     => 'required',
-        ]);
-
         EventLelang::create([
-            'event'     => $request->event,
+            'judul'     => $request->judul,
+            'kategori_barang_id'     => $request->kategori_id,
+            'waktu'     => $request->waktu,
+            'alamat'     => $request->alamat,
+            'link_lokasi'     => $request->link_lokasi,
+            'deskripsi'     => $request->deskripsi,
         ]);
 
         return redirect('/event-lelang')->with('success', 'Data Berhasil ditambahkan');
@@ -545,16 +555,22 @@ class MenuController extends Controller
     public function edit_event_lelang($id)
     {
         $data = EventLelang::find($id);
+        $kategori = KategoriBarang::all();
 
         //render view with post
-        return view('lelang.edit_eventlelang', compact('data'));
+        return view('lelang.edit_eventlelang', compact('data','kategori'));
     }
     public function update_event_lelang(Request $request, $id)
     {
 
         $data = EventLelang::find($id);
         $data->update([
-            'event'     => $request->event,
+            'judul'     => $request->judul,
+            'kategori_barang_id'     => $request->kategori_id,
+            'waktu'     => $request->waktu,
+            'alamat'     => $request->alamat,
+            'link_lokasi'     => $request->link_lokasi,
+            'deskripsi'     => $request->deskripsi,
         ]);
 
         //redirect to index
@@ -563,7 +579,17 @@ class MenuController extends Controller
     public function delete_event_lelang($id)
     {
         $data = EventLelang::find($id);
-        $data->delete();
+        $data->update([
+            'status_data' => 0
+        ]);
+        return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+    public function active_event_lelang($id)
+    {
+        $data = EventLelang::find($id);
+        $data->update([
+            'status_data' => 1
+        ]);
         return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
@@ -1479,7 +1505,7 @@ class MenuController extends Controller
             ]);
         }
 
-return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
+    return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
 
     }
 

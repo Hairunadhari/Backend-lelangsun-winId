@@ -1,9 +1,5 @@
 @extends('app.layouts')
 @section('content')
-<!-- Begin Page Content -->
-<div class="section-header">
-    <h1>Data E-commerce</h1>
-</div>
 <div class="section-body">
     <div class="container-fluid">
         <div class="card">
@@ -14,17 +10,36 @@
                 @csrf
                 @method('PUT')
                 <div class="card-body">
-                    @if ($errors->has('event'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Event sudah terdaftar!</strong>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                    </div>
-                    @endif
                     <div class="form-group">
                         <label>Nama Event</label>
-                        <input type="text" class="form-control" value="{{ old('event', $data->event) }}" name="event">
+                        <input type="text" class="form-control" value="{{ $data->judul }}" name="judul">
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Event</label>
+                        <select class="form-control select2" name="kategori_id">
+                             @foreach ($kategori as $item)
+                            <option value="{{ $item->id }}"
+                                {{ $item->id == $data->kategori_id ? 'selected' : '' }}>
+                                {{ $item->kategori }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Waktu Event <span style="color: red">*</span></label>
+                        <input type="datetime-local" class="form-control" name="waktu" value="{{$data->waktu}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat Event <span style="color: red">*</span></label>
+                        <textarea class="form-control" name="alamat" >{{$data->alamat}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Link Lokasi <span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="link_lokasi" value="{{$data->link_lokasi}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi Event<span style="color: red">*</span></label>
+                        <textarea class="summernote-simple" placeholder="keterangan..." name="deskripsi">{{$data->deskripsi}}</textarea>
                     </div>
                 </div>
                 <div class="card-footer text-right">

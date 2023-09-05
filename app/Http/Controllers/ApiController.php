@@ -742,18 +742,23 @@ class ApiController extends Controller
      * )
      */
     public function update_akun(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'foto' => 'image|mimes:jpeg,jpg,png',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'VALIDASI GAGAL'
+            ]);
+        }
         
         $data = User::find($id);
-        // dd($data);
-        
-        if ($request->has('foto')) {
-            $base64Image = explode(";base64,", $request->foto);
 
-            $explodeImage = explode("image/", $base64Image[0]);
-            $imageType = $explodeImage[1];
-            $image_base64 = base64_decode($base64Image[1]);
-            $fileName = time() . '-' . $request->name  . '.' . $imageType;
-            Storage::put($fileName, $image_base64);
+        if ($request->hasFile('foto')) {
+
+            //upload new image
+            $foto = $request->file('foto');
+            $foto->storeAs('public/image', $foto->hashName());
 
             Storage::delete('public/image/'.$data->foto);
 
@@ -761,7 +766,7 @@ class ApiController extends Controller
                 'name' => $request->name,
                 'no_telp' => $request->no_telp,
                 'alamat' => $request->alamat,
-                'foto'     => $fileName,
+                'foto'     => $foto->hashName(),
             ]);
 
         } else {
@@ -777,6 +782,8 @@ class ApiController extends Controller
             'data' => $data
         ]);
     }
+
+
 
     
 
