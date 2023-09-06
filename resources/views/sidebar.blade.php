@@ -36,7 +36,9 @@
         <li class="menu-header">Win Event</li>
         <li class="{{ request()->routeIs('event') ? 'active' : '' }}"><a href="{{route('event')}}"><i class="fas fa-calendar-alt"></i><span>Event Belanja</span></a></li>
         <li class="{{ request()->routeIs('event-lelang') ? 'active' : '' }}"><a href="{{route('event-lelang')}}"><i class="fas fa-calendar-alt"></i><span>Event Lelang</span></a></li>
-            <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a href="{{route('kategori-lelang')}}"><i class="fas fa-th-large"></i><span>Kategori Lelang</span></a></li>
+        <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a href="{{route('kategori-lelang')}}"><i class="fas fa-th-large"></i><span>Kategori Lelang</span></a></li>
+        <li class="{{ request()->routeIs('barang-lelang') ? 'active' : '' }}"><a href="{{route('barang-lelang')}}">Barang Lelang</a></li>
+        <li class="{{ request()->routeIs('peserta-npl') ? 'active' : '' }}"><a href="{{route('peserta-npl')}}">Peserta & NPL Lelang</a></li>
 
 
         <!-- {{-- <li class="{{ request()->routeIs('banner-lelang') ? 'active' : '' }}"><a href="{{route('banner-lelang')}}"><i class="fas fa-th-large"></i><span>Banner Lelang</span></a></li> --}} -->

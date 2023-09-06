@@ -20,6 +20,7 @@ use App\Models\Keranjang;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
+use App\Models\PesertaNpl;
 use App\Models\BannerUtama;
 use App\Models\EventLelang;
 use App\Models\GambarEvent;
@@ -941,7 +942,7 @@ class MenuController extends Controller
     public function edit_barang_lelang($id)
     {
         $data = BarangLelang::with('kategoribarang','gambarlelang')->find($id);
-        $kategori = KategoriBarang::all();
+        $kategori = KategoriBarang::where('status',1)->get();
         //render view with post
         return view('lelang.edit_baranglelang', compact('data','kategori'));
     }
@@ -1441,7 +1442,7 @@ class MenuController extends Controller
     }
 
     public function list_barang_lelang(){
-        $kategori = KategoriBarang::select('id','kategori')->get();
+        $kategori = KategoriBarang::select('id','kategori')->where('status','active')->get();
         if (request()->ajax()) {
             $status = request('status');
 
@@ -1822,10 +1823,6 @@ class MenuController extends Controller
         return view('lelang.list_lot');
     }
 
-    public function list_pembelian_npl(){
-        return view('lelang.list_pembelian_npl');
-    }
-
     public function tambah_admin(){
         $role = Role::where('role','Admin')->get();
         return view('user-cms.input_admin',compact('role'));
@@ -1939,5 +1936,129 @@ class MenuController extends Controller
         $data->each->delete();
         $peserta->each->delete();
         return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
+    }
+
+    public function list_peserta_npl(){
+        if (request()->ajax()) {
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = PesertaNpl::where('status','active')->orderBy('created_at','desc')->get();
+            } elseif ($status == 'not-active') {
+                $data = PesertaNpl::where('status','not-active')->orderBy('created_at','desc')->get();
+            }
+
+            return DataTables::of($data)->make(true);
+        }
+        return view('lelang.list_peserta_npl');
+    }
+
+    public function add_peserta_npl(Request $request){
+        $ktp = $request->file('foto_ktp');
+        $npwp = $request->file('foto_npwp');
+        $ktp->storeAs('public/image', $ktp->hashName());
+        $npwp->storeAs('public/image', $npwp->hashName());
+        PesertaNpl::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'nik' => $request->nik,
+            'npwp' => $request->npwp,
+            'foto_ktp' => $ktp->hashName(),
+            'foto_npwp' => $npwp->hashName(),
+        ]);
+
+        return redirect('/peserta-npl')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_peserta_npl($id){
+        $data = PesertaNpl::find($id);
+        return view('lelang.edit_peserta_npl',compact('data'));
+    }
+
+    public function update_peserta_npl(Request $request, $id){
+        $data = PesertaNpl::find($id);
+
+        if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
+            
+            Storage::delete('public/image/'.$data->foto_ktp);
+            $foto_ktp = $request->file('foto_ktp');
+            $foto_ktp->storeAs('public/image', $foto_ktp->hashName());
+
+            Storage::delete('public/image/'.$data->foto_npwp);
+            $foto_npwp = $request->file('foto_npwp');
+            $foto_npwp->storeAs('public/image', $foto_npwp->hashName());
+
+            $data->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+                'foto_ktp'     => $foto_ktp->hashName(),
+                'foto_npwp'     => $foto_npwp->hashName(),
+            ]);
+
+        }elseif ($request->hasFile('foto_npwp')){
+
+            Storage::delete('public/image/'.$data->foto_npwp);
+            $foto_npwp = $request->file('foto_npwp');
+            $foto_npwp->storeAs('public/image', $foto_npwp->hashName());
+
+            $data->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+                'foto_npwp'     => $foto_npwp->hashName(),
+            ]);
+
+        }elseif ($request->hasFile('foto_ktp')){
+
+            Storage::delete('public/image/'.$data->foto_ktp);
+            $foto_ktp = $request->file('foto_ktp');
+            $foto_ktp->storeAs('public/image', $foto_ktp->hashName());
+
+            $data->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+                'foto_ktp'     => $foto_ktp->hashName(),
+            ]);
+
+        }else {
+            $data->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+            ]);
+        }
+        return redirect('/peserta-npl')->with('success', 'Data Berhasil Diubah!');
+    }
+
+    public function delete_peserta_npl($id){
+        $data = PesertaNpl::find($id);
+        $data->update([
+            'status' => 'not-active'
+        ]);
+        return redirect('/peserta-npl')->with('success', 'Data Berhasil Dihapus!');
+    }
+
+    public function active_peserta_npl($id){
+        $data = PesertaNpl::find($id);
+        $data->update([
+            'status' => 'active'
+        ]);
+        return redirect('/peserta-npl')->with('success', 'Data Berhasil Diaktfikan!');
     }
 }   

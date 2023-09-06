@@ -5,13 +5,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="w-100">Daftar Event</h4>
+                    <h4 class="w-100">Daftar Peserta</h4>
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#pembeliannplmodal">
                         <span class="text">+ Tambah Peserta</span>
                     </button>
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#npl">
+                    {{-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#npl">
                         <span class="text">+ Tambah NPL Peserta</span>
-                    </button>
+                    </button> --}}
                 </div>
                 <div class="card-body">
                     @if(session('success'))
@@ -38,7 +38,7 @@
                     </ul>
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
-                            <table class="table table-striped w-100" >
+                            <table class="table table-striped w-100" id="active">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -55,7 +55,7 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                            <table class="table table-striped w-100">
+                            <table class="table table-striped w-100" id="not-active">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -72,7 +72,7 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="verif3" role="tabpanel" aria-labelledby="verif-tab3">
-                            <table class="table table-striped w-100">
+                            <table class="table table-striped w-100" >
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -94,7 +94,118 @@
         </div>
     </div>
 </div>
+ <script type="text/javascript">
+    $(document).ready(function () {
+        $('#active').DataTable({
+            processing: true,
+            ordering: false,
+            searching: true,
+            serverSide: true,
+            ajax: {
+                    url: '{{ url()->current() }}',
+                    data: function (data) {
+                        data.status = 'active';
+                    }
+                },
+        columns: [
+          {
+             render: function (data, type, row, meta) {
+               return meta.row + meta.settings._iDisplayStart + 1;
+             },
+          },
+          { 
+            data: "nama",
+          },
+          { 
+            data: "email",
+          },
+          { 
+            data: "no_hp",
+          },
+          { 
+            data: "alamat",
+          },
+          { 
+            data: null,
+            render: function (data){
+                var npl = '/list-member-event/' + data.id;
+                return `<a class="btn btn-success fs-5" href="#">0</a>`;
+            }
+          },
+          {
+            data: null,
+            render: function (data) {
+              var deleteUrl = '/delete-peserta-npl/' + data.id;
+              var editUrl = '/edit-peserta-npl/' + data.id;
+              return `
+                <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                  <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-info-circle"></i>Edit</a></span>
+                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                  <input type="hidden" name="_method" value="PUT">
+                  <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+                </form>
+              `;
+            },
+          },
+        ],
+      });
+
+        $('#not-active').DataTable({
+            processing: true,
+            ordering: false,
+            searching: true,
+            serverSide: true,
+            ajax: {
+                    url: '{{ url()->current() }}',
+                    data: function (data) {
+                        data.status = 'not-active';
+                    }
+                },
+        columns: [
+          {
+             render: function (data, type, row, meta) {
+               return meta.row + meta.settings._iDisplayStart + 1;
+             },
+          },
+          { 
+            data: "nama",
+          },
+          { 
+            data: "email",
+          },
+          { 
+            data: "no_hp",
+          },
+          { 
+            data: "alamat",
+          },
+          { 
+            data: null,
+            render: function (data){
+                var npl = '/list-member-event/' + data.id;
+                return `<a class="btn btn-success fs-5" href="#">0</a>`;
+            }
+          },
+          {
+            data: null,
+            render: function (data) {
+                    var activeUrl = '/active-peserta-npl/' + data.id;
+                    return `
+                    <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button class="btn btn-success" type="submit">Aktifkan</button>
+                    </form>
+                    `;
+                },
+          },
+        ],
+      });
+    });
+  </script>
 @endsection
+
+@section('modal')
 <style>
     .form-group img {
         padding: 0rem;
@@ -111,46 +222,46 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="#" method="post" enctype="multipart/form-data">
+            <form action="{{route('add-peserta-npl')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                         <div class="form-group">
                             <label>Nama <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="penyelenggara" required>
+                            <input type="text" class="form-control" name="nama" required>
                         </div>
                     <div class="row">
                         <div class="form-group col-6">
                             <label>Email <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="penyelenggara" required>
+                            <input type="email" class="form-control" name="email" required>
                         </div>
                         <div class="form-group col-6">
                             <label>Telepon <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="penyelenggara" required>
+                            <input type="text" class="form-control" name="no_hp" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Alamat <span style="color: red">*</span></label>
-                        <textarea class="form-control" name="alamat_lokasi"></textarea>
+                        <textarea class="form-control" name="alamat"></textarea>
                     </div>
                     <div class="row">
                         <div class="form-group col-6">
                             <label>NIK <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="tgl_mulai" required>
+                            <input type="text" class="form-control" name="nik" required>
                         </div>
                         <div class="form-group col-6">
                             <label>NPWP <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="tgl_selesai" required>
+                            <input type="text" class="form-control" name="npwp" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-6">
-                            <label>Foto KTP</label>
-                            <input type="file" class="form-control" name="gambar" required id="gambarktp">
+                            <label>Foto KTP <span style="color: red">*</span></label>
+                            <input type="file" class="form-control" name="foto_ktp" required id="gambarktp">
                         <div id="previewktp" class="mt-3"></div>
                         </div>
                         <div class="form-group col-6">
-                            <label>Foto NPWP</label>
-                            <input type="file" class="form-control" name="gambar" required id="gambarnpwp">
+                            <label>Foto NPWP <span style="color: red">*</span></label>
+                            <input type="file" class="form-control" name="foto_npwp" required id="gambarnpwp">
                         <div id="previewnpwp" class="mt-3"></div>
                         </div>
                     </div>
@@ -162,7 +273,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="npl" tabindex="-1" role="dialog" aria-labelledby="npl" aria-hidden="true">
+{{-- <div class="modal fade" id="npl" tabindex="-1" role="dialog" aria-labelledby="npl" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -212,7 +323,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> --}}
 <script>
 
     function previewgambarktp() {
@@ -270,3 +381,4 @@
 </script>
 
 <!-- /.container-fluid -->
+@endsection
