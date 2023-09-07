@@ -9,4 +9,13 @@ class PesertaNpl extends Model
 {
     use HasFactory;
     protected $guarded = [''];
+
+    public function pembelian_npl()
+    {
+        return $this->hasMany(PembelianNpl::class);
+    }
+    public function npl()
+    {
+        return $this->hasMany(Npl::class);
+    }
 }

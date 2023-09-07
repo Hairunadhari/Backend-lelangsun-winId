@@ -19,7 +19,7 @@
                         <select class="form-control select2" name="kategori_id">
                              @foreach ($kategori as $item)
                             <option value="{{ $item->id }}"
-                                {{ $item->id == $data->kategori_id ? 'selected' : '' }}>
+                                {{ $item->id == $data->kategori_barang_id ? 'selected' : '' }}>
                                 {{ $item->kategori }}
                             </option>
                             @endforeach

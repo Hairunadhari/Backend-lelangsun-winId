@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use DataTables;
+use App\Models\Npl;
 use App\Models\Role;
 use App\Models\Toko;
 use App\Models\User;
@@ -25,6 +26,7 @@ use App\Models\BannerUtama;
 use App\Models\EventLelang;
 use App\Models\GambarEvent;
 use App\Models\ProdukPromo;
+use Illuminate\Support\Str;
 use App\Models\BannerDiskon;
 use App\Models\BannerLelang;
 use App\Models\BarangLelang;
@@ -2061,4 +2063,65 @@ class MenuController extends Controller
         ]);
         return redirect('/peserta-npl')->with('success', 'Data Berhasil Diaktfikan!');
     }
+    public function npl($id){
+        $event = EventLelang::with('kategori_barang')->where('status_data',1)->get();
+        if (request()->ajax()) {
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = Npl::with('peserta_npl')->where('status','active')->where('peserta_npl_id',$id)->get();
+            } elseif ($status == 'not-active') {
+                $data = Npl::where('status','not-active')->orderBy('created_at','desc')->find($id);
+            }
+            return DataTables::of($data)->make(true);
+        }
+        return view('lelang.npl', compact('event','id'));
+    }
+    public function harganpl_by_event($id){
+        $event = EventLelang::with('kategori_barang')->where('id', $id)->first();
+        
+        $harga_npl = $event->kategori_barang->harga_npl;
+        
+        return response()->json($harga_npl);        
+    }
+
+    public function add_npl(Request $request){
+        $peserta = PesertaNpl::where('id', $request->peserta_npl_id)->first();
+        $bukti = $request->file('bukti');
+        $bukti->storeAs('public/image', $bukti->hashName());
+        $npl = preg_replace('/\D/', '', $request->harga_npl); 
+        $harga_npl = trim($npl);
+        $nominal = preg_replace('/\D/', '', $request->nominal); 
+        $harga_nominal = trim($nominal);
+
+        $pembelian = PembelianNpl::create([
+            'event_lelang_id' => $request->event_lelang_id,
+            'peserta_npl_id' => $request->peserta_npl_id,
+            'type_pembelian' => $request->type_pembelian,
+            'type_transaksi' => $request->type_transaksi,
+            'no_rek' => $request->no_rek,
+            'nama_pemilik' => $peserta->nama,
+            'nominal' => $harga_nominal,
+            'tgl_transfer' => $request->tgl_transfer,
+            'harga_npl' => $harga_npl,
+            'jumlah_tiket' => $request->jumlah_tiket,
+            'pesan_verifikasi' => null,
+            'bukti' => $bukti->hashName(),
+        ]);
+        Npl::create([
+            'no_npl' => 'SUN_0'. $pembelian->id,
+            'npl' => Str::random(64),
+            'peserta_npl_id' => $request->peserta_npl_id,
+            'pembelian_npl_id' => $pembelian->id,
+            'event_lelang_id' => $request->event_lelang_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
+    }
+    public function detail_npl($id){
+        $data = Npl::with('pembelian_npl','event_lelang.kategori_barang')->where('id',$id)->first();
+        return view('lelang/detail_npl', compact('data'));
+    }
+    
+    
 }   

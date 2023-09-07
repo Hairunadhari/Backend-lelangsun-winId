@@ -128,8 +128,8 @@
           { 
             data: null,
             render: function (data){
-                var npl = '/list-member-event/' + data.id;
-                return `<a class="btn btn-success fs-5" href="#">0</a>`;
+                var npl = '/npl/' + data.id;
+                return `<a class="btn btn-success fs-5" href="${npl}">0</a>`;
             }
           },
           {
@@ -139,10 +139,10 @@
               var editUrl = '/edit-peserta-npl/' + data.id;
               return `
                 <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                  <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-info-circle"></i>Edit</a></span>
+                  <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                   <input type="hidden" name="_method" value="PUT">
-                  <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+                  <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
                 </form>
               `;
             },
@@ -182,8 +182,8 @@
           { 
             data: null,
             render: function (data){
-                var npl = '/list-member-event/' + data.id;
-                return `<a class="btn btn-success fs-5" href="#">0</a>`;
+                var npl = '/npl/' + data.id;
+                return `<a class="btn btn-success fs-5" href="${npl}">0</a>`;
             }
           },
           {

@@ -94,6 +94,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-peserta-npl/{id}/', [MenuController::class, 'update_peserta_npl'])->name('update-peserta-npl');
     Route::put('/delete-peserta-npl/{id}/', [MenuController::class, 'delete_peserta_npl'])->name('delete-peserta-npl');
     Route::put('/active-peserta-npl/{id}/', [MenuController::class, 'active_peserta_npl'])->name('active-peserta-npl');
+    Route::get('/npl/{id}/', [MenuController::class, 'npl'])->name('npl');
+    Route::get('/npl/get-harganpl-by-event/{id}/', [MenuController::class, 'harganpl_by_event']);
+    Route::post('/add-npl', [MenuController::class, 'add_npl'])->name('add-npl');
+    Route::get('/detail-npl/{id}/', [MenuController::class, 'detail_npl'])->name('detail-npl');
 
     // route Lot
     Route::get('/lot', [MenuController::class, 'list_lot'])->name('lot');
