@@ -782,9 +782,9 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = KategoriBarang::where('status', 1)->get();
+                $data = KategoriBarang::where('status', 1)->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
-                $data = KategoriBarang::where('status', 0)->get();
+                $data = KategoriBarang::where('status', 0)->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -1444,7 +1444,7 @@ class MenuController extends Controller
     }
 
     public function list_barang_lelang(){
-        $kategori = KategoriBarang::select('id','kategori')->where('status','active')->get();
+        $kategori = KategoriBarang::select('id','kategori')->where('status',1)->get();
         if (request()->ajax()) {
             $status = request('status');
 

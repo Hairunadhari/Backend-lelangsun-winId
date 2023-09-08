@@ -718,23 +718,27 @@ class ApiController extends Controller
     }
 
 
-  /**
-     * @OA\Put(
+     /**
+     * @OA\Post(
      *      path="/api/update-akun/{id}",
-    *      tags={"Akun"},
-    *      summary="Update Akun",
-    *      description="Mengupdate data akun berdasarkan ID",
+     *      tags={"Akun"},
+     *      summary="Akun",
+     *      description="masukkan name, telp, alamat, foto",
+     *      operationId="Akun",
      *      @OA\RequestBody(
-    *          required=true,
-    *          description="form edit",
-    *          @OA\JsonContent(
-    *              required={"name", "no_telp","alamat"},
-    *              @OA\Property(property="name", type="string"),
-    *              @OA\Property(property="no_telp", type="integer"),
-    *              @OA\Property(property="alamat", type="string"),
-    *              @OA\Property(property="foto", type="string"),
-    *          )
-    *      ),
+     *          required=true,
+     *          description="",
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                   @OA\Property(property="name", type="string"),
+     *                   @OA\Property(property="no_telp", type="integer"),
+     *                   @OA\Property(property="alamat", type="string"),
+     *                  @OA\Property(property="foto", type="file", format="binary"),
+     *                  @OA\Property(property="_method", type="string", example="PUT"),
+     *              )
+     *          )
+     *      ),
      *      @OA\Response(
      *          response="default",
      *          description=""

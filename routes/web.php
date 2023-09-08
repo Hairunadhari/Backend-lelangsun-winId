@@ -20,11 +20,12 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 
-Route::get('/', function () {
+Route::get('/admin', function () {
     return view('auth.login');
 });
 
-// Route::get('/', [FrontEndController::class, 'view'])->name('view');
+
+Route::get('/', [FrontEndController::class, 'view'])->name('view');
 
 // Auth::routes(['verify' => true]);
 

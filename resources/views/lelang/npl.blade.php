@@ -139,8 +139,8 @@
             <form action="{{route('add-npl')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <input type="string" class="form-control" name="peserta_npl_id" value="{{$id}}" required>
-                    <input type="string" class="form-control" name="type_pembelian" value="offline" required>
+                    <input type="hidden" class="form-control" name="peserta_npl_id" value="{{$id}}" required>
+                    <input type="hidden" class="form-control" name="type_pembelian" value="offline" required>
                     <div class="form-group">
                         <label>Event <span style="color: red">*</span></label>
                         <select class="form-control selectric" id="eventlist" name="event_lelang_id">
