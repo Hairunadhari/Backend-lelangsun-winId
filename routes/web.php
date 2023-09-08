@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\SendEmailMemberController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -19,9 +20,12 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 
-Route::get('/', function () {
+Route::get('/admin', function () {
     return view('auth.login');
 });
+
+
+Route::get('/', [FrontEndController::class, 'view'])->name('view');
 
 // Auth::routes(['verify' => true]);
 
@@ -83,13 +87,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/pembayaran', [MenuController::class, 'list_pembayaran'])->name('pembayaran');
     Route::get('/pengiriman', [MenuController::class, 'list_pengiriman'])->name('pengiriman');
 
-    // route pembelian NPL
-    Route::get('/pembelian-npl', [MenuController::class, 'list_pembelian_npl'])->name('pembelian-npl');
-    Route::post('/add-pembelian-npl', [MenuController::class, 'add_pembelian_npl'])->name('add-pembelian-npl');
-    Route::get('/detail-pembelian-npl/{id}/', [MenuController::class, 'detail_pembelian_npl'])->name('detail-pembelian-npl');
-    Route::get('/edit-pembelian-npl/{id}/', [MenuController::class, 'edit_pembelian_npl'])->name('edit-pembelian-npl');
-    Route::put('/update-pembelian-npl/{id}/', [MenuController::class, 'update_pembelian_npl'])->name('update-pembelian-npl');
-    Route::delete('/delete-pembelian-npl/{id}/', [MenuController::class, 'delete_pembelian_npl'])->name('delete-pembelian-npl');
+    // route peserta NPL
+    Route::get('/peserta-npl', [MenuController::class, 'list_peserta_npl'])->name('peserta-npl');
+    Route::post('/add-peserta-npl', [MenuController::class, 'add_peserta_npl'])->name('add-peserta-npl');
+    Route::get('/detail-peserta-npl/{id}/', [MenuController::class, 'detail_peserta_npl'])->name('detail-peserta-npl');
+    Route::get('/edit-peserta-npl/{id}/', [MenuController::class, 'edit_peserta_npl'])->name('edit-peserta-npl');
+    Route::put('/update-peserta-npl/{id}/', [MenuController::class, 'update_peserta_npl'])->name('update-peserta-npl');
+    Route::put('/delete-peserta-npl/{id}/', [MenuController::class, 'delete_peserta_npl'])->name('delete-peserta-npl');
+    Route::put('/active-peserta-npl/{id}/', [MenuController::class, 'active_peserta_npl'])->name('active-peserta-npl');
+    Route::get('/npl/{id}/', [MenuController::class, 'npl'])->name('npl');
+    Route::get('/npl/get-harganpl-by-event/{id}/', [MenuController::class, 'harganpl_by_event']);
+    Route::post('/add-npl', [MenuController::class, 'add_npl'])->name('add-npl');
+    Route::get('/detail-npl/{id}/', [MenuController::class, 'detail_npl'])->name('detail-npl');
 
     // route Lot
     Route::get('/lot', [MenuController::class, 'list_lot'])->name('lot');
@@ -114,7 +123,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-event-lelang/{id}/', [MenuController::class, 'detail_event_lelang'])->name('detail-event-lelang');
     Route::get('/edit-event-lelang/{id}/', [MenuController::class, 'edit_event_lelang'])->name('edit-event-lelang');
     Route::put('/update-event-lelang/{id}/', [MenuController::class, 'update_event_lelang'])->name('update-event-lelang');
-    Route::delete('/delete-event-lelang/{id}/', [MenuController::class, 'delete_event_lelang'])->name('delete-event-lelang');
+    Route::put('/delete-event-lelang/{id}/', [MenuController::class, 'delete_event_lelang'])->name('delete-event-lelang');
+    Route::put('/active-event-lelang/{id}/', [MenuController::class, 'active_event_lelang'])->name('active-event-lelang');
 
     Route::get('/cari-toko', [MenuController::class, 'cari_toko'])->name('cari-toko');
 

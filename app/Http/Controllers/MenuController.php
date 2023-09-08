@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use DataTables;
+use App\Models\Npl;
 use App\Models\Role;
 use App\Models\Toko;
 use App\Models\User;
@@ -20,10 +21,12 @@ use App\Models\Keranjang;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
+use App\Models\PesertaNpl;
 use App\Models\BannerUtama;
 use App\Models\EventLelang;
 use App\Models\GambarEvent;
 use App\Models\ProdukPromo;
+use Illuminate\Support\Str;
 use App\Models\BannerDiskon;
 use App\Models\BannerLelang;
 use App\Models\BarangLelang;
@@ -520,19 +523,29 @@ class MenuController extends Controller
     }
 
     public function list_event_lelang(){
-        $data = EventLelang::paginate(10);
-        // dd($data);
+        $data = KategoriBarang::all();
+        if (request()->ajax()) {
+            $status = request('status_data');
+
+            if ($status == 'active') {
+                $data = EventLelang::where('status_data', 1)->orderBy('created_at','desc')->get();
+            } elseif ($status == 'not-active') {
+                $data = EventLelang::where('status_data', 0)->orderBy('created_at','desc')->get();
+            }
+            return DataTables::of($data)->make();
+        }
         return view('lelang/list_eventlelang', compact('data'));
     }
 
     public function add_event_lelang(Request $request){
 
-        $this->validate($request, [
-            'event'     => 'required',
-        ]);
-
         EventLelang::create([
-            'event'     => $request->event,
+            'judul'     => $request->judul,
+            'kategori_barang_id'     => $request->kategori_id,
+            'waktu'     => $request->waktu,
+            'alamat'     => $request->alamat,
+            'link_lokasi'     => $request->link_lokasi,
+            'deskripsi'     => $request->deskripsi,
         ]);
 
         return redirect('/event-lelang')->with('success', 'Data Berhasil ditambahkan');
@@ -545,16 +558,22 @@ class MenuController extends Controller
     public function edit_event_lelang($id)
     {
         $data = EventLelang::find($id);
+        $kategori = KategoriBarang::all();
 
         //render view with post
-        return view('lelang.edit_eventlelang', compact('data'));
+        return view('lelang.edit_eventlelang', compact('data','kategori'));
     }
     public function update_event_lelang(Request $request, $id)
     {
 
         $data = EventLelang::find($id);
         $data->update([
-            'event'     => $request->event,
+            'judul'     => $request->judul,
+            'kategori_barang_id'     => $request->kategori_id,
+            'waktu'     => $request->waktu,
+            'alamat'     => $request->alamat,
+            'link_lokasi'     => $request->link_lokasi,
+            'deskripsi'     => $request->deskripsi,
         ]);
 
         //redirect to index
@@ -563,7 +582,17 @@ class MenuController extends Controller
     public function delete_event_lelang($id)
     {
         $data = EventLelang::find($id);
-        $data->delete();
+        $data->update([
+            'status_data' => 0
+        ]);
+        return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+    public function active_event_lelang($id)
+    {
+        $data = EventLelang::find($id);
+        $data->update([
+            'status_data' => 1
+        ]);
         return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
@@ -753,9 +782,9 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = KategoriBarang::where('status', 1)->get();
+                $data = KategoriBarang::where('status', 1)->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
-                $data = KategoriBarang::where('status', 0)->get();
+                $data = KategoriBarang::where('status', 0)->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -915,7 +944,7 @@ class MenuController extends Controller
     public function edit_barang_lelang($id)
     {
         $data = BarangLelang::with('kategoribarang','gambarlelang')->find($id);
-        $kategori = KategoriBarang::all();
+        $kategori = KategoriBarang::where('status',1)->get();
         //render view with post
         return view('lelang.edit_baranglelang', compact('data','kategori'));
     }
@@ -1415,7 +1444,7 @@ class MenuController extends Controller
     }
 
     public function list_barang_lelang(){
-        $kategori = KategoriBarang::select('id','kategori')->get();
+        $kategori = KategoriBarang::select('id','kategori')->where('status',1)->get();
         if (request()->ajax()) {
             $status = request('status');
 
@@ -1479,7 +1508,7 @@ class MenuController extends Controller
             ]);
         }
 
-return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
+    return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
 
     }
 
@@ -1796,10 +1825,6 @@ return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
         return view('lelang.list_lot');
     }
 
-    public function list_pembelian_npl(){
-        return view('lelang.list_pembelian_npl');
-    }
-
     public function tambah_admin(){
         $role = Role::where('role','Admin')->get();
         return view('user-cms.input_admin',compact('role'));
@@ -1914,4 +1939,189 @@ return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
         $peserta->each->delete();
         return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
     }
+
+    public function list_peserta_npl(){
+        if (request()->ajax()) {
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = PesertaNpl::where('status','active')->orderBy('created_at','desc')->get();
+            } elseif ($status == 'not-active') {
+                $data = PesertaNpl::where('status','not-active')->orderBy('created_at','desc')->get();
+            }
+
+            return DataTables::of($data)->make(true);
+        }
+        return view('lelang.list_peserta_npl');
+    }
+
+    public function add_peserta_npl(Request $request){
+        $ktp = $request->file('foto_ktp');
+        $npwp = $request->file('foto_npwp');
+        $ktp->storeAs('public/image', $ktp->hashName());
+        $npwp->storeAs('public/image', $npwp->hashName());
+        PesertaNpl::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'nik' => $request->nik,
+            'npwp' => $request->npwp,
+            'foto_ktp' => $ktp->hashName(),
+            'foto_npwp' => $npwp->hashName(),
+        ]);
+
+        return redirect('/peserta-npl')->with('success', 'Data Berhasil Ditambahkan');
+    }
+
+    public function edit_peserta_npl($id){
+        $data = PesertaNpl::find($id);
+        return view('lelang.edit_peserta_npl',compact('data'));
+    }
+
+    public function update_peserta_npl(Request $request, $id){
+        $data = PesertaNpl::find($id);
+
+        if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
+            
+            Storage::delete('public/image/'.$data->foto_ktp);
+            $foto_ktp = $request->file('foto_ktp');
+            $foto_ktp->storeAs('public/image', $foto_ktp->hashName());
+
+            Storage::delete('public/image/'.$data->foto_npwp);
+            $foto_npwp = $request->file('foto_npwp');
+            $foto_npwp->storeAs('public/image', $foto_npwp->hashName());
+
+            $data->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+                'foto_ktp'     => $foto_ktp->hashName(),
+                'foto_npwp'     => $foto_npwp->hashName(),
+            ]);
+
+        }elseif ($request->hasFile('foto_npwp')){
+
+            Storage::delete('public/image/'.$data->foto_npwp);
+            $foto_npwp = $request->file('foto_npwp');
+            $foto_npwp->storeAs('public/image', $foto_npwp->hashName());
+
+            $data->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+                'foto_npwp'     => $foto_npwp->hashName(),
+            ]);
+
+        }elseif ($request->hasFile('foto_ktp')){
+
+            Storage::delete('public/image/'.$data->foto_ktp);
+            $foto_ktp = $request->file('foto_ktp');
+            $foto_ktp->storeAs('public/image', $foto_ktp->hashName());
+
+            $data->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+                'foto_ktp'     => $foto_ktp->hashName(),
+            ]);
+
+        }else {
+            $data->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+            ]);
+        }
+        return redirect('/peserta-npl')->with('success', 'Data Berhasil Diubah!');
+    }
+
+    public function delete_peserta_npl($id){
+        $data = PesertaNpl::find($id);
+        $data->update([
+            'status' => 'not-active'
+        ]);
+        return redirect('/peserta-npl')->with('success', 'Data Berhasil Dihapus!');
+    }
+
+    public function active_peserta_npl($id){
+        $data = PesertaNpl::find($id);
+        $data->update([
+            'status' => 'active'
+        ]);
+        return redirect('/peserta-npl')->with('success', 'Data Berhasil Diaktfikan!');
+    }
+    public function npl($id){
+        $event = EventLelang::with('kategori_barang')->where('status_data',1)->get();
+        if (request()->ajax()) {
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = Npl::with('peserta_npl')->where('status','active')->where('peserta_npl_id',$id)->get();
+            } elseif ($status == 'not-active') {
+                $data = Npl::where('status','not-active')->orderBy('created_at','desc')->find($id);
+            }
+            return DataTables::of($data)->make(true);
+        }
+        return view('lelang.npl', compact('event','id'));
+    }
+    public function harganpl_by_event($id){
+        $event = EventLelang::with('kategori_barang')->where('id', $id)->first();
+        
+        $harga_npl = $event->kategori_barang->harga_npl;
+        
+        return response()->json($harga_npl);        
+    }
+
+    public function add_npl(Request $request){
+        $peserta = PesertaNpl::where('id', $request->peserta_npl_id)->first();
+        $bukti = $request->file('bukti');
+        $bukti->storeAs('public/image', $bukti->hashName());
+        $npl = preg_replace('/\D/', '', $request->harga_npl); 
+        $harga_npl = trim($npl);
+        $nominal = preg_replace('/\D/', '', $request->nominal); 
+        $harga_nominal = trim($nominal);
+
+        $pembelian = PembelianNpl::create([
+            'event_lelang_id' => $request->event_lelang_id,
+            'peserta_npl_id' => $request->peserta_npl_id,
+            'type_pembelian' => $request->type_pembelian,
+            'type_transaksi' => $request->type_transaksi,
+            'no_rek' => $request->no_rek,
+            'nama_pemilik' => $peserta->nama,
+            'nominal' => $harga_nominal,
+            'tgl_transfer' => $request->tgl_transfer,
+            'harga_npl' => $harga_npl,
+            'jumlah_tiket' => $request->jumlah_tiket,
+            'pesan_verifikasi' => null,
+            'bukti' => $bukti->hashName(),
+        ]);
+        Npl::create([
+            'no_npl' => 'SUN_0'. $pembelian->id,
+            'npl' => Str::random(64),
+            'peserta_npl_id' => $request->peserta_npl_id,
+            'pembelian_npl_id' => $pembelian->id,
+            'event_lelang_id' => $request->event_lelang_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
+    }
+    public function detail_npl($id){
+        $data = Npl::with('pembelian_npl','event_lelang.kategori_barang')->where('id',$id)->first();
+        return view('lelang/detail_npl', compact('data'));
+    }
+    
+    
 }   

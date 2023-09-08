@@ -13,4 +13,8 @@ class KategoriBarang extends Model
     {
         return $this->hasMany(BarangLelang::class);
     }
+    public function event_lelang()
+    {
+        return $this->hasMany(EventLelang::class);
+    }
 }

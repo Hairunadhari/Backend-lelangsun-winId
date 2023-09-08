@@ -717,23 +717,27 @@ class ApiController extends Controller
     }
 
 
-  /**
-     * @OA\Put(
+     /**
+     * @OA\Post(
      *      path="/api/update-akun/{id}",
-    *      tags={"Akun"},
-    *      summary="Update Akun",
-    *      description="Mengupdate data akun berdasarkan ID",
+     *      tags={"Akun"},
+     *      summary="Akun",
+     *      description="masukkan name, telp, alamat, foto",
+     *      operationId="Akun",
      *      @OA\RequestBody(
-    *          required=true,
-    *          description="form edit",
-    *          @OA\JsonContent(
-    *              required={"name", "no_telp","alamat"},
-    *              @OA\Property(property="name", type="string"),
-    *              @OA\Property(property="no_telp", type="integer"),
-    *              @OA\Property(property="alamat", type="string"),
-    *              @OA\Property(property="foto", type="string"),
-    *          )
-    *      ),
+     *          required=true,
+     *          description="",
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                   @OA\Property(property="name", type="string"),
+     *                   @OA\Property(property="no_telp", type="integer"),
+     *                   @OA\Property(property="alamat", type="string"),
+     *                  @OA\Property(property="foto", type="file", format="binary"),
+     *                  @OA\Property(property="_method", type="string", example="PUT"),
+     *              )
+     *          )
+     *      ),
      *      @OA\Response(
      *          response="default",
      *          description=""
@@ -741,18 +745,23 @@ class ApiController extends Controller
      * )
      */
     public function update_akun(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'foto' => 'image|mimes:jpeg,jpg,png',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'VALIDASI GAGAL'
+            ]);
+        }
         
         $data = User::find($id);
-        // dd($data);
-        
-        if ($request->has('foto')) {
-            $base64Image = explode(";base64,", $request->foto);
 
-            $explodeImage = explode("image/", $base64Image[0]);
-            $imageType = $explodeImage[1];
-            $image_base64 = base64_decode($base64Image[1]);
-            $fileName = time() . '-' . $request->name  . '.' . $imageType;
-            Storage::put($fileName, $image_base64);
+        if ($request->hasFile('foto')) {
+
+            //upload new image
+            $foto = $request->file('foto');
+            $foto->storeAs('public/image', $foto->hashName());
 
             Storage::delete('public/image/'.$data->foto);
 
@@ -760,7 +769,7 @@ class ApiController extends Controller
                 'name' => $request->name,
                 'no_telp' => $request->no_telp,
                 'alamat' => $request->alamat,
-                'foto'     => $fileName,
+                'foto'     => $foto->hashName(),
             ]);
 
         } else {
@@ -776,6 +785,8 @@ class ApiController extends Controller
             'data' => $data
         ]);
     }
+
+
 
     
 

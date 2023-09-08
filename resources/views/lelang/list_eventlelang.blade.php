@@ -50,12 +50,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Gambar</th>
-                                        <th>Judul</th>
-                                        <th>Jenis</th>
-                                        <th>Tiket</th>
-                                        <th>Link Meet</th>
-                                        <th>Status</th>
+                                        <th>Event</th>
+                                        <th>Tanggal Event</th>
+                                        <th>Lokasi</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -70,155 +67,100 @@
     </div>
 </div>
 <script>
-    // $(document).ready(function () {
-    //     $('#event').DataTable({
-    //         processing: true,
-    //         ordering: false,
-    //         responsive: true,
-    //         ajax: {
-    //             url: '{{ url()->current() }}',
-    //             data: function (data) {
-    //                 data.status_data = 'active';
-    //             }
-    //         },
-    //         columns: [{
-    //                 render: function (data, type, row, meta) {
-    //                     return meta.row + meta.settings._iDisplayStart + 1;
-    //                 },
-    //             },
-    //             {
-    //                 data: "gambar",
-    //                 render: function (data) {
-    //                     return '<img src="/storage/image/' + data +
-    //                         '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
-    //                 },
-    //             },
-    //             {
-    //                 data: "judul",
-    //             },
-    //             {
-    //                 data: "jenis",
-    //             },
-    //             {
-    //                 data: "tiket",
-    //             },
-    //             {
-    //                 data: null,
-    //                 render: function (data) {
-    //                     return `<a href="${data.link}">${data.link}</a>`
-    //                 }
-    //             },
-    //             {
-    //                 data: "status",
-    //                 render: function (data, type, row, meta) {
-    //                     if (data == "akan datang") {
-    //                         badge = `<span class="badge badge-primary">Coming Soon</span>`
-    //                     } else if (data == "sedang berlangsung") {
-    //                         badge =
-    //                             `<span class="badge badge-success">Sedang Berlangsung</span>`
-    //                     } else if (data == "selesai") {
-    //                         badge = `<span class="badge badge-light">Selesai</span>`
-    //                     }
-    //                     return badge;
-    //                 }
-    //             },
-    //             {
-    //                 data: null,
-    //                 render: function (data) {
-    //                     var deleteUrl = '/delete-event/' + data.id;
-    //                     var editUrl = '/edit-event/' + data.id;
-    //                     return `
-    //                 <div class="dropdown d-inline">
-    //                     <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
-    //                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-    //                     <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-    //                         <div class="dropdown-menu" x-placement="bottom-start"
-    //                             style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-    //                             <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
-    //                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    //                             <input type="hidden" name="_method" value="PUT">
-    //                             <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
-    //                         </div>
-    //                     </form>
-    //                 </div>
-    //                 `;
-    //                 },
-    //             },
-    //         ],
-    //     });
-    // });
-
-    // $(document).ready(function () {
-    //     $('#event-notactive').DataTable({
-    //         processing: true,
-    //         ordering: false,
-    //         responsive: true,
-    //         ajax: {
-    //             url: '{{ url()->current() }}',
-    //             data: function (data) {
-    //                 data.status_data = 'not-active';
-    //             }
-    //         },
-    //         columns: [{
-    //                 render: function (data, type, row, meta) {
-    //                     return meta.row + meta.settings._iDisplayStart + 1;
-    //                 },
-    //             },
-    //             {
-    //                 data: "gambar",
-    //                 render: function (data) {
-    //                     return '<img src="/storage/image/' + data +
-    //                         '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
-    //                 },
-    //             },
-    //             {
-    //                 data: "judul",
-    //             },
-    //             {
-    //                 data: "jenis",
-    //             },
-    //             {
-    //                 data: "tiket",
-    //             },
-    //             {
-    //                 data: null,
-    //                 render: function (data) {
-    //                     return `<a href="${data.link}">${data.link}</a>`
-    //                 }
-    //             },
-    //             {
-    //                 data: "status",
-    //                 render: function (data, type, row, meta) {
-    //                     if (data == "akan datang") {
-    //                         badge = `<span class="badge badge-primary">Coming Soon</span>`
-    //                     } else if (data == "sedang berlangsung") {
-    //                         badge =
-    //                             `<span class="badge badge-success">Sedang Berlangsung</span>`
-    //                     } else if (data == "selesai") {
-    //                         badge = `<span class="badge badge-light">Selesai</span>`
-    //                     }
-    //                     return badge;
-    //                 }
-    //             },
-    //             {
-    //                 data: null,
-    //                 render: function (data) {
-    //                     var activeurl = '/active-event/' + data.id;
-    //                     return `
-    //                     <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
-    //                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    //                     <input type="hidden" name="_method" value="PUT">
-    //                     <button class="btn btn-success" type="submit"><i class="fas fa-sync-alt"></i></button>
-    //                     </form>
-    //                 `;
-    //                 },
-    //             },
-    //         ],
-    //     });
-    // });
+     $(document).ready(function () {
+         $('#event').DataTable({
+             processing: true,
+             ordering: false,
+             responsive: true,
+             ajax: {
+                 url: '{{ url()->current() }}',
+                 data: function (data) {
+                     data.status_data = 'active';
+                 }
+             },
+             columns: [{
+                     render: function (data, type, row, meta) {
+                         return meta.row + meta.settings._iDisplayStart + 1;
+                     },
+                 },
+                 {
+                     data: "judul",
+                 },
+                 {
+                     data: "waktu",
+                 },
+                 {
+                     data: "link_lokasi",
+                 },
+                 
+                 {
+                     data: null,
+                     render: function (data) {
+                         var deleteUrl = '/delete-event-lelang/' + data.id;
+                         var editUrl = '/edit-event-lelang/' + data.id;
+                         return `
+                     <div class="dropdown d-inline">
+                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
+                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                         <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                             <div class="dropdown-menu" x-placement="bottom-start"
+                                 style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                 <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
+                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                 <input type="hidden" name="_method" value="PUT">
+                                 <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+                             </div>
+                         </form>
+                     </div>
+                     `;
+                     },
+                 },
+             ],
+         });
+         $('#event-notactive').DataTable({
+             processing: true,
+             ordering: false,
+             responsive: true,
+             ajax: {
+                 url: '{{ url()->current() }}',
+                 data: function (data) {
+                     data.status_data = 'not-active';
+                 }
+             },
+             columns: [{
+                     render: function (data, type, row, meta) {
+                         return meta.row + meta.settings._iDisplayStart + 1;
+                     },
+                 },
+                 {
+                     data: "judul",
+                 },
+                 {
+                     data: "waktu",
+                 },
+                 {
+                     data: "link_lokasi",
+                 },
+                 {
+                     data: null,
+                     render: function (data) {
+                         var activeurl = '/active-event-lelang/' + data.id;
+                         return `
+                         <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
+                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                         <input type="hidden" name="_method" value="PUT">
+                         <button class="btn btn-success" type="submit"><i class="fas fa-sync-alt"></i></button>
+                         </form>
+                     `;
+                     },
+                 },
+             ],
+         });
+     });
 
 </script>
 @endsection
+@section('modal')
 <!-- Modal -->
 <div class="modal fade" id="eventmodal" tabindex="-1" role="dialog" aria-labelledby="eventlabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -229,7 +171,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('add-event')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('add-event-lelang')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -237,12 +179,20 @@
                         <input type="text" class="form-control" name="judul" placeholder="Judul event" required>
                     </div>
                     <div class="form-group">
+                        <label>Jenis Kategori Lelang <span style="color: red">*</span></label>
+                        <select class="form-control selectric" name="kategori_id">
+                            @foreach ($data as $item)
+                            <option value="{{ $item->id }}">{{ $item->kategori }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Waktu Event <span style="color: red">*</span></label>
-                        <input type="date" class="form-control" name="judul" required>
+                        <input type="datetime-local" class="form-control" name="waktu" required>
                     </div>
                     <div class="form-group">
                         <label>Alamat Event <span style="color: red">*</span></label>
-                        <textarea class="form-control" name="alamat_lokasi"></textarea>
+                        <textarea class="form-control" name="alamat" required></textarea>
                     </div>
                     <div class="form-group">
                         <label>Link Lokasi <span style="color: red">*</span></label>
@@ -260,3 +210,4 @@
         </div>
     </div>
 </div>
+@endsection

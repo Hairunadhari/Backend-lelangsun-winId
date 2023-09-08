@@ -12,7 +12,6 @@
             <h4 class="text-center">Win Event</h4>
         </div>
         <div class="card-body">
-            <div style="display:flex; justify-content:center; align-items:center; width: auto; height:auto; ">{!! DNS2D::getBarcodeHTML("$data->nama", 'QRCODE', 5, 5) !!}</div>
             <p>Halooo {{ $data->nama }} Selamat akun anda sudah terverifikasi! Info tentang event {{ $data->event->judul }} sebagai berikut:</p>
             <p>Nama Event : {{ $data->event->judul }}</p>
             <p>Link Meeting : {{ $data->event->link }}</p>

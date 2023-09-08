@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EventLelang extends Model
+class PesertaNpl extends Model
 {
     use HasFactory;
-    protected $guarded = [];
-    public function kategori_barang()
+    protected $guarded = [''];
+
+    public function pembelian_npl()
     {
-        return $this->belongsTo(KategoriBarang::class);
+        return $this->hasMany(PembelianNpl::class);
     }
     public function npl()
     {
