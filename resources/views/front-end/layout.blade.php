@@ -59,7 +59,7 @@
         }
         .card-footer{
             margin-inline: 10px;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
         }
         footer h4, p, li{
             font-size: 16px;
@@ -81,8 +81,8 @@
                 <div class="navbar-nav">
                     <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a>
-                    <a class="nav-link fw-semibold" href="#">Lelang</a>
-                    <a class="nav-link fw-semibold">Events</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
                     <a class="nav-link fw-semibold">Kontak</a>
                     <a class="nav-link fw-semibold">Login</a>
                 </div>

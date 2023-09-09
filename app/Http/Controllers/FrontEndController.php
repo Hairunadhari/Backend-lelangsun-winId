@@ -12,4 +12,10 @@ class FrontEndController extends Controller
     public function lot(){
         return view('front-end/lot');
     }
+    public function lelang(){
+        return view('front-end/lelang');
+    }
+    public function event(){
+        return view('front-end/event');
+    }
 }

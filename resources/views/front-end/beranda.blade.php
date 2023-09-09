@@ -100,7 +100,10 @@
     }
 
     @media (max-width: 600px){
-        
+        .container-fluid .logosun {
+            margin-left: 0;
+            width: 100px;
+        }
 
         .carousel-text {
             position: absolute;
