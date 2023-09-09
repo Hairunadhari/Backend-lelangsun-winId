@@ -25,7 +25,8 @@ Route::get('/admin', function () {
 });
 
 
-Route::get('/', [FrontEndController::class, 'view'])->name('view');
+Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
+Route::get('/user-lot', [FrontEndController::class, 'lot'])->name('front-end-lot');
 
 // Auth::routes(['verify' => true]);
 
