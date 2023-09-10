@@ -44,6 +44,9 @@
         margin-inline: 100px;
         margin-bottom: 50px;
     }
+    .last-text{
+        padding: 5px;
+    }
 
     @media (max-width: 600px) {
         .container-fluid .logosun {
@@ -61,7 +64,7 @@
             margin-inline: 10px;
             margin-bottom: 30px;
         }
-        footer h4, p, li{
+        footer h5, p, li{
             font-size: 16px;
         }
         
@@ -83,7 +86,7 @@
                     <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
-                    <a class="nav-link fw-semibold">Kontak</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
                     <a class="nav-link fw-semibold">Login</a>
                 </div>
             </div>
@@ -116,7 +119,9 @@
                 <p><i class="fas fa-envelope"></i> lelangsun@gmail.com</p>
             </div>
         </div>
-        <h4 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h4>
+        <div class="last-text">
+            <h5 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
+        </div>
     </footer>
 
 

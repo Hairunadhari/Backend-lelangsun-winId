@@ -18,4 +18,7 @@ class FrontEndController extends Controller
     public function event(){
         return view('front-end/event');
     }
+    public function kontak(){
+        return view('front-end/kontak');
+    }
 }

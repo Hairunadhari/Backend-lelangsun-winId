@@ -1,7 +1,7 @@
 @extends('front-end.layout')
 @section('content')
 <style>
-     .carousel-inner {
+     /* .carousel-inner {
         height: 400px;
     }
 
@@ -97,7 +97,7 @@
         border: 1px solid white;
         padding: 10px
         
-    }
+    } */
 
     @media (max-width: 600px){
         .container-fluid .logosun {
@@ -128,8 +128,6 @@
             background-image: url('/asset-lelang/mobile-02.png');
             background-size: cover;
             background-repeat: no-repeat;
-            /* padding-top: 50px; */
-            /* padding-left: 50px; */
             background-position: center;
             height: 52vh;
         }
