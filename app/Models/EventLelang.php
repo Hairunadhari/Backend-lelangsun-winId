@@ -9,6 +9,7 @@ class EventLelang extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    
     public function kategori_barang()
     {
         return $this->belongsTo(KategoriBarang::class);
@@ -16,5 +17,13 @@ class EventLelang extends Model
     public function npl()
     {
         return $this->hasMany(Npl::class);
+    }
+    public function lot()
+    {
+        return $this->hasMany(Lot::class);
+    }
+    public function lot_item()
+    {
+        return $this->hasMany(LotItem::class);
     }
 }

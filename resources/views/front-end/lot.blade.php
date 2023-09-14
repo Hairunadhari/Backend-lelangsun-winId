@@ -8,38 +8,21 @@
         background-size: cover;
         background-repeat: no-repeat;
         width: 100%;
-        padding: 20px;
+        padding: 10px;
     }
 
-    .card {
-        width: 300px;
-        height: 400px;
-        padding: 20px;
-        background-color: #31869b;
-        color: white
+    .bungkus-lot {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+        grid-gap: 20px; /* Spasi antara card */
+        padding: 0 20px; /* Spasi kiri dan kanan dari container */
+        justify-content: center;
     }
-
-    select {
-        margin-top: 20px;
+    .bungkus-lot img{
+        height: 200px;
     }
-
-    .judul {
-        padding: 50px;
-    }
-
     @media (max-width: 600px) {
-        .card {
-            width: 200px;
-            height: 300px;
-            padding: 10px;
-            background-color: #31869b;
-            color: white;
-        }
-
-        .card01 {
-            display: flex;
-            justify-content: center
-        }
 
         .judul {
             padding: 10px;
@@ -54,48 +37,27 @@
             width: 100%;
             padding: 10px;
         }
+        
     }
 
 </style>
 <section>
     <div class="lot">
         <h1>LOT</h1>
-        <h3>{{ now()->format('d-M-Y') }}</h3>
-        <div class="card01">
+        <div class="bungkus-lot">
+            @foreach ($lot_item as $item)
             <div class="card">
-                <div class="judul">
-                    <h4 class="text-center">FILTER</h4>
+                <img src="{{asset('storage/image/'.$item->barang_lelang->gambarlelang[0]->gambar)}}"  alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">{{$item->barang_lelang->barang}}</h5>
+                  <p class="card-text">Rp. {{number_format($item->event_lelang->kategori_barang->kelipatan_bidding)}}</p>
+                  <p class="card-text"><i class="fas fa-map-marker-alt"></i> {{$item->event_lelang->alamat}}</p>
+                  <p class="card-text"><i class="fas fa-calendar-alt"></i> {{$item->tanggal}} WIB</p>
                 </div>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="search...">
-                </div>
-                <form action="/action_page.php">
-                    <select name="cars" id="cars">
-                        <option value="volvo">Brand</option>
-                        <option value="saab">Saab</option>
-                        <option value="opel">Opel</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                    <br>
-                    <select name="cars" id="cars">
-                        <option value="volvo">Tahun</option>
-                        <option value="saab">Saab</option>
-                        <option value="opel">Opel</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                    <br>
-                    <select name="cars" id="cars">
-                        <option value="volvo">Harga Awal</option>
-                        <option value="saab">Saab</option>
-                        <option value="opel">Opel</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                </form>
-            </div>
+              </div>
+              @endforeach
         </div>
-        <div class="hasil-filter">
-            
-        </div>
+        
     </div>
 </section>
 @endsection

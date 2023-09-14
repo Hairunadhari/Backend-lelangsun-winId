@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'peserta' => [ // Nama guard khusus untuk Peserta
+            'driver' => 'session',
+            'provider' => 'pesertas', // Nama provider khusus untuk Peserta
+        ],
     ],
 
     /*
@@ -63,6 +68,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'pesertas' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\PesertaNpl::class,
         ],
 
         // 'users' => [
@@ -93,6 +102,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'peserta' => [
+            'provider' => 'pesertas',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

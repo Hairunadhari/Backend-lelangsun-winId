@@ -8,7 +8,7 @@
       </div>
       <ul class="sidebar-menu">
         @if (Auth::user()->role_id == 1)    
-        <!-- <li class="menu-header">Menu SuperAdmin</li>
+        <li class="menu-header">Banner Win Belanja</li>
           <li class="dropdown {{ request()->routeIs(['banner-utama','banner-diskon','banner-spesial']) ? 'active' : '' }}">
             <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-large"></i> <span>Banner E-commerce</span></a>
             <ul class="dropdown-menu">
@@ -16,16 +16,7 @@
             <li class="{{ request()->routeIs('banner-diskon') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-diskon')}}">Banner Diskon</a></li>
             <li class="{{ request()->routeIs('banner-spesial') ? 'active' : '' }}"><a class="nav-link" href="{{route('banner-spesial')}}">Banner Spesial</a></li>
           </ul>
-        </li> -->
-        <!-- <li class="dropdown {{ request()->routeIs(['toko', 'kategori-produk', 'produk', 'pembayaran', 'pengiriman','promosi','detail-pesanan']) ? 'active' : '' }}">
-          <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-shopping-cart"></i> <span>E-commerce</span></a>
-          <ul class="dropdown-menu">
-            </ul>
-          </li> -->
-          <li class="menu-header">Banner Win Belanja</li>
-          <li class="{{ request()->routeIs('banner-utama') ? 'active' : '' }}"><a href="{{route('banner-utama')}}"><i class="fas fa-images"></i><span>Banner Utama</span></a></li>
-          <li class="{{ request()->routeIs('banner-diskon') ? 'active' : '' }}"><a href="{{route('banner-diskon')}}"><i class="fas fa-images"></i><span>Banner Diskon</span></a></li>
-          <li class="{{ request()->routeIs('banner-spesial') ? 'active' : '' }}"><a href="{{route('banner-spesial')}}"><i class="fas fa-images"></i><span>Banner Spesial</span></a></li>
+        </li>
           <li class="menu-header">Win Belanja</li>
           <li class="{{ request()->routeIs('toko') ? 'active' : '' }}"><a href="{{route('toko')}}"><i class="fas fa-store"></i><span>Toko</span></a></li>
           <li class="{{ request()->routeIs('kategori-produk') ? 'active' : '' }}"><a href="{{route('kategori-produk')}}"><i class="fas fa-th-large"></i><span>Kategori Produk</span></a></li>
@@ -39,7 +30,8 @@
         <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a href="{{route('kategori-lelang')}}"><i class="fas fa-th-large"></i><span>Kategori Lelang</span></a></li>
         <li class="{{ request()->routeIs('barang-lelang') ? 'active' : '' }}"><a href="{{route('barang-lelang')}}"><i class="fas fa-car"></i><span>Barang Lelang</span></a></li>
         <li class="{{ request()->routeIs('event-lelang') ? 'active' : '' }}"><a href="{{route('event-lelang')}}"><i class="fas fa-calendar-alt"></i><span>Event Lelang</span></a></li>
-        {{-- <li class="{{ request()->routeIs('peserta-npl') ? 'active' : '' }}"><a href="{{route('peserta-npl')}}">Peserta & NPL Lelang</a></li> --}}
+        <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a href="{{route('lot')}}"><i class="fas fa-star"></i>Lot</a></li>
+        <li class="{{ request()->routeIs('peserta-npl') ? 'active' : '' }}"><a href="{{route('peserta-npl')}}"><i class="fas fa-users"></i>Peserta & NPL Lelang</a></li>
 
 
         <!-- {{-- <li class="{{ request()->routeIs('banner-lelang') ? 'active' : '' }}"><a href="{{route('banner-lelang')}}"><i class="fas fa-th-large"></i><span>Banner Lelang</span></a></li> --}} -->

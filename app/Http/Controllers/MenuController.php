@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Exception;
 use DataTables;
+use Carbon\Carbon;
+use App\Models\Lot;
 use App\Models\Npl;
 use App\Models\Role;
 use App\Models\Toko;
@@ -13,6 +15,7 @@ use App\Models\Order;
 use App\Models\Reply;
 use App\Models\Produk;
 use App\Models\Review;
+use App\Models\LotItem;
 use App\Models\Promosi;
 use App\Models\Setting;
 use App\Models\Tagihan;
@@ -539,13 +542,17 @@ class MenuController extends Controller
 
     public function add_event_lelang(Request $request){
 
-        EventLelang::create([
+        $event = EventLelang::create([
             'judul'     => $request->judul,
             'kategori_barang_id'     => $request->kategori_id,
             'waktu'     => $request->waktu,
             'alamat'     => $request->alamat,
             'link_lokasi'     => $request->link_lokasi,
             'deskripsi'     => $request->deskripsi,
+        ]);
+        Lot::create([
+            'event_lelang_id' => $event->id,
+            'tanggal' => $request->waktu
         ]);
 
         return redirect('/event-lelang')->with('success', 'Data Berhasil ditambahkan');
@@ -558,7 +565,7 @@ class MenuController extends Controller
     public function edit_event_lelang($id)
     {
         $data = EventLelang::find($id);
-        $kategori = KategoriBarang::all();
+        $kategori = KategoriBarang::where('status',1)->get();
 
         //render view with post
         return view('lelang.edit_eventlelang', compact('data','kategori'));
@@ -575,6 +582,14 @@ class MenuController extends Controller
             'link_lokasi'     => $request->link_lokasi,
             'deskripsi'     => $request->deskripsi,
         ]);
+        $lot = Lot::where('event_lelang_id',$id)->get();
+        $lot_item = LotItem::where('event_lelang_id',$id)->get();
+        $lot->each->update([
+            'tanggal' => $request->waktu
+        ]);
+        $lot_item->each->update([
+            'tanggal' => $request->waktu
+        ]);
 
         //redirect to index
         return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Diubah!']);
@@ -582,9 +597,15 @@ class MenuController extends Controller
     public function delete_event_lelang($id)
     {
         $data = EventLelang::find($id);
+        $lot = Lot::where('event_lelang_id',$id)->get();
+        $lot_item = LotItem::where('event_lelang_id',$id)->get();
         $data->update([
             'status_data' => 0
         ]);
+        $lot->each->update([
+            'status' => 'not-active'
+        ]);
+        $lot_item->each->delete();
         return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
     public function active_event_lelang($id)
@@ -592,6 +613,10 @@ class MenuController extends Controller
         $data = EventLelang::find($id);
         $data->update([
             'status_data' => 1
+        ]);
+        $lot = Lot::where('event_lelang_id',$id)->get();
+        $lot->each->update([
+            'status' => 'active'
         ]);
         return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -1449,9 +1474,9 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = BarangLelang::with('kategoribarang','gambarlelang')->where('status', 1)->get();
+                $data = BarangLelang::with('kategoribarang','gambarlelang')->where('status', 1)->orderBy('created_at','desc')->get();
             } elseif ($status == 'notactive') {
-                $data = BarangLelang::with('kategoribarang','gambarlelang')->where('status', 0)->get();
+                $data = BarangLelang::with('kategoribarang','gambarlelang')->where('status', 0)->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make();
@@ -1821,9 +1846,6 @@ class MenuController extends Controller
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
     }
 
-    public function list_lot(){
-        return view('lelang.list_lot');
-    }
 
     public function tambah_admin(){
         $role = Role::where('role','Admin')->get();
@@ -2121,6 +2143,74 @@ class MenuController extends Controller
     public function detail_npl($id){
         $data = Npl::with('pembelian_npl','event_lelang.kategori_barang')->where('id',$id)->first();
         return view('lelang/detail_npl', compact('data'));
+    }
+
+    public function list_lot(){
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('Y-m-d H:i:s');
+        
+        if (request()->ajax()) {
+                $data = Lot::with('event_lelang','lot_item')->where('tanggal','>', $now)->where('status', 'active')->orderBy('created_at','desc')->get();
+            return DataTables::of($data)->make();
+        }
+        return view('lelang.list_lot');
+    }
+
+    // public function form_add_lot($id){
+    //     $id_lot = $id;
+    //     $lot = Lot::with('event_lelang.kategori_barang')->find($id);
+    //     $baranglelang = BarangLelang::where('status',1)->where('kategoribarang_id', $lot->event_lelang->kategori_barang_id)->get();
+    //     return view('lelang.add_lot',compact('id_lot','baranglelang','lot'));
+    // }
+    public function  form_edit_lot($id){
+        $lot = Lot::with('event_lelang.kategori_barang')->find($id);
+        $baranglelang = BarangLelang::where('status',1)->where('kategoribarang_id', $lot->event_lelang->kategori_barang_id)->get();
+        // dd($baranglelang);
+        $lot_item = LotItem::where('lot_id',$id)->get();
+        $barangTerpilih = [];
+
+        foreach ($lot_item as $item) {
+            $barangTerpilih[$item->barang_lelang_id] = $item->barang_lelang_id;
+        }
+        return view('lelang.edit_lot',compact('lot','id','baranglelang','barangTerpilih'));
+    }
+    // public function add_lot(Request $request){
+    //     if (is_null($request->barang_id)) {
+    //         return redirect()->back()->with('error', 'Anda belum memilih Barang!');
+    //     }else {
+
+    //         foreach ($request->barang_id as $barang) {
+    //             LotItem::create([
+    //                 'barang_lelang_id' => $barang,
+    //                 'event_lelang_id' => $request->event_id,
+    //                 'lot_id' => $request->lot_id,
+    //                 'tanggal' => $request->waktu_from_event,
+    //                 'harga_awal' => $request->harga_awal,
+    //             ]);
+    //         }
+            
+    //     }
+    //     return redirect('/lot')->with('success', 'Data Berhasil diTambahkan');
+    // }
+
+    public function update_lot(Request $request,$id){
+        if (is_null($request->barang_id)) {
+            return redirect()->back()->with('error', 'Anda belum memilih Barang!');
+        }else {
+            $lot_item = LotItem::where('lot_id',$id)->delete();
+
+            foreach ($request->barang_id as $barang) {
+                LotItem::create([
+                    'barang_lelang_id' => $barang,
+                    'event_lelang_id' => $request->event_id,
+                    'lot_id' => $id,
+                    'tanggal' => $request->waktu_from_event,
+                    'harga_awal' => $request->harga_awal,
+                ]);
+            }
+            
+        }
+        return redirect('/lot')->with('success', 'Data Berhasil diEdit!');
     }
     
     

@@ -20,6 +20,9 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
+            if ($guard == 'peserta' && Auth::guard($guard)->check()) {
+                return redirect(RouteServiceProvider::PESERTA_HOME);
+            }
             if (Auth::guard($guard)->check()) {
                 return redirect(RouteServiceProvider::HOME);
             }

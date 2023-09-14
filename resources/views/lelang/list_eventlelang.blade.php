@@ -94,26 +94,41 @@
                  },
                  
                  {
-                     data: null,
-                     render: function (data) {
-                         var deleteUrl = '/delete-event-lelang/' + data.id;
-                         var editUrl = '/edit-event-lelang/' + data.id;
-                         return `
-                     <div class="dropdown d-inline">
-                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
-                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                         <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                             <div class="dropdown-menu" x-placement="bottom-start"
-                                 style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                 <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
-                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                 <input type="hidden" name="_method" value="PUT">
-                                 <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
-                             </div>
-                         </form>
-                     </div>
-                     `;
-                     },
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        var deleteUrl = '/delete-event-lelang/' + data.id;
+                        var editUrl = '/edit-event-lelang/' + data.id;
+                        var eventDate = new Date(row.waktu);
+                        var now = new Date();
+                        var oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
+                        console.log(eventDate);
+                        // Periksa apakah eventDate sudah lebih dari satu hari dari waktu saat ini
+                        if (eventDate > now) {
+                            return `
+                            <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                                <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i></a></span>
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="_method" value="PUT">
+                                <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
+                                ${
+                                eventDate - now <= oneDayInMilliseconds
+                                    ? `<button class="btn btn-success" type="submit"><i class="fas fa-hand-paper"></i></button>`
+                                    : ''
+                                }
+                            </form>
+                            `;
+                        } else {
+                            return `
+                            <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                                <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i></a></span>
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="_method" value="PUT">
+                                <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
+                            </form>
+                            `;
+                        }
+                    }
+
                  },
              ],
          });
