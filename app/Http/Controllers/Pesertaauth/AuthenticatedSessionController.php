@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Pesertaauth;
 
 use App\Models\User;
 use Illuminate\View\View;
+use App\Models\PesertaNpl;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Pesertaauth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -18,7 +19,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('peserta.auth.login');
     }
 
     /**
@@ -26,17 +27,18 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $user = User::where('email', $request->email)->first();
+        // ambil data all status
+        $user = PesertaNpl::where('email', $request->email)->first();
         if ($user) {
-            if ($user->role_id != null && $user->status == 'active') {
+            if ($user->status == 'active') {
                 $request->authenticate();
                 $request->session()->regenerate();
-                return redirect()->intended(RouteServiceProvider::HOME);
-            }else {
-                return redirect('login')->with(['pesan' => 'Ada Kesalahan']);            
+                return redirect()->intended(RouteServiceProvider::PESERTA_HOME);
+            } else {
+                return redirect('/user-login')->with(['pesan' => 'Ada Kesalahan']);            
             }
-        } else {
-            return redirect('login')->with(['pesan' => 'Email tidak ditemukan']);            
+        }else{
+            return redirect('/user-login')->with(['pesan' => 'Email Belum Terdaftar!']);            
         }
     }
 
@@ -45,12 +47,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('beranda');
     }
 }

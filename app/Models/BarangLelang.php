@@ -18,4 +18,8 @@ class BarangLelang extends Model
     {
         return $this->hasMany(GambarLelang::class);
     }
+    public function lot_item()
+    {
+        return $this->hasMany(LotItem::class);
+    }
 }

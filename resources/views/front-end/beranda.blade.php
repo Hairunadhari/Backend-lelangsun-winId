@@ -128,8 +128,6 @@
             background-image: url('/asset-lelang/mobile-02.png');
             background-size: cover;
             background-repeat: no-repeat;
-            /* padding-top: 50px; */
-            /* padding-left: 50px; */
             background-position: center;
             height: 52vh;
         }

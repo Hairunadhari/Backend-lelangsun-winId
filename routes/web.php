@@ -24,11 +24,17 @@ Route::get('/admin', function () {
     return view('auth.login');
 });
 
-
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
 Route::get('/user-lot', [FrontEndController::class, 'lot'])->name('front-end-lot');
 Route::get('/user-lelang', [FrontEndController::class, 'lelang'])->name('front-end-lelang');
 Route::get('/user-event', [FrontEndController::class, 'event'])->name('front-end-event');
+Route::get('/user-kontak', [FrontEndController::class, 'kontak'])->name('front-end-kontak');
+Route::get('/user-login', [FrontEndController::class, 'login'])->name('front-end-login');
+Route::get('/user-register', [FrontEndController::class, 'register'])->name('front-end-register');
+Route::post('/add-register', [FrontEndController::class, 'add_register'])->name('register-user');
+Route::post('/proses-login', [FrontEndController::class, 'proses_login'])->name('proses-login-user');
+
+Route::get('/detail-event-user/{id}/', [FrontEndController::class, 'detail_event'])->name('detail-event-user');
 
 // Auth::routes(['verify' => true]);
 
@@ -106,9 +112,10 @@ Route::middleware('auth')->group(function () {
     // route Lot
     Route::get('/lot', [MenuController::class, 'list_lot'])->name('lot');
     Route::post('/add-lot', [MenuController::class, 'add_lot'])->name('add-lot');
+    Route::get('/form-add-lot/{id}/', [MenuController::class, 'form_add_lot'])->name('form-add-lot');
     Route::get('/detail-lot/{id}/', [MenuController::class, 'detail_lot'])->name('detail-lot');
-    Route::get('/edit-lot/{id}/', [MenuController::class, 'edit_lot'])->name('edit-lot');
-    Route::put('/update-lot/{id}/', [MenuController::class, 'update_lot'])->name('update-lot');
+    Route::get('/form-edit-lot/{id}/', [MenuController::class, 'form_edit_lot'])->name('form-edit-lot');
+    Route::post('/update-lot/{id}/', [MenuController::class, 'update_lot'])->name('update-lot');
     Route::delete('/delete-lot/{id}/', [MenuController::class, 'delete_lot'])->name('delete-lot');
 
     // route barang lelang
@@ -236,3 +243,6 @@ Route::middleware('auth')->group(function () {
 
  
 require __DIR__.'/auth.php';
+
+require __DIR__.'/pesertaauth.php';
+

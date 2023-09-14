@@ -57,8 +57,7 @@
     </section>
     <section id="dua">
         <div class="lelang">
-            <h3>Jadwal Lelang</h3>
-            <h3>(1 jan 2023 - 1 des 2024)</h3>
+            <h3>Lelang</h3>
         </div>
     </section>
 

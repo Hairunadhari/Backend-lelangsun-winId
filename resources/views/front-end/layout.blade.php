@@ -7,8 +7,10 @@
     <title>Win Lelang</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+        integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <style>
     .navbar-nav {
@@ -24,25 +26,32 @@
         margin-top: 20px;
     }
 
-   
-    footer{
+
+    footer {
         background-color: #252525;
         color: white;
         width: 100%;
         height: auto;
     }
-    #content-4 .con1{
+
+    #content-4 .con1 {
         display: flex;
         justify-content: center;
     }
-    .confooter{
+
+    .confooter {
         display: flex;
         justify-content: space-between;
         padding: 50px 50px 0 50px;
     }
-    .card-footer{
+
+    .card-footer {
         margin-inline: 100px;
         margin-bottom: 50px;
+    }
+
+    .last-text {
+        padding: 5px;
     }
 
     @media (max-width: 600px) {
@@ -50,21 +59,27 @@
             margin-left: 0;
             width: 100px;
         }
+
         .navbar-nav {
             margin-left: 0;
         }
-        .confooter{
+
+        .confooter {
             display: block;
             padding: 10px 10px 0 10px;
         }
-        .card-footer{
+
+        .card-footer {
             margin-inline: 10px;
             margin-bottom: 30px;
         }
-        footer h4, p, li{
+
+        footer h5,
+        p,
+        li {
             font-size: 16px;
         }
-        
+
     }
 
 </style>
@@ -79,12 +94,34 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
+                    @if (Auth::guard('peserta')->user())
                     <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
-                    <a class="nav-link fw-semibold">Kontak</a>
-                    <a class="nav-link fw-semibold">Login</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fas fa-user"></i> {{Auth::guard('peserta')->user()->nama}}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <form method="POST" action="{{ route('peserta.logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item has-icon text-danger" style="cursor: pointer">
+                                    <i class="fas fa-sign-out-alt mt-2"></i> <span style="font-size: 14px">Logout</span>
+                                </button>
+                            </form>
+                        </ul>
+                    </li>
+                    @else 
+                    <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-login')}}">Login</a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -111,12 +148,15 @@
             </div>
             <div class="card-footer">
                 <h4>TENTANG </h4>
-                <p><i class="fas fa-map-marker-alt"></i> Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, excepturi.</p>
+                <p><i class="fas fa-map-marker-alt"></i> Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+                    excepturi.</p>
                 <p><i class="fas fa-phone-alt"></i> +192819281</p>
                 <p><i class="fas fa-envelope"></i> lelangsun@gmail.com</p>
             </div>
         </div>
-        <h4 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h4>
+        <div class="last-text">
+            <h5 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
+        </div>
     </footer>
 
 
