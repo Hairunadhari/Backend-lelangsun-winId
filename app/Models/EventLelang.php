@@ -26,4 +26,8 @@ class EventLelang extends Model
     {
         return $this->hasMany(LotItem::class);
     }
+    public function pembelian_npl()
+    {
+        return $this->hasMany(PembelianNpl::class);
+    }
 }

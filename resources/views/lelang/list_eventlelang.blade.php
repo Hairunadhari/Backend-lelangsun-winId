@@ -98,6 +98,7 @@
                     render: function (data, type, row, meta) {
                         var deleteUrl = '/delete-event-lelang/' + data.id;
                         var editUrl = '/edit-event-lelang/' + data.id;
+                        var bidding = '/bidding-event-lelang/' + data.id;
                         var eventDate = new Date(row.waktu);
                         var now = new Date();
                         var oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
@@ -112,7 +113,7 @@
                                 <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
                                 ${
                                 eventDate - now <= oneDayInMilliseconds
-                                    ? `<button class="btn btn-success" type="submit"><i class="fas fa-hand-paper"></i></button>`
+                                    ? `<span><a class="btn btn-success" target="_blank" href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>`
                                     : ''
                                 }
                             </form>

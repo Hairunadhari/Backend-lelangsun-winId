@@ -18,4 +18,8 @@ class PembelianNpl extends Model
     {
         return $this->hasMany(Npl::class);
     }
+    public function event_lelang()
+    {
+        return $this->belongsTo(EventLelang::class);
+    }
 }

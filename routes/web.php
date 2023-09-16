@@ -33,8 +33,14 @@ Route::get('/user-login', [FrontEndController::class, 'login'])->name('front-end
 Route::get('/user-register', [FrontEndController::class, 'register'])->name('front-end-register');
 Route::post('/add-register', [FrontEndController::class, 'add_register'])->name('register-user');
 Route::post('/proses-login', [FrontEndController::class, 'proses_login'])->name('proses-login-user');
-
+Route::get('/user-notif', [FrontEndController::class, 'notif'])->name('front-end-notif');
+Route::get('/user-profil', [FrontEndController::class, 'profil'])->name('front-end-profil');
+Route::get('/user-npl', [FrontEndController::class, 'npl'])->name('front-end-npl');
+Route::get('/user-pelunasan', [FrontEndController::class, 'pelunasan'])->name('front-end-pelunasan');
+Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
 Route::get('/detail-event-user/{id}/', [FrontEndController::class, 'detail_event'])->name('detail-event-user');
+Route::get('/get-harganpl/{id}/', [MenuController::class, 'harganpl_by_event']);
+Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
 
 // Auth::routes(['verify' => true]);
 
@@ -108,6 +114,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/npl/get-harganpl-by-event/{id}/', [MenuController::class, 'harganpl_by_event']);
     Route::post('/add-npl', [MenuController::class, 'add_npl'])->name('add-npl');
     Route::get('/detail-npl/{id}/', [MenuController::class, 'detail_npl'])->name('detail-npl');
+    Route::put('/verify-npl/{id}/', [MenuController::class, 'verify_npl'])->name('verify-npl');
 
     // route Lot
     Route::get('/lot', [MenuController::class, 'list_lot'])->name('lot');
@@ -135,6 +142,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-event-lelang/{id}/', [MenuController::class, 'update_event_lelang'])->name('update-event-lelang');
     Route::put('/delete-event-lelang/{id}/', [MenuController::class, 'delete_event_lelang'])->name('delete-event-lelang');
     Route::put('/active-event-lelang/{id}/', [MenuController::class, 'active_event_lelang'])->name('active-event-lelang');
+    Route::get('/bidding-event-lelang/{id}/', [MenuController::class, 'bidding'])->name('bidding-event-lelang');
 
     Route::get('/cari-toko', [MenuController::class, 'cari_toko'])->name('cari-toko');
 

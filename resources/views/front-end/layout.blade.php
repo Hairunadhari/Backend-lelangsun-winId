@@ -10,11 +10,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+        
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 </head>
 <style>
     .navbar-nav {
-        margin-left: 400px;
+        margin-left: 300px;
     }
 
     .navbar-nav .nav-link {
@@ -100,6 +102,7 @@
                     <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-notif')}}"><i class="fas fa-bell"></i></a>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">

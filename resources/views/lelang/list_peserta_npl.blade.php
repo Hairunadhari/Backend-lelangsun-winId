@@ -72,15 +72,14 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="verif3" role="tabpanel" aria-labelledby="verif-tab3">
-                            <table class="table table-striped w-100" >
+                            <table class="table table-striped w-100" id="verify">
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Nama</th>
                                         <th>Email</th>
-                                        <th>Telpon</th>
-                                        <th>Alamat</th>
-                                        <th>NPL</th>
+                                        <th>Tgl Transfer</th>
+                                        <th>Nominal</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -94,7 +93,7 @@
         </div>
     </div>
 </div>
- <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         $('#active').DataTable({
             processing: true,
@@ -102,42 +101,42 @@
             searching: true,
             serverSide: true,
             ajax: {
-                    url: '{{ url()->current() }}',
-                    data: function (data) {
-                        data.status = 'active';
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'active';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "nama",
+                },
+                {
+                    data: "email",
+                },
+                {
+                    data: "no_hp",
+                },
+                {
+                    data: "alamat",
+                },
+                {
+                    data: null,
+                    render: function (data, row, type, meta) {
+                        var npl = '/npl/' + data.id;
+                        var total =  data.npl.length;
+                        return `<a class="btn btn-warning fs-5" href="${npl}">${total}</a>`;
                     }
                 },
-        columns: [
-          {
-             render: function (data, type, row, meta) {
-               return meta.row + meta.settings._iDisplayStart + 1;
-             },
-          },
-          { 
-            data: "nama",
-          },
-          { 
-            data: "email",
-          },
-          { 
-            data: "no_hp",
-          },
-          { 
-            data: "alamat",
-          },
-          { 
-            data: null,
-            render: function (data){
-                var npl = '/npl/' + data.id;
-                return `<a class="btn btn-success fs-5" href="${npl}">0</a>`;
-            }
-          },
-          {
-            data: null,
-            render: function (data) {
-              var deleteUrl = '/delete-peserta-npl/' + data.id;
-              var editUrl = '/edit-peserta-npl/' + data.id;
-              return `
+                {
+                    data: null,
+                    render: function (data) {
+                        var deleteUrl = '/delete-peserta-npl/' + data.id;
+                        var editUrl = '/edit-peserta-npl/' + data.id;
+                        return `
                 <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
                   <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -145,10 +144,10 @@
                   <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
                 </form>
               `;
-            },
-          },
-        ],
-      });
+                    },
+                },
+            ],
+        });
 
         $('#not-active').DataTable({
             processing: true,
@@ -156,64 +155,119 @@
             searching: true,
             serverSide: true,
             ajax: {
-                    url: '{{ url()->current() }}',
-                    data: function (data) {
-                        data.status = 'not-active';
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'not-active';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "nama",
+                },
+                {
+                    data: "email",
+                },
+                {
+                    data: "no_hp",
+                },
+                {
+                    data: "alamat",
+                },
+                {
+                    data: null,
+                    render: function (data) {
+                        var npl = '/npl/' + data.id;
+                        return `<a class="btn btn-success fs-5" href="${npl}">0</a>`;
                     }
                 },
-        columns: [
-          {
-             render: function (data, type, row, meta) {
-               return meta.row + meta.settings._iDisplayStart + 1;
-             },
-          },
-          { 
-            data: "nama",
-          },
-          { 
-            data: "email",
-          },
-          { 
-            data: "no_hp",
-          },
-          { 
-            data: "alamat",
-          },
-          { 
-            data: null,
-            render: function (data){
-                var npl = '/npl/' + data.id;
-                return `<a class="btn btn-success fs-5" href="${npl}">0</a>`;
-            }
-          },
-          {
-            data: null,
-            render: function (data) {
-                    var activeUrl = '/active-peserta-npl/' + data.id;
-                    return `
+                {
+                    data: null,
+                    render: function (data) {
+                        var activeUrl = '/active-peserta-npl/' + data.id;
+                        return `
                     <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="PUT">
                         <button class="btn btn-success" type="submit">Aktifkan</button>
                     </form>
                     `;
+                    },
                 },
-          },
-        ],
-      });
+            ],
+        });
+
+        $('#verify').DataTable({
+            processing: true,
+            ordering: false,
+            searching: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'verifikasi';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "peserta_npl.nama",
+                },
+                {
+                    data: "peserta_npl.email",
+                },
+                {
+                    data: "tgl_transfer",
+                },
+                {
+                    data: "nominal",
+                    render: function(data, type, row, meta) {
+                        if (type === 'display') {
+                            // Mengubah data menjadi format mata uang dengan simbol IDR
+                            return "Rp " + data.toLocaleString('id-ID', {
+                                minimumFractionDigits: 0
+                            });
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data) {
+                        var activeUrl = '/verify-npl/' + data.id;
+                        return `
+                    <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan memverifikasi data ini ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button class="btn btn-success" type="submit"><i class="fas fa-check"></i></button>
+                    </form>
+                    `;
+                    },
+                },
+            ],
+        });
     });
-  </script>
+
+</script>
 @endsection
 
 @section('modal')
 <style>
     .form-group img {
         padding: 0rem;
-        border:1px solid #dee2e6;
+        border: 1px solid #dee2e6;
     }
+
 </style>
 <!-- Modal -->
-<div class="modal fade" id="pembeliannplmodal" tabindex="-1" role="dialog" aria-labelledby="pembeliannpllabel" aria-hidden="true">
+<div class="modal fade" id="pembeliannplmodal" tabindex="-1" role="dialog" aria-labelledby="pembeliannpllabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -225,10 +279,10 @@
             <form action="{{route('add-peserta-npl')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                        <div class="form-group">
-                            <label>Nama <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="nama" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Nama <span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="nama" required>
+                    </div>
                     <div class="row">
                         <div class="form-group col-6">
                             <label>Email <span style="color: red">*</span></label>
@@ -257,12 +311,12 @@
                         <div class="form-group col-6">
                             <label>Foto KTP <span style="color: red">*</span></label>
                             <input type="file" class="form-control" name="foto_ktp" required id="gambarktp">
-                        <div id="previewktp" class="mt-3"></div>
+                            <div id="previewktp" class="mt-3"></div>
                         </div>
                         <div class="form-group col-6">
                             <label>Foto NPWP <span style="color: red">*</span></label>
                             <input type="file" class="form-control" name="foto_npwp" required id="gambarnpwp">
-                        <div id="previewnpwp" class="mt-3"></div>
+                            <div id="previewnpwp" class="mt-3"></div>
                         </div>
                     </div>
                 </div>
@@ -325,7 +379,6 @@
     </div>
 </div> --}}
 <script>
-
     function previewgambarktp() {
         var preview = document.querySelector('#previewktp');
 

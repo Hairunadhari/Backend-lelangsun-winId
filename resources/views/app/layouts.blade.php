@@ -100,6 +100,7 @@
    <!-- Page Specific JS File -->
    <script src="{{ asset('assets/js/page/forms-advanced-forms.js')}}"></script>
    <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script> 
+   {{-- <script src="{{asset('assets/js/page/components-chat-box.js')}}"></script> --}}
    
    <!-- Template JS File -->
    <script src="{{ asset('assets/js/scripts.js')}}"></script>

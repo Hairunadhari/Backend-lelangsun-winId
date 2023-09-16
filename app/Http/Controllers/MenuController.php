@@ -1967,9 +1967,11 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = PesertaNpl::where('status','active')->orderBy('created_at','desc')->get();
+                $data = PesertaNpl::with('npl')->where('status','active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
                 $data = PesertaNpl::where('status','not-active')->orderBy('created_at','desc')->get();
+            } elseif ($status == 'verifikasi') {
+                $data = PembelianNpl::with('peserta_npl')->where('verifikasi','verifikasi')->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -2211,6 +2213,21 @@ class MenuController extends Controller
             
         }
         return redirect('/lot')->with('success', 'Data Berhasil diEdit!');
+    }
+    public function verify_npl($id){
+        $pembelian_npl = PembelianNpl::find($id);
+        $npl = Npl::where('pembelian_npl_id',$id)->get();
+        $pembelian_npl->update([
+            'verifikasi' => 'aktif'
+        ]);
+        $npl->each->update([
+            'status_npl' => 'aktif'
+        ]);
+        
+        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
+    }
+    public function bidding($id){
+        return view('lelang.bidding');
     }
     
     
