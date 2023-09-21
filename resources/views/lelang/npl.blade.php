@@ -21,50 +21,20 @@
                         </button>
                     </div>
                     @endif
-                    <ul class="nav nav-pills" id="myTab3" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
-                                aria-controls="home" aria-selected="true">Peserta Aktif</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
-                                aria-controls="profile" aria-selected="false">Peserta Tidak Aktif</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent2">
-                        <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
-                            <table class="table table-striped w-100" id="activenpl">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama</th>
-                                        <th>Email</th>
-                                         <th>No Telp</th>
-                                        <th>Npl</th>
-                                        <th>Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                            <table class="table table-striped w-100" id="not-active">
-                                <thead>
-                                    <tr>
-                                         <th>No</th>
-                                        <th>Nama</th>
-                                        <th>Email</th>
-                                        <th>No Telp</th>
-                                        <th>Npl</th>
-                                        <th>Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <table class="table table-striped w-100" id="activenpl">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>No Telp</th>
+                                <th>Npl</th>
+                                <th>Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -83,8 +53,7 @@
                     data.status = 'active';
                 }
             },
-            columns: [
-                {
+            columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     },

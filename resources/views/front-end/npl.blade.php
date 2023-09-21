@@ -218,7 +218,17 @@
                                     <td>-</td>
                                 @else
                                     <td><span class="badge text-bg-success">Aktif</span></td>
-                                    <td><button class="btn btn-danger">Refund</button></td>
+                                    <td>
+                                        @if ($p->refund)
+                                            <button class="btn btn-warning">Pengajuan</button>
+                                        @else
+                                            <form action="{{route('user-refund', $p->id)}}" method="POST" onsubmit="return confirm('Apakah anda yakin akan melakukan refund ?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="_method" value="PUT">
+                                                <button class="btn btn-danger" type="submit">Refund</button>
+                                            </form>
+                                        @endif
+                                    </td>
                                 @endif
                             </tr>
                             @empty

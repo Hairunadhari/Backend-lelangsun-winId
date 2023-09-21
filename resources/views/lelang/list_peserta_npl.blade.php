@@ -35,6 +35,10 @@
                             <a class="nav-link" id="verif-tab3" data-toggle="tab" href="#verif3" role="tab"
                                 aria-controls="verif" aria-selected="false">Verifikasi NPL</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="ref-tab3" data-toggle="tab" href="#ref3" role="tab"
+                                aria-controls="ref" aria-selected="false">Refund NPL</a>
+                        </li>
                     </ul>
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
@@ -79,6 +83,22 @@
                                         <th>Nama</th>
                                         <th>Email</th>
                                         <th>Tgl Transfer</th>
+                                        <th>Nominal</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="ref3" role="tabpanel" aria-labelledby="ref-tab3">
+                            <table class="table table-striped w-100" id="ref">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Kode NPL</th>
                                         <th>Nominal</th>
                                         <th>Opsi</th>
                                     </tr>
@@ -252,6 +272,58 @@
                 },
             ],
         });
+        // $('#ref').DataTable({
+        //     processing: true,
+        //     ordering: false,
+        //     searching: true,
+        //     serverSide: true,
+        //     ajax: {
+        //         url: '{{ url()->current() }}',
+        //         data: function (data) {
+        //             data.status = 'Pengajuan';
+        //         }
+        //     },
+        //     columns: [{
+        //             render: function (data, type, row, meta) {
+        //                 return meta.row + meta.settings._iDisplayStart + 1;
+        //             },
+        //         },
+        //         {
+        //             data: "peserta_npl.nama",
+        //         },
+        //         {
+        //             data: "peserta_npl.email",
+        //         },
+        //         {
+        //             data: "tgl_transfer",
+        //         },
+        //         {
+        //             data: "nominal",
+        //             render: function(data, type, row, meta) {
+        //                 if (type === 'display') {
+        //                     // Mengubah data menjadi format mata uang dengan simbol IDR
+        //                     return "Rp " + data.toLocaleString('id-ID', {
+        //                         minimumFractionDigits: 0
+        //                     });
+        //                 }
+        //                 return data;
+        //             }
+        //         },
+        //         {
+        //             data: null,
+        //             render: function (data) {
+        //                 var activeUrl = '/verify-npl/' + data.id;
+        //                 return `
+        //             <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan memverifikasi data ini ?');">
+        //                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        //                 <input type="hidden" name="_method" value="PUT">
+        //                 <button class="btn btn-success" type="submit"><i class="fas fa-check"></i></button>
+        //             </form>
+        //             `;
+        //             },
+        //         },
+        //     ],
+        // });
     });
 
 </script>

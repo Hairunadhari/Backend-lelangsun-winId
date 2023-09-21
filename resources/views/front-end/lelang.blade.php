@@ -57,7 +57,15 @@
     </section>
     <section id="dua">
         <div class="lelang">
-            <h3>Lelang</h3>
+            <h3>Jadwal Lelang</h3>
+            @foreach ($event as $item)
+            <div class="event-lelangs mb-1">
+                <h3>{{$item->judul}}</h3>
+                <h5><i class="fas fa-map-marker-alt"></i> {{$item->alamat}}</h5>
+                <h5><i class="fas fa-calendar-alt"></i> {{$item->waktu}}</h5>
+                <a href="{{route('user-bidding', $item->id)}}" class="btn btn-danger"><span>Masuk</span></a>
+            </div>
+            @endforeach
         </div>
     </section>
 

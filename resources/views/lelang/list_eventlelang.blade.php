@@ -100,36 +100,19 @@
                         var editUrl = '/edit-event-lelang/' + data.id;
                         var bidding = '/bidding-event-lelang/' + data.id;
                         var eventDate = new Date(row.waktu);
-                        var now = new Date();
-                        var oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
-                        console.log(eventDate);
-                        // Periksa apakah eventDate sudah lebih dari satu hari dari waktu saat ini
-                        if (eventDate > now) {
-                            return `
-                            <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                        var today = new Date();
+                        var convert_eventDate = eventDate.getFullYear()+'-'+(eventDate.getMonth()+1)+'-'+eventDate.getDate(); 
+                        var convert_today = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(); 
+                        // console.log(woi);
+                        return ` <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
                                 <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i></a></span>
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
                                 <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
-                                ${
-                                eventDate - now <= oneDayInMilliseconds
-                                    ? `<span><a class="btn btn-success" target="_blank" href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>`
-                                    : ''
-                                }
-                            </form>
-                            `;
-                        } else {
-                            return `
-                            <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                                <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i></a></span>
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="PUT">
-                                <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
-                            </form>
-                            `;
-                        }
+                                ${convert_eventDate == convert_today ? `<span><a class="btn btn-success" target="_blank" href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>` : ''}
+                                
+                            </form>`
                     }
-
                  },
              ],
          });

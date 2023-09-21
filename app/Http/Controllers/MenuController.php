@@ -15,6 +15,8 @@ use App\Models\Order;
 use App\Models\Reply;
 use App\Models\Produk;
 use App\Models\Review;
+use App\Events\Message;
+use App\Models\Bidding;
 use App\Models\LotItem;
 use App\Models\Promosi;
 use App\Models\Setting;
@@ -1972,6 +1974,8 @@ class MenuController extends Controller
                 $data = PesertaNpl::where('status','not-active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'verifikasi') {
                 $data = PembelianNpl::with('peserta_npl')->where('verifikasi','verifikasi')->orderBy('created_at','desc')->get();
+            } elseif ($status == 'Pengajuan') {
+                $data = Refund::with('npl')->where('status_refund','Pengajuan')->where('status','active')->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -2149,10 +2153,10 @@ class MenuController extends Controller
 
     public function list_lot(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
-        $now = $konvers_tanggal->format('Y-m-d H:i:s');
+        $now = $konvers_tanggal->format('Y-m-d');
         
         if (request()->ajax()) {
-                $data = Lot::with('event_lelang','lot_item')->where('tanggal','>', $now)->where('status', 'active')->orderBy('created_at','desc')->get();
+                $data = Lot::with('event_lelang','lot_item')->where('tanggal','>=', $now)->where('status', 'active')->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make();
         }
         return view('lelang.list_lot');
@@ -2167,14 +2171,16 @@ class MenuController extends Controller
     public function  form_edit_lot($id){
         $lot = Lot::with('event_lelang.kategori_barang')->find($id);
         $baranglelang = BarangLelang::where('status',1)->where('kategoribarang_id', $lot->event_lelang->kategori_barang_id)->get();
-        // dd($baranglelang);
         $lot_item = LotItem::where('lot_id',$id)->get();
         $barangTerpilih = [];
 
         foreach ($lot_item as $item) {
             $barangTerpilih[$item->barang_lelang_id] = $item->barang_lelang_id;
         }
-        return view('lelang.edit_lot',compact('lot','id','baranglelang','barangTerpilih'));
+        foreach ($lot_item as $item) {
+            $barangTerpilih[$item->barang_lelang_id] = $item->harga_awal;
+        }
+        return view('lelang.edit_lot',compact('lot','id','baranglelang','barangTerpilih','lot_item'));
     }
     // public function add_lot(Request $request){
     //     if (is_null($request->barang_id)) {
@@ -2199,17 +2205,21 @@ class MenuController extends Controller
         if (is_null($request->barang_id)) {
             return redirect()->back()->with('error', 'Anda belum memilih Barang!');
         }else {
-            $lot_item = LotItem::where('lot_id',$id)->delete();
+            LotItem::where('lot_id', $id)->delete();
 
-            foreach ($request->barang_id as $barang) {
-                LotItem::create([
-                    'barang_lelang_id' => $barang,
-                    'event_lelang_id' => $request->event_id,
-                    'lot_id' => $id,
-                    'tanggal' => $request->waktu_from_event,
-                    'harga_awal' => $request->harga_awal,
-                ]);
-            }
+        // Loop melalui barang_id dan harga_awal yang diterima dari formulir
+        foreach ($request->barang_id as $index => $barangId) {
+            // Periksa apakah indeks yang sesuai ada dalam array harga_awal
+            $hargaAwal = isset($request->harga_awal[$index]) ? $request->harga_awal[$index] : 0;
+
+            LotItem::create([
+                'barang_lelang_id' => $barangId,
+                'event_lelang_id' => $request->event_id,
+                'lot_id' => $id,
+                'tanggal' => $request->waktu_from_event,
+                'harga_awal' => $hargaAwal,
+            ]);
+        }
             
         }
         return redirect('/lot')->with('success', 'Data Berhasil diEdit!');
@@ -2227,7 +2237,42 @@ class MenuController extends Controller
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
     }
     public function bidding($id){
-        return view('lelang.bidding');
+        $lot_item = LotItem::where('event_lelang_id',$id)->get();
+        // dd($lot_item[0]->barang_lelang->gambarlelang[0]);
+        return view('lelang.bidding',compact('lot_item','id'));
+    }
+    // public function add_bidding(Request $request){
+    //     $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+    //     $now = $konvers_tanggal->format('Y-m-d H:i:s');
+    //     $data = Bidding::create([
+    //         'kode_event' => Str::random(64),
+    //         'email' => $request->email,
+    //         'event_lelang_id' => null,
+    //         'peserta_npl_id' => null,
+    //         'lot_id' => null,
+    //         'npl_id' => null,
+    //         'harga_bidding' => 5000,
+    //         'waktu' => $now,
+    //     ]);
+    //     return response()->back()->with('success', 'Data Berhasil Ditambahkan!');
+    // }
+
+    public function send_bidding(Request $request){
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('Y-m-d H:i:s');
+        Bidding::create([
+            'kode_event' => Str::random(64),
+            'email' => $request->email,
+            'event_lelang_id' => $request->event_lelang_id,
+            'peserta_npl_id' => null,
+            'lot_id' => $request->lot_id,
+            'npl_id' => $request->npl_id,
+            'harga_bidding' => $request->harga_bidding,
+            'waktu' => $now,
+        ]);
+        event(new Message($request->email, $request->harga_bidding));
+        return ['success' => true];
+
     }
     
     

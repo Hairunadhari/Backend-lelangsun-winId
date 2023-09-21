@@ -109,6 +109,12 @@
     </div>
     <div class="con-kontak2">
         <div class="card" style="width: 80%;">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ session('success') }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                @endif
             <div class="card-body">
                 <div class="heads">
                     <a href="{{route('front-end-notif')}}">Profile</a>
@@ -116,40 +122,48 @@
                     <a href="{{route('front-end-pelunasan')}}">Pelunasan Barang Lelang</a>
                     <a href="{{route('front-end-pesan')}}">Notifikasi</a>
                 </div>
-                <form>
-                    <div class="row">
+                <form action="{{route('edit-profil-user', $data->id)}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="row mb-3">
                         <div class="col-6">
                             <label for="" class="form-label">Nama</label>
-                            <input type="email" class="form-control" id="">
+                            <input type="text" class="form-control" name="nama" value="{{$data->nama}}">
                         </div>
                         <div class="col-6">
                             <label for="" class="form-label">No Hp</label>
-                            <input type="email" class="form-control" id="" aria-describedby="emailHelp">
+                            <input type="number" class="form-control" name="no_hp" value="{{$data->no_hp}}">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-6">
                             <label for="" class="form-label">No Rekening</label>
-                            <input type="email" class="form-control" id="">
+                            <input type="text" class="form-control" name="no_rek" value="{{$data->no_rek}}">
                         </div>
                         <div class="col-6">
                             <label for="" class="form-label">NIK</label>
-                            <input type="email" class="form-control" id="" aria-describedby="emailHelp">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <label for="" class="form-label">Nama Pemilik Rekening</label>
-                            <input type="email" class="form-control" id="">
-                        </div>
-                        <div class="col-6">
-                            <label for="" class="form-label">Foto KTP</label>
-                            <input type="email" class="form-control" id="" aria-describedby="emailHelp">
+                            <input type="text" class="form-control" name="nik" value="{{$data->nik}}">
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">Bogor</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <label for="exampleFormControlTextarea1" class="form-label">Alamat</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" name="alamat" rows="3">{{$data->alamat}}</textarea>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6"><img src="{{ asset('storage/image/'.$data->foto_ktp) }}" width="150" height="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;"></div>
+                        <div class="col-6"><img src="{{ asset('storage/image/'.$data->foto_npwp) }}" width="150" height="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="" class="form-label">Foto KTP</label>
+                            <input type="file" class="form-control" name="foto_ktp" id="gambarktp">
+                            <div id="previewktp" class="mt-3"></div>
+                        </div>
+                        <div class="col-6">
+                            <label for="" class="form-label">Foto NPWP</label>
+                            <input type="file" class="form-control" name="foto_npwp" id="gambarnpwp">
+                            <div id="previewnpwp" class="mt-3"></div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
@@ -182,4 +196,69 @@
 
 
 </section>
+<script>
+    function previewgambarktp() {
+        var preview = document.querySelector('#previewktp');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
+                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
+                document.querySelector('#gambarktp').value = '';
+                return;
+            }
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 150;
+                image.height = 150;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#gambarktp').addEventListener("change", previewgambarktp);
+
+    function previewgambarnpwp() {
+        var preview = document.querySelector('#previewnpwp');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
+                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
+                document.querySelector('#gambarnpwp').value = '';
+                return;
+            }
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 150;
+                image.height = 150;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#gambarnpwp').addEventListener("change", previewgambarnpwp);
+</script>
 @endsection

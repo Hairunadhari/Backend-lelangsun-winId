@@ -45,14 +45,16 @@
                                 </tr>
                             </thead>
                             <tbody >
-                                @forelse ($baranglelang as $p)
-                                <tr>
-                                    <td><input type="checkbox" name="barang_id[]" value="{{$p->id}}" {{isset($barangTerpilih[$p->id])?"checked":""}}></td>
-                                    <td>{{$p->barang}}</td>
-                                    <td>{{number_format($lot->event_lelang->kategori_barang->kelipatan_bidding)}}</td>
-                                </tr>
-                                @empty
-                                @endforelse
+                                @foreach ($baranglelang as $p)
+                                    <tr>
+                                        <td><input type="checkbox" name="barang_id[]" value="{{ $p->id }}" {{ isset($barangTerpilih[$p->id]) ? 'checked' : '' }}></td>
+                                        <td>{{ $p->barang }}</td>
+                                        <td>
+                                            <input type="number" class="form-control" name="harga_awal[]" value="{{ isset($barangTerpilih[$p->id]) ? $barangTerpilih[$p->id] : '' }}">
+                                        </td>
+                                    </tr>
+                                @endforeach
+
                             </tbody>
                         </table>
                     </div>
