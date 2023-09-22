@@ -21,6 +21,7 @@ use App\Models\LotItem;
 use App\Models\Promosi;
 use App\Models\Setting;
 use App\Models\Tagihan;
+use App\Models\Pemenang;
 use App\Models\Wishlist;
 use App\Models\Keranjang;
 use App\Models\OrderItem;
@@ -2237,8 +2238,8 @@ class MenuController extends Controller
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
     }
     public function bidding($id){
-        $lot_item = LotItem::where('event_lelang_id',$id)->get();
-        // dd($lot_item[0]->barang_lelang->gambarlelang[0]);
+        $lot_item = LotItem::where('event_lelang_id',$id)->where('status_item','active')->where('status','active')->get();
+        // dd($lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding);
         return view('lelang.bidding',compact('lot_item','id'));
     }
     // public function add_bidding(Request $request){
@@ -2265,7 +2266,7 @@ class MenuController extends Controller
             'email' => $request->email,
             'event_lelang_id' => $request->event_lelang_id,
             'peserta_npl_id' => null,
-            'lot_id' => $request->lot_id,
+            'lot_item_id' => $request->lot_item_id,
             'npl_id' => $request->npl_id,
             'harga_bidding' => $request->harga_bidding,
             'waktu' => $now,
@@ -2273,6 +2274,49 @@ class MenuController extends Controller
         event(new Message($request->email, $request->harga_bidding));
         return ['success' => true];
 
+    }
+
+    public function log_bidding(Request $request){
+        $event_id = $request->event_lelang_id;
+        $lot_item_id = $request->lot_item_id;
+        $bidding = Bidding::where('event_lelang_id',$event_id)->where('lot_item_id',$lot_item_id)->get();
+        return response()->json($bidding);
+    }
+
+    public function search_pemenang_event(Request $request){
+        $event_id = $request->event_lelang_id;
+        $lot_item_id = $request->lot_item_id;
+
+        $bid = Bidding::where('event_lelang_id', $event_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
+        return response()->json($bid);
+    }
+
+    public function next_lot(Request $request){
+        $event_id = $request->event_lelang_id;
+        $lot_item_id = $request->lot_item_id;
+        $data_lot = LotItem::find($lot_item_id);
+        $data_lot->update([
+            'status_item' => 'not-active',
+            'status' => 'not-active',
+        ]);
+
+        $bid = Bidding::where('event_lelang_id', $event_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
+        Pemenang::create([
+            'bidding_id' => $bid->id,
+            'npl_id' => null,
+            'no_rek' => null,
+            'nama_pemilik' => null,
+            'nominal' => null,
+            'tgl_transfer' => null,
+            'bukti' => null,
+            'tipe_pelunasan' => null,
+        ]);
+        
+        $bidding = Bidding::where('event_lelang_id', $event_id)->where('lot_item_id',$lot_item_id)->get();
+        $bidding->each->update([
+            'status'=> 'not-active'
+        ]);
+        return ['success' => true];
     }
     
     

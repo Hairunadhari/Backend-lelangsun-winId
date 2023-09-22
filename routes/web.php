@@ -255,6 +255,9 @@ Route::middleware('auth')->group(function () {
      Route::post('/send-email-member/{id}/', [SendEmailMemberController::class, 'send_email_member'])->name('send-email-member');
 
      Route::post('send-bidding',[MenuController::class, 'send_bidding']);
+     Route::post('log-bidding',[MenuController::class, 'log_bidding']);
+     Route::post('search-pemenang-event',[MenuController::class, 'search_pemenang_event']);
+     Route::post('next-lot',[MenuController::class, 'next_lot']);
     //  Route::post('send-message',function (Request $request){
     //     event(new Message($request->email, $request->harga_bidding));
     //     return ['success' => true];

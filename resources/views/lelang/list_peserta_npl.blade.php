@@ -104,6 +104,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <td>1</td>
+                                    <td>Hairun</td>
+                                    <td>tes@gmail.com</td>
+                                    <td>SUN_123</td>
+                                    <td>1000.000</td>
+                                    <td><span class="badge bg-success">Verif</span></td>
                                 </tbody>
                             </table>
                         </div>
