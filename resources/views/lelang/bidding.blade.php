@@ -38,9 +38,8 @@
                                         <div class="input-group">
                                             <input type="hidden" name="email" id="email" value="{{Auth::user()->email}}" class="form-control">
                                             <input type="hidden" name="event_lelang_id" id="event_lelang_id" value="{{$id}}" class="form-control">
-                                            <input type="hidden" name="peserta_npl_id" id="peserta_npl_id" value="3" class="form-control">
                                             <input type="hidden" name="lot_id" id="lot_item_id" value="{{$lot_item[0]->id}}" class="form-control">
-                                            <input type="hidden" name="npl_id" id="npl_id" value="12" class="form-control">
+                                            <input type="text" name="harga_awal" id="harga_awal" value="{{$lot_item[0]->harga_awal}}" class="form-control">
                                             <input type="hidden" name="harga_bidding" id="harga_bidding" value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
                                                 <div class="button-center d-flex justify-content-center w-100">
                                                     <div class="button-bid" style="display: flex; justify-content: center; width:100%;">

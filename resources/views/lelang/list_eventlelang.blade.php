@@ -98,7 +98,7 @@
                     render: function (data, type, row, meta) {
                         var deleteUrl = '/delete-event-lelang/' + data.id;
                         var editUrl = '/edit-event-lelang/' + data.id;
-                        var bidding = '/bidding-event-lelang/' + data.id;
+                        var bidding = '/bidding-event-lelang/' + data.id + '?lot='  ;
                         var eventDate = new Date(row.waktu);
                         var today = new Date();
                         var convert_eventDate = eventDate.getFullYear()+'-'+(eventDate.getMonth()+1)+'-'+eventDate.getDate(); 

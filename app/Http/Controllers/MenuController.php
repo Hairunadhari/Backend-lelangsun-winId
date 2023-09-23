@@ -2157,7 +2157,9 @@ class MenuController extends Controller
         $now = $konvers_tanggal->format('Y-m-d');
         
         if (request()->ajax()) {
-                $data = Lot::with('event_lelang','lot_item')->where('tanggal','>=', $now)->where('status', 'active')->orderBy('created_at','desc')->get();
+                $data = Lot::with(['event_lelang','lot_item' => function($query){
+                    $query->where('status_item','active')->where('status','active');
+                }])->where('tanggal','>=', $now)->where('status', 'active')->orderBy('created_at','desc')->get();
             return DataTables::of($data)->make();
         }
         return view('lelang.list_lot');
@@ -2172,7 +2174,7 @@ class MenuController extends Controller
     public function  form_edit_lot($id){
         $lot = Lot::with('event_lelang.kategori_barang')->find($id);
         $baranglelang = BarangLelang::where('status',1)->where('kategoribarang_id', $lot->event_lelang->kategori_barang_id)->get();
-        $lot_item = LotItem::where('lot_id',$id)->get();
+        $lot_item = LotItem::where('lot_id',$id)->where('status_item','active')->where('status','active')->get();
         $barangTerpilih = [];
 
         foreach ($lot_item as $item) {
@@ -2206,7 +2208,11 @@ class MenuController extends Controller
         if (is_null($request->barang_id)) {
             return redirect()->back()->with('error', 'Anda belum memilih Barang!');
         }else {
-            LotItem::where('lot_id', $id)->delete();
+            $lot_item = LotItem::where('lot_id', $id)->get();
+            $lot_item->each->update([
+                'status_item' => 'not-active',
+                'status' => 'not-active',
+            ]);
 
         // Loop melalui barang_id dan harga_awal yang diterima dari formulir
         foreach ($request->barang_id as $index => $barangId) {
@@ -2239,6 +2245,7 @@ class MenuController extends Controller
     }
     public function bidding($id){
         $lot_item = LotItem::where('event_lelang_id',$id)->where('status_item','active')->where('status','active')->get();
+        
         // dd($lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding);
         return view('lelang.bidding',compact('lot_item','id'));
     }
@@ -2311,12 +2318,14 @@ class MenuController extends Controller
             'bukti' => null,
             'tipe_pelunasan' => null,
         ]);
-        
+        // nonaktfikan bidding sesuai event id dan lot item id yg sedang lg bidding
         $bidding = Bidding::where('event_lelang_id', $event_id)->where('lot_item_id',$lot_item_id)->get();
         $bidding->each->update([
             'status'=> 'not-active'
         ]);
-        return ['success' => true];
+        // cek apakah masih ada lot item di suatu event 
+        $lot_item = LotItem::where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
+        return response()->json($lot_item);
     }
     
     

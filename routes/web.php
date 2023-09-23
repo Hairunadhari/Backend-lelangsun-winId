@@ -138,7 +138,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-barang-lelang/{id}/', [MenuController::class, 'edit_barang_lelang'])->name('edit-barang-lelang');
     Route::put('/update-barang-lelang/{id}/', [MenuController::class, 'update_barang_lelang'])->name('update-barang-lelang');
     Route::put('/delete-barang-lelang/{id}/', [MenuController::class, 'delete_barang_lelang'])->name('delete-barang-lelang');
-    Route::put('/active-barang-lelang/{id}/', [MenuController::class, 'active_barang_lelang'])->name('active-barang-lelang');
+    Route::put('/active-barang-lelang/{id}/lot', [MenuController::class, 'active_barang_lelang'])->name('active-barang-lelang');
 
     // route event lelang
     Route::get('/event-lelang', [MenuController::class, 'list_event_lelang'])->name('event-lelang');

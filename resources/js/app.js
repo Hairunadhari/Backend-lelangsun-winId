@@ -40,17 +40,17 @@ $(document).ready(function () {
         let npl_id = $('#npl_id').val();
 
         // Dapatkan nilai harga bidding saat ini dan tambahkan kelipatan bidding
-        let harga_bidding = parseFloat($('#harga_bidding').val()) + kelipatanBidding;
+        let harga_bidding = parseFloat($('#harga_awal').val()) + kelipatanBidding;
 
-        // Update nilai input harga_bidding
-        $('#harga_bidding').val(harga_bidding);
+        // Update nilai input harga_awal
+        $('#harga_awal').val(harga_bidding);
 
-        console.log(email);
-        console.log(event_lelang_id);
-        console.log(peserta_npl_id);
-        console.log(lot_item_id);
-        console.log(npl_id);
-        console.log(harga_bidding);
+        // console.log(email);
+        // console.log(event_lelang_id);
+        // console.log(peserta_npl_id);
+        // console.log(lot_item_id);
+        // console.log(npl_id);
+        // console.log(harga_bidding);
 
         $.ajax({
             method: 'post',
@@ -109,8 +109,20 @@ $(document).ready(function () {
                                             lot_item_id: lot_item_id,
                                         },
                                         success: function (res) {
-                                            window.open(event_lelang_id, '_blank');
-                                        }
+                                            console.log(res);
+                                            if (res) {
+                                                // Mengarahkan ke URL "event-lelang" tanpa awalan "bidding-lelang"
+                                                var currentURL = window.location.href;
+                                                var newURL = currentURL.replace('bidding-lelang/'.event_lelang_id, 'event-lelang');
+                                                window.location.href = newURL;
+                                            } else {
+                                                // Lakukan sesuatu jika res adalah falsy
+                                            }
+                                        },
+                                                                            
+                                        // Jika 'res' ada isinya, buka jendela baru dengan URL 'event_lelang_id'
+                                        // window.open(event_lelang_id, '_blank');
+                                        // Jika 'res' kosong, arahkan ke URL 'event_lelang_id' di jendela saat ini
                                     });
                                 }
                             });
