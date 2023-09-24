@@ -77,8 +77,9 @@
         text-decoration: none;
         color: black;
     }
-    .scroll{
-        height:500px;
+
+    .scroll {
+        height: 500px;
         overflow: scroll;
     }
 
@@ -124,7 +125,7 @@
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>{{ session('success') }}</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
+                </div>
                 @endif
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-success m-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -145,28 +146,35 @@
                                 <form action="{{route('add-npl-user')}}" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <div class="modal-body">
-                                        <input type="hidden" class="form-control" name="peserta_npl_id" value="{{Auth::guard('peserta')->user()->id}}">
-                                        <input type="hidden" class="form-control" name="type_pembelian" value="online" required>
+                                        <input type="hidden" class="form-control" name="peserta_npl_id"
+                                            value="{{Auth::guard('peserta')->user()->id}}">
+                                        <input type="hidden" class="form-control" name="type_pembelian" value="online"
+                                            required>
                                         <div class="form-group mb-3">
                                             <label>Event <span style="color: red">*</span></label>
-                                            <select class="form-control selectric" id="eventlist" name="event_lelang_id">
+                                            <select class="form-control selectric" id="eventlist"
+                                                name="event_lelang_id">
                                                 <option selected disabled>-- Pilih Event --</option>
                                                 @foreach ($event as $item)
-                                                <option value="{{ $item->id }}">{{ $item->judul }} ({{$item->waktu}})</option>
+                                                <option value="{{ $item->id }}">{{ $item->judul }} ({{$item->waktu}})
+                                                </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label>Harga Npl <span style="color: red">*</span></label>
-                                            <input type="text" class="form-control" id="harganpl" name="harga_npl" required readonly>
+                                            <input type="text" class="form-control" id="harganpl" name="harga_npl"
+                                                required readonly>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label>Jumlah NPL yg dibeli <span style="color: red">*</span></label>
-                                            <input type="number" class="form-control" id="jumlahNpl" name="jumlah_tiket" required>
+                                            <input type="number" class="form-control" id="jumlahNpl" name="jumlah_tiket"
+                                                required>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label>Nominal Transfer<span style="color: red">*</span></label>
-                                            <input type="text" class="form-control" id="nominalTransfer" name="nominal" readonly required>
+                                            <input type="text" class="form-control" id="nominalTransfer" name="nominal"
+                                                readonly required>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label>No Rekening<span style="color: red">*</span></label>
@@ -174,17 +182,20 @@
                                         </div>
                                         <div class="form-group mb-3">
                                             <label>Waktu Transfer<span style="color: red">*</span></label>
-                                            <input type="datetime-local" class="form-control" name="tgl_transfer" required>
+                                            <input type="datetime-local" class="form-control" name="tgl_transfer"
+                                                required>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label>Bukti Transfer <span style="color: red">*</span></label>
-                                            <input type="file" class="form-control" name="bukti" required id="gambarktp">
+                                            <input type="file" class="form-control" name="bukti" required
+                                                id="gambarktp">
                                             <div id="previewktp" class="mt-3"></div>
                                         </div>
                                         <input type="hidden" name="type_transaksi" value="transfer">
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batak</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Batak</button>
                                         <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </form>
@@ -205,31 +216,35 @@
                             </tr>
                         </thead>
                         @php
-                            $no = 1;
+                        $no = 1;
                         @endphp
-                        <tbody >
+                        <tbody>
                             @forelse ($npl as $p)
                             <tr>
                                 <td>{{$no++}}</td>
                                 <td>{{$p->event_lelang->judul}}</td>
                                 <td>{{$p->no_npl}}</td>
-                                @if ($p->status_npl == 1)
-                                    <td><span class="badge text-bg-warning">Verifikasi</span></td>
-                                    <td>-</td>
-                                @else
-                                    <td><span class="badge text-bg-success">Aktif</span></td>
-                                    <td>
-                                        @if ($p->refund)
-                                            <button class="btn btn-warning">Pengajuan</button>
-                                        @else
-                                            <form action="{{route('user-refund', $p->id)}}" method="POST" onsubmit="return confirm('Apakah anda yakin akan melakukan refund ?');">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="hidden" name="_method" value="PUT">
-                                                <button class="btn btn-danger" type="submit">Refund</button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                @endif
+                                <td>
+                                    @if ($p->status_npl == 1)
+                                    <span class=" badge bg-warning">Verifikasi</span>
+                                    @elseif($p->status_npl == 'pengajuan')
+                                    <span class=" badge bg-primary">Pengajuan</span>
+                                    @else
+                                    <span class=" badge bg-success">Aktif</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($p->status_npl == 'aktif' && $p->event_lelang->waktu < $hours_now)
+                                    <form action="{{route('user-refund', $p->id)}}" method="POST" onsubmit="return
+                                    confirm('Apakah anda yakin akan melakukan refund ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button class="btn btn-danger" type="submit">Refund</button>
+                                    </form>
+                                    @else
+                                    <span>-</span>
+                                    @endif
+                                </td>
                             </tr>
                             @empty
                             @endforelse
@@ -240,63 +255,64 @@
         </div>
     </div>
 
-<script>
-    $(document).ready(function () {
-        $('#eventlist').on('change', function () {
-            var eventId = this.value;
-            $('#harganpl').html('');
-            $.ajax({
-                url: "get-harganpl/" + eventId,
-                type: 'get',
-                success: function (res) {
-                    console.log(res);
-                    var formattedNumber = parseFloat(res).toLocaleString(
-                        'id-ID'); // Ganti 'id-ID' sesuai dengan kode bahasa yang sesuai
-                    $('#harganpl').val(formattedNumber);
+    <script>
+        $(document).ready(function () {
+            $('#eventlist').on('change', function () {
+                var eventId = this.value;
+                $('#harganpl').html('');
+                $.ajax({
+                    url: "get-harganpl/" + eventId,
+                    type: 'get',
+                    success: function (res) {
+                        console.log(res);
+                        var formattedNumber = parseFloat(res).toLocaleString(
+                            'id-ID'); // Ganti 'id-ID' sesuai dengan kode bahasa yang sesuai
+                        $('#harganpl').val(formattedNumber);
 
-                    $('#jumlahNpl').on('input', function () {
-                        var jumlahNpl = parseFloat($(this).val());
-                        if (!isNaN(jumlahNpl)) {
-                            var hargaNpl = parseFloat(res);
-                            var totalHarga = jumlahNpl * hargaNpl;
-                            $('#nominalTransfer').val(totalHarga.toLocaleString(
-                                'id-ID'));
-                        } else {
-                            // Jika nilai "Jumlah NPL yang dibeli" kosong, kosongkan "Nominal Transfer"
-                            $('#nominalTransfer').val('');
-                        }
-                    });
-                }
+                        $('#jumlahNpl').on('input', function () {
+                            var jumlahNpl = parseFloat($(this).val());
+                            if (!isNaN(jumlahNpl)) {
+                                var hargaNpl = parseFloat(res);
+                                var totalHarga = jumlahNpl * hargaNpl;
+                                $('#nominalTransfer').val(totalHarga.toLocaleString(
+                                    'id-ID'));
+                            } else {
+                                // Jika nilai "Jumlah NPL yang dibeli" kosong, kosongkan "Nominal Transfer"
+                                $('#nominalTransfer').val('');
+                            }
+                        });
+                    }
+                });
             });
         });
-    });
 
 
-    function previewgambarktp() {
-        var preview = document.querySelector('#previewktp');
+        function previewgambarktp() {
+            var preview = document.querySelector('#previewktp');
 
-        // Hapus semua elemen child di dalam elemen #preview
-        while (preview.firstChild) {
-            preview.removeChild(preview.firstChild);
+            // Hapus semua elemen child di dalam elemen #preview
+            while (preview.firstChild) {
+                preview.removeChild(preview.firstChild);
+            }
+
+            if (this.files) {
+                [].forEach.call(this.files, readAndPreview);
+            }
+
+            function readAndPreview(file) {
+                var reader = new FileReader();
+                reader.addEventListener("load", function () {
+                    var image = new Image();
+                    image.width = 200;
+                    image.title = file.name;
+                    image.src = this.result;
+                    preview.appendChild(image);
+                }, false);
+                reader.readAsDataURL(file);
+            }
         }
+        document.querySelector('#gambarktp').addEventListener("change", previewgambarktp);
 
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-    document.querySelector('#gambarktp').addEventListener("change", previewgambarktp);
-</script>
+    </script>
 </section>
 @endsection

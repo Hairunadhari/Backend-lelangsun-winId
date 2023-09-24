@@ -121,6 +121,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/add-npl', [MenuController::class, 'add_npl'])->name('add-npl');
     Route::get('/detail-npl/{id}/', [MenuController::class, 'detail_npl'])->name('detail-npl');
     Route::put('/verify-npl/{id}/', [MenuController::class, 'verify_npl'])->name('verify-npl');
+    Route::get('/form-refund/{id}/', [MenuController::class, 'form_refund'])->name('form-refund');
+    Route::put('/verify-refund/{id}/', [MenuController::class, 'verify_refund'])->name('verify-refund');
 
     // route Lot
     Route::get('/lot', [MenuController::class, 'list_lot'])->name('lot');

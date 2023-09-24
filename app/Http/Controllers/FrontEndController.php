@@ -20,10 +20,12 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Notifikasi;
 
 class FrontEndController extends Controller
 {
     public function beranda(){
+        
         return view('front-end/beranda');
     }
     public function lot(){
@@ -94,19 +96,29 @@ class FrontEndController extends Controller
         $data = PesertaNpl::find($id);
         return view('front-end/notif',compact('data'));
     }
+
     public function npl(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
-        $now = $konvers_tanggal->format('Y-m-d H:i:s');
-        $event = EventLelang::where('waktu','>',$now)->where('status_data',1)->get();
+        $now = $konvers_tanggal->format('Y-m-d');
+        $hours_now = $konvers_tanggal->format('Y-m-d H');
+        $event = EventLelang::where('waktu','>=',$now)->where('status_data',1)->get();
         $user_id = Auth::guard('peserta')->user()->id;
-        $npl = Npl::with('event_lelang','refund')->where('peserta_npl_id',$user_id)->get();
-        return view('front-end/npl',compact('event','npl'));
+        $npl = Npl::with('event_lelang')->where('status','active')->where('peserta_npl_id',$user_id)->orderBy('created_at','desc')->get();
+
+        return view('front-end/npl',compact('event','npl','hours_now'));
     }
+
     public function pelunasan(){
         return view('front-end/pelunasan');
     }
     public function pesan(){
-        return view('front-end/pesan');
+        $id = Auth::guard('peserta')->user()->id;
+        $notif = Notifikasi::with('peserta_npl','refund')->where('peserta_npl_id',$id)->get();
+        $notif->each->update([
+            'is_read' => 'dibaca'
+        ]);
+        $data = Notifikasi::where('peserta_npl_id',$id)->get();
+        return view('front-end/pesan',compact('data'));
     }
     public function harganpl_by_event($id){
         $event = EventLelang::with('kategori_barang')->where('id', $id)->first();
@@ -142,6 +154,7 @@ class FrontEndController extends Controller
             $npl = Npl::create([
                 'no_npl' => 'SUN_0'. $pembelian_npl->id . Str::random(5),
                 'npl' => Str::random(64),
+                'harga_item' => $harga_npl,
                 'peserta_npl_id' => $pembelian_npl->peserta_npl_id,
                 'pembelian_npl_id' => $pembelian_npl->id,
                 'event_lelang_id' => $pembelian_npl->event_lelang_id,

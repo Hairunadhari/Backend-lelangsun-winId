@@ -14,6 +14,7 @@ use App\Models\Event;
 use App\Models\Order;
 use App\Models\Reply;
 use App\Models\Produk;
+use App\Models\Refund;
 use App\Models\Review;
 use App\Events\Message;
 use App\Models\Bidding;
@@ -25,6 +26,7 @@ use App\Models\Pemenang;
 use App\Models\Wishlist;
 use App\Models\Keranjang;
 use App\Models\OrderItem;
+use App\Models\Notifikasi;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\PesertaNpl;
@@ -534,7 +536,9 @@ class MenuController extends Controller
             $status = request('status_data');
 
             if ($status == 'active') {
-                $data = EventLelang::where('status_data', 1)->orderBy('created_at','desc')->get();
+                $data = EventLelang::with(['lot_item' => function($query){
+                    $query->where('status','active')->where('status_item','active');
+                }])->where('status_data', 1)->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
                 $data = EventLelang::where('status_data', 0)->orderBy('created_at','desc')->get();
             }
@@ -1966,17 +1970,21 @@ class MenuController extends Controller
     }
 
     public function list_peserta_npl(){
+//         $data = Refund::with('npl')->where('status_refund','Pengajuan')->where('status','active')->orderBy('created_at','desc')->get();
+// dd($data);
         if (request()->ajax()) {
             $status = request('status');
 
             if ($status == 'active') {
-                $data = PesertaNpl::with('npl')->where('status','active')->orderBy('created_at','desc')->get();
+                $data = PesertaNpl::with(['npl' => function($query){
+                    $query->where('status','active')->where('status_npl','aktif');
+                }])->where('status','active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
                 $data = PesertaNpl::where('status','not-active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'verifikasi') {
                 $data = PembelianNpl::with('peserta_npl')->where('verifikasi','verifikasi')->orderBy('created_at','desc')->get();
             } elseif ($status == 'Pengajuan') {
-                $data = Refund::with('npl')->where('status_refund','Pengajuan')->where('status','active')->orderBy('created_at','desc')->get();
+                $data = Refund::with('npl.peserta_npl')->where('status_refund','Pengajuan')->where('status','active')->orderBy('created_at','desc')->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -2240,6 +2248,13 @@ class MenuController extends Controller
         $npl->each->update([
             'status_npl' => 'aktif'
         ]);
+
+        Notifikasi::create([
+            'peserta_npl_id' => $pembelian_npl->peserta_npl_id,
+            'type' => 'verifikasi',
+            'judul' => 'Pembelian NPL Berhasil',
+            'pesan' => 'Selamat, pembelian NPL anda berhasil dengan nominal tranfer sebesar Rp' . number_format($pembelian_npl->nominal),
+        ]);
         
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
     }
@@ -2328,5 +2343,36 @@ class MenuController extends Controller
         return response()->json($lot_item);
     }
     
+    public function form_refund($id){
+        $refund = Refund::with('npl')->find($id);
+       
+        return view('lelang.form_refund',compact('refund'));
+    }
+    public function verify_refund(Request $request, $id){
+        $refund = Refund::with('npl')->find($id);
+        $bukti = $request->file('bukti');
+        $bukti->storeAs('public/image', $bukti->hashName());
+
+        Storage::delete('public/image/'.$refund->bukti);
+        $refund->update([
+            'status_refund' => 'Sukses Refund',
+            'bukti'     => $bukti->hashName(),
+        ]);
+
+        $refund->npl->update([
+            'status_npl' => 'not-aktif',
+            'status' => 'not-active'
+        ]);
+
+        Notifikasi::create([
+            'refund_id' => $id,
+            'peserta_npl_id' => $refund->npl->peserta_npl_id,
+            'type' => 'refund',
+            'judul' => 'NPL berhasil di refund',
+            'pesan' => 'Selamat,  NPL anda berhasil direfund dengan nominal tranfer sebesar Rp' . number_format($refund->npl->harga_item),
+        ]);
+        
+        return redirect('/peserta-npl')->with('success', 'Data berhasil di Refund !');
+    }
     
 }   

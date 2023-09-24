@@ -19,4 +19,8 @@ class PesertaNpl extends Model
     {
         return $this->hasMany(Npl::class);
     }
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
 }

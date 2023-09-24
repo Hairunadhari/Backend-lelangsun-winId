@@ -96,9 +96,14 @@
                  {
                     data: null,
                     render: function (data, type, row, meta) {
+                        // console.log(data.lot_item);
+                        
                         var deleteUrl = '/delete-event-lelang/' + data.id;
                         var editUrl = '/edit-event-lelang/' + data.id;
-                        var bidding = '/bidding-event-lelang/' + data.id + '?lot='  ;
+                        var bidding = '';
+                        if (data && data.lot_item && data.lot_item[0] && data.lot_item[0].id) {
+                            bidding = '/bidding-event-lelang/' + data.id + '?lot=' + data.lot_item[0].id;
+                        }
                         var eventDate = new Date(row.waktu);
                         var today = new Date();
                         var convert_eventDate = eventDate.getFullYear()+'-'+(eventDate.getMonth()+1)+'-'+eventDate.getDate(); 

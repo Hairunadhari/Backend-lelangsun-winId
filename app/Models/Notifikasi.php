@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Refund extends Model
+class Notifikasi extends Model
 {
     use HasFactory;
     protected $guarded = [''];
 
-    public function npl()
+    public function peserta_npl()
     {
-        return $this->belongsTo(Npl::class);
+        return $this->belongsTo(PesertaNpl::class);
     }
-    public function notifikasi()
+    public function refund()
     {
-        return $this->hasOne(Notifikasi::class);
+        return $this->belongsTo(Refund::class);
     }
 }

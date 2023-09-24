@@ -125,107 +125,27 @@
                         <thead style="position: sticky; top: 0; background-color: rgb(224, 13, 13);">
                             <tr>
                                 <th>No</th>
+                                <th>Judul</th>
                                 <th>Pesan</th>
-                                <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
+                            @php
+                                $id = 1;
+                            @endphp
+                            @foreach ($data as $item)
                             <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
+                                <td>{{$id++}}</td>
+                                <td>{{$item->judul}}</td>
+                                <td>{{$item->pesan}}
+                                    @if ($item->refund)
+                                    <img  style="width:200px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; " src="{{ asset('storage/image/'.$item->refund->bukti) }}" alt="">
+                                    @else
+                                        
+                                    @endif
+                                </td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                            </tr>
-                            
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

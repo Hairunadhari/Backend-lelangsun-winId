@@ -104,12 +104,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <td>1</td>
-                                    <td>Hairun</td>
-                                    <td>tes@gmail.com</td>
-                                    <td>SUN_123</td>
-                                    <td>1000.000</td>
-                                    <td><span class="badge bg-success">Verif</span></td>
                                 </tbody>
                             </table>
                         </div>
@@ -278,58 +272,55 @@
                 },
             ],
         });
-        // $('#ref').DataTable({
-        //     processing: true,
-        //     ordering: false,
-        //     searching: true,
-        //     serverSide: true,
-        //     ajax: {
-        //         url: '{{ url()->current() }}',
-        //         data: function (data) {
-        //             data.status = 'Pengajuan';
-        //         }
-        //     },
-        //     columns: [{
-        //             render: function (data, type, row, meta) {
-        //                 return meta.row + meta.settings._iDisplayStart + 1;
-        //             },
-        //         },
-        //         {
-        //             data: "peserta_npl.nama",
-        //         },
-        //         {
-        //             data: "peserta_npl.email",
-        //         },
-        //         {
-        //             data: "tgl_transfer",
-        //         },
-        //         {
-        //             data: "nominal",
-        //             render: function(data, type, row, meta) {
-        //                 if (type === 'display') {
-        //                     // Mengubah data menjadi format mata uang dengan simbol IDR
-        //                     return "Rp " + data.toLocaleString('id-ID', {
-        //                         minimumFractionDigits: 0
-        //                     });
-        //                 }
-        //                 return data;
-        //             }
-        //         },
-        //         {
-        //             data: null,
-        //             render: function (data) {
-        //                 var activeUrl = '/verify-npl/' + data.id;
-        //                 return `
-        //             <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan memverifikasi data ini ?');">
-        //                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        //                 <input type="hidden" name="_method" value="PUT">
-        //                 <button class="btn btn-success" type="submit"><i class="fas fa-check"></i></button>
-        //             </form>
-        //             `;
-        //             },
-        //         },
-        //     ],
-        // });
+        $('#ref').DataTable({
+            processing: true,
+            ordering: false,
+            searching: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ url()->current() }}',
+                data: function (data) {
+                    data.status = 'Pengajuan';
+                }
+            },
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "npl.peserta_npl.nama",
+                },
+                {
+                    data: "npl.peserta_npl.email",
+                },
+                {
+                    data: "npl.no_npl",
+                },
+                {
+                    data: "npl.harga_item",
+                    render: function(data, type, row, meta) {
+                        if (type === 'display') {
+                            // Mengubah data menjadi format mata uang dengan simbol IDR
+                            return "Rp " + data.toLocaleString('id-ID', {
+                                minimumFractionDigits: 0
+                            });
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data) {
+                        var activeUrl = '/verify-npl/' + data.id;
+                        var refund = '/form-refund/' + data.id;
+                        return `
+                        <span><a class="btn btn-success" href="${refund}"><i class="fas fa-check"></i></a></span>
+                    `;
+                    },
+                },
+            ],
+        });
     });
 
 </script>
