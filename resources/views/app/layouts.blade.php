@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>WIN</title>
   
   <!-- General CSS Files -->
@@ -29,12 +30,12 @@
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css')}}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/css/components.css')}}">
-
+  @vite(['resources/css/app.css' , 'resources/js/app.js'])
 <!-- Start GA -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
 <script>
@@ -78,9 +79,8 @@
   <!-- Page Specific JS File -->
   {{-- <script src="{{ asset('assets/js/page/modules-datatables.js')}}"></script> --}}
   {{-- <script src="{{ asset('assets/js/page/index.js')}}"></script> --}}
-
-
-   <!-- General JS Scripts -->
+  
+  <!-- General JS Scripts -->
    <script src="{{ asset('assets/modules/jquery.min.js')}}"></script>
    <script src="{{ asset('assets/modules/popper.js')}}"></script>
    <script src="{{ asset('assets/modules/tooltip.js')}}"></script>
@@ -100,9 +100,17 @@
    <!-- Page Specific JS File -->
    <script src="{{ asset('assets/js/page/forms-advanced-forms.js')}}"></script>
    <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script> 
+   {{-- <script src="{{asset('assets/js/page/components-chat-box.js')}}"></script> --}}
    
    <!-- Template JS File -->
    <script src="{{ asset('assets/js/scripts.js')}}"></script>
    <script src="{{ asset('assets/js/custom.js')}}"></script>
+   <script>
+     $.ajaxSetup({
+           headers: {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           }
+       });
+   </script>
 </body>
 </html>

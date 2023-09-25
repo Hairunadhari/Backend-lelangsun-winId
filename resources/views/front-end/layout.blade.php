@@ -11,10 +11,13 @@
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
 </head>
 <style>
     .navbar-nav {
-        margin-left: 400px;
+        margin-left: 300px;
     }
 
     .navbar-nav .nav-link {
@@ -100,6 +103,18 @@
                     <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
+                    {{-- ambil model notifikasi --}}
+                    @inject('notifikasi', 'App\Models\Notifikasi')
+                    @php
+                        $id = Auth::guard('peserta')->user()->id;
+                        $total_pesan = $notifikasi::where('peserta_npl_id', $id)->where('is_read','belum dibaca')->count();
+                    @endphp
+                    <a class="nav-link fw-semibold" href="{{route('front-end-notif')}}" style="position: relative;">
+                        <i class="fas fa-bell"></i>
+                        <span
+                            style="position: absolute; top: 0; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 4px 7px; font-size: 12px;">{{$total_pesan}}</span>
+                    </a>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -108,13 +123,14 @@
                         <ul class="dropdown-menu">
                             <form method="POST" action="{{ route('peserta.logout') }}">
                                 @csrf
-                                <button type="submit" class="dropdown-item has-icon text-danger" style="cursor: pointer">
+                                <button type="submit" class="dropdown-item has-icon text-danger"
+                                    style="cursor: pointer">
                                     <i class="fas fa-sign-out-alt mt-2"></i> <span style="font-size: 14px">Logout</span>
                                 </button>
                             </form>
                         </ul>
                     </li>
-                    @else 
+                    @else
                     <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>

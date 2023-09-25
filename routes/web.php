@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\Message;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
@@ -24,6 +26,7 @@ Route::get('/admin', function () {
     return view('auth.login');
 });
 
+
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
 Route::get('/user-lot', [FrontEndController::class, 'lot'])->name('front-end-lot');
 Route::get('/user-lelang', [FrontEndController::class, 'lelang'])->name('front-end-lelang');
@@ -33,8 +36,17 @@ Route::get('/user-login', [FrontEndController::class, 'login'])->name('front-end
 Route::get('/user-register', [FrontEndController::class, 'register'])->name('front-end-register');
 Route::post('/add-register', [FrontEndController::class, 'add_register'])->name('register-user');
 Route::post('/proses-login', [FrontEndController::class, 'proses_login'])->name('proses-login-user');
-
+Route::get('/user-notif', [FrontEndController::class, 'notif'])->name('front-end-notif');
+Route::get('/user-profil', [FrontEndController::class, 'profil'])->name('front-end-profil');
+Route::get('/user-npl', [FrontEndController::class, 'npl'])->name('front-end-npl');
+Route::get('/user-pelunasan', [FrontEndController::class, 'pelunasan'])->name('front-end-pelunasan');
+Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
 Route::get('/detail-event-user/{id}/', [FrontEndController::class, 'detail_event'])->name('detail-event-user');
+Route::get('/get-harganpl/{id}/', [MenuController::class, 'harganpl_by_event']);
+Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
+Route::get('/user-bidding/{id}/', [FrontEndController::class, 'bidding'])->name('user-bidding');
+Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
+Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
 
 // Auth::routes(['verify' => true]);
 
@@ -108,6 +120,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/npl/get-harganpl-by-event/{id}/', [MenuController::class, 'harganpl_by_event']);
     Route::post('/add-npl', [MenuController::class, 'add_npl'])->name('add-npl');
     Route::get('/detail-npl/{id}/', [MenuController::class, 'detail_npl'])->name('detail-npl');
+    Route::put('/verify-npl/{id}/', [MenuController::class, 'verify_npl'])->name('verify-npl');
+    Route::get('/form-refund/{id}/', [MenuController::class, 'form_refund'])->name('form-refund');
+    Route::put('/verify-refund/{id}/', [MenuController::class, 'verify_refund'])->name('verify-refund');
 
     // route Lot
     Route::get('/lot', [MenuController::class, 'list_lot'])->name('lot');
@@ -125,7 +140,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-barang-lelang/{id}/', [MenuController::class, 'edit_barang_lelang'])->name('edit-barang-lelang');
     Route::put('/update-barang-lelang/{id}/', [MenuController::class, 'update_barang_lelang'])->name('update-barang-lelang');
     Route::put('/delete-barang-lelang/{id}/', [MenuController::class, 'delete_barang_lelang'])->name('delete-barang-lelang');
-    Route::put('/active-barang-lelang/{id}/', [MenuController::class, 'active_barang_lelang'])->name('active-barang-lelang');
+    Route::put('/active-barang-lelang/{id}/lot', [MenuController::class, 'active_barang_lelang'])->name('active-barang-lelang');
 
     // route event lelang
     Route::get('/event-lelang', [MenuController::class, 'list_event_lelang'])->name('event-lelang');
@@ -135,6 +150,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-event-lelang/{id}/', [MenuController::class, 'update_event_lelang'])->name('update-event-lelang');
     Route::put('/delete-event-lelang/{id}/', [MenuController::class, 'delete_event_lelang'])->name('delete-event-lelang');
     Route::put('/active-event-lelang/{id}/', [MenuController::class, 'active_event_lelang'])->name('active-event-lelang');
+
+    Route::get('/bidding-event-lelang/{id}/', [MenuController::class, 'bidding'])->name('bidding-event-lelang');
+    Route::post('/add-bidding', [MenuController::class, 'add_bidding'])->name('add-bidding');
 
     Route::get('/cari-toko', [MenuController::class, 'cari_toko'])->name('cari-toko');
 
@@ -238,6 +256,15 @@ Route::middleware('auth')->group(function () {
      Route::delete('/delete-all-member-event/{id}/', [MenuController::class, 'delete_all_member_event'])->name('delete-all-member-event');
      Route::post('/send-email-member/{id}/', [SendEmailMemberController::class, 'send_email_member'])->name('send-email-member');
 
+     Route::post('send-bidding',[MenuController::class, 'send_bidding']);
+     Route::post('log-bidding',[MenuController::class, 'log_bidding']);
+     Route::post('search-pemenang-event',[MenuController::class, 'search_pemenang_event']);
+     Route::post('next-lot',[MenuController::class, 'next_lot']);
+    //  Route::post('send-message',function (Request $request){
+    //     event(new Message($request->email, $request->harga_bidding));
+    //     return ['success' => true];
+    // });
+    
     });
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
 

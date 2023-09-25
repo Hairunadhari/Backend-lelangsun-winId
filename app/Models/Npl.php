@@ -22,4 +22,8 @@ class Npl extends Model
     {
         return $this->belongsTo(EventLelang::class);
     }
+    public function refund()
+    {
+        return $this->hasOne(Refund::class);
+    }
 }

@@ -50,7 +50,7 @@
                 <img src="{{asset('storage/image/'.$item->barang_lelang->gambarlelang[0]->gambar)}}"  alt="...">
                 <div class="card-body">
                   <h5 class="card-title">{{$item->barang_lelang->barang}}</h5>
-                  <p class="card-text">Rp. {{number_format($item->event_lelang->kategori_barang->kelipatan_bidding)}}</p>
+                  <p class="card-text">Rp. {{number_format($item->harga_awal)}}</p>
                   <p class="card-text"><i class="fas fa-map-marker-alt"></i> {{$item->event_lelang->alamat}}</p>
                   <p class="card-text"><i class="fas fa-calendar-alt"></i> {{$item->tanggal}} WIB</p>
                 </div>
