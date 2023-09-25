@@ -243,9 +243,9 @@ class FrontEndController extends Controller
     public function refund($id){
         $npl = Npl::find($id);
         $npl->update([
-            'status_npl' => 'pengajuan'
+            'status_npl' => 'pengajuan',
         ]);
-
+        
         Refund::create([
             'npl_id' => $id,
         ]);
