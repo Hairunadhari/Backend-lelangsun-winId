@@ -48,7 +48,9 @@
                                 @foreach ($baranglelang as $p)
                                     <tr>
                                         <td><input type="checkbox" name="barang_id[]" value="{{ $p->id }}" {{ isset($barangTerpilih[$p->id]) ? 'checked' : '' }}></td>
-                                        <td>{{ $p->barang }}</td>
+                                        <td>{{ $p->barang }}
+                                            <input type="hidden" value="{{$p->barang}}" name="nama_barang[]">
+                                        </td>
                                         <td>
                                             <input type="number" class="form-control" name="harga_awal[]" value="{{ isset($barangTerpilih[$p->id]) ? $barangTerpilih[$p->id] : '' }}">
                                         </td>

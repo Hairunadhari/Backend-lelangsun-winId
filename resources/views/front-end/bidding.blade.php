@@ -2,7 +2,7 @@
 @section('content')
 <style>
     #satu {
-        background-image: url('detail_event.jpg');
+        background-image: url('/asset-lelang/detail_event.jpg');
         height: 100vh;
         background-position: left;
         background-size: cover;
@@ -75,24 +75,38 @@
         </div>
         <div class="row">
             <div class="card col-6">
-                <h1>Event : {{$event->judul}}</h1>
-                <img src="{{asset('storage/image/'.$event->lot_item[0]->barang_lelang->gambarlelang[0]->gambar)}}"  alt="...">
+                <h1>Event : {{$lot_item[0]->event_lelang->judul}}</h1>
+                <img src="{{asset('storage/image/'.$lot_item[0]->barang_lelang->gambarlelang[0]->gambar)}}" class="my-2"  alt="...">
             </div>
             <div class="scroll col-6">
                 <div class="card" >
                     <div class="card-body">
-                        
+                        <div class="" id="log-bid-user"></div>
                     </div>
                   </div>
-                  <form>
+                  @if ($npl->count() > 0) {{--apakah user punya npl event--}}
+                  <form action="#" method="post" id="message_form" onsubmit="return submitForm(this);">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Email</label>
-                      <input type="text" class="form-control" name="email">
+                        <input type="hidden" class="form-control" name="email" id="email_user" value="{{Auth::guard('peserta')->user()->email}}" readonly>
+                        <input type="hidden" readonly name="event_lelang_id" id="event_lelang_id_user" value="{{$lot_item[0]->event_lelang->id}}" class="form-control">
+                        <input type="hidden" readonly name="peserta_npl_id" id="peserta_npl_id_user" value="{{Auth::guard('peserta')->user()->id}}" class="form-control">
+                        <input type="hidden" readonly name="npl_id" id="npl_id_user" value="{{$npl[0]->id}}" class="form-control">
+                        <input type="hidden" readonly name="lot_id" id="lot_item_id_user" value="{{$lot_item[0]->id}}" class="form-control">
+                        <input type="hidden" readonly name="harga_awal" id="harga_awal_user" value="{{ (!empty($lot_item) && !empty($lot_item[0]->bidding) && count($lot_item[0]->bidding) > 0) ? $lot_item[0]->bidding[0]->harga_bidding : $lot_item[0]->harga_awal }}" class="form-control">
+                        <input type="hidden" readonly name="harga_bidding" id="harga_bidding_user" value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
+                        @php
+                            $event_id_crypt= Crypt::encrypt($lot_item[0]->event_lelang->id);
+                        @endphp
+                        <input type="hidden" readonly  id="id_event_crypt" value="{{$event_id_crypt}}" class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </form>
+                    
+                </form>
+                <button  class="btn btn-success w-100" id="user_send_bidding">Bidding</button>
+                @endif
             </div>
         </div>
     </section>
-
+<script>
+   
+</script>
 @endsection

@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\Message;
+use App\Events\StartBid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,7 @@ Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-
 Route::get('/user-bidding/{id}/', [FrontEndController::class, 'bidding'])->name('user-bidding');
 Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
 Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
+Route::post('send-bidding-user',[FrontEndController::class, 'send_bidding']);
 
 // Auth::routes(['verify' => true]);
 
@@ -256,10 +258,15 @@ Route::middleware('auth')->group(function () {
      Route::delete('/delete-all-member-event/{id}/', [MenuController::class, 'delete_all_member_event'])->name('delete-all-member-event');
      Route::post('/send-email-member/{id}/', [SendEmailMemberController::class, 'send_email_member'])->name('send-email-member');
 
-     Route::post('send-bidding',[MenuController::class, 'send_bidding']);
-     Route::post('log-bidding',[MenuController::class, 'log_bidding']);
+     //  Route::post('log-bidding',[MenuController::class, 'log_bidding']);
      Route::post('search-pemenang-event',[MenuController::class, 'search_pemenang_event']);
      Route::post('next-lot',[MenuController::class, 'next_lot']);
+    Route::post('send-bidding',[MenuController::class, 'send_bidding']);
+
+     Route::post('open-button',function (Request $request){
+        event(new StartBid($request->button));
+        return ['success' => true];
+    });
     //  Route::post('send-message',function (Request $request){
     //     event(new Message($request->email, $request->harga_bidding));
     //     return ['success' => true];
@@ -267,7 +274,7 @@ Route::middleware('auth')->group(function () {
     
     });
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
-
+    Route::post('log-bidding',[MenuController::class, 'log_bidding']);
  
 require __DIR__.'/auth.php';
 

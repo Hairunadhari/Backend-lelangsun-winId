@@ -10,24 +10,23 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BiddingEvent implements ShouldBroadcast
+class NextLot implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public $lot_item;
+    public function __construct($lot_item)
+    {
+        $this->lot_item = $lot_item;
+    }
 
-  public function __construct($message)
-  {
-      $this->message = $message;
-  }
+    public function broadcastOn()
+    {
+        return new Channel('next-lot');
+    }
 
-  public function broadcastOn()
-  {
-        return new Channel('chat');
-  }
-
-  public function broadcastAs()
-  {
-      return 'my-event';
-  }
+    public function broadcastAs()
+    {
+        return 'lot';
+    }
 }

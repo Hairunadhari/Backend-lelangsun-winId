@@ -1,4 +1,4 @@
-@extends('front-end.layout')
+ @extends('front-end.layout')
 @section('content')
 <style>
     .con-kontak {

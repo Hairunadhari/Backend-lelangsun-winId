@@ -23,4 +23,8 @@ class PesertaNpl extends Model
     {
         return $this->hasMany(Notifikasi::class);
     }
+    public function bidding()
+    {
+        return $this->hasMany(Bidding::class);
+    }
 }

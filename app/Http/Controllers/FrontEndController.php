@@ -6,8 +6,10 @@ use Carbon\Carbon;
 use App\Models\Lot;
 use App\Models\Npl;
 use App\Models\Refund;
+use App\Events\Message;
 use App\Models\Bidding;
 use App\Models\LotItem;
+use App\Models\Notifikasi;
 use App\Models\PesertaNpl;
 use App\Models\EventLelang;
 use Illuminate\Support\Str;
@@ -20,7 +22,6 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Models\Notifikasi;
 
 class FrontEndController extends Controller
 {
@@ -37,14 +38,17 @@ class FrontEndController extends Controller
     public function lelang(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d');
-        $event = EventLelang::with('lot_item')->where('waktu','>=', $now)->where('status_data',1)->get();
+        $event = EventLelang::with(['lot_item' => function($query){
+            $query->where('status_item','active')->where('status','active');
+        }])->where('waktu','>=', $now)->where('status_data',1)->get();
 
             return view('front-end/lelang',compact('event'));
     }
     public function event(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
-        $now = $konvers_tanggal->format('Y-m-d H:i:s');
-        $event = EventLelang::where('waktu','>',$now)->where('status_data',1)->take(4)->get();
+        $now = $konvers_tanggal->format('Y-m-d');
+        $event = EventLelang::where('waktu','>=',$now)->where('status_data',1)->take(4)->get();
+        // dd($event);
         return view('front-end/event',compact('event'));
     }
     public function detail_event($id){
@@ -167,8 +171,15 @@ class FrontEndController extends Controller
     }
 
     public function bidding($id){
-        $event = EventLelang::with('lot_item.barang_lelang.gambarlelang')->find($id);
-        return view('front-end/bidding',compact('event'));
+        $event_id = Crypt::decrypt($id);
+        $lot_item = LotItem::with(['bidding' => function($query){
+            $query->orderBy('harga_bidding','desc')->first();
+        }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
+
+        $id_peserta = Auth::guard('peserta')->user()->id;
+        $npl = Npl::where('peserta_npl_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
+        // dd($npl);
+        return view('front-end/bidding',compact('lot_item','npl'));
     }
 
     public function edit_profil_user(Request $request, $id){
@@ -250,5 +261,23 @@ class FrontEndController extends Controller
             'npl_id' => $id,
         ]);
         return redirect()->back()->with('success', 'SUCCESS! data anda sedang di verifikasi oleh admin');
+    }
+
+    public function send_bidding(Request $request){
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('Y-m-d H:i:s');
+        Bidding::create([
+            'kode_event' => Str::random(64),
+            'email' => $request->email,
+            'event_lelang_id' => $request->event_lelang_id,
+            'peserta_npl_id' => $request->npl_id,
+            'lot_item_id' => $request->lot_item_id,
+            'npl_id' => $request->npl_id,
+            'harga_bidding' => $request->harga_bidding,
+            'waktu' => $now,
+        ]);
+        event(new Message($request->email, $request->harga_bidding));
+        return ['success' => true];
+
     }
 }
