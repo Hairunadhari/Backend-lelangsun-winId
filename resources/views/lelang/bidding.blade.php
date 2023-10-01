@@ -59,7 +59,7 @@
                                                 </div>
                                             </div>
                                         </form>
-                                        <button  id="start-bid" class="btn btn-success w-100 my-2">
+                                        <button id="start-bid" class="btn btn-success w-100 my-2">
                                              <h6 class="mb-0"><i class="fas fa-play"></i> Start Bid</h6>
                                         </button>
                                 </div>

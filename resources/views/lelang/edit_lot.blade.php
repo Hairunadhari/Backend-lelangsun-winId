@@ -30,6 +30,7 @@
             @endif
             <form action="{{route('update-lot',$lot->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
+                @method('put')
                 <div class="table-responsive">
                     <label for="">List Barang <span style="color: red">*</span></label>
                     <input type="hidden" value="{{$lot->event_lelang->id}}" name="event_id">
@@ -52,7 +53,7 @@
                                             <input type="hidden" value="{{$p->barang}}" name="nama_barang[]">
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" name="harga_awal[]" value="{{ isset($barangTerpilih[$p->id]) ? $barangTerpilih[$p->id] : '' }}">
+                                            <input type="number" class="form-control" name="harga_awal[]"  data-idBarang="{{ $p->id }}"  value="{{ isset($barangTerpilih[$p->id]) ? $barangTerpilih[$p->id] : '' }}">
                                         </td>
                                     </tr>
                                 @endforeach

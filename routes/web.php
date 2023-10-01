@@ -49,6 +49,8 @@ Route::get('/user-bidding/{id}/', [FrontEndController::class, 'bidding'])->name(
 Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
 Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
 Route::post('send-bidding-user',[FrontEndController::class, 'send_bidding']);
+Route::post('log-bidding-user',[FrontEndController::class, 'log_bidding']);
+
 
 // Auth::routes(['verify' => true]);
 
@@ -132,7 +134,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/form-add-lot/{id}/', [MenuController::class, 'form_add_lot'])->name('form-add-lot');
     Route::get('/detail-lot/{id}/', [MenuController::class, 'detail_lot'])->name('detail-lot');
     Route::get('/form-edit-lot/{id}/', [MenuController::class, 'form_edit_lot'])->name('form-edit-lot');
-    Route::post('/update-lot/{id}/', [MenuController::class, 'update_lot'])->name('update-lot');
+    Route::put('/update-lot/{id}/', [MenuController::class, 'update_lot'])->name('update-lot');
     Route::delete('/delete-lot/{id}/', [MenuController::class, 'delete_lot'])->name('delete-lot');
 
     // route barang lelang
@@ -142,7 +144,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-barang-lelang/{id}/', [MenuController::class, 'edit_barang_lelang'])->name('edit-barang-lelang');
     Route::put('/update-barang-lelang/{id}/', [MenuController::class, 'update_barang_lelang'])->name('update-barang-lelang');
     Route::put('/delete-barang-lelang/{id}/', [MenuController::class, 'delete_barang_lelang'])->name('delete-barang-lelang');
-    Route::put('/active-barang-lelang/{id}/lot', [MenuController::class, 'active_barang_lelang'])->name('active-barang-lelang');
+    Route::put('/active-barang-lelang/{id}/', [MenuController::class, 'active_barang_lelang'])->name('active-barang-lelang');
 
     // route event lelang
     Route::get('/event-lelang', [MenuController::class, 'list_event_lelang'])->name('event-lelang');
@@ -258,7 +260,7 @@ Route::middleware('auth')->group(function () {
      Route::delete('/delete-all-member-event/{id}/', [MenuController::class, 'delete_all_member_event'])->name('delete-all-member-event');
      Route::post('/send-email-member/{id}/', [SendEmailMemberController::class, 'send_email_member'])->name('send-email-member');
 
-     //  Route::post('log-bidding',[MenuController::class, 'log_bidding']);
+    //   Route::post('log-bidding',[MenuController::class, 'log_bidding']);
      Route::post('search-pemenang-event',[MenuController::class, 'search_pemenang_event']);
      Route::post('next-lot',[MenuController::class, 'next_lot']);
     Route::post('send-bidding',[MenuController::class, 'send_bidding']);
@@ -273,8 +275,8 @@ Route::middleware('auth')->group(function () {
     // });
     
     });
-    Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
     Route::post('log-bidding',[MenuController::class, 'log_bidding']);
+    Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
  
 require __DIR__.'/auth.php';
 

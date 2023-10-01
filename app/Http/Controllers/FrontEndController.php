@@ -177,7 +177,7 @@ class FrontEndController extends Controller
         }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
 
         $id_peserta = Auth::guard('peserta')->user()->id;
-        $npl = Npl::where('peserta_npl_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
+        $npl = Npl::where('status_npl','aktif')->where('status','active')->where('peserta_npl_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
         // dd($npl);
         return view('front-end/bidding',compact('lot_item','npl'));
     }
@@ -270,7 +270,7 @@ class FrontEndController extends Controller
             'kode_event' => Str::random(64),
             'email' => $request->email,
             'event_lelang_id' => $request->event_lelang_id,
-            'peserta_npl_id' => $request->npl_id,
+            'peserta_npl_id' => $request->peserta_npl_id,
             'lot_item_id' => $request->lot_item_id,
             'npl_id' => $request->npl_id,
             'harga_bidding' => $request->harga_bidding,
@@ -279,5 +279,12 @@ class FrontEndController extends Controller
         event(new Message($request->email, $request->harga_bidding));
         return ['success' => true];
 
+    }
+    public function log_bidding(Request $request){
+        $event_id = Crypt::decrypt($request->event_lelang_id);
+        $lot_item_id = $request->lot_item_id;
+        $bidding = Bidding::where('event_lelang_id',$event_id)->where('lot_item_id',$lot_item_id)->get();
+        // event(new LogBid($bidding));
+        return response()->json($bidding);
     }
 }

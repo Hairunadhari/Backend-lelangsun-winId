@@ -97,7 +97,8 @@
                     data: null,
                     render: function (data, type, row, meta) {
                         // console.log(data.lot_item);
-                        
+                        // var encryptedId = "{{ Crypt::encrypt("+ data.id +") }}"; // Mengenkripsi id menggunakan Crypt::encrypt()
+                        // console.log(encryptedId);
                         var deleteUrl = '/delete-event-lelang/' + data.id;
                         var editUrl = '/edit-event-lelang/' + data.id;
                         var bidding = '';
