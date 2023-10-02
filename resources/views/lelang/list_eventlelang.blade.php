@@ -97,13 +97,11 @@
                     data: null,
                     render: function (data, type, row, meta) {
                         // console.log(data.lot_item);
-                        // var encryptedId = "{{ Crypt::encrypt("+ data.id +") }}"; // Mengenkripsi id menggunakan Crypt::encrypt()
-                        // console.log(encryptedId);
                         var deleteUrl = '/delete-event-lelang/' + data.id;
                         var editUrl = '/edit-event-lelang/' + data.id;
                         var bidding = '';
                         if (data && data.lot_item && data.lot_item[0] && data.lot_item[0].id) {
-                            bidding = '/bidding-event-lelang/' + data.id + '?lot=' + data.lot_item[0].id;
+                            bidding = '/bidding-event-lelang/' + data.encrypted_id + '?lot=' + data.lot_item[0].id;
                         }
                         var eventDate = new Date(row.waktu);
                         var today = new Date();

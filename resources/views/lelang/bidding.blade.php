@@ -37,7 +37,11 @@
                                     <form action="#" method="post" id="message_form" onsubmit="return submitForm(this);">
                                         <div class="input-group">
                                             <input type="hidden" name="email" id="email" value="BidOffline" class="form-control">
-                                            <input type="hidden" name="event_lelang_id" id="event_lelang_id" value="{{$id}}" class="form-control">
+                                            @php
+                                                $event_id_crypt= Crypt::encrypt($event_id);
+                                            @endphp
+                                            <input type="text" name="event_lelang_id" id="event_lelang_id" value="{{$event_id}}" class="form-control">
+                                            <input type="text" name="event_lelang_id_crypt" id="event_lelang_id_crypt" value="{{$event_id_crypt}}" class="form-control">
                                             <input type="hidden" name="lot_id" id="lot_item_id" value="{{$lot_item[0]->id}}" class="form-control">
                                             <input type="hidden" name="harga_awal" id="harga_awal" value="{{ (!empty($lot_item) && !empty($lot_item[0]->bidding) && count($lot_item[0]->bidding) > 0) ? $lot_item[0]->bidding[0]->harga_bidding : $lot_item[0]->harga_awal }}" class="form-control">
                                             <input type="hidden" name="harga_bidding" id="harga_bidding" value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
@@ -68,7 +72,7 @@
                         <div class="row">
                             @foreach ($lot_item as $index => $item)
                             @if ($index > 0)
-                                <div class="card col-4 m-1" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6;">
+                                <div class="card col-4 m-1 p-1" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6;">
                                     <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}" class="card-img-top" alt="..." style="height:100px; width:auto;">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $item->barang_lelang->barang }}</h5>

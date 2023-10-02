@@ -32,7 +32,7 @@ class FrontEndController extends Controller
     public function lot(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d');
-        $lot_item = LotItem::with('barang_lelang.gambarlelang','event_lelang.kategori_barang')->where('tanggal','>',$now)->where('status','active')->take(4)->get();
+        $lot_item = LotItem::with('barang_lelang.gambarlelang','event_lelang.kategori_barang')->where('tanggal','>',$now)->where('status','active')->where('status_item','active')->take(4)->get();
         return view('front-end/lot',compact('lot_item'));
     }
     public function lelang(){
@@ -281,9 +281,9 @@ class FrontEndController extends Controller
 
     }
     public function log_bidding(Request $request){
-        $event_id = Crypt::decrypt($request->event_lelang_id);
+        // $event_id = Crypt::decrypt($request->event_lelang_id);
         $lot_item_id = $request->lot_item_id;
-        $bidding = Bidding::where('event_lelang_id',$event_id)->where('lot_item_id',$lot_item_id)->get();
+        $bidding = Bidding::where('event_lelang_id',$request->event_lelang_id)->where('lot_item_id',$lot_item_id)->get();
         // event(new LogBid($bidding));
         return response()->json($bidding);
     }

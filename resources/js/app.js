@@ -6,11 +6,12 @@ window.Alpine = Alpine;
 
 Alpine.start();
 $(document).ready(function () {
-    
+
     let event_lelang_id = $('#event_lelang_id').val();
     let lot_item_id = $('#lot_item_id').val();
-    
+
     // <------------------------------------------------ FUNGSI LIAT STORY BIDDING --------------------------------------------------->
+    // console.log(event_lelang_id_crypt);
 
     $.ajax({
         method: 'post',
@@ -20,7 +21,7 @@ $(document).ready(function () {
             lot_item_id: lot_item_id,
         },
         success: function (res) {
-            console.log(res);
+            // console.log(res);
             $.each(res, function (key, value) {
                 // $('#log-bid-user').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">'+ value.email+' '+ ': ' + value.harga_bidding+'</h5></div>');
                 $('#log-bid').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' + value.email + ' ' + ': ' + value.harga_bidding + '</h5></div>');
@@ -67,7 +68,7 @@ $(document).ready(function () {
     }
 
     // kode tampilkan button bidding di user, button stop, bid dan jalankan timer
-    $(document).on('click','#start-bid', function (e){
+    $(document).on('click', '#start-bid', function (e) {
         $('#con-bid').css('display', 'block');
         $('#start-bid').css('display', 'none');
         // conBidElement.style.display = 'block';
@@ -83,20 +84,6 @@ $(document).ready(function () {
             }
         });
     });
-    // startBidButton.addEventListener('click', function () {
-    //     conBidElement.style.display = 'block';
-    //     startBidButton.style.display = 'none';
-    //     $.ajax({
-    //         method: 'post',
-    //         url: '/open-button',
-    //         data: {
-    //             button: 'open',
-    //         },
-    //         success: function (res) {
-    //             toggleTimer();
-    //         }
-    //     });
-    // });
 
     // <--------FUNGSI ketika timer habis ----------->
     function timer_habis() {
@@ -191,6 +178,7 @@ $(document).ready(function () {
             .then((win) => {
                 if (win) {
                     let event_lelang_id = $('#event_lelang_id').val();
+                    let event_lelang_id_crypt = $('#event_lelang_id_crypt').val();
                     let lot_item_id = $('#lot_item_id').val();
                     $.ajax({
                         method: 'post',
@@ -220,9 +208,18 @@ $(document).ready(function () {
                                         },
                                         success: function (res) {
                                             if (res.lot_item.length > 0) {
-                                                window.location.href = '/bidding-event-lelang/' + event_lelang_id + '?lot=' + res.lot_item[0].id;
+                                                window.location.href = '/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
                                             } else {
-                                                window.location.href = '/event-lelang';
+                                                $.ajax({
+                                                    method: 'post',
+                                                    url: 'delete-event-lelang/' + event_lelang_id,
+                                                    data: {
+                                                        _method: 'PUT',
+                                                    },
+                                                    success: function (res) {
+                                                        window.location.href = '/event-lelang';
+                                                    }
+                                                });
                                             }
                                         },
 
@@ -295,6 +292,7 @@ window.Echo.channel('search-pemenang-lot')
                     text: message,
                     icon: "success",
                     buttons: false,
+                    closeOnClickOutside: false,
                 });
                 break;
             }
@@ -306,7 +304,13 @@ window.Echo.channel('next-lot')
         let id_event_crypt = $('#id_event_crypt').val();
 
         if (e.lot_item.length > 0) {
-            window.location.href = '/user-bidding/' + id_event_crypt + '?lot=' + e.lot_item[0].id;
+            var meta = document.getElementsByTagName('meta');
+            for (let idx = 0; idx < meta.length; idx++) {
+                const el = meta[idx];
+                if (el.getAttribute('data-page') == "user") {
+                    window.location.href = '/user-bidding/' + id_event_crypt + '?lot=' + e.lot_item[0].id;
+                }
+            }
         } else {
             window.location.href = '/';
         }

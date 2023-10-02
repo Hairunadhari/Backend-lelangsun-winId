@@ -538,13 +538,16 @@ class MenuController extends Controller
         $data = KategoriBarang::all();
         if (request()->ajax()) {
             $status = request('status_data');
-
+            
             if ($status == 'active') {
                 $data = EventLelang::with(['lot_item' => function($query){
                     $query->where('status','active')->where('status_item','active');
                 }])->where('status_data', 1)->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
                 $data = EventLelang::where('status_data', 0)->orderBy('created_at','desc')->get();
+            }
+            foreach ($data as $key => $value) {
+                $data[$key]->encrypted_id = Crypt::encrypt($value->id);
             }
             return DataTables::of($data)->make();
         }
@@ -2267,39 +2270,23 @@ class MenuController extends Controller
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
     }
     public function bidding($id){
-        // $event_id = Crypt::decrypt($id);
+        $event_id = Crypt::decrypt($id);
         // dd($event_id);
         $lot_item = LotItem::with(['bidding' => function($query){
             $query->orderBy('harga_bidding','desc')->first();
-        }])->where('event_lelang_id',$id)->where('status_item','active')->where('status','active')->get();
+        }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
         
         // dd($lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding);
-        return view('lelang.bidding',compact('lot_item','id'));
+        return view('lelang.bidding',compact('lot_item','event_id'));
     }
-    // public function add_bidding(Request $request){
-    //     $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
-    //     $now = $konvers_tanggal->format('Y-m-d H:i:s');
-    //     $data = Bidding::create([
-    //         'kode_event' => Str::random(64),
-    //         'email' => $request->email,
-    //         'event_lelang_id' => null,
-    //         'peserta_npl_id' => null,
-    //         'lot_id' => null,
-    //         'npl_id' => null,
-    //         'harga_bidding' => 5000,
-    //         'waktu' => $now,
-    //     ]);
-    //     return response()->back()->with('success', 'Data Berhasil Ditambahkan!');
-    // }
 
     public function send_bidding(Request $request){
-        $event_id = Crypt::decrypt($request->event_lelang_id);
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d H:i:s');
         Bidding::create([
             'kode_event' => Str::random(64),
             'email' => $request->email,
-            'event_lelang_id' => $event_id,
+            'event_lelang_id' => $request->event_lelang_id,
             'peserta_npl_id' => null,
             'lot_item_id' => $request->lot_item_id,
             'npl_id' => $request->npl_id,
@@ -2312,18 +2299,16 @@ class MenuController extends Controller
     }
 
     public function log_bidding(Request $request){
-        $event_id = Crypt::decrypt($request->event_lelang_id);
         $lot_item_id = $request->lot_item_id;
-        $bidding = Bidding::where('event_lelang_id',$event_id)->where('lot_item_id',$lot_item_id)->get();
+        $bidding = Bidding::where('event_lelang_id',$request->event_lelang_id)->where('lot_item_id',$lot_item_id)->get();
         // event(new LogBid($bidding));
         return response()->json($bidding);
     }
 
     public function search_pemenang_event(Request $request){
-        $event_id = Crypt::decrypt($request->event_lelang_id);
         $lot_item_id = $request->lot_item_id;
 
-        $bid = Bidding::with('peserta_npl')->where('event_lelang_id', $event_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
+        $bid = Bidding::with('peserta_npl')->where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
         $lot = LotItem::find($lot_item_id);
         $npl = Npl::find($bid->npl_id ?? null);
         // dd($npl);
@@ -2364,18 +2349,17 @@ class MenuController extends Controller
     }
 
     public function next_lot(Request $request){
-        $event_id = Crypt::decrypt($request->event_lelang_id);
         $lot_item_id = $request->lot_item_id;
 
-        $bid = Bidding::where('event_lelang_id', $event_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
+        // $bid = Bidding::where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
         
-        // nonaktfikan bidding sesuai event id dan lot item id yg sedang lg bidding
-        $bidding = Bidding::where('event_lelang_id', $event_id)->where('lot_item_id',$lot_item_id)->get();
-        $bidding->each->update([
-            'status'=> 'not-active'
-        ]);
+        // // nonaktfikan bidding sesuai event id dan lot item id yg sedang lg bidding
+        // $bidding = Bidding::where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->get();
+        // $bidding->each->update([
+        //     'status'=> 'not-active'
+        // ]);
         // cek apakah masih ada lot item di suatu event 
-        $lot_item = LotItem::where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
+        $lot_item = LotItem::where('event_lelang_id',$request->event_lelang_id)->where('status_item','active')->where('status','active')->get();
         event(new NextLot($lot_item));
         return response()->json(['lot_item' => $lot_item]);
     }
