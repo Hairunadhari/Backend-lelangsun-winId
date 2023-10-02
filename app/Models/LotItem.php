@@ -22,5 +22,9 @@ class LotItem extends Model
     {
         return $this->belongsTo(BarangLelang::class);
     }
+    public function bidding()
+    {
+        return $this->hasMany(Bidding::class);
+    }
 }
 

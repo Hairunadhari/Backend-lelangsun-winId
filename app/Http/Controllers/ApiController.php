@@ -7,12 +7,14 @@ use Exception;
 use Validator;
 use DateTimeZone;
 use Carbon\Carbon;
+use App\Models\Lot;
 use App\Models\Toko;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Review;
+use App\Models\LotItem;
 use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\TLogApi;
@@ -26,10 +28,12 @@ use App\Models\GambarEvent;
 use App\Models\ProdukPromo;
 use Illuminate\Support\Str;
 use App\Models\BannerDiskon;
+use App\Models\BarangLelang;
 use App\Models\GambarProduk;
 use App\Models\PesertaEvent;
 use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
+use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use App\Models\PembayaranEvent;
 use App\Http\Controllers\Controller;
@@ -67,11 +71,11 @@ class ApiController extends Controller
         ->get();
         
         $produk->each(function ($item) {
-            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+            $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
         });
         $produk->each(function ($item) {
             $logo = $item->toko->logo;
-            $url = 'https://backendwin.spero-lab.id/storage/image/';
+            $url = env('APP_URL').'/storage/image/';
 
             $item->toko->logo = str_replace($url, '', $logo);
             $item->toko->logo = $url . $item->toko->logo;
@@ -98,7 +102,7 @@ class ApiController extends Controller
     public function daftar_top_produk(){
         $topproduk = Produk::take(5)->get();
         $topproduk->each(function ($item) {
-            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+            $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
         });
         return response()->json([
             'topproduk' => $topproduk
@@ -129,17 +133,17 @@ class ApiController extends Controller
      */
     public function detail_produk($id){
         $produk = Produk::with('toko','kategoriproduk')->find($id);
-            $produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $produk->thumbnail);
-            $produk->toko->logo = url('https://backendwin.spero-lab.id/storage/image/' . $produk->toko->logo);
+            $produk->thumbnail = env('APP_URL').'/storage/image/' . $produk->thumbnail;
+            $produk->toko->logo = env('APP_URL').'/storage/image/' . $produk->toko->logo;
 
         $gambarproduk = GambarProduk::where('produk_id', $id)->get();
         $gambarproduk->each(function ($item) {
-            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+            $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
         });
 
         $review = Review::with('user')->where('produk_id', $id)->where('status','active')->get();
         $review->each(function ($item){
-            $item->user->foto = url('https://backendwin.spero-lab.id/storage/image/' . $item->user->foto);
+            $item->user->foto = env('APP_URL').'/storage/image/' . $item->user->foto;
         });
         $totalreview = Review::where('produk_id', $id)->where('status','active')->count();
 
@@ -178,7 +182,7 @@ class ApiController extends Controller
         
         $produk = Produk::where('kategoriproduk_id',$id)->where('status','active')->get();
         $produk->each(function ($item) {
-            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+            $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
         });
         return response()->json([
             'kategoriproduk' => $kategoriproduk,
@@ -363,7 +367,7 @@ class ApiController extends Controller
         $today = Carbon::today();
         $promosi = Promosi::where('tanggal_mulai', '<=', $today)->get();
         $promosi->each(function ($item) {
-            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+            $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
         });
         return response()->json([
             'promosi' => $promosi,
@@ -394,12 +398,12 @@ class ApiController extends Controller
      */
     public function detail_promosi($id){
         $datapromosi = Promosi::find($id);
-        $datapromosi->gambar =  url('https://backendwin.spero-lab.id/storage/image/' . $datapromosi->gambar);
+        $datapromosi->gambar =  env('APP_URL').'/storage/image/' . $datapromosi->gambar;
         $datapromosi->diskon =  $datapromosi->diskon . '%';
 
         $detailproduk = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
         $detailproduk->each(function ($item){
-            $item->produk->thumbnail =  url('https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail);
+            $item->produk->thumbnail =  env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
         });
         return response()->json([
             'datapromosi' => $datapromosi,
@@ -680,7 +684,7 @@ class ApiController extends Controller
     public function cari_produk($name){
         $produk = Produk::where('nama','Like','%'.$name.'%')->get();
         $produk->each(function ($data){
-            $data->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $data->thumbnail);
+            $data->thumbnail = env('APP_URL').'/storage/image/' . $data->thumbnail;
         });
         return response()->json([
             'data' => $produk
@@ -806,7 +810,7 @@ class ApiController extends Controller
     public function daftar_banner_utama(){
         $data = BannerUtama::all();
         $data->each(function ($item) {
-            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+            $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
         });
         return response()->json([
             'data' => $data,
@@ -829,7 +833,7 @@ class ApiController extends Controller
     public function daftar_banner_diskon(){
         $data = BannerDiskon::all();
         $data->each(function ($item) {
-            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+            $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
         });
         return response()->json([
             'data' => $data,
@@ -851,7 +855,7 @@ class ApiController extends Controller
     public function daftar_banner_spesial(){
         $data = BannerSpesial::all();
         $data->each(function ($item) {
-            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+            $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
         });
         return response()->json([
             'data' => $data,
@@ -886,7 +890,7 @@ class ApiController extends Controller
         $data->each(function ($item) {
             $item->orderitem->each(function ($orderItem) {
                 $thumbnail = $orderItem->produk->thumbnail;
-                $url = 'https://backendwin.spero-lab.id/storage/image/';
+                $url = env('APP_URL').'/storage/image/';
                 
                 $orderItem->produk->thumbnail = str_replace($url, '', $thumbnail);
                 $orderItem->produk->thumbnail = $url . $orderItem->produk->thumbnail;
@@ -925,7 +929,7 @@ class ApiController extends Controller
         $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
         $pengiriman = Pengiriman::where('order_id', $id)->first();
         $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
-        $itemproduk->produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $itemproduk->produk->thumbnail);
+        $itemproduk->produk->thumbnail = env('APP_URL').'/storage/image/' . $itemproduk->produk->thumbnail;
         return response()->json([
             'id_order' => $tagihan->order_id,
             'email_user' => $tagihan->user->email,
@@ -1016,7 +1020,7 @@ class ApiController extends Controller
             $query->orderBy('created_at','desc');
         }])->where('user_id', $id)->latest()->get();
         $data->each(function ($item){
-            $item->produk->thumbnail =  'https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail;
+            $item->produk->thumbnail =  env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
         });
         return response()->json([
             'data' => $data
@@ -1170,7 +1174,7 @@ class ApiController extends Controller
         }])->where('user_id', $id)->latest()->get();
         
         $data->each(function ($item) {
-            $item->produk->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->produk->thumbnail);
+            $item->produk->thumbnail = env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
         });
         return response()->json([
             'message' => 'SUCCESS',
@@ -1227,9 +1231,9 @@ class ApiController extends Controller
         $kategori = KategoriProduk::select('id','kategori')->where('toko_id',$id)->get();
         $produk = Produk::where('toko_id',$id)->get();
 
-        $toko->logo = url('https://backendwin.spero-lab.id/storage/image/' . $toko->logo);
+        $toko->logo = env('APP_URL').'/storage/image/' . $toko->logo;
         $produk->each(function ($item) {
-            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+            $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
         });
         return response()->json([
             'massage' => 'SUCCESS',
@@ -1258,7 +1262,7 @@ class ApiController extends Controller
         ->get();
 
         $data->each(function ($item) use ($now){
-            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+            $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
             if ($item->tgl_selesai < $now) {
                 $item->status_event = 1;
             } else if ($item->tgl_mulai <= $now) {
@@ -1300,10 +1304,10 @@ class ApiController extends Controller
         $event = Event::find($id);
         $detail_gambar_event = GambarEvent::where('event_id',$id)->get();
 
-        $event->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $event->gambar);
+        $event->gambar = env('APP_URL').'/storage/image/' . $event->gambar;
 
         $detail_gambar_event->each(function ($item){
-            $item->gambar = url('https://backendwin.spero-lab.id/storage/image/' . $item->gambar);
+            $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
         });
 
         return response()->json([
@@ -1446,7 +1450,7 @@ class ApiController extends Controller
         $kategoriproduk = Produk::where('toko_id',$request->toko_id)->where('kategoriproduk_id',$request->kategori_id)->where('status','active')->where('stok', '>', 0)->get();
         
         $kategoriproduk->each(function ($item) {
-            $item->thumbnail = url('https://backendwin.spero-lab.id/storage/image/' . $item->thumbnail);
+            $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
         });
         return response()->json([
             'message' => 'SUCCESS',
@@ -1509,5 +1513,94 @@ class ApiController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Get(
+     *      path="/api/kategori/lelang",
+     *      tags={"Kategori Lelang"},
+     *      summary="Kategori Lelang",
+     *      description="menampilkan semua kategori Lelang ",
+     *      operationId="KategoriLelang",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function daftar_kategori_lelang(){
+        $kategorilelang = KategoriBarang::where('status',1)->get();
+       
+        return response()->json([
+            'kategori_lelang' => $kategorilelang
+            
+        ]);
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/kategori/detail/{id}/",
+     *      tags={"Kategori Lelang"},
+     *      summary="Detail Kategori",
+     *      description="Menampilkan semua barang berdasarkan kategori yg dipillih",
+     *      operationId="DetailKategori",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID kategori yang akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function daftar_lelang_berdasarkan_kategori($id){
+        $kategoribarang = KategoriBarang::find($id);
+        
+        $barang = BarangLelang::where('kategoribarang_id', $id)->where('status', 1)->get();
+    
+        // Mengubah URL gambar dalam setiap barang lelang
+        $barang->each(function ($item) {
+            $item->gambarlelang->each(function ($gambar) {
+                $gambar->gambar = env('APP_URL').'/storage/image/' . $gambar->gambar;
+            });
+        });
+    
+        return response()->json([
+            'kategoribarang' => $kategoribarang,
+            'barang' => $barang
+        ]);
+    }
+    
+    /**
+     * @OA\Get(
+     *      path="/api/lot/list",
+     *      tags={"Lot"},
+     *      summary="Lot",
+     *      description="menampilkan semua Lot ",
+     *      operationId="Lot",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function daftar_lot(){
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('Y-m-d');
+        $lot = LotItem::with('barang_lelang.gambarlelang')->where('tanggal','>=',$now)->where('status','active')->where('status_item','active')->get();
+        $lot->each(function ($item){
+            $item->barang_lelang->gambarlelang->each(function($itembarang){
+                $itembarang->gambar = env('APP_URL').'/storage/image/'. $itembarang->gambar;
+            });
+        });
+       
+        return response()->json([
+            'lot_item' => $lot
+        ]);
+    }
     
 }

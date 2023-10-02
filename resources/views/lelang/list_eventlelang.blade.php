@@ -97,12 +97,11 @@
                     data: null,
                     render: function (data, type, row, meta) {
                         // console.log(data.lot_item);
-                        
                         var deleteUrl = '/delete-event-lelang/' + data.id;
                         var editUrl = '/edit-event-lelang/' + data.id;
                         var bidding = '';
                         if (data && data.lot_item && data.lot_item[0] && data.lot_item[0].id) {
-                            bidding = '/bidding-event-lelang/' + data.id + '?lot=' + data.lot_item[0].id;
+                            bidding = '/bidding-event-lelang/' + data.encrypted_id + '?lot=' + data.lot_item[0].id;
                         }
                         var eventDate = new Date(row.waktu);
                         var today = new Date();
@@ -114,7 +113,7 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
                                 <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
-                                
+                                ${convert_eventDate == convert_today ? `<span><a class="btn btn-success" target="_blank" href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>` : ''}
                             </form>`
                     }
                  },
