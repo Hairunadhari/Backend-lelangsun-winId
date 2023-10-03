@@ -113,7 +113,7 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
                                 <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
-                                ${convert_eventDate == convert_today ? `<span><a class="btn btn-success" target="_blank" href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>` : ''}
+                                ${convert_eventDate == convert_today ? `<span><a class="btn btn-success"  href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>` : ''}
                             </form>`
                     }
                  },

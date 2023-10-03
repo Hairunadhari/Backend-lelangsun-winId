@@ -1520,7 +1520,7 @@ class ApiController extends Controller
      *      tags={"Kategori Lelang"},
      *      summary="Kategori Lelang",
      *      description="menampilkan semua kategori Lelang ",
-     *      operationId="KategoriLelang",
+     *      operationId="KategoriLelanlg",
      *      @OA\Response(
      *          response="default",
      *          description=""
@@ -1542,7 +1542,7 @@ class ApiController extends Controller
      *      tags={"Kategori Lelang"},
      *      summary="Detail Kategori",
      *      description="Menampilkan semua barang berdasarkan kategori yg dipillih",
-     *      operationId="DetailKategori",
+     *      operationId="DetailKategoriLelang",
      *       @OA\Parameter(
     *          name="id",
     *          in="path",

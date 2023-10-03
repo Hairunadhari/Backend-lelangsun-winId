@@ -6,12 +6,11 @@ window.Alpine = Alpine;
 
 Alpine.start();
 $(document).ready(function () {
-
     let event_lelang_id = $('#event_lelang_id').val();
     let lot_item_id = $('#lot_item_id').val();
-
+    let event_lelang_id_crypt = $('#event_lelang_id_crypt').val();
+   
     // <------------------------------------------------ FUNGSI LIAT STORY BIDDING --------------------------------------------------->
-    // console.log(event_lelang_id_crypt);
 
     $.ajax({
         method: 'post',
@@ -80,7 +79,7 @@ $(document).ready(function () {
                 button: 'open',
             },
             success: function (res) {
-                toggleTimer();
+                // toggleTimer();
             }
         });
     });
@@ -114,7 +113,7 @@ $(document).ready(function () {
                             },
                             success: function (res) {
                                 if (res.lot_item.length > 0) {
-                                    window.location.href = '/bidding-event-lelang/' + event_lelang_id + '?lot=' + res.lot_item[0].id;
+                                    window.location.href = '/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
                                 } else {
                                     window.location.href = '/event-lelang';
                                 }
@@ -129,23 +128,22 @@ $(document).ready(function () {
     }
 
     // Simpan value harga bidding dan konversi ke tipe data float
-    let kelipatanBidding = parseFloat($('#harga_bidding').val());
-
+    
     // <------------------------------------------------ FUNGSI KLIK BIDDING ------------------------------------------------------->
     $(document).on('click', '#send_bidding', function (e) {
         e.preventDefault();
-
+         
+        let kelipatanBidding = parseFloat($('#harga_bidding').val());
+        let harga_bidding = parseFloat($('#harga_awal').val()) + kelipatanBidding;
+        
+        // Update nilai input harga_awal
+        $('#harga_awal').val(harga_bidding);
         let email = $('#email').val();
         let event_lelang_id = $('#event_lelang_id').val();
         let peserta_npl_id = $('#peserta_npl_id').val();
         let lot_item_id = $('#lot_item_id').val();
         let npl_id = $('#npl_id').val();
-
-        // Dapatkan nilai harga bidding saat ini dan tambahkan kelipatan bidding
-        let harga_bidding = parseFloat($('#harga_awal').val()) + kelipatanBidding;
-
-        // Update nilai input harga_awal
-        $('#harga_awal').val(harga_bidding);
+        
 
         $.ajax({
             method: 'post',
@@ -178,7 +176,7 @@ $(document).ready(function () {
             .then((win) => {
                 if (win) {
                     let event_lelang_id = $('#event_lelang_id').val();
-                    let event_lelang_id_crypt = $('#event_lelang_id_crypt').val();
+                    
                     let lot_item_id = $('#lot_item_id').val();
                     $.ajax({
                         method: 'post',
@@ -212,14 +210,14 @@ $(document).ready(function () {
                                             } else {
                                                 $.ajax({
                                                     method: 'post',
-                                                    url: 'delete-event-lelang/' + event_lelang_id,
+                                                    url: '/delete-event-lelang/' + event_lelang_id,
                                                     data: {
                                                         _method: 'PUT',
                                                     },
                                                     success: function (res) {
-                                                        window.location.href = '/event-lelang';
                                                     }
                                                 });
+                                                window.location.href = '/event-lelang';
                                             }
                                         },
 
@@ -271,8 +269,22 @@ $(document).ready(function () {
 
 window.Echo.channel('chat')
     .listen('.message', (e) => {
+        // console.log(e);
         $('#log-bid').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' + e.email + ' ' + ': ' + e.harga_bidding + '</h5></div>');
         $('#log-bid-user').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' + e.email + ' ' + ': ' + e.harga_bidding + '</h5></div>');
+        // let kelipatanBidding = parseFloat($('#harga_bidding').val());
+        // let harga_bidding = parseFloat($('#harga_awal').val()) + kelipatanBidding;
+        $('#harga_awal').val(e.harga_bidding);
+        $('#harga_awal_user').val(e.harga_bidding);
+
+        
+        // let kelipatanBidding_user = parseFloat($('#harga_bidding_user').val());
+        // // Dapatkan nilai harga bidding saat ini dan tambahkan kelipatan bidding
+        // let harga_bidding_user = parseFloat($('#harga_awal_user').val()) + kelipatanBidding_user;
+        
+        // // Update nilai input harga_awal
+        // $('#harga_awal_user').val(harga_bidding_user);
+
     });
 window.Echo.channel('button')
     .listen('.respon-button', (e) => {
@@ -281,12 +293,17 @@ window.Echo.channel('button')
 window.Echo.channel('search-pemenang-lot')
     .listen('.pemenang-lot', (e) => {
         console.log(e);
-        const message = e.bid.email ? "Pemenang Dari LOT Ini Adalah " + e.bid.email + " dengan harga " + e.bid.harga_bidding + "!" : "LOT tidak memiliki pemenang.";
+        
         var meta = document.getElementsByTagName('meta');
         for (let idx = 0; idx < meta.length; idx++) {
             const el = meta[idx];
             // console.log("meta page",el.getAttribute('data-page'));
             if (el.getAttribute('data-page') == "user") {
+                if (e.bid !== null) {
+                    var message = "Pemenang Dari LOT Ini Adalah " + e.bid.email + " dengan harga " + e.bid.harga_bidding + "!";
+                } else {
+                    var message ="LOT tidak memiliki pemenang.";
+                }
                 swal({
                     title: "WAKTU HABIS !!!",
                     text: message,
@@ -304,14 +321,15 @@ window.Echo.channel('next-lot')
         let id_event_crypt = $('#id_event_crypt').val();
 
         if (e.lot_item.length > 0) {
-            var meta = document.getElementsByTagName('meta');
-            for (let idx = 0; idx < meta.length; idx++) {
-                const el = meta[idx];
-                if (el.getAttribute('data-page') == "user") {
-                    window.location.href = '/user-bidding/' + id_event_crypt + '?lot=' + e.lot_item[0].id;
-                }
-            }
+            window.location.href = '/user-bidding/' + id_event_crypt + '?lot=' + e.lot_item[0].id;
         } else {
+            swal({
+                title: "Event Selesai !!!",
+                icon: "success",
+                text: "Terima Kasih Sudah mengikuti event ini :)",
+                buttons: false,
+                closeOnClickOutside: false,
+            });
             window.location.href = '/';
         }
     });
