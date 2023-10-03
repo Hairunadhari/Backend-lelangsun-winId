@@ -26,4 +26,8 @@ class Npl extends Model
     {
         return $this->hasOne(Refund::class);
     }
+    public function pemenang()
+    {
+        return $this->hasOne(Pemenang::class);
+    }
 }

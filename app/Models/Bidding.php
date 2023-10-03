@@ -18,4 +18,12 @@ class Bidding extends Model
     {
         return $this->belongsTo(PesertaNpl::class);
     }
+    public function event_lelang()
+    {
+        return $this->belongsTo(EventLelang::class);
+    }
+    public function pemenang()
+    {
+        return $this->hasOne(Pemenang::class);
+    }
 }

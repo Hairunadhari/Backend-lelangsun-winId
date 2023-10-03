@@ -30,4 +30,8 @@ class EventLelang extends Model
     {
         return $this->hasMany(PembelianNpl::class);
     }
+    public function bidding()
+    {
+        return $this->hasMany(Bidding::class);
+    }
 }

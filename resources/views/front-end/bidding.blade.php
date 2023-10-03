@@ -115,10 +115,10 @@
                         class="form-control">
                     <input type="hidden" readonly name="lot_id" id="lot_item_id_user" value="{{$lot_item[0]->id}}"
                         class="form-control">
-                    <input type="hidden" readonly name="harga_awal" id="harga_awal_user"
+                    <input type="text" readonly name="harga_awal" id="harga_awal_user"
                         value="{{ (!empty($lot_item) && !empty($lot_item[0]->bidding) && count($lot_item[0]->bidding) > 0) ? $lot_item[0]->bidding[0]->harga_bidding : $lot_item[0]->harga_awal }}"
                         class="form-control">
-                    <input type="hidden" readonly name="harga_bidding" id="harga_bidding_user"
+                    <input type="text" readonly name="harga_bidding" id="harga_bidding_user"
                         value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
                     </div>
 
@@ -128,7 +128,7 @@
                     @php
                     $event_id_crypt= Crypt::encrypt($lot_item[0]->event_lelang->id);
                     @endphp
-                    <input type="text" readonly name="id_event_crypt" id="id_event_crypt" value="{{$event_id_crypt}}" class="form-control">
+                    <input type="hidden" readonly name="id_event_crypt" id="id_event_crypt" value="{{$event_id_crypt}}" class="form-control">
         </div>
     </div>
 </section>

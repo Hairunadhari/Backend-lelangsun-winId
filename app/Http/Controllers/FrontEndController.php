@@ -113,7 +113,10 @@ class FrontEndController extends Controller
     }
 
     public function pelunasan(){
-        return view('front-end/pelunasan');
+        $id = Auth::guard('peserta')->user()->id;
+        $data = Npl::with('pemenang.bidding.lot_item.barang_lelang')->where('peserta_npl_id',$id)->get();
+        // dd($npl);
+        return view('front-end/pelunasan',compact('data'));
     }
     public function pesan(){
         $id = Auth::guard('peserta')->user()->id;

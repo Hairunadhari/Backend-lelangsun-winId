@@ -131,121 +131,17 @@
                             </tr>
                         </thead>
                         <tbody >
+                            @php
+                                $id = 1;
+                            @endphp
+                            @foreach ($data as $item)
                             <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
+                                <td>{{$id++}}</td>
+                                <td>{{$item->pemenang->bidding->lot_item->barang_lelang->barang}}</td>
+                                <td>Rp {{number_format($item->pemenang->nominal)}}</td>
+                                <td><span class="badge bg-success">Bayar</span></td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>event</td>
-                                <td>1219281982</td>
-                                <td>-</td>
-                            </tr>
-                            
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

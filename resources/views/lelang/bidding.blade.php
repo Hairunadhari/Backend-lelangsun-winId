@@ -40,11 +40,11 @@
                                             @php
                                                 $event_id_crypt= Crypt::encrypt($event_id);
                                             @endphp
-                                            <input type="text" name="event_lelang_id" id="event_lelang_id" value="{{$event_id}}" class="form-control">
-                                            <input type="text" name="event_lelang_id_crypt" id="event_lelang_id_crypt" value="{{$event_id_crypt}}" class="form-control">
+                                            <input type="hidden" name="event_lelang_id" id="event_lelang_id" value="{{$event_id}}" class="form-control">
+                                            <input type="hidden" name="event_lelang_id_crypt" id="event_lelang_id_crypt" value="{{$event_id_crypt}}" class="form-control">
                                             <input type="hidden" name="lot_id" id="lot_item_id" value="{{$lot_item[0]->id}}" class="form-control">
-                                            <input type="hidden" name="harga_awal" id="harga_awal" value="{{ (!empty($lot_item) && !empty($lot_item[0]->bidding) && count($lot_item[0]->bidding) > 0) ? $lot_item[0]->bidding[0]->harga_bidding : $lot_item[0]->harga_awal }}" class="form-control">
-                                            <input type="hidden" name="harga_bidding" id="harga_bidding" value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
+                                            <input type="text" name="harga_awal" id="harga_awal" value="{{ (!empty($lot_item) && !empty($lot_item[0]->bidding) && count($lot_item[0]->bidding) > 0) ? $lot_item[0]->bidding[0]->harga_bidding : $lot_item[0]->harga_awal }}" class="form-control">
+                                            <input type="text" name="harga_bidding" id="harga_bidding" value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
                                             {{-- <input type="text" id="role" value="{{Auth::user()->role->role}}" class="form-control"> --}}
                                                 <div id="con-bid" class="button-center w-100" style="display:none">
                                                     <div class="d-flex justify-content-center mb-2">
