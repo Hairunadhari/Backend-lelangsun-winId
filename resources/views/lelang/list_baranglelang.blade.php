@@ -354,11 +354,11 @@
                                 <input type="text" class="form-control" name="nomer_mesin" required>
                             </div>
                             <div class="form-group col-6">
-                                <label>Tipe Mobil <span style="color: red">*</span></label>
+                                <label>Tipe Kendaraan <span style="color: red">*</span></label>
                                 <input type="text" class="form-control" name="tipe_mobil" required>
                             </div>
                             <div class="form-group col-6">
-                                <label>Transmisi Mobil <span style="color: red">*</span></label>
+                                <label>Transmisi Kendaraan <span style="color: red">*</span></label>
                                 <select class="form-control selectric" name="transisi_mobil" required>
                                     <option value="Automatic Transmission">Automatic Transmission</option>
                                     <option value="Manual Transmission">Manual Transmission</option>

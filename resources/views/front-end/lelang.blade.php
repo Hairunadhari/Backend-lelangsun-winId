@@ -63,10 +63,13 @@
                 <h3>{{$item->judul}}</h3>
                 <h5><i class="fas fa-map-marker-alt"></i> {{$item->alamat}}</h5>
                 <h5><i class="fas fa-calendar-alt"></i> {{$item->waktu}}</h5>
+                @if (!empty($item->lot_item[0]->id))
                 @php
                     $hashid = Crypt::encrypt($item->id)
                 @endphp
                 <a href="{{ route('user-bidding', ['id' => $hashid, 'lot' => $item->lot_item[0]->id]) }}" class="btn btn-danger"><span>Masuk</span></a>
+                    
+                @endif
             </div>
             @endforeach
         </div>

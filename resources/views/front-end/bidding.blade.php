@@ -107,19 +107,19 @@
                 <div class="mb-3">
                     <input type="hidden" class="form-control" name="email" id="email_user"
                         value="{{Auth::guard('peserta')->user()->email}}" readonly>
-                    <input type="hidden" readonly name="event_lelang_id" id="event_lelang_id_user"
-                        value="{{$lot_item[0]->event_lelang->id}}" class="form-control">
+                    {{-- <input type="hidden" readonly name="event_lelang_id" id="event_lelang_id_user"
+                        value="{{$lot_item[0]->event_lelang->id}}" class="form-control"> --}}
                     <input type="hidden" readonly name="peserta_npl_id" id="peserta_npl_id_user"
                         value="{{Auth::guard('peserta')->user()->id}}" class="form-control">
                     <input type="hidden" readonly name="npl_id" id="npl_id_user" value="{{$npl[0]->id}}"
                         class="form-control">
                     <input type="hidden" readonly name="lot_id" id="lot_item_id_user" value="{{$lot_item[0]->id}}"
                         class="form-control">
-                    <input type="hidden" readonly name="harga_awal" id="harga_awal_user"
+                    {{-- <input type="hidden" readonly name="harga_awal" id="harga_awal_user"
                         value="{{ (!empty($lot_item) && !empty($lot_item[0]->bidding) && count($lot_item[0]->bidding) > 0) ? $lot_item[0]->bidding[0]->harga_bidding : $lot_item[0]->harga_awal }}"
                         class="form-control">
                     <input type="hidden" readonly name="harga_bidding" id="harga_bidding_user"
-                        value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
+                        value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control"> --}}
                     </div>
 
                 </form>

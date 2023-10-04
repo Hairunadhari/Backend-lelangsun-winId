@@ -84,6 +84,7 @@
                                         <th>Email</th>
                                         <th>Tgl Transfer</th>
                                         <th>Nominal</th>
+                                        <th>Bukti Transfer</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -256,6 +257,12 @@
                         }
                         return data;
                     }
+                },
+                {
+                    data: "bukti",
+                    render: function (data) {
+                        return '<a href="/storage/image/' + data + '" target="_blank"><img src="/storage/image/' + data + '" style="width: 100px; height: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin: 5px; padding: 0.25rem; border: 1px solid #dee2e6;"></a>';
+                        },
                 },
                 {
                     data: null,
