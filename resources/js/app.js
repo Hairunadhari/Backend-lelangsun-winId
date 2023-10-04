@@ -79,7 +79,7 @@ $(document).ready(function () {
                 button: 'open',
             },
             success: function (res) {
-                toggleTimer();
+                // toggleTimer();
             }
         });
     });
