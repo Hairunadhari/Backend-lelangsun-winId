@@ -29,6 +29,7 @@ class AuthenticatedSessionController extends Controller
     {
         // ambil data all status
         $user = PesertaNpl::where('email', $request->email)->first();
+        // dd($user);
         if ($user) {
             if ($user->status == 'active') {
                 $request->authenticate();
