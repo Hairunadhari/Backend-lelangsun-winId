@@ -2384,5 +2384,18 @@ class MenuController extends Controller
         
         return redirect('/peserta-npl')->with('success', 'Data berhasil di Refund !');
     }
+
+    public function list_pemenang(){
+        if (request()->ajax()) {
+            $status = request('status');
+
+            if ($status == 'active') {
+                $data = Pemenang::where('status','active')->get();
+            }
+            return DataTables::of($data)->make(true);
+        }
+
+        return view('lelang/pemenang');
+    }
     
 }   

@@ -260,22 +260,20 @@ Route::middleware('auth')->group(function () {
      Route::delete('/delete-member-event/{id}/', [MenuController::class, 'delete_member_event'])->name('delete-member-event');
      Route::delete('/delete-all-member-event/{id}/', [MenuController::class, 'delete_all_member_event'])->name('delete-all-member-event');
      Route::post('/send-email-member/{id}/', [SendEmailMemberController::class, 'send_email_member'])->name('send-email-member');
-
-    //   Route::post('log-bidding',[MenuController::class, 'log_bidding']);
+     
+     //   Route::post('log-bidding',[MenuController::class, 'log_bidding']);
      Route::post('search-pemenang-event',[MenuController::class, 'search_pemenang_event']);
      Route::post('next-lot',[MenuController::class, 'next_lot']);
-    Route::post('send-bidding',[MenuController::class, 'send_bidding']);
-
+     Route::post('send-bidding',[MenuController::class, 'send_bidding']);
+     
      Route::post('open-button',function (Request $request){
-        event(new StartBid($request->button));
-        return ['success' => true];
-    });
-    //  Route::post('send-message',function (Request $request){
-    //     event(new Message($request->email, $request->harga_bidding));
-    //     return ['success' => true];
-    // });
+         event(new StartBid($request->button));
+         return ['success' => true];
+        });
+
+    Route::get('/pemenang', [MenuController::class, 'list_pemenang'])->name('pemenang');
     
-    });
+});
     Route::post('log-bidding',[MenuController::class, 'log_bidding']);
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
  
