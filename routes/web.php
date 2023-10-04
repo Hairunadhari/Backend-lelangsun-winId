@@ -26,8 +26,6 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::get('/admin', function () {
     return view('auth.login');
 });
-
-
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
 Route::get('/user-lot', [FrontEndController::class, 'lot'])->name('front-end-lot');
 Route::get('/user-lelang', [FrontEndController::class, 'lelang'])->name('front-end-lelang');
@@ -37,19 +35,22 @@ Route::get('/user-login', [FrontEndController::class, 'login'])->name('front-end
 Route::get('/user-register', [FrontEndController::class, 'register'])->name('front-end-register');
 Route::post('/add-register', [FrontEndController::class, 'add_register'])->name('register-user');
 Route::post('/proses-login', [FrontEndController::class, 'proses_login'])->name('proses-login-user');
+Route::get('/detail-event-user/{id}/', [FrontEndController::class, 'detail_event'])->name('detail-event-user');
+Route::get('/get-harganpl/{id}/', [MenuController::class, 'harganpl_by_event']);
+Route::get('/user-bidding/{id}/', [FrontEndController::class, 'bidding'])->name('user-bidding');
+Route::post('send-bidding-user',[FrontEndController::class, 'send_bidding']);
+Route::post('log-bidding-user',[FrontEndController::class, 'log_bidding']);
+
+Route::middleware('peserta')->group(function () {
+});
 Route::get('/user-notif', [FrontEndController::class, 'notif'])->name('front-end-notif');
+Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
+Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
 Route::get('/user-profil', [FrontEndController::class, 'profil'])->name('front-end-profil');
 Route::get('/user-npl', [FrontEndController::class, 'npl'])->name('front-end-npl');
 Route::get('/user-pelunasan', [FrontEndController::class, 'pelunasan'])->name('front-end-pelunasan');
 Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
-Route::get('/detail-event-user/{id}/', [FrontEndController::class, 'detail_event'])->name('detail-event-user');
-Route::get('/get-harganpl/{id}/', [MenuController::class, 'harganpl_by_event']);
 Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
-Route::get('/user-bidding/{id}/', [FrontEndController::class, 'bidding'])->name('user-bidding');
-Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
-Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
-Route::post('send-bidding-user',[FrontEndController::class, 'send_bidding']);
-Route::post('log-bidding-user',[FrontEndController::class, 'log_bidding']);
 
 
 // Auth::routes(['verify' => true]);
