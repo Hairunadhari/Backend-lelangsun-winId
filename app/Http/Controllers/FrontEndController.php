@@ -129,7 +129,7 @@ class FrontEndController extends Controller
     }
     public function pesan(){
         $id = Auth::guard('peserta')->user()->id;
-        $notif = Notifikasi::with('peserta_npl','refund')->where('peserta_npl_id',$id)->get();
+        $notif = Notifikasi::with('peserta_npl','refund')->where('peserta_npl_id',$id)->orderBy('created_at','desc')->get();
         $notif->each->update([
             'is_read' => 'dibaca'
         ]);

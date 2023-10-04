@@ -12,9 +12,9 @@ class Peserta
     public function handle($request, Closure $next)
     {
         // dd($next);
-        if (Auth::check()) {
+        if (Auth::guard('peserta')->user()) {
             return $next($request);
         }
-        return redirect('/');
+        return redirect()->back();
     }
 }
