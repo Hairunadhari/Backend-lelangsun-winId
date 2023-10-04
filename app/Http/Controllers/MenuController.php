@@ -2390,7 +2390,7 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = Pemenang::where('status','active')->get();
+                $data = Pemenang::where('status','active')->orderBy('created_at','desc')->get();
             }
             return DataTables::of($data)->make(true);
         }

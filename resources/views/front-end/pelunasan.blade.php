@@ -136,10 +136,12 @@
                             @endphp
                             @foreach ($data as $item)
                             <tr>
+                                @if (!empty($item->pemenang->bidding))
                                 <td>{{$id++}}</td>
                                 <td>{{$item->pemenang->bidding->lot_item->barang_lelang->barang}}</td>
                                 <td>Rp {{number_format($item->pemenang->nominal)}}</td>
                                 <td><span class="badge bg-success">Bayar</span></td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

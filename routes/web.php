@@ -42,15 +42,15 @@ Route::post('send-bidding-user',[FrontEndController::class, 'send_bidding']);
 Route::post('log-bidding-user',[FrontEndController::class, 'log_bidding']);
 
 Route::middleware('peserta')->group(function () {
+    Route::get('/user-notif', [FrontEndController::class, 'notif'])->name('front-end-notif');
+    Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
+    Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
+    Route::get('/user-profil', [FrontEndController::class, 'profil'])->name('front-end-profil');
+    Route::get('/user-npl', [FrontEndController::class, 'npl'])->name('front-end-npl');
+    Route::get('/user-pelunasan', [FrontEndController::class, 'pelunasan'])->name('front-end-pelunasan');
+    Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
+    Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
 });
-Route::get('/user-notif', [FrontEndController::class, 'notif'])->name('front-end-notif');
-Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
-Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
-Route::get('/user-profil', [FrontEndController::class, 'profil'])->name('front-end-profil');
-Route::get('/user-npl', [FrontEndController::class, 'npl'])->name('front-end-npl');
-Route::get('/user-pelunasan', [FrontEndController::class, 'pelunasan'])->name('front-end-pelunasan');
-Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
-Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
 
 
 // Auth::routes(['verify' => true]);
