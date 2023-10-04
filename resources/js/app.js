@@ -115,6 +115,15 @@ $(document).ready(function () {
                                 if (res.lot_item.length > 0) {
                                     window.location.href = '/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
                                 } else {
+                                    $.ajax({
+                                        method: 'post',
+                                        url: '/delete-event-lelang/' + event_lelang_id,
+                                        data: {
+                                            _method: 'PUT',
+                                        },
+                                        success: function (res) {
+                                        }
+                                    });
                                     window.location.href = '/event-lelang';
                                 }
                             },

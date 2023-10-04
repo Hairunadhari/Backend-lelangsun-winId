@@ -24,6 +24,7 @@ use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\BannerUtama;
+use App\Models\EventLelang;
 use App\Models\GambarEvent;
 use App\Models\ProdukPromo;
 use Illuminate\Support\Str;
@@ -1515,7 +1516,7 @@ class ApiController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/kategori/lelang",
+     *      path="/api/lelang/kategori/lelang",
      *      tags={"Kategori Lelang"},
      *      summary="Kategori Lelang",
      *      description="menampilkan semua kategori Lelang ",
@@ -1537,7 +1538,7 @@ class ApiController extends Controller
 
      /**
      * @OA\Get(
-     *      path="/api/kategori/detail/{id}/",
+     *      path="/api/lelang/kategori/detail/{id}/",
      *      tags={"Kategori Lelang"},
      *      summary="Detail Kategori",
      *      description="Menampilkan semua barang berdasarkan kategori yg dipillih",
@@ -1558,26 +1559,24 @@ class ApiController extends Controller
      * )
      */
     public function daftar_lelang_berdasarkan_kategori($id){
-        $kategoribarang = KategoriBarang::find($id);
+        $kategoribarang = KategoriBarang::with(['baranglelang' => function($query){
+            $query->where('status',1);  
+        }])->find($id);
         
-        $barang = BarangLelang::where('kategoribarang_id', $id)->where('status', 1)->get();
-    
-        // Mengubah URL gambar dalam setiap barang lelang
-        $barang->each(function ($item) {
+        $kategoribarang->baranglelang->each(function ($item) {
             $item->gambarlelang->each(function ($gambar) {
                 $gambar->gambar = env('APP_URL').'/storage/image/' . $gambar->gambar;
             });
         });
     
         return response()->json([
-            'kategoribarang' => $kategoribarang,
-            'barang' => $barang
+            'data' => $kategoribarang,
         ]);
     }
     
     /**
      * @OA\Get(
-     *      path="/api/lot/list",
+     *      path="/api/lelang/lot/list",
      *      tags={"Lot"},
      *      summary="Lot",
      *      description="menampilkan semua Lot ",
@@ -1602,5 +1601,86 @@ class ApiController extends Controller
             'lot_item' => $lot
         ]);
     }
+
+     /**
+     * @OA\Get(
+     *      path="/api/lelang/detail-barang-lelang/{id}",
+     *      tags={"Barang Lelang"},
+     *      summary="Menampilkan detail barang lelang berdasarkan ID",
+     *      description="Menampilkan detail barang lelang berdasarkan ID yg diberikan",
+     *      operationId="Detail-Barang-Lelang",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID barang yang akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function detail_barang_lelang($id){
+        $data = BarangLelang::find($id);
+        $data->gambarlelang->each(function ($item){
+         $item->gambar = env('APP_URL').'/storage/image/'. $item->gambar;
+        });
+ 
+        return response()->json([
+             'data' => $data
+        ]);
+     }
+
+     /**
+     * @OA\Get(
+     *      path="/api/lelang/barang",
+     *      tags={"Barang Lelang"},
+     *      summary="List barang",
+     *      description="menampilkan semua barang",
+     *      operationId="barang",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+
+     public function daftar_barang_lelang(){
+        $data = BarangLelang::where('status',1)->get();
+        $data->each(function ($item){
+            $item->gambarlelang->each(function ($gambar){
+                $gambar->gambar = env('APP_URL').'/storage/image/'. $gambar->gambar;
+            });
+        });
+   
+        return response()->json([
+            'data' => $data
+        ]);
+     }
+
+     /**
+     * @OA\Get(
+     *      path="/api/lelang/event",
+     *      tags={"Event Lelang"},
+     *      summary="List Event",
+     *      description="menampilkan semua event",
+     *      operationId="eventlelang",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+
+     public function list_event_lelang(){
+        $data = EventLelang::where('status_data',1)->get();
+        return response()->json([
+            'data' => $data
+        ]);
+     }
     
 }

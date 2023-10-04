@@ -65,6 +65,10 @@ Route::get('/detail-pembayaran-event/{id}/', [ApiController::class, 'detail_pemb
 Route::get('/detail-toko/{id}/', [ApiController::class, 'detail_toko']);
 Route::post('/detail-kategori-toko', [ApiController::class, 'daftar_produk_berdasarkan_kategori_toko']);
 Route::post('/form-peserta-event', [ApiController::class, 'form_peserta_event']);
-Route::get('/kategori/lelang', [ApiController::class, 'daftar_kategori_lelang']);
-Route::get('/kategori/detail/{id}/', [ApiController::class, 'daftar_lelang_berdasarkan_kategori']);
-Route::get('/lot/list', [ApiController::class, 'daftar_lot']);
+
+Route::get('/lelang/kategori/lelang', [ApiController::class, 'daftar_kategori_lelang']);
+Route::get('/lelang/kategori/detail/{id}/', [ApiController::class, 'daftar_lelang_berdasarkan_kategori']);
+Route::get('/lelang/lot/list', [ApiController::class, 'daftar_lot']);
+Route::get('/lelang/detail-barang-lelang/{id}/', [ApiController::class, 'detail_barang_lelang']);
+Route::get('/lelang/barang', [ApiController::class, 'daftar_barang_lelang']);
+Route::get('/lelang/event', [ApiController::class, 'list_event_lelang']);
