@@ -32,6 +32,7 @@
         <li class="{{ request()->routeIs('event-lelang') ? 'active' : '' }}"><a href="{{route('event-lelang')}}"><i class="fas fa-calendar-alt"></i><span>Event Lelang</span></a></li>
         <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a href="{{route('lot')}}"><i class="fas fa-star"></i>Lot</a></li>
         <li class="{{ request()->routeIs('peserta-npl') ? 'active' : '' }}"><a href="{{route('peserta-npl')}}"><i class="fas fa-users"></i>Peserta & NPL Lelang</a></li>
+        <li class="{{ request()->routeIs('pemenang') ? 'active' : '' }}"><a href="{{route('pemenang')}}"><i class="fas fa-trophy"></i>Pemenang</a></li>
 
 
         <!-- {{-- <li class="{{ request()->routeIs('banner-lelang') ? 'active' : '' }}"><a href="{{route('banner-lelang')}}"><i class="fas fa-th-large"></i><span>Banner Lelang</span></a></li> --}} -->
