@@ -75,11 +75,20 @@ class FrontEndController extends Controller
             'confirm_password'     => 'required|same:password',
             
         ]);
+        $ktp = $request->file('foto_ktp');
+        $npwp = $request->file('foto_npwp');
+        $ktp->storeAs('public/image', $ktp->hashName());
+        $npwp->storeAs('public/image', $npwp->hashName());
 
         $data = PesertaNpl::create([
             'nama' => $request->nama,
             'email' => $request->email,
+            'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
+            'nik' => $request->nik,
+            'npwp' => $request->npwp,
+            'foto_ktp' => $ktp->hashName(),
+            'foto_npwp' => $npwp->hashName(),
             'password' => Hash::make($request->password),
         ]);
 
@@ -87,7 +96,7 @@ class FrontEndController extends Controller
     }
 
     public function proses_login(LoginRequest $request){
-        
+        // dd($request);
         if (Auth::guard('peserta')->attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect('/user-kontak');
         }
