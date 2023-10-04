@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
             if ($user->status == 'active') {
                 $request->authenticate();
                 $request->session()->regenerate();
-                return redirect()->intended(RouteServiceProvider::PESERTA_HOME);
+                return redirect()->intended(RouteServiceProvider::PESERTA);
             } else {
                 return redirect('/user-login')->with(['pesan' => 'Ada Kesalahan']);            
             }
