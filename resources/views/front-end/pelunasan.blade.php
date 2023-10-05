@@ -77,8 +77,9 @@
         text-decoration: none;
         color: black;
     }
-    .scroll{
-        height:500px;
+
+    .scroll {
+        height: 500px;
         overflow: scroll;
     }
 
@@ -127,20 +128,29 @@
                                 <th>No</th>
                                 <th>Nama Barang Lelang</th>
                                 <th>Harga</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             @php
-                                $id = 1;
+                            $id = 1;
                             @endphp
                             @foreach ($data as $item)
                             <tr>
                                 @if (!empty($item->pemenang->bidding))
                                 <td>{{$id++}}</td>
                                 <td>{{$item->pemenang->bidding->lot_item->barang_lelang->barang}}</td>
-                                <td>Rp {{number_format($item->pemenang->nominal)}}</td>
-                                <td><span class="badge bg-success">Bayar</span></td>
+                                <td>Rp {{number_format($item->pemenang->nominal - $item->pemenang->npl->harga_item,0,'.','.')}}</td>
+                                <td><span class="badge bg-secondary">{{$item->pemenang->status_verif}}</span></td>
+                                    @if ($item->pemenang->status_verif == '-')
+                                    <td>
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal{{$item->id}}">
+                                            Bayar Pelunasan
+                                        </button>
+                                    </td>
+                                    @endif
                                 @endif
                             </tr>
                             @endforeach
@@ -152,5 +162,88 @@
     </div>
 
 
+@foreach ($data as $item)
+    @if (!empty($item->pemenang->bidding))
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal{{$item->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Form Pelunasan Barang</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{route('pelunasan-barang-lelang', $item->id)}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                        <div class="form-group mb-3">
+                            <label>Nama Barang <span style="color: red">*</span></label>
+                            <input type="text" class="form-control"  value="{{$item->pemenang->bidding->lot_item->barang_lelang->barang}}"
+                                 readonly>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Total Transfer<span style="color: red">*</span></label>
+                            <input type="text" class="form-control" value="{{number_format($item->pemenang->nominal - $item->pemenang->npl->harga_item,0,'.','.')}}"
+                                readonly>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Waktu Transfer<span style="color: red">*</span></label>
+                            <input type="datetime-local" class="form-control" name="tgl_transfer"
+                                required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Bukti Transfer <span style="color: red">*</span></label>
+                            <input type="file" class="form-control" name="bukti" required
+                                id="gambar">
+                            <div id="preview" class="mt-3"></div>
+                        </div>
+                        <input type="hidden" name="tipe_pelunasan" value="transfer">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    
+
+@endforeach
+    {{-- <script>
+         function previewImages() {
+            var preview = document.querySelector('#preview');
+    
+            // Hapus semua elemen child di dalam elemen #preview
+            while (preview.firstChild) {
+                preview.removeChild(preview.firstChild);
+            }
+    
+            if (this.files) {
+                [].forEach.call(this.files, readAndPreview);
+            }
+    
+            function readAndPreview(file) {
+                if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                    alert(file.name + " format tidak sesuai");
+                    document.querySelector('#gambar').value = '';
+                    preview.removeChild(preview.firstChild);
+                    return;
+                }
+                var reader = new FileReader();
+                reader.addEventListener("load", function () {
+                    var image = new Image();
+                    image.width = 200;
+                    image.title = file.name;
+                    image.src = this.result;
+                    preview.appendChild(image);
+                }, false);
+                reader.readAsDataURL(file);
+            }
+        }
+        document.querySelector('#gambar').addEventListener("change", previewImages);
+    </script> --}}
 </section>
 @endsection

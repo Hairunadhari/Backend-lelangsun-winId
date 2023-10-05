@@ -2298,7 +2298,7 @@ class MenuController extends Controller
                 $pemenang = Pemenang::create([
                     'bidding_id' => $bid->id,
                     'npl_id' => $bid->npl_id ?? null,
-                    'no_rek' => null,
+                    'no_rek' => $bid->peserta_npl->no_rek ?? null,
                     'nama_pemilik' => $bid->peserta_npl->nama ?? null,
                     'nominal' => $bid->harga_bidding,
                     'tgl_transfer' => null,
@@ -2390,12 +2390,35 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = Pemenang::where('status','active')->orderBy('created_at','desc')->get();
+                $data = Pemenang::with('npl')->where('status','active')->orderBy('created_at','desc')->get();
+            } elseif ($status == 'not-active') {
+                $data = Pemenang::with('npl')->where('status','not-active')->orderBy('created_at','desc')->get();
             }
             return DataTables::of($data)->make(true);
         }
 
         return view('lelang/pemenang');
+    }
+
+    public function form_verify_pemenang($id){
+        $data = Pemenang::find($id);
+        return view('lelang/form_verify_pemenang',compact('data'));
+    }
+    public function verify_pemenang(Request $request, $id){
+        $data = Pemenang::find($id);
+        $data->update([
+            'status_pembayaran' => 'Lunas',
+            'status_verif' => 'Terverifikasi',
+            'status' => 'not-active'
+        ]);
+        Notifikasi::create([
+            'peserta_npl_id' => $data->npl->peserta_npl->id,
+            'type' => 'Pelunasan Barang',
+            'judul' => 'Pelunasan Barang Lelang',
+            'pesan' => $request->pesan
+        ]);
+
+        return redirect('/pemenang')->with('success', 'Data berhasil di Verifikasi !');
     }
     
 }   
