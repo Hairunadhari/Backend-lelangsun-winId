@@ -50,6 +50,7 @@ Route::middleware('peserta')->group(function () {
     Route::get('/user-pelunasan', [FrontEndController::class, 'pelunasan'])->name('front-end-pelunasan');
     Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
     Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
+    Route::put('/pelunasan-barang-lelang/{id}/', [FrontEndController::class, 'pelunasan_barang'])->name('pelunasan-barang-lelang');
 });
 
 
@@ -272,6 +273,8 @@ Route::middleware('auth')->group(function () {
         });
 
     Route::get('/pemenang', [MenuController::class, 'list_pemenang'])->name('pemenang');
+    Route::get('/form-verify-pemenang/{id}/', [MenuController::class, 'form_verify_pemenang'])->name('form-verify-pemenang');
+    Route::put('/verify-pemenang/{id}/', [MenuController::class, 'verify_pemenang'])->name('verify-pemenang');
     
 });
     Route::post('log-bidding',[MenuController::class, 'log_bidding']);

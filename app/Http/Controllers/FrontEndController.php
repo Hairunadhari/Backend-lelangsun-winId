@@ -9,6 +9,7 @@ use App\Models\Refund;
 use App\Events\Message;
 use App\Models\Bidding;
 use App\Models\LotItem;
+use App\Models\Pemenang;
 use App\Models\Notifikasi;
 use App\Models\PesertaNpl;
 use App\Models\EventLelang;
@@ -87,6 +88,7 @@ class FrontEndController extends Controller
             'alamat' => $request->alamat,
             'nik' => $request->nik,
             'npwp' => $request->npwp,
+            'no_rek' => $request->no_rek,
             'foto_ktp' => $ktp->hashName(),
             'foto_npwp' => $npwp->hashName(),
             'password' => Hash::make($request->password),
@@ -123,17 +125,17 @@ class FrontEndController extends Controller
 
     public function pelunasan(){
         $id = Auth::guard('peserta')->user()->id;
-        $data = Npl::with('pemenang.bidding.lot_item.barang_lelang')->where('peserta_npl_id',$id)->get();
+        $data = Npl::with('pemenang.bidding.lot_item.barang_lelang')->where('peserta_npl_id',$id)->orderBy('created_at','desc')->get();
         // dd($npl);
         return view('front-end/pelunasan',compact('data'));
     }
     public function pesan(){
         $id = Auth::guard('peserta')->user()->id;
-        $notif = Notifikasi::with('peserta_npl','refund')->where('peserta_npl_id',$id)->orderBy('created_at','desc')->get();
+        $notif = Notifikasi::with('peserta_npl','refund')->where('peserta_npl_id',$id)->get();
         $notif->each->update([
             'is_read' => 'dibaca'
         ]);
-        $data = Notifikasi::where('peserta_npl_id',$id)->get();
+        $data = Notifikasi::where('peserta_npl_id',$id)->orderBy('created_at','desc')->get();
         return view('front-end/pesan',compact('data'));
     }
     public function harganpl_by_event($id){
@@ -298,5 +300,18 @@ class FrontEndController extends Controller
         $bidding = Bidding::where('event_lelang_id',$request->event_lelang_id)->where('lot_item_id',$lot_item_id)->get();
         // event(new LogBid($bidding));
         return response()->json($bidding);
+    }
+
+    public function pelunasan_barang(Request $request, $id){
+        $data = Pemenang::where('npl_id',$id)->first();
+        $bukti = $request->file('bukti');
+        $bukti->storeAs('public/image', $bukti->hashName());
+        $data->update([
+            'tgl_transfer' => $request->tgl_transfer,
+            'bukti' => $bukti->hashName(),
+            'tipe_pelunasan' => $request->tipe_pelunasan,
+            'status_verif' => 'Verifikasi',
+        ]);
+        return redirect()->back()->with('success', 'SUCCESS! data anda sedang di verifikasi oleh admin');
     }
 }

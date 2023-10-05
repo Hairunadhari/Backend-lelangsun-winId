@@ -97,12 +97,18 @@
                         @endif
                     </div>
                 </div>
-                <div class="mb-1">
-                    <label class="form-label">Npwp</label>
-                    <input type="text" class="form-control" name="npwp" required>
-                    @if ($errors->has('email'))
-                    <div class="warn"><small class="text-alert">Email Sudah Terdaftar!</small></div>
-                    @endif
+                <div class="row">
+                    <div class="mb-1 col-6">
+                        <label class="form-label">Npwp</label>
+                        <input type="text" class="form-control" name="npwp" required>
+                        @if ($errors->has('email'))
+                        <div class="warn"><small class="text-alert">Email Sudah Terdaftar!</small></div>
+                        @endif
+                    </div>
+                    <div class="mb-1 col-6">
+                        <label class="form-label">No Rekening</label>
+                        <input type="text" class="form-control" name="no_rek" required>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
