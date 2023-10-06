@@ -58,7 +58,6 @@ class FrontEndController extends Controller
         return view('front-end/detail_event',compact('event'));
     }
     public function kontak(){
-        event(new BiddingEvent('tes bidding'));
         return view('front-end/kontak');
     }
     public function login(){
