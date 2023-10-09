@@ -25,19 +25,19 @@
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
                                 aria-controls="profile" aria-selected="false">Kontak</a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
                                 aria-controls="contact" aria-selected="false">Lelang</a>
-                        </li>
+                        </li> --}}
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <form action="{{route('update-setting-metadata', $data->id)}}" method="post">
+                            <form action="#" method="post">
                                 @csrf
                                 @method('put')
                                 <div class="form-group">
                                     <label>Title</label>
-                                    <input type="text" class="form-control" name="title" value="{{$data->title}}">
+                                    <input type="text" class="form-control" name="title" value="">
                                 </div>
                                 <div class="form-group">
                                     <label>Keyword</label>
@@ -46,7 +46,7 @@
                                 <div class="form-group">
                                     <label>Deskripsi <span style="color: red">*</span></label>
                                     <textarea class="summernote-simple" placeholder="keterangan..."
-                                        name="deskripsi">{{$data->deskripsi}}</textarea>
+                                        name="deskripsi"></textarea>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button class="me-auto btn btn-success mt-3" type="submit">Simpan</button>
@@ -54,47 +54,47 @@
                             </form>
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <form action="{{route('update-setting-kontak', $data->id)}}" method="post">
+                            <form action="#" method="post">
                                 <div class="row">
                                     <div class="form-group col-6">
                                         <label>Nomer Telepon</label>
-                                        <input type="number" class="form-control" name="no_telp" value="{{$data->no_telp}}">
+                                        <input type="number" class="form-control" name="no_telp" value="">
                                     </div>
                                     <div class="form-group col-6">
                                         <label>Nomer Wa</label>
-                                        <input type="number" class="form-control" name="wa" value="{{$data->wa}}">
+                                        <input type="number" class="form-control" name="wa" value="">
                                     </div>
                                 </div>
                                 @csrf
                                 @method('put')
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="text" class="form-control" name="email" value="{{$data->email}}">
+                                    <input type="text" class="form-control" name="email" value="">
                                 </div>
                                 <div class="form-group">
                                     <label>Alamat <span style="color: red">*</span></label>
                                     <textarea class="form-control" name="alamat"
-                                        name="alamat_lokasi">{{$data->alamat}}</textarea>
+                                        name="alamat_lokasi"></textarea>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-6">
                                         <label>Instagram</label>
-                                        <input type="text" class="form-control" name="ig" value="{{$data->ig}}">
+                                        <input type="text" class="form-control" name="ig" value="">
                                     </div>
                                     <div class="form-group col-6">
                                         <label>Facebook</label>
-                                        <input type="text" class="form-control" name="fb" value="{{$data->fb}}">
+                                        <input type="text" class="form-control" name="fb" value="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-6">
                                         <label>Twitter</label>
                                         <input type="text" class="form-control" name="twitter"
-                                            value="{{$data->twitter}}">
+                                            value="">
                                     </div>
                                     <div class="form-group col-6">
                                         <label>Youtube</label>
-                                        <input type="text" class="form-control" name="yt" value="{{$data->yt}}">
+                                        <input type="text" class="form-control" name="yt" value="">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end">

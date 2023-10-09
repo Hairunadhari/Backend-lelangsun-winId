@@ -23,9 +23,9 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 
-Route::get('/admin', function () {
-    return view('auth.login');
-});
+// Route::get('/admin', function () {
+//     return view('auth.login');
+// });
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
 Route::get('/user-lot', [FrontEndController::class, 'lot'])->name('front-end-lot');
 Route::get('/user-lelang', [FrontEndController::class, 'lelang'])->name('front-end-lelang');
@@ -242,9 +242,9 @@ Route::middleware('auth')->group(function () {
 
     // rute setting
     Route::get('/setting', [MenuController::class, 'setting'])->name('setting');
-    Route::put('/update-setting-metadata/{id}/', [MenuController::class, 'update_setting_metadata'])->name('update-setting-metadata');
-    Route::put('/update-setting-kontak/{id}/', [MenuController::class, 'update_setting_kontak'])->name('update-setting-kontak');
-    Route::put('/update-setting-lelang/{id}/', [MenuController::class, 'update_setting_lelang'])->name('update-setting-lelang');
+    // Route::put('/update-setting-metadata/{id}/', [MenuController::class, 'update_setting_metadata'])->name('update-setting-metadata');
+    // Route::put('/update-setting-kontak/{id}/', [MenuController::class, 'update_setting_kontak'])->name('update-setting-kontak');
+    // Route::put('/update-setting-lelang/{id}/', [MenuController::class, 'update_setting_lelang'])->name('update-setting-lelang');
 
      // route user admin
      Route::get('/tambah-admin', [MenuController::class, 'tambah_admin'])->name('tambah-admin');

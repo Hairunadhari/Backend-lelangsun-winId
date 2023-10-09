@@ -14,6 +14,10 @@ use App\Http\Requests\Pesertaauth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('auth')->except('logout');
+    // }
     /**
      * Display the login view.
      */
