@@ -106,8 +106,12 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        var total = data.nominal - row.npl.harga_item
-                        // console.log(total);
+                        if (row.npl == null) {
+                            var total = data.nominal;
+                        } else {
+                            var total = data.nominal - row.npl.harga_item;
+                        }
+                        
                         if (type === 'display') {
                             return parseInt(total).toLocaleString('id-ID', {
                                 style: 'currency',
