@@ -2412,10 +2412,10 @@ class MenuController extends Controller
             'status' => 'not-active'
         ]);
         Notifikasi::create([
-            'peserta_npl_id' => $data->npl->peserta_npl->id,
+            'peserta_npl_id' => $data->npl->peserta_npl->id ?? null,
             'type' => 'Pelunasan Barang',
             'judul' => 'Pelunasan Barang Lelang',
-            'pesan' => $request->pesan
+            'pesan' => $request->pesan ?? null
         ]);
 
         return redirect('/pemenang')->with('success', 'Data berhasil di Verifikasi !');
