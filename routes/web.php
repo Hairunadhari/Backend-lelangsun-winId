@@ -9,6 +9,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\SendEmailMemberController;
+use App\Http\Controllers\VerifyEmailRegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
@@ -52,19 +53,25 @@ Route::middleware('peserta')->group(function () {
     Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
     Route::put('/pelunasan-barang-lelang/{id}/', [FrontEndController::class, 'pelunasan_barang'])->name('pelunasan-barang-lelang');
 });
+Route::get('/verify-email-user/{id}/', [VerifyEmailRegisterController::class, 'verifikasi_email_user'])->name('verify-email-user');
 
 
-// Auth::routes(['verify' => true]);
 
 // Route::get('/email/verify', function () {
-//     return view('auth.verify-email');
-// })->middleware('auth')->name('verification.notice');
+//     return view('front-end.verify-email');
+// })->middleware('peserta')->name('verification.notice');
  
 // Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-//     $request->fulfill();
+//     $request->fulfill_peserta();
  
-//     return redirect('/dashboard');
-// })->middleware(['auth', 'signed'])->name('verification.verify');
+//     return redirect('/profiles');
+// })->middleware(['peserta', 'signed'])->name('verification.verify');
+
+// Route::get('/profiles', function (){
+//     return 'ini halaman profile yg sudah verifikasi email';
+// })->middleware(['peserta', 'verified']);
+
+
 
 
 Route::middleware('auth')->group(function () {
@@ -242,9 +249,10 @@ Route::middleware('auth')->group(function () {
 
     // rute setting
     Route::get('/setting', [MenuController::class, 'setting'])->name('setting');
-    // Route::put('/update-setting-metadata/{id}/', [MenuController::class, 'update_setting_metadata'])->name('update-setting-metadata');
-    // Route::put('/update-setting-kontak/{id}/', [MenuController::class, 'update_setting_kontak'])->name('update-setting-kontak');
-    // Route::put('/update-setting-lelang/{id}/', [MenuController::class, 'update_setting_lelang'])->name('update-setting-lelang');
+    Route::put('/update-setting-metadata/{id}/', [MenuController::class, 'update_setting_metadata'])->name('update-setting-metadata');
+    Route::put('/update-setting-kontak/{id}/', [MenuController::class, 'update_setting_kontak'])->name('update-setting-kontak');
+    Route::put('/update-setting-lelang/{id}/', [MenuController::class, 'update_setting_lelang'])->name('update-setting-lelang');
+    Route::put('/delete-keyword/{id}/', [MenuController::class, 'delete_keyword']);
 
      // route user admin
      Route::get('/tambah-admin', [MenuController::class, 'tambah_admin'])->name('tambah-admin');

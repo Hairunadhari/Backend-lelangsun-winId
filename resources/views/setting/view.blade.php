@@ -5,7 +5,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>Setting Balai Lelang SUN</h4>
+                    <h4>Setting {{$data->title}}</h4>
                 </div>
                 <div class="card-body">
                     @if(session('success'))
@@ -32,21 +32,32 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <form action="#" method="post">
+                            <form action="{{route('update-setting-metadata',$data->id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
                                 <div class="form-group">
-                                    <label>Title</label>
-                                    <input type="text" class="form-control" name="title" value="">
+                                    <label>Title <span style="color: red">*</span></label>
+                                    <input type="text" class="form-control" name="title" value="{{$data->title}}">
                                 </div>
                                 <div class="form-group">
-                                    <label>Keyword</label>
-                                    <input type="text" class="form-control">
+                                    <label>List Keyword <span style="color: red">*</span></label>
+                                    <br>
+                                    @foreach ($data->keyword as $item)
+                                        
+                                        <span class="badge bg-primary text-white" ">{{$item->key}} 
+                                            <button type="button" id="delete-key" class="btn btn-danger btn-sm " data-keyid="{{$item->id}}">x</button>
+                                        </span>
+                                    @endforeach
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Keyword <span style="color: red">*</span></label>
+                                        <input type="text" class="form-control" name="key" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Deskripsi <span style="color: red">*</span></label>
-                                    <textarea class="summernote-simple" placeholder="keterangan..."
-                                        name="deskripsi"></textarea>
+                                        <textarea class="summernote-simple" placeholder="keterangan..."
+                                        name="deskripsi">{{$data->deskripsi}}</textarea>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button class="me-auto btn btn-success mt-3" type="submit">Simpan</button>
@@ -54,47 +65,46 @@
                             </form>
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <form action="#" method="post">
-                                <div class="row">
-                                    <div class="form-group col-6">
-                                        <label>Nomer Telepon</label>
-                                        <input type="number" class="form-control" name="no_telp" value="">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label>Nomer Wa</label>
-                                        <input type="number" class="form-control" name="wa" value="">
-                                    </div>
-                                </div>
+                            <form action="{{route('update-setting-kontak',$data->id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <label>Nomer Telepon <span style="color: red">*</span></label>
+                                        <input type="number" class="form-control" name="no_telp" value="{{$data->no_telp}}">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label>Nomer Wa <span style="color: red">*</span></label>
+                                        <input type="number" class="form-control" name="wa" value="{{$data->no_telp}}">
+                                    </div>
+                                </div>
                                 <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="text" class="form-control" name="email" value="">
+                                    <label>Email <span style="color: red">*</span></label>
+                                    <input type="email" class="form-control" name="email" value="{{$data->email}}">
                                 </div>
                                 <div class="form-group">
                                     <label>Alamat <span style="color: red">*</span></label>
-                                    <textarea class="form-control" name="alamat"
-                                        name="alamat_lokasi"></textarea>
+                                    <textarea class="form-control" name="alamat">{{$data->alamat}}</textarea>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-6">
-                                        <label>Instagram</label>
-                                        <input type="text" class="form-control" name="ig" value="">
+                                        <label>Instagram <span style="color: red">*</span></label>
+                                        <input type="text" class="form-control" name="ig" value="{{$data->ig}}">
                                     </div>
                                     <div class="form-group col-6">
-                                        <label>Facebook</label>
-                                        <input type="text" class="form-control" name="fb" value="">
+                                        <label>Facebook <span style="color: red">*</span></label>
+                                        <input type="text" class="form-control" name="fb" value="{{$data->fb}}">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-6">
-                                        <label>Twitter</label>
+                                        <label>Twitter <span style="color: red">*</span></label>
                                         <input type="text" class="form-control" name="twitter"
-                                            value="">
+                                            value="{{$data->twitter}}">
                                     </div>
                                     <div class="form-group col-6">
-                                        <label>Youtube</label>
-                                        <input type="text" class="form-control" name="yt" value="">
+                                        <label>Youtube <span style="color: red">*</span></label>
+                                        <input type="text" class="form-control" name="yt" value="{{$data->yt}}">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
@@ -102,16 +112,38 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                        {{-- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                             <div class="form-group">
                                 <label>Internal Waktu Lelang (Detik)</label>
                                 <input type="text" class="form-control">
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function (){
+        $(document).on('click', '#delete-key', function (e) {
+            e.preventDefault();
+            let keyId = $(this).data('keyid');
+            let elementToRemove = $(this).closest('.badge'); // Temukan elemen badge yang akan dihapus
+
+            console.log(keyId);
+            $.ajax({
+                method: 'post',
+                url: '/delete-keyword/' + keyId,
+                data: {
+                    _method: 'PUT',
+                },
+                success: function (res) {
+                    console.log(res);
+                    elementToRemove.remove();
+                }
+            });
+        });
+    });
+</script>
 @endsection

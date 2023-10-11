@@ -148,6 +148,10 @@
     </nav>
     @yield('content')
     <footer>
+        @inject('setting', 'App\Models\Setting')
+        @php
+            $data = $setting::where('status', 'active')->first();
+        @endphp
         <div class="confooter">
             <div class="card-footer">
                 <h4>TENTANG KAMI</h4>
@@ -168,17 +172,16 @@
             </div>
             <div class="card-footer">
                 <h4>TENTANG </h4>
-                <p><i class="fas fa-map-marker-alt"></i> Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
-                    excepturi.</p>
-                <p><i class="fas fa-phone-alt"></i> +192819281</p>
-                <p><i class="fas fa-envelope"></i> lelangsun@gmail.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> {{$data->alamat}}</p>
+                <p><i class="fas fa-phone-alt"></i> {{$data->no_telp}}</p>
+                <p><i class="fas fa-envelope"></i> {{$data->email}}</p>
             </div>
         </div>
         <div class="last-text">
             <h5 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
         </div>
     </footer>
-
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">

@@ -20,6 +20,7 @@ use App\Models\Review;
 use App\Events\Message;
 use App\Events\NextLot;
 use App\Models\Bidding;
+use App\Models\Keyword;
 use App\Models\LotItem;
 use App\Models\Promosi;
 use App\Models\Setting;
@@ -1835,7 +1836,9 @@ class MenuController extends Controller
     }
 
     public function setting(){
-        $data = Setting::first();
+        $data = Setting::with(['keyword' => function ($query){
+            $query->where('status','active');
+        }])->first();
         return view('setting.view', compact('data'));
     }
 
@@ -1844,6 +1847,10 @@ class MenuController extends Controller
         $data->update([
             'title' => $request->title,
             'deskripsi' => $request->deskripsi,
+        ]);
+        $keyword = Keyword::create([
+            'setting_id' => $id,
+            'key' => $request->key,
         ]);
 
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
@@ -1864,6 +1871,13 @@ class MenuController extends Controller
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
     }
 
+    public function delete_keyword($id){
+        $keyword = Keyword::find($id);
+        $keyword->update([
+            'status' => 'not-active'
+        ]);
+        return response()->json($keyword);
+    }
 
     public function tambah_admin(){
         $role = Role::where('role','Admin')->get();

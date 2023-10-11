@@ -154,9 +154,11 @@
 
 </script>
 @endsection
+@section('modal')
+    
 <!-- Modal -->
 <div class="modal fade" id="eventmodal" tabindex="-1" role="dialog" aria-labelledby="eventlabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="eventlabel">Form Input Banner</h5>
@@ -181,10 +183,10 @@
     </div>
 </div>
 <script>
-
-function previewImages() {
+    
+    function previewImages() {
         var preview = document.querySelector('#preview');
-
+        
         // Hapus semua elemen child di dalam elemen #preview
         while (preview.firstChild) {
             preview.removeChild(preview.firstChild);
@@ -195,6 +197,12 @@ function previewImages() {
         }
 
         function readAndPreview(file) {
+            if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                alert(file.name + " format tidak sesuai");
+                document.querySelector('#gambar').value = '';
+                preview.removeChild(preview.firstChild);
+                return;
+            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();
@@ -207,7 +215,7 @@ function previewImages() {
         }
     }
     document.querySelector('#gambar').addEventListener("change", previewImages);
-
+    
 </script>
 
-<!-- /.container-fluid -->
+@endsection

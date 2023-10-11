@@ -27,16 +27,17 @@
         <li class="menu-header">Win Event</li>
         <li class="{{ request()->routeIs('event') ? 'active' : '' }}"><a href="{{route('event')}}"><i class="fas fa-calendar-alt"></i><span>Event Belanja</span></a></li>
         <li class="menu-header">Win Lelang</li>
+        <li class="{{ request()->routeIs('banner-lelang') ? 'active' : '' }}"><a href="{{route('banner-lelang')}}"><i class="fas fa-images"></i><span>Banner Lelang</span></a></li>
         <li class="{{ request()->routeIs('kategori-lelang') ? 'active' : '' }}"><a href="{{route('kategori-lelang')}}"><i class="fas fa-th-large"></i><span>Kategori Lelang</span></a></li>
         <li class="{{ request()->routeIs('barang-lelang') ? 'active' : '' }}"><a href="{{route('barang-lelang')}}"><i class="fas fa-car"></i><span>Barang Lelang</span></a></li>
         <li class="{{ request()->routeIs('event-lelang') ? 'active' : '' }}"><a href="{{route('event-lelang')}}"><i class="fas fa-calendar-alt"></i><span>Event Lelang</span></a></li>
         <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a href="{{route('lot')}}"><i class="fas fa-star"></i><span>Lot</span></a></li>
         <li class="{{ request()->routeIs('peserta-npl') ? 'active' : '' }}"><a href="{{route('peserta-npl')}}"><i class="fas fa-users"></i><span>Peserta & NPL Lelang</span></a></li>
         <li class="{{ request()->routeIs('pemenang') ? 'active' : '' }}"><a href="{{route('pemenang')}}"><i class="fas fa-trophy"></i><span>Pemenang</span></a></li>
-        {{-- <ul class="sidebar-menu">
+        <ul class="sidebar-menu">
           <li class="menu-header">Setting</li>
           <li class="{{ request()->routeIs('setting') ? 'active' : '' }}"><a href="{{route('setting')}}"><i class="fas fa-cogs"></i><span>Setting</span></a></li>
-        </ul> --}}
+        </ul>
 
         {{-- <li class="{{ request()->routeIs('user-cms') ? 'active' : '' }}"><a href="{{route('user-cms')}}"><i class="fas fa-users"></i><span>User</span></a></li> --}}
         @else
