@@ -2,7 +2,14 @@
 <html lang="en">
 
 <head>
+    @inject('setting', 'App\Models\Setting')
+        @php
+            $data = $setting::where('status', 'active')->first();
+        @endphp
     <meta charset="utf-8">
+    <meta name="description" content="{{$data->deskripsi}}">
+    <meta name="keywords" content="tes">
+    <meta name="author" content="John Doe">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Win Lelang</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -148,10 +155,7 @@
     </nav>
     @yield('content')
     <footer>
-        @inject('setting', 'App\Models\Setting')
-        @php
-            $data = $setting::where('status', 'active')->first();
-        @endphp
+        
         <div class="confooter">
             <div class="card-footer ">
                 <h4>TENTANG KAMI</h4>

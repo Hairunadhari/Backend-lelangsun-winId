@@ -1,66 +1,58 @@
 @extends('app.layouts')
 @section('content')
-  <div class="section-body">
+<div class="section-body">
     <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="w-100">Daftar Banner Utama</h4>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
-                <span class="text">+ Tambah</span>
-            </button>
-          </div>
-          <div class="card-body">
-            @if(session('success'))
-            <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
-                <strong>{{ session('success') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="w-100">Daftar Banner Utama</h4>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+                        <span class="text">+ Tambah</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                <table class="table table-striped w-100" id="tablebanner-1">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Gambar</th>
+                            <th>Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-            @endif
-              <table class="table table-striped w-100" id="tablebanner-1">
-                <thead>                                 
-                  <tr>
-                    <th>No</th>
-                    <th>Gambar</th>
-                    <th>Opsi</th>
-                  </tr>
-                </thead>
-                <tbody>                                 
-                </tbody>
-              </table>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  <script type="text/javascript">
+</div>
+</div>
+<script type="text/javascript">
     $(document).ready(function () {
         $('#tablebanner-1').DataTable({
             processing: true,
             ordering: false,
             searching: false,
             serverSide: true,
-        ajax: '{{ url()->current() }}',
-        columns: [
-          {
-             render: function (data, type, row, meta) {
-               return meta.row + meta.settings._iDisplayStart + 1;
-             },
-          },
-          { 
-            data: "gambar",
-            render: function (data) {
-              return '<img src="/storage/image/' + data + '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
-            },
-          },
-          {
-            data: null,
-            render: function (data) {
-              var deleteUrl = '/delete-banner-utama/' + data.id;
-              var editUrl = '/edit-banner-utama/' + data.id;
-              return `
+            ajax: '{{ url()->current() }}',
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: "gambar",
+                    render: function (data) {
+                        return '<img src="/storage/image/' + data +
+                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
+                    },
+                },
+                {
+                    data: null,
+                    render: function (data) {
+                        var deleteUrl = '/delete-banner-utama/' + data.id;
+                        var editUrl = '/edit-banner-utama/' + data.id;
+                        return `
                 <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
                   <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -68,12 +60,14 @@
                   <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
                 </form>
               `;
-            },
-          },
-        ],
-      });
+                    },
+                },
+            ],
+        });
     });
-  </script>
+
+</script>
+
 @endsection
 @section('modal')
 <!-- Modal -->
@@ -91,7 +85,8 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Gambar <small>(png, jpg, jpeg)</small><span style="color: red">*</span></label>
+                        <label for="exampleInputEmail1">Gambar <small>(png, jpg, jpeg)</small><span
+                                style="color: red">*</span></label>
                         <input type="file" class="form-control" name="gambar" required id="gambar">
                     </div>
                     <div id="preview"></div>
@@ -117,7 +112,7 @@
         }
 
         function readAndPreview(file) {
-          if (!/\.(jpe?g|png)$/i.test(file.name)) {
+            if (!/\.(jpe?g|png)$/i.test(file.name)) {
                 alert(file.name + " format tidak sesuai");
                 document.querySelector('#gambar').value = '';
                 return;
@@ -134,6 +129,6 @@
         }
     }
     document.querySelector('#gambar').addEventListener("change", previewImages);
-    
+
 </script>
 @endsection
