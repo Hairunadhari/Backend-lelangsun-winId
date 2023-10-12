@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BannerLelang extends Model
+class BannerLelangImage extends Model
 {
     use HasFactory;
     protected $guarded = [''];
 
-    public function banner_lelang_image()
+    public function banner_lelang()
     {
-        return $this->hasMany(BannerLelangImage::class);
+        return $this->belongsTo(BannerLelang::class);
     }
 }

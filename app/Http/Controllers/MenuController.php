@@ -51,6 +51,7 @@ use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use App\Models\PembayaranEvent;
 use App\Events\SearchPemenangLot;
+use App\Models\BannerLelangImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
@@ -1691,17 +1692,8 @@ class MenuController extends Controller
     }
 
     public function list_banner_lelang(){
-        if (request()->ajax()) {
-            $status = request('status');
-
-            if ($status == 'active') {
-                $data = BannerLelang::where('status', 1)->get();
-            } elseif ($status == 'not-active') {
-                $data = BannerLelang::where('status', 0)->get();
-            }
-            return DataTables::of($data)->make();
-        }
-        return view('publikasi.banner_lelang');
+        $data = BannerLelang::where('status','active')->first();
+        return view('publikasi.banner_lelang',compact('data'));
     }
 
     public function add_banner_lelang(Request $request){
@@ -2433,6 +2425,39 @@ class MenuController extends Controller
         ]);
 
         return redirect('/pemenang')->with('success', 'Data berhasil di Verifikasi !');
+    }
+
+    public function update_banner_web(Request $request, $id){
+        $data = BannerLelang::find($id);
+        $gambarlelang = BannerLelangImage::where('banner_lelang_id', $id)->get();
+        if ($request->hasFile('gambar')) {
+            $data->update([
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi,
+            ]);
+            
+            foreach ($gambarlelang as $gambar) {
+                Storage::delete('public/image/'.$gambar->gambar);
+                $gambar->delete();  
+            }
+            
+            $gambars = $request->file('gambar');
+            foreach ($gambars as $file) {
+                $filename = $file->hashName();
+                $file->storeAs('public/image', $filename);
+                BannerLelangImage::create([
+                    'banner_lelang_id' => $id,
+                    'gambar' => $filename
+                ]);
+            }
+        } else {
+            $data->update([
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Data berhasil di Update !');
     }
     
 }   

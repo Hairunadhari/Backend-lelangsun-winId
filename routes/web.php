@@ -283,6 +283,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pemenang', [MenuController::class, 'list_pemenang'])->name('pemenang');
     Route::get('/form-verify-pemenang/{id}/', [MenuController::class, 'form_verify_pemenang'])->name('form-verify-pemenang');
     Route::put('/verify-pemenang/{id}/', [MenuController::class, 'verify_pemenang'])->name('verify-pemenang');
+
+    Route::put('/update-banner-web/{id}/', [MenuController::class, 'update_banner_web'])->name('update-banner-web');
+
     
 });
     Route::post('log-bidding',[MenuController::class, 'log_bidding']);

@@ -153,13 +153,13 @@
             $data = $setting::where('status', 'active')->first();
         @endphp
         <div class="confooter">
-            <div class="card-footer">
+            <div class="card-footer ">
                 <h4>TENTANG KAMI</h4>
                 <p>Tentang Kami</p>
-                <i class="fab fa-instagram"></i>
-                <i class="fab fa-facebook"></i>
-                <i class="fab fa-twitter"></i>
-                <i class="fab fa-youtube"></i>
+                <a href="{{$data->ig}}" class="text-white" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                <a href="{{$data->fb}}" class="text-white" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                <a href="{{$data->twitter}}" class="text-white" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                <a href="{{$data->yt}}" class="text-white" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
             </div>
             <div class="card-footer">
                 <h4>MENU</h4>

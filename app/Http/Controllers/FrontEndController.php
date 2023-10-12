@@ -16,9 +16,11 @@ use App\Models\PesertaNpl;
 use App\Models\EventLelang;
 use Illuminate\Support\Str;
 use App\Events\BiddingEvent;
+use App\Models\BannerLelang;
 use App\Models\PembelianNpl;
 use Illuminate\Http\Request;
 use App\Mail\VerifyRegisterUser;
+use App\Models\BannerLelangImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -30,7 +32,10 @@ use App\Http\Requests\Auth\LoginRequest;
 class FrontEndController extends Controller
 {
     public function beranda(){
-        return view('front-end/beranda');
+        $data = BannerLelang::where('status','active')->first();
+        $banner = BannerLelangImage::where('banner_lelang_id',$data->id)->get();
+        // dd($banner);
+        return view('front-end/beranda',compact('data','banner'));
     }
     public function lot(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
