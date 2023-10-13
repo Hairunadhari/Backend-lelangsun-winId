@@ -128,7 +128,7 @@
                     @php
                     $event_id_crypt= Crypt::encrypt($lot_item[0]->event_lelang->id);
                     @endphp
-                    <input type="text" readonly name="id_event_crypt" id="id_event_crypt" value="{{$event_id_crypt}}" class="form-control">
+                    <input type="hidden" readonly name="id_event_crypt" id="id_event_crypt" value="{{$event_id_crypt}}" class="form-control">
         </div>
     </div>
 </section>

@@ -9,15 +9,21 @@ use App\Models\Refund;
 use App\Events\Message;
 use App\Models\Bidding;
 use App\Models\LotItem;
+use App\Models\Setting;
+use App\Models\Pemenang;
 use App\Models\Notifikasi;
 use App\Models\PesertaNpl;
 use App\Models\EventLelang;
 use Illuminate\Support\Str;
 use App\Events\BiddingEvent;
+use App\Models\BannerLelang;
 use App\Models\PembelianNpl;
 use Illuminate\Http\Request;
+use App\Mail\VerifyRegisterUser;
+use App\Models\BannerLelangImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
@@ -26,8 +32,10 @@ use App\Http\Requests\Auth\LoginRequest;
 class FrontEndController extends Controller
 {
     public function beranda(){
-        
-        return view('front-end/beranda');
+        $data = BannerLelang::where('status','active')->first();
+        $banner = BannerLelangImage::where('banner_lelang_id',$data->id)->get();
+        // dd($banner);
+        return view('front-end/beranda',compact('data','banner'));
     }
     public function lot(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
@@ -57,8 +65,8 @@ class FrontEndController extends Controller
         return view('front-end/detail_event',compact('event'));
     }
     public function kontak(){
-        event(new BiddingEvent('tes bidding'));
-        return view('front-end/kontak');
+        $data = Setting::first();
+        return view('front-end/kontak', compact('data'));
     }
     public function login(){
         return view('front-end/login');
@@ -75,19 +83,33 @@ class FrontEndController extends Controller
             'confirm_password'     => 'required|same:password',
             
         ]);
+        $ktp = $request->file('foto_ktp');
+        $npwp = $request->file('foto_npwp');
+        $ktp->storeAs('public/image', $ktp->hashName());
+        $npwp->storeAs('public/image', $npwp->hashName());
 
-        $data = PesertaNpl::create([
+        $user = PesertaNpl::create([
             'nama' => $request->nama,
             'email' => $request->email,
+            'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
+            'nik' => $request->nik,
+            'npwp' => $request->npwp,
+            'no_rek' => $request->no_rek,
+            'foto_ktp' => $ktp->hashName(),
+            'foto_npwp' => $npwp->hashName(),
             'password' => Hash::make($request->password),
         ]);
-
-        return redirect('/user-login')->with(['success'=>'Registrasi berhasil silahkan login!']);
+       
+        $encrypt_id = Crypt::encrypt($user->id);
+        $url = route('verify-email-user',$encrypt_id);  
+        Mail::to($user->email)->send(new VerifyRegisterUser($user, $url));
+       
+        return redirect('/user-login')->with('message','Registrasi berhasil silahkan verifikasi email anda!');
     }
 
     public function proses_login(LoginRequest $request){
-        
+        // dd($request);
         if (Auth::guard('peserta')->attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect('/user-kontak');
         }
@@ -113,7 +135,10 @@ class FrontEndController extends Controller
     }
 
     public function pelunasan(){
-        return view('front-end/pelunasan');
+        $id = Auth::guard('peserta')->user()->id;
+        $data = Npl::with('pemenang.bidding.lot_item.barang_lelang')->where('peserta_npl_id',$id)->orderBy('created_at','desc')->get();
+        // dd($npl);
+        return view('front-end/pelunasan',compact('data'));
     }
     public function pesan(){
         $id = Auth::guard('peserta')->user()->id;
@@ -121,7 +146,7 @@ class FrontEndController extends Controller
         $notif->each->update([
             'is_read' => 'dibaca'
         ]);
-        $data = Notifikasi::where('peserta_npl_id',$id)->get();
+        $data = Notifikasi::where('peserta_npl_id',$id)->orderBy('created_at','desc')->get();
         return view('front-end/pesan',compact('data'));
     }
     public function harganpl_by_event($id){
@@ -286,5 +311,18 @@ class FrontEndController extends Controller
         $bidding = Bidding::where('event_lelang_id',$request->event_lelang_id)->where('lot_item_id',$lot_item_id)->get();
         // event(new LogBid($bidding));
         return response()->json($bidding);
+    }
+
+    public function pelunasan_barang(Request $request, $id){
+        $data = Pemenang::where('npl_id',$id)->first();
+        $bukti = $request->file('bukti');
+        $bukti->storeAs('public/image', $bukti->hashName());
+        $data->update([
+            'tgl_transfer' => $request->tgl_transfer,
+            'bukti' => $bukti->hashName(),
+            'tipe_pelunasan' => $request->tipe_pelunasan,
+            'status_verif' => 'Verifikasi',
+        ]);
+        return redirect()->back()->with('success', 'SUCCESS! data anda sedang di verifikasi oleh admin');
     }
 }

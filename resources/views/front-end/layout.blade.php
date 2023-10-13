@@ -2,7 +2,14 @@
 <html lang="en">
 
 <head>
+    @inject('setting', 'App\Models\Setting')
+        @php
+            $data = $setting::where('status', 'active')->first();
+        @endphp
     <meta charset="utf-8">
+    <meta name="description" content="{{$data->deskripsi}}">
+    <meta name="keywords" content="tes">
+    <meta name="author" content="John Doe">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Win Lelang</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -148,14 +155,15 @@
     </nav>
     @yield('content')
     <footer>
+        
         <div class="confooter">
-            <div class="card-footer">
+            <div class="card-footer ">
                 <h4>TENTANG KAMI</h4>
                 <p>Tentang Kami</p>
-                <i class="fab fa-instagram"></i>
-                <i class="fab fa-facebook"></i>
-                <i class="fab fa-twitter"></i>
-                <i class="fab fa-youtube"></i>
+                <a href="{{$data->ig}}" class="text-white" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                <a href="{{$data->fb}}" class="text-white" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                <a href="{{$data->twitter}}" class="text-white" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                <a href="{{$data->yt}}" class="text-white" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
             </div>
             <div class="card-footer">
                 <h4>MENU</h4>
@@ -168,17 +176,16 @@
             </div>
             <div class="card-footer">
                 <h4>TENTANG </h4>
-                <p><i class="fas fa-map-marker-alt"></i> Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
-                    excepturi.</p>
-                <p><i class="fas fa-phone-alt"></i> +192819281</p>
-                <p><i class="fas fa-envelope"></i> lelangsun@gmail.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> {{$data->alamat}}</p>
+                <p><i class="fas fa-phone-alt"></i> {{$data->no_telp}}</p>
+                <p><i class="fas fa-envelope"></i> {{$data->email}}</p>
             </div>
         </div>
         <div class="last-text">
             <h5 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
         </div>
     </footer>
-
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">

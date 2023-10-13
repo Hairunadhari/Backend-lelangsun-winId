@@ -9,5 +9,9 @@ class Setting extends Model
 {
     use HasFactory;
     protected $guarded = [''];
+    public function keyword()
+    {
+        return $this->hasMany(Keyword::class);
+    }
 }
 

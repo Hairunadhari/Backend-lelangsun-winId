@@ -9,6 +9,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\SendEmailMemberController;
+use App\Http\Controllers\VerifyEmailRegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
@@ -23,11 +24,9 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 
-Route::get('/admin', function () {
-    return view('auth.login');
-});
-
-
+// Route::get('/admin', function () {
+//     return view('auth.login');
+// });
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
 Route::get('/user-lot', [FrontEndController::class, 'lot'])->name('front-end-lot');
 Route::get('/user-lelang', [FrontEndController::class, 'lelang'])->name('front-end-lelang');
@@ -37,32 +36,42 @@ Route::get('/user-login', [FrontEndController::class, 'login'])->name('front-end
 Route::get('/user-register', [FrontEndController::class, 'register'])->name('front-end-register');
 Route::post('/add-register', [FrontEndController::class, 'add_register'])->name('register-user');
 Route::post('/proses-login', [FrontEndController::class, 'proses_login'])->name('proses-login-user');
-Route::get('/user-notif', [FrontEndController::class, 'notif'])->name('front-end-notif');
-Route::get('/user-profil', [FrontEndController::class, 'profil'])->name('front-end-profil');
-Route::get('/user-npl', [FrontEndController::class, 'npl'])->name('front-end-npl');
-Route::get('/user-pelunasan', [FrontEndController::class, 'pelunasan'])->name('front-end-pelunasan');
-Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
 Route::get('/detail-event-user/{id}/', [FrontEndController::class, 'detail_event'])->name('detail-event-user');
 Route::get('/get-harganpl/{id}/', [MenuController::class, 'harganpl_by_event']);
-Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
 Route::get('/user-bidding/{id}/', [FrontEndController::class, 'bidding'])->name('user-bidding');
-Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
-Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
 Route::post('send-bidding-user',[FrontEndController::class, 'send_bidding']);
 Route::post('log-bidding-user',[FrontEndController::class, 'log_bidding']);
 
+Route::middleware('peserta')->group(function () {
+    Route::get('/user-notif', [FrontEndController::class, 'notif'])->name('front-end-notif');
+    Route::put('/edit-profil-user/{id}/', [FrontEndController::class, 'edit_profil_user'])->name('edit-profil-user');
+    Route::put('/user-refund/{id}/', [FrontEndController::class, 'refund'])->name('user-refund');
+    Route::get('/user-profil', [FrontEndController::class, 'profil'])->name('front-end-profil');
+    Route::get('/user-npl', [FrontEndController::class, 'npl'])->name('front-end-npl');
+    Route::get('/user-pelunasan', [FrontEndController::class, 'pelunasan'])->name('front-end-pelunasan');
+    Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
+    Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
+    Route::put('/pelunasan-barang-lelang/{id}/', [FrontEndController::class, 'pelunasan_barang'])->name('pelunasan-barang-lelang');
+});
+Route::get('/verify-email-user/{id}/', [VerifyEmailRegisterController::class, 'verifikasi_email_user'])->name('verify-email-user');
 
-// Auth::routes(['verify' => true]);
+
 
 // Route::get('/email/verify', function () {
-//     return view('auth.verify-email');
-// })->middleware('auth')->name('verification.notice');
+//     return view('front-end.verify-email');
+// })->middleware('peserta')->name('verification.notice');
  
 // Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-//     $request->fulfill();
+//     $request->fulfill_peserta();
  
-//     return redirect('/dashboard');
-// })->middleware(['auth', 'signed'])->name('verification.verify');
+//     return redirect('/profiles');
+// })->middleware(['peserta', 'signed'])->name('verification.verify');
+
+// Route::get('/profiles', function (){
+//     return 'ini halaman profile yg sudah verifikasi email';
+// })->middleware(['peserta', 'verified']);
+
+
 
 
 Route::middleware('auth')->group(function () {
@@ -243,6 +252,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-setting-metadata/{id}/', [MenuController::class, 'update_setting_metadata'])->name('update-setting-metadata');
     Route::put('/update-setting-kontak/{id}/', [MenuController::class, 'update_setting_kontak'])->name('update-setting-kontak');
     Route::put('/update-setting-lelang/{id}/', [MenuController::class, 'update_setting_lelang'])->name('update-setting-lelang');
+    Route::put('/delete-keyword/{id}/', [MenuController::class, 'delete_keyword']);
 
      // route user admin
      Route::get('/tambah-admin', [MenuController::class, 'tambah_admin'])->name('tambah-admin');
@@ -259,22 +269,25 @@ Route::middleware('auth')->group(function () {
      Route::delete('/delete-member-event/{id}/', [MenuController::class, 'delete_member_event'])->name('delete-member-event');
      Route::delete('/delete-all-member-event/{id}/', [MenuController::class, 'delete_all_member_event'])->name('delete-all-member-event');
      Route::post('/send-email-member/{id}/', [SendEmailMemberController::class, 'send_email_member'])->name('send-email-member');
-
-    //   Route::post('log-bidding',[MenuController::class, 'log_bidding']);
+     
+     //   Route::post('log-bidding',[MenuController::class, 'log_bidding']);
      Route::post('search-pemenang-event',[MenuController::class, 'search_pemenang_event']);
      Route::post('next-lot',[MenuController::class, 'next_lot']);
-    Route::post('send-bidding',[MenuController::class, 'send_bidding']);
-
+     Route::post('send-bidding',[MenuController::class, 'send_bidding']);
+     
      Route::post('open-button',function (Request $request){
-        event(new StartBid($request->button));
-        return ['success' => true];
-    });
-    //  Route::post('send-message',function (Request $request){
-    //     event(new Message($request->email, $request->harga_bidding));
-    //     return ['success' => true];
-    // });
+         event(new StartBid($request->button));
+         return ['success' => true];
+        });
+
+    Route::get('/pemenang', [MenuController::class, 'list_pemenang'])->name('pemenang');
+    Route::get('/form-verify-pemenang/{id}/', [MenuController::class, 'form_verify_pemenang'])->name('form-verify-pemenang');
+    Route::put('/verify-pemenang/{id}/', [MenuController::class, 'verify_pemenang'])->name('verify-pemenang');
+
+    Route::put('/update-banner-web/{id}/', [MenuController::class, 'update_banner_web'])->name('update-banner-web');
+
     
-    });
+});
     Route::post('log-bidding',[MenuController::class, 'log_bidding']);
     Route::get('/download-apk', [MenuController::class, 'download_apk'])->name('download-apk');
  

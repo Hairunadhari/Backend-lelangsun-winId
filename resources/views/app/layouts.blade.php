@@ -33,6 +33,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <link rel="stylesheet" href="{{ asset('assets/modules/izitoast/css/iziToast.min.css')}}">
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/css/components.css')}}">
@@ -97,15 +98,26 @@
   <script src="{{ asset('assets/modules/datatables/datatables.min.js')}}"></script>
    <script src="{{ asset('assets/modules/summernote/summernote-bs4.js')}}"></script>
    <script src="{{ asset('assets/modules/upload-preview/assets/js/jquery.uploadPreview.min.js')}}"></script>
+   <script src="{{ asset('assets/modules/izitoast/js/iziToast.min.js')}}"></script>
  
    <!-- Page Specific JS File -->
    <script src="{{ asset('assets/js/page/forms-advanced-forms.js')}}"></script>
    <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script> 
    {{-- <script src="{{asset('assets/js/page/components-chat-box.js')}}"></script> --}}
+   <script src="{{ asset('assets/js/page/modules-toastr.js')}}"></script>
    
    <!-- Template JS File -->
    <script src="{{ asset('assets/js/scripts.js')}}"></script>
    <script src="{{ asset('assets/js/custom.js')}}"></script>
+   @if (Session::has('success'))
+      <script>
+          iziToast.success({
+            title: 'Success',
+            message: "{{Session::get('success')}}",
+            position: 'topRight'
+          });
+      </script>
+    @endif
    <script>
      $.ajaxSetup({
            headers: {

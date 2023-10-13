@@ -74,17 +74,17 @@
                     <div class="a">
                         <h1><i class="fas fa-map-marker-alt"></i> </h1>
                         <h2>OUR ADDRESS</h2>
-                        <h5>Ciledug Mas, Ruko, Jl. HOS Cokroaminoto No.D3, Karang Tim., Kec. Ciledug, Kota Tangerang, Banten 15151</h5>
+                        <h5>{{$data->alamat}}</h5>
                     </div>
                 </div>
                 <div class="card-kon2">
                     <h1><i class="fas fa-envelope"></i></h1> 
                     <h2>EMAIL US</h2>
-                    <h5>lelangsun@gmail.com</h5>
+                    <h5>{{$data->email}}</h5>
                 </div>
                 <div class="card-kon3">
                     <h1><i class="fas fa-phone-alt"></i></h1>
-                    <h5>+02122271959</h5>
+                    <h5>{{$data->no_telp}}</h5>
                 </div>
             </div>
             <div class="lokasi">

@@ -60,7 +60,7 @@
                                     </button>
                                 </div>
                                 @endif
-                                <form method="POST" action="{{ route('login') }}" class="needs-validation"
+                                <form method="POST" action="{{ route('admin-login') }}" class="needs-validation"
                                     novalidate="">
                                     @csrf
                                     <div class="form-group">

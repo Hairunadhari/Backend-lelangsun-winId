@@ -1007,6 +1007,118 @@
                     }
                 }
             }
+        },
+        "/api/lelang/kategori/lelang": {
+            "get": {
+                "tags": [
+                    "Kategori Lelang"
+                ],
+                "summary": "Kategori Lelang",
+                "description": "menampilkan semua kategori Lelang ",
+                "operationId": "KategoriLelanlg",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/kategori/detail/{id}/": {
+            "get": {
+                "tags": [
+                    "Kategori Lelang"
+                ],
+                "summary": "Detail Kategori",
+                "description": "Menampilkan semua barang berdasarkan kategori yg dipillih",
+                "operationId": "DetailKategoriLelang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID kategori yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/lot/list": {
+            "get": {
+                "tags": [
+                    "Lot"
+                ],
+                "summary": "Lot",
+                "description": "menampilkan semua Lot ",
+                "operationId": "Lot",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/detail-barang-lelang/{id}": {
+            "get": {
+                "tags": [
+                    "Barang Lelang"
+                ],
+                "summary": "Menampilkan detail barang lelang berdasarkan ID",
+                "description": "Menampilkan detail barang lelang berdasarkan ID yg diberikan",
+                "operationId": "Detail-Barang-Lelang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID barang yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/barang": {
+            "get": {
+                "tags": [
+                    "Barang Lelang"
+                ],
+                "summary": "List barang",
+                "description": "menampilkan semua barang",
+                "operationId": "barang",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/event": {
+            "get": {
+                "tags": [
+                    "Event Lelang"
+                ],
+                "summary": "List Event",
+                "description": "menampilkan semua event",
+                "operationId": "eventlelang",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }
