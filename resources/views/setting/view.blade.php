@@ -17,10 +17,10 @@
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
                                 aria-controls="profile" aria-selected="false">Kontak</a>
                         </li>
-                        {{-- <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
                                 aria-controls="contact" aria-selected="false">Lelang</a>
-                        </li> --}}
+                        </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -104,12 +104,19 @@
                                 </div>
                             </form>
                         </div>
-                        {{-- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                            <div class="form-group">
-                                <label>Internal Waktu Lelang (Detik)</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div> --}}
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                            <form action="{{route('update-setting-lelang',$data->id)}}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                @method('put')
+                                <div class="form-group">
+                                    <label>Waktu Lelang (Detik)</label>
+                                    <input type="number" class="form-control" name="waktu_bid" value="{{$data->waktu_bid}}">
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button class="me-auto btn btn-success mt-3" type="submit">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

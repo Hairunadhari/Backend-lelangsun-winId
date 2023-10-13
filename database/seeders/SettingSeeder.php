@@ -23,6 +23,7 @@ class SettingSeeder extends Seeder
             'fb' => '#!',
             'twitter' => '#!',
             'yt' => 'https://www.youtube.com/channel/UCD9ve-bPrPuIorZgF8kubVA',
+            'waktu_bid' => 30
         ]);
     }
 }

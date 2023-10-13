@@ -34,7 +34,7 @@ $(document).ready(function () {
     let countdown; // variabel untuk menyimpan interval timer
     let isTimerRunning = false; // false karena timer belom berjalan
 
-    // // Fungsi untuk mengubah format waktu menjadi menit:detik
+    // // Fungsi untuk mengubah format waktu_bid menjadi menit:detik
     function formatTime(seconds) {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
@@ -44,9 +44,8 @@ $(document).ready(function () {
 
     function toggleTimer() { // <-- Fungsi untuk memulai timer
         if (!isTimerRunning) { // <-- apakah timer false
-            let seconds = 30; // set timer ke 30 detik
             const timerElement = document.getElementById('timer');
-            timerElement.textContent = formatTime(seconds);
+            let seconds = parseInt(timerElement.getAttribute('data-seconds')); 
 
             countdown = setInterval(() => {
                 seconds--; // kurangi second 1

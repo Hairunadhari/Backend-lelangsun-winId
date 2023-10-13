@@ -1863,6 +1863,15 @@ class MenuController extends Controller
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
     }
 
+    public function update_setting_lelang(Request $request, $id){
+        $data = Setting::find($id);
+        $data->update([
+            'waktu_bid' => $request->waktu_bid,
+        ]);
+
+        return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
+    }
+
     public function delete_keyword($id){
         $keyword = Keyword::find($id);
         $keyword->update([
@@ -2257,13 +2266,13 @@ class MenuController extends Controller
     }
     public function bidding($id){
         $event_id = Crypt::decrypt($id);
-        // dd($event_id);
+        $setting = Setting::first();
         $lot_item = LotItem::with(['bidding' => function($query){
             $query->orderBy('harga_bidding','desc')->first();
         }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
         
         // dd($lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding);
-        return view('lelang.bidding',compact('lot_item','event_id'));
+        return view('lelang.bidding',compact('lot_item','event_id','setting'));
     }
 
     public function send_bidding(Request $request){

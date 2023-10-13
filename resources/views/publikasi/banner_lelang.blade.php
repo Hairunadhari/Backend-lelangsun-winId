@@ -45,7 +45,7 @@
                                     @endforeach
                                 </div>
                                 <div class="form-group">
-                                    <label>Banner Web <small>(disarankan : upload 3 file, width:1000px height:800px) </small><span
+                                    <label>Banner Web <small>(disarankan : upload 3 file, width:1000px height:900px) </small><span
                                             style="color: red">*</span></label>
                                     <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
                                 </div>
