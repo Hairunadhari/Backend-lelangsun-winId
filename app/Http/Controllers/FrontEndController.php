@@ -129,7 +129,7 @@ class FrontEndController extends Controller
         $hours_now = $konvers_tanggal->format('Y-m-d H');
         $event = EventLelang::where('waktu','>=',$now)->where('status_data',1)->get();
         $user_id = Auth::guard('peserta')->user()->id;
-        $npl = Npl::with('event_lelang')->where('status','active')->where('peserta_npl_id',$user_id)->orderBy('created_at','desc')->get();
+        $npl = Npl::with('event_lelang')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('peserta_npl_id',$user_id)->orderBy('created_at','desc')->get();
 
         return view('front-end/npl',compact('event','npl','hours_now'));
     }

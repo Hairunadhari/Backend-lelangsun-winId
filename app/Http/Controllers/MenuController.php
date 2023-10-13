@@ -1996,14 +1996,12 @@ class MenuController extends Controller
     }
 
     public function list_peserta_npl(){
-//         $data = Refund::with('npl')->where('status_refund','Pengajuan')->where('status','active')->orderBy('created_at','desc')->get();
-// dd($data);
         if (request()->ajax()) {
             $status = request('status');
 
             if ($status == 'active') {
                 $data = PesertaNpl::with(['npl' => function($query){
-                    $query->where('status','active')->where('status_npl','aktif');
+                    $query->where('status','active')->where('status_npl','aktif')->where('created_at', '>', Carbon::now()->subDays(30));
                 }])->where('status','active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
                 $data = PesertaNpl::where('status','not-active')->orderBy('created_at','desc')->get();
@@ -2132,7 +2130,7 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = Npl::with('peserta_npl')->where('status','active')->where('peserta_npl_id',$id)->get();
+                $data = Npl::with('peserta_npl')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('peserta_npl_id',$id)->get();
             } elseif ($status == 'not-active') {
                 $data = Npl::where('status','not-active')->orderBy('created_at','desc')->find($id);
             }
