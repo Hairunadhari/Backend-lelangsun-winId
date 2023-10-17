@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use DataTables;
+use Validator;
 use Carbon\Carbon;
 use App\Models\Lot;
 use App\Models\Npl;
@@ -2050,6 +2051,12 @@ class MenuController extends Controller
     }
 
     public function add_peserta_npl(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email'     => 'required|email|unique:peserta_npls,email',
+        ]);
+        if($validator->fails()){
+            return redirect()->back()->with(['error' => "Email Sudah Terdaftar!"]);
+        }
         $ktp = $request->file('foto_ktp');
         $npwp = $request->file('foto_npwp');
         $ktp->storeAs('public/image', $ktp->hashName());

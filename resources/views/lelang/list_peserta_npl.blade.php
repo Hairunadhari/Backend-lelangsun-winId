@@ -11,6 +11,14 @@
                     </button>
                 </div>
                 <div class="card-body">
+                    @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
+                        <strong>{{ session('error') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
                     <ul class="nav nav-pills" id="myTab3" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
@@ -414,6 +422,12 @@
         }
 
         function readAndPreview(file) {
+            if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                alert(file.name + " format tidak sesuai");
+                document.querySelector('#gambarktp').value = '';
+                preview.removeChild(preview.firstChild);
+                return;
+            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();
@@ -440,6 +454,12 @@
         }
 
         function readAndPreview(file) {
+            if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                alert(file.name + " format tidak sesuai");
+                document.querySelector('#gambarnpwp').value = '';
+                preview.removeChild(preview.firstChild);
+                return;
+            }
             var reader = new FileReader();
             reader.addEventListener("load", function () {
                 var image = new Image();
