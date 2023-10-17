@@ -47,16 +47,24 @@
                             </thead>
                             <tbody >
                                 @foreach ($baranglelang as $p)
-                                    <tr>
-                                        <td><input type="checkbox" name="barang_id[]" value="{{ $p->id }}" {{ isset($barangTerpilih[$p->id]) ? 'checked' : '' }}></td>
-                                        <td>{{ $p->barang }}
-                                            <input type="hidden" value="{{$p->barang}}" name="nama_barang[]">
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" name="harga_awal[]"  data-idBarang="{{ $p->id }}"  value="{{ isset($barangTerpilih[$p->id]) ? $barangTerpilih[$p->id] : '' }}">
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="barang_id[]" value="{{ $p->id }}" {{ isset($barangTerpilih[$p->id]) ? 'checked' : '' }}>
+                                    </td>
+                                    <td>
+                                        {{ $p->barang }}
+                                        <input type="hidden" value="{{$p->barang}}" name="nama_barang[]">
+                                    </td>
+                                    <td>
+                                        @if(isset($barangTerpilih[$p->id]))
+                                            <input type="number" class="form-control" name="harga_awal[]" value="{{ $barangTerpilih[$p->id] }}">
+                                        @else
+                                            <input type="number" class="form-control" name="harga_awal[]" style="display: none">
+                                        @endif
+                                    </td>
+                                </tr>
                                 @endforeach
+                                
 
                             </tbody>
                         </table>
@@ -72,15 +80,41 @@
 
 
 <script>
-    $(document).ready(function () {
-        // Ketika checkbox di atas tabel dengan id "tabel1" dicentang
-        $("#pilihsemua").click(function () {
-            // Ambil status checked dari checkbox di atasnya
+   $(document).ready(function () {
+    // Ketika checkbox di atas tabel dengan id "pilihsemua" dicentang
+    $("#pilihsemua").click(function () {
+        // Ambil status checked dari checkbox di atasnya
+        var isChecked = $(this).prop("checked");
+        // Atur status checked dari semua checkbox di dalam tag <tbody> pada tabel "tabel1"
+        $("#tabel1 tbody input[type='checkbox']").prop('checked', isChecked);
+
+        // Tampilkan atau sembunyikan input harga awal dan tambahkan atribut required
+        $("#tabel1 tbody input[type='checkbox']").each(function () {
             var isChecked = $(this).prop("checked");
-            // Atur status checked dari semua checkbox di dalam tag <tbody> pada tabel "tabel1"
-            $("#tabel1 tbody input[type='checkbox']").prop('checked', isChecked);
+            var hargaAwalInput = $(this).closest("tr").find("input[name='harga_awal[]']");
+
+            if (isChecked) {
+                hargaAwalInput.show().prop('required', true);
+            } else {
+                hargaAwalInput.hide().prop('required', false).val('');
+            }
         });
     });
+
+    // Ketika terjadi perubahan pada kotak centang di dalam tabel
+    $("#tabel1 tbody input[type='checkbox']").change(function () {
+        var isChecked = $(this).prop("checked");
+        var hargaAwalInput = $(this).closest("tr").find("input[name='harga_awal[]']");
+
+        if (isChecked) {
+            hargaAwalInput.show().prop('required', true);
+        } else {
+            hargaAwalInput.hide().prop('required', false).val('');
+        }
+    });
+});
+
+
 
 </script>
 @endsection

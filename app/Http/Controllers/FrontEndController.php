@@ -9,16 +9,21 @@ use App\Models\Refund;
 use App\Events\Message;
 use App\Models\Bidding;
 use App\Models\LotItem;
+use App\Models\Setting;
 use App\Models\Pemenang;
 use App\Models\Notifikasi;
 use App\Models\PesertaNpl;
 use App\Models\EventLelang;
 use Illuminate\Support\Str;
 use App\Events\BiddingEvent;
+use App\Models\BannerLelang;
 use App\Models\PembelianNpl;
 use Illuminate\Http\Request;
+use App\Mail\VerifyRegisterUser;
+use App\Models\BannerLelangImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
@@ -27,8 +32,10 @@ use App\Http\Requests\Auth\LoginRequest;
 class FrontEndController extends Controller
 {
     public function beranda(){
-        
-        return view('front-end/beranda');
+        $data = BannerLelang::where('status','active')->first();
+        $banner = BannerLelangImage::where('banner_lelang_id',$data->id)->get();
+        // dd($banner);
+        return view('front-end/beranda',compact('data','banner'));
     }
     public function lot(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
@@ -58,7 +65,8 @@ class FrontEndController extends Controller
         return view('front-end/detail_event',compact('event'));
     }
     public function kontak(){
-        return view('front-end/kontak');
+        $data = Setting::first();
+        return view('front-end/kontak', compact('data'));
     }
     public function login(){
         return view('front-end/login');
@@ -80,7 +88,7 @@ class FrontEndController extends Controller
         $ktp->storeAs('public/image', $ktp->hashName());
         $npwp->storeAs('public/image', $npwp->hashName());
 
-        $data = PesertaNpl::create([
+        $user = PesertaNpl::create([
             'nama' => $request->nama,
             'email' => $request->email,
             'no_hp' => $request->no_hp,
@@ -92,8 +100,13 @@ class FrontEndController extends Controller
             'foto_npwp' => $npwp->hashName(),
             'password' => Hash::make($request->password),
         ]);
-
-        return redirect('/user-login')->with(['success'=>'Registrasi berhasil silahkan login!']);
+       
+        $encrypt_id = Crypt::encrypt($user->id);
+        $url = route('verify-email-user',$encrypt_id);  
+        Mail::to($user->email)->send(new VerifyRegisterUser($user, $url));
+       
+        // return redirect()->route('verify-email-register')->with('user', $user);
+        return redirect('/user-login')->with('message','Registrasi berhasil, silahkan verifikasi email anda');
     }
 
     public function proses_login(LoginRequest $request){
@@ -117,7 +130,7 @@ class FrontEndController extends Controller
         $hours_now = $konvers_tanggal->format('Y-m-d H');
         $event = EventLelang::where('waktu','>=',$now)->where('status_data',1)->get();
         $user_id = Auth::guard('peserta')->user()->id;
-        $npl = Npl::with('event_lelang')->where('status','active')->where('peserta_npl_id',$user_id)->orderBy('created_at','desc')->get();
+        $npl = Npl::with('event_lelang')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('peserta_npl_id',$user_id)->orderBy('created_at','desc')->get();
 
         return view('front-end/npl',compact('event','npl','hours_now'));
     }
@@ -190,7 +203,7 @@ class FrontEndController extends Controller
         }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
 
         $id_peserta = Auth::guard('peserta')->user()->id;
-        $npl = Npl::where('status_npl','aktif')->where('status','active')->where('peserta_npl_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
+        $npl = Npl::where('status_npl','aktif')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('peserta_npl_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
         // dd($npl);
         return view('front-end/bidding',compact('lot_item','npl'));
     }

@@ -6,16 +6,20 @@
             <div class="card-header">
                 <h4>Edit Event</h4>
             </div>
-            <form action="{{route('update-event-lelang', $data->id)}}" method="post">
+            <form action="{{route('update-event-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="card-body">
                     <div class="form-group">
-                        <label>Nama Event</label>
+                        <label>Image <small>(png, jpg, jpeg)</small> <span style="color: red">*</span></label>
+                        <input type="file" class="form-control" name="gambar"  id="gambar">
+                    <div id="preview" class="mt-3 mb-3"></div>
+                    <div class="form-group">
+                        <label>Judul Event</label>
                         <input type="text" class="form-control" value="{{ $data->judul }}" name="judul">
                     </div>
                     <div class="form-group">
-                        <label>Nama Event</label>
+                        <label>Jenis Kategori Lelang <span style="color: red">*</span></label>
                         <select class="form-control select2" name="kategori_id">
                              @foreach ($kategori as $item)
                             <option value="{{ $item->id }}"
@@ -49,5 +53,37 @@
         </div>
     </div>
 </div>
+<script>
+    function previewImages() {
+        var preview = document.querySelector('#preview');
 
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                alert(file.name + " format tidak sesuai");
+                document.querySelector('#gambar').value = '';
+                preview.removeChild(preview.firstChild);
+                return;
+            }
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#gambar').addEventListener("change", previewImages);
+</script>
 @endsection

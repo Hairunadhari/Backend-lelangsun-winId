@@ -14,6 +14,10 @@ use App\Http\Requests\Pesertaauth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('auth')->except('logout');
+    // }
     /**
      * Display the login view.
      */
@@ -31,12 +35,12 @@ class AuthenticatedSessionController extends Controller
         $user = PesertaNpl::where('email', $request->email)->first();
         // dd($user);
         if ($user) {
-            if ($user->status == 'active') {
+            if ($user->status == 'active' && $user->verified_email == 'active') {
                 $request->authenticate();
                 $request->session()->regenerate();
                 return redirect()->intended(RouteServiceProvider::PESERTA);
             } else {
-                return redirect('/user-login')->with(['pesan' => 'Ada Kesalahan']);            
+                return redirect('/user-login')->with(['pesan' => 'Akun belum Terverivikasi!']);            
             }
         }else{
             return redirect('/user-login')->with(['pesan' => 'Email Belum Terdaftar!']);            

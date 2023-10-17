@@ -15,7 +15,7 @@
 <style>
     body {
         background-image: url('asset-lelang/mobil5.jpg');
-        height: auto;
+        height: 100vh;
         background-position: center;
         background-repeat: no-repeat;
         color: white;
@@ -45,13 +45,15 @@
         margin-top: 20px;
         color: white
     }
-    .warn{
+
+    .warn {
         background-color: #ff0000;
         margin-top: 3px;
         width: auto;
         padding: 3px;
-        border-radius: 5px; 
+        border-radius: 5px;
     }
+
     /* .regis-button{
         margin-bottom: 100px;
     } */
@@ -71,9 +73,9 @@
                     <div class="mb-1 col-6">
                         <label class="form-label">Nama</label>
                         <input type="text" class="form-control" name="nama" required>
-                        
+
                     </div>
-                    <div class="mb-3 col-6">
+                    <div class="mb-1 col-6">
                         <label class="form-label">Email</label>
                         <input type="email" class="form-control" name="email" required>
                         @if ($errors->has('email'))
@@ -85,25 +87,16 @@
                     <div class="mb-1 col-6">
                         <label class="form-label">Telepon</label>
                         <input type="text" class="form-control" name="no_hp" required>
-                        @if ($errors->has('email'))
-                        <div class="warn"><small class="text-alert">Email Sudah Terdaftar!</small></div>
-                        @endif
                     </div>
                     <div class="mb-1 col-6">
                         <label class="form-label">Nik</label>
                         <input type="text" class="form-control" name="nik" required>
-                        @if ($errors->has('email'))
-                        <div class="warn"><small class="text-alert">Email Sudah Terdaftar!</small></div>
-                        @endif
                     </div>
                 </div>
                 <div class="row">
                     <div class="mb-1 col-6">
                         <label class="form-label">Npwp</label>
                         <input type="text" class="form-control" name="npwp" required>
-                        @if ($errors->has('email'))
-                        <div class="warn"><small class="text-alert">Email Sudah Terdaftar!</small></div>
-                        @endif
                     </div>
                     <div class="mb-1 col-6">
                         <label class="form-label">No Rekening</label>
@@ -114,12 +107,10 @@
                     <div class="col-6">
                         <label for="" class="form-label">Foto KTP</label>
                         <input type="file" class="form-control" name="foto_ktp" id="gambarktp">
-                        <div id="previewktp" class="mt-3"></div>
                     </div>
                     <div class="col-6">
                         <label for="" class="form-label">Foto NPWP</label>
                         <input type="file" class="form-control" name="foto_npwp" id="gambarnpwp">
-                        <div id="previewnpwp" class="mt-3"></div>
                     </div>
                 </div>
                 <div class="mb-1">
@@ -133,86 +124,48 @@
                     <div class="warn"><small class="text-alert">Password harus memiliki 5 karakter!</small></div>
                     @endif
                 </div>
-                <div class="mb-2">
+                <div class="mb-1">
                     <label class="form-label">Confirm Password</label>
                     <input type="password" class="form-control" name="confirm_password" required>
                     @if ($errors->has('confirm_password'))
                     <div class="warn"><small class="text-alert">Konfirmasi Password Tidak Cocok!</small></div>
                     @endif
                 </div>
-                <button type="submit" class="btn btn-danger w-100 regis-button mb-5">Registrasi</button>
+                <button type="submit" class="btn btn-danger w-100 regis-button mb-2">Registrasi</button>
             </form>
         </div>
     </div>
     <div class="last-text">
         <h5 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
     </div>
+
     <script>
-         function previewgambarktp() {
-        var preview = document.querySelector('#previewktp');
+        document.querySelector('#gambarktp').addEventListener("change", validateFilektp);
 
-        // Hapus semua elemen child di dalam elemen #preview
-        while (preview.firstChild) {
-            preview.removeChild(preview.firstChild);
-        }
-
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
-                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
-                document.querySelector('#gambarktp').value = '';
-                return;
+        function validateFilektp() {
+            if (this.files && this.files.length > 0) {
+                [].forEach.call(this.files, function(file) {
+                    if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
+                        alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
+                        document.querySelector('#gambarktp').value = '';
+                    }
+                });
             }
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 150;
-                image.height = 150;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-    document.querySelector('#gambarktp').addEventListener("change", previewgambarktp);
-
-    function previewgambarnpwp() {
-        var preview = document.querySelector('#previewnpwp');
-
-        // Hapus semua elemen child di dalam elemen #preview
-        while (preview.firstChild) {
-            preview.removeChild(preview.firstChild);
         }
 
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
+        document.querySelector('#gambarnpwp').addEventListener("change", validateFilenpwp);
 
-        function readAndPreview(file) {
-            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
-                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
-                document.querySelector('#gambarnpwp').value = '';
-                return;
+        function validateFilenpwp() {
+            if (this.files && this.files.length > 0) {
+                [].forEach.call(this.files, function(file) {
+                    if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
+                        alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
+                        document.querySelector('#gambarnpwp').value = '';
+                    }
+                });
             }
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 150;
-                image.height = 150;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
         }
-    }
-    document.querySelector('#gambarnpwp').addEventListener("change", previewgambarnpwp);
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
     </script>

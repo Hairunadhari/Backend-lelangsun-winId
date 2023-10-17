@@ -49,7 +49,7 @@
                                                 <div id="con-bid" class="button-center w-100" style="display:none">
                                                     <div class="d-flex justify-content-center mb-2">
                                                         <span class="badge badge-secondary text-center">
-                                                            <div id="timer" >00:30</div>
+                                                            <div id="timer" data-seconds="<?= $setting->waktu_bid ?>">00:{{$setting->waktu_bid}}</div>
                                                         </span>
                                                     </div>
                                                     <div class="button-bid" style="display: flex; justify-content: center; width:100%;">

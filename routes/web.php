@@ -9,6 +9,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\SendEmailMemberController;
+use App\Http\Controllers\VerifyEmailRegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
@@ -23,9 +24,9 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 
-Route::get('/admin', function () {
-    return view('auth.login');
-});
+// Route::get('/admin', function () {
+//     return view('auth.login');
+// });
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
 Route::get('/user-lot', [FrontEndController::class, 'lot'])->name('front-end-lot');
 Route::get('/user-lelang', [FrontEndController::class, 'lelang'])->name('front-end-lelang');
@@ -52,19 +53,28 @@ Route::middleware('peserta')->group(function () {
     Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
     Route::put('/pelunasan-barang-lelang/{id}/', [FrontEndController::class, 'pelunasan_barang'])->name('pelunasan-barang-lelang');
 });
+Route::get('/verify-email-user/{id}/', [VerifyEmailRegisterController::class, 'verifikasi_email_user'])->name('verify-email-user');
+// Route::get('/resend-code/{id}/', [VerifyEmailRegisterController::class, 'resend_code'])->name('resend-code');
+Route::get('/verify-email-register', [VerifyEmailRegisterController::class, 'verifikasi_email_register'])->name('verify-email-register');
+Route::post('/resend-email', [VerifyEmailRegisterController::class, 'resend_email'])->name('resend-email');
 
 
-// Auth::routes(['verify' => true]);
 
 // Route::get('/email/verify', function () {
-//     return view('auth.verify-email');
-// })->middleware('auth')->name('verification.notice');
+//     return view('front-end.verify-email');
+// })->middleware('peserta')->name('verification.notice');
  
 // Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-//     $request->fulfill();
+//     $request->fulfill_peserta();
  
-//     return redirect('/dashboard');
-// })->middleware(['auth', 'signed'])->name('verification.verify');
+//     return redirect('/profiles');
+// })->middleware(['peserta', 'signed'])->name('verification.verify');
+
+// Route::get('/profiles', function (){
+//     return 'ini halaman profile yg sudah verifikasi email';
+// })->middleware(['peserta', 'verified']);
+
+
 
 
 Route::middleware('auth')->group(function () {
@@ -245,6 +255,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-setting-metadata/{id}/', [MenuController::class, 'update_setting_metadata'])->name('update-setting-metadata');
     Route::put('/update-setting-kontak/{id}/', [MenuController::class, 'update_setting_kontak'])->name('update-setting-kontak');
     Route::put('/update-setting-lelang/{id}/', [MenuController::class, 'update_setting_lelang'])->name('update-setting-lelang');
+    Route::put('/delete-keyword/{id}/', [MenuController::class, 'delete_keyword']);
 
      // route user admin
      Route::get('/tambah-admin', [MenuController::class, 'tambah_admin'])->name('tambah-admin');
@@ -275,6 +286,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pemenang', [MenuController::class, 'list_pemenang'])->name('pemenang');
     Route::get('/form-verify-pemenang/{id}/', [MenuController::class, 'form_verify_pemenang'])->name('form-verify-pemenang');
     Route::put('/verify-pemenang/{id}/', [MenuController::class, 'verify_pemenang'])->name('verify-pemenang');
+
+    Route::put('/update-banner-web/{id}/', [MenuController::class, 'update_banner_web'])->name('update-banner-web');
+
     
 });
     Route::post('log-bidding',[MenuController::class, 'log_bidding']);

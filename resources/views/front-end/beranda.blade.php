@@ -181,27 +181,15 @@
 <section id="img-slider">
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="{{ asset('asset-lelang/car1.jpg') }}" class="d-block w-100" alt="...">
+            @foreach ($banner as $key => $item)
+            <div class="carousel-item {{$key == 0 ? 'active' : ''}}">
+                <img src="{{ asset('storage/image/'.$item->gambar) }}" class="d-block w-100" alt="...">
                 <div class="carousel-text">
-                    <h1>Ikuti Lelang Dimana Saja</h1>
-                    <p>Dengan Fitur Live Auction Dan Time Auction</p>
+                    <h1>{{$data->judul}}</h1>
+                    <p>{{$data->deskripsi}}</p>
                 </div>
             </div>
-            <div class="carousel-item">
-                <img src="{{ asset('asset-lelang/car2.jpg') }}" class="d-block w-100" alt="...">
-                <div class="carousel-text">
-                    <h1>Ikuti Lelang Dimana Saja</h1>
-                    <p>Dengan Fitur Live Auction Dan Time Auction</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="{{ asset('asset-lelang/car3.jpg') }}" class="d-block w-100" alt="...">
-                <div class="carousel-text">
-                    <h1>Ikuti Lelang Dimana Saja</h1>
-                    <p>Dengan Fitur Live Auction Dan Time Auction</p>
-                </div>
-            </div>
+            @endforeach
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"
             data-bs-slide="prev">

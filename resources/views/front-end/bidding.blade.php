@@ -120,15 +120,16 @@
                         class="form-control">
                     <input type="hidden" readonly name="harga_bidding" id="harga_bidding_user"
                         value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
-                    </div>
+                </div>
 
-                </form>
-                <button class="btn btn-success w-100" id="user-send-bidding" style="display:none">Bidding</button>
-                @endif
-                    @php
-                    $event_id_crypt= Crypt::encrypt($lot_item[0]->event_lelang->id);
-                    @endphp
-                    <input type="hidden" readonly name="id_event_crypt" id="id_event_crypt" value="{{$event_id_crypt}}" class="form-control">
+            </form>
+            <button class="btn btn-success w-100" id="user-send-bidding" style="display:none">Bidding</button>
+            @endif
+            @php
+            $event_id_crypt= Crypt::encrypt($lot_item[0]->event_lelang->id);
+            @endphp
+            <input type="hidden" readonly name="id_event_crypt" id="id_event_crypt" value="{{$event_id_crypt}}"
+                class="form-control">
         </div>
     </div>
 </section>

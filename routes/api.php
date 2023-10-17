@@ -72,3 +72,7 @@ Route::get('/lelang/lot/list', [ApiController::class, 'daftar_lot']);
 Route::get('/lelang/detail-barang-lelang/{id}/', [ApiController::class, 'detail_barang_lelang']);
 Route::get('/lelang/barang', [ApiController::class, 'daftar_barang_lelang']);
 Route::get('/lelang/event', [ApiController::class, 'list_event_lelang']);
+
+Route::get('/lelang/npl/add-npl', [ApiController::class, 'add_npl']);
+Route::get('/lelang/event/detail/{id}/', [ApiController::class, 'detail_event_lelang']);
+Route::post('/lelang/registrasi-peserta-lelang', [ApiController::class, 'registrasi_peserta_lelang']);

@@ -20,6 +20,7 @@ use App\Models\Review;
 use App\Events\Message;
 use App\Events\NextLot;
 use App\Models\Bidding;
+use App\Models\Keyword;
 use App\Models\LotItem;
 use App\Models\Promosi;
 use App\Models\Setting;
@@ -50,6 +51,7 @@ use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use App\Models\PembayaranEvent;
 use App\Events\SearchPemenangLot;
+use App\Models\BannerLelangImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
@@ -555,8 +557,11 @@ class MenuController extends Controller
     }
 
     public function add_event_lelang(Request $request){
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
 
         $event = EventLelang::create([
+            'gambar'     => $gambar->hashName(),
             'judul'     => $request->judul,
             'kategori_barang_id'     => $request->kategori_id,
             'waktu'     => $request->waktu,
@@ -586,24 +591,54 @@ class MenuController extends Controller
     }
     public function update_event_lelang(Request $request, $id)
     {
-
         $data = EventLelang::find($id);
-        $data->update([
-            'judul'     => $request->judul,
-            'kategori_barang_id'     => $request->kategori_id,
-            'waktu'     => $request->waktu,
-            'alamat'     => $request->alamat,
-            'link_lokasi'     => $request->link_lokasi,
-            'deskripsi'     => $request->deskripsi,
-        ]);
-        $lot = Lot::where('event_lelang_id',$id)->get();
-        $lot_item = LotItem::where('event_lelang_id',$id)->get();
-        $lot->each->update([
-            'tanggal' => $request->waktu
-        ]);
-        $lot_item->each->update([
-            'tanggal' => $request->waktu
-        ]);
+        if ($request->hasFile('gambar')) {
+
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+            Storage::delete('public/image/'.$data->gambar);
+
+            $data->update([
+                'gambar'     => $gambar->hashName(),
+                'judul'     => $request->judul,
+                'kategori_barang_id'     => $request->kategori_id,
+                'waktu'     => $request->waktu,
+                'alamat'     => $request->alamat,
+                'link_lokasi'     => $request->link_lokasi,
+                'deskripsi'     => $request->deskripsi,
+            ]);
+
+            $lot = Lot::where('event_lelang_id',$id)->get();
+            $lot_item = LotItem::where('event_lelang_id',$id)->get();
+            $lot->each->update([
+                'tanggal' => $request->waktu
+            ]);
+            $lot_item->each->update([
+                'tanggal' => $request->waktu
+            ]);
+
+        } else {
+
+            $data->update([
+                'judul'     => $request->judul,
+                'kategori_barang_id'     => $request->kategori_id,
+                'waktu'     => $request->waktu,
+                'alamat'     => $request->alamat,
+                'link_lokasi'     => $request->link_lokasi,
+                'deskripsi'     => $request->deskripsi,
+            ]);
+
+            $lot = Lot::where('event_lelang_id',$id)->get();
+            $lot_item = LotItem::where('event_lelang_id',$id)->get();
+            $lot->each->update([
+                'tanggal' => $request->waktu
+            ]);
+            $lot_item->each->update([
+                'tanggal' => $request->waktu
+            ]);
+        }
+        
+
 
         //redirect to index
         return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Diubah!']);
@@ -1690,17 +1725,8 @@ class MenuController extends Controller
     }
 
     public function list_banner_lelang(){
-        if (request()->ajax()) {
-            $status = request('status');
-
-            if ($status == 'active') {
-                $data = BannerLelang::where('status', 1)->get();
-            } elseif ($status == 'not-active') {
-                $data = BannerLelang::where('status', 0)->get();
-            }
-            return DataTables::of($data)->make();
-        }
-        return view('publikasi.banner_lelang');
+        $data = BannerLelang::where('status','active')->first();
+        return view('publikasi.banner_lelang',compact('data'));
     }
 
     public function add_banner_lelang(Request $request){
@@ -1835,7 +1861,9 @@ class MenuController extends Controller
     }
 
     public function setting(){
-        $data = Setting::first();
+        $data = Setting::with(['keyword' => function ($query){
+            $query->where('status','active');
+        }])->first();
         return view('setting.view', compact('data'));
     }
 
@@ -1844,6 +1872,10 @@ class MenuController extends Controller
         $data->update([
             'title' => $request->title,
             'deskripsi' => $request->deskripsi,
+        ]);
+        $keyword = Keyword::create([
+            'setting_id' => $id,
+            'key' => $request->key,
         ]);
 
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
@@ -1864,6 +1896,22 @@ class MenuController extends Controller
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
     }
 
+    public function update_setting_lelang(Request $request, $id){
+        $data = Setting::find($id);
+        $data->update([
+            'waktu_bid' => $request->waktu_bid,
+        ]);
+
+        return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
+    }
+
+    public function delete_keyword($id){
+        $keyword = Keyword::find($id);
+        $keyword->update([
+            'status' => 'not-active'
+        ]);
+        return response()->json($keyword);
+    }
 
     public function tambah_admin(){
         $role = Role::where('role','Admin')->get();
@@ -1981,14 +2029,12 @@ class MenuController extends Controller
     }
 
     public function list_peserta_npl(){
-//         $data = Refund::with('npl')->where('status_refund','Pengajuan')->where('status','active')->orderBy('created_at','desc')->get();
-// dd($data);
         if (request()->ajax()) {
             $status = request('status');
 
             if ($status == 'active') {
                 $data = PesertaNpl::with(['npl' => function($query){
-                    $query->where('status','active')->where('status_npl','aktif');
+                    $query->where('status','active')->where('status_npl','aktif')->where('created_at', '>', Carbon::now()->subDays(30));
                 }])->where('status','active')->orderBy('created_at','desc')->get();
             } elseif ($status == 'not-active') {
                 $data = PesertaNpl::where('status','not-active')->orderBy('created_at','desc')->get();
@@ -2117,7 +2163,7 @@ class MenuController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = Npl::with('peserta_npl')->where('status','active')->where('peserta_npl_id',$id)->get();
+                $data = Npl::with('peserta_npl')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('peserta_npl_id',$id)->get();
             } elseif ($status == 'not-active') {
                 $data = Npl::where('status','not-active')->orderBy('created_at','desc')->find($id);
             }
@@ -2251,13 +2297,13 @@ class MenuController extends Controller
     }
     public function bidding($id){
         $event_id = Crypt::decrypt($id);
-        // dd($event_id);
+        $setting = Setting::first();
         $lot_item = LotItem::with(['bidding' => function($query){
             $query->orderBy('harga_bidding','desc')->first();
         }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
         
         // dd($lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding);
-        return view('lelang.bidding',compact('lot_item','event_id'));
+        return view('lelang.bidding',compact('lot_item','event_id','setting'));
     }
 
     public function send_bidding(Request $request){
@@ -2412,13 +2458,46 @@ class MenuController extends Controller
             'status' => 'not-active'
         ]);
         Notifikasi::create([
-            'peserta_npl_id' => $data->npl->peserta_npl->id,
+            'peserta_npl_id' => $data->npl->peserta_npl->id ?? null,
             'type' => 'Pelunasan Barang',
             'judul' => 'Pelunasan Barang Lelang',
-            'pesan' => $request->pesan
+            'pesan' => $request->pesan ?? null
         ]);
 
         return redirect('/pemenang')->with('success', 'Data berhasil di Verifikasi !');
+    }
+
+    public function update_banner_web(Request $request, $id){
+        $data = BannerLelang::find($id);
+        $gambarlelang = BannerLelangImage::where('banner_lelang_id', $id)->get();
+        if ($request->hasFile('gambar')) {
+            $data->update([
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi,
+            ]);
+            
+            foreach ($gambarlelang as $gambar) {
+                Storage::delete('public/image/'.$gambar->gambar);
+                $gambar->delete();  
+            }
+            
+            $gambars = $request->file('gambar');
+            foreach ($gambars as $file) {
+                $filename = $file->hashName();
+                $file->storeAs('public/image', $filename);
+                BannerLelangImage::create([
+                    'banner_lelang_id' => $id,
+                    'gambar' => $filename
+                ]);
+            }
+        } else {
+            $data->update([
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Data berhasil di Update !');
     }
     
 }   

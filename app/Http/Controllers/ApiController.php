@@ -23,6 +23,7 @@ use App\Models\Keranjang;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
 use App\Models\Pengiriman;
+use App\Models\PesertaNpl;
 use App\Models\BannerUtama;
 use App\Models\EventLelang;
 use App\Models\GambarEvent;
@@ -31,6 +32,7 @@ use Illuminate\Support\Str;
 use App\Models\BannerDiskon;
 use App\Models\BarangLelang;
 use App\Models\GambarProduk;
+use App\Models\PembelianNpl;
 use App\Models\PesertaEvent;
 use Illuminate\Http\Request;
 use App\Models\BannerSpesial;
@@ -1625,7 +1627,12 @@ class ApiController extends Controller
      * )
      */
     public function detail_barang_lelang($id){
-        $data = BarangLelang::find($id);
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('Y-m-d');
+
+        $data = BarangLelang::with(['lot_item' => function ($query) use($now){
+            $query->where('status','active')->where('status_item','active')->whereDate('tanggal','>=',$now);
+        }])->find($id);
         $data->gambarlelang->each(function ($item){
          $item->gambar = env('APP_URL').'/storage/image/'. $item->gambar;
         });
@@ -1650,12 +1657,34 @@ class ApiController extends Controller
      */
 
      public function daftar_barang_lelang(){
-        $data = BarangLelang::where('status',1)->get();
-        $data->each(function ($item){
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('Y-m-d');
+        $data = BarangLelang::with([
+            'lot_item' => function($query) use ($now) {
+                $query->where('status', 'active')
+                    ->where('status_item', 'active')
+                    ->where('tanggal', '>=', $now);
+            },
+            'lot_item.event_lelang' => function($query){
+                $query->where('status_data', 1);
+            }
+        ])->where('status', 1)->get();
+        
+        $data->each(function ($item) use ($now){
+            $item->lot_item->each(function ($lot) use($now){
+                $lotDate = date('Y-m-d', strtotime($lot->tanggal)); 
+                if ($lotDate == $now) {
+                    $lot->status_event = 'Sedang Berlangsung';
+                } else {
+                    # code...
+                    $lot->status_event = 'Coming Soon';
+                }
+                
+            });
             $item->gambarlelang->each(function ($gambar){
                 $gambar->gambar = env('APP_URL').'/storage/image/'. $gambar->gambar;
             });
-        });
+        });        
    
         return response()->json([
             'data' => $data
@@ -1677,10 +1706,155 @@ class ApiController extends Controller
      */
 
      public function list_event_lelang(){
-        $data = EventLelang::where('status_data',1)->get();
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('Y-m-d');
+
+        $data = EventLelang::where('status_data',1)->where('waktu', '>=', $now)->get();
+        $data->each(function ($item){
+            $item->gambar = env('APP_URL').'/storage/image/'. $item->gambar;
+        });
         return response()->json([
             'data' => $data
         ]);
      }
     
+
+     /**
+     * @OA\Get(
+     *      path="/api/lelang/detail-barang-lelang/{id}/",
+     *      tags={"Event Lelang"},
+     *      summary="Menampilkan detail event lelang berdasarkan ID",
+     *      description="Menampilkan detail event lelang berdasarkan ID yg diberikan",
+     *      operationId="Detail-Event-Lelang",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID event yang akan ditampilkan",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function detail_event_lelang($id){
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('Y-m-d');
+        $data = EventLelang::with([
+            'lot_item' => function ($query){
+                $query->where('status_item','active')->where('status','active');
+            },
+            'lot_item.barang_lelang' => function ($query){
+                $query->where('status',1);
+            },
+            'lot_item.barang_lelang.gambarlelang' => function ($query){
+                //
+            }
+        ])->find($id);
+
+        $data->gambar = env('APP_URL').'/storage/image/'. $data->gambar;
+
+        $data->lot_item->each(function ($lot){
+            $lot->barang_lelang->gambarlelang->each(function($barang){
+                    $barang->gambar = env('APP_URL').'/storage/image/'. $barang->gambar;
+                });
+        });
+
+        $waktu_event = date('Y-m-d', strtotime($data->waktu)); 
+        if ($waktu_event == $now) {
+            $data->status_event = 'Sedang Berlangsung';
+        } else {
+            $data->status_event = 'Coming Soon';
+        }
+
+        return response()->json([
+             'data' => $data
+        ]);
+     }
+
+     public function registrasi_peserta_lelang(Request $request){
+        $validator = Validator::make($request->all(), [
+            'nama'     => 'required',
+            'email'     => 'required|email|unique:peserta_npls,email',
+            'no_hp'     => 'required',
+            'alamat'     => 'required',
+            'nik'     => 'required',
+            'npwp'     => 'required',
+            'foto_ktp'     => 'required|mimes:jpeg,jpg,png',
+            'foto_npwp'     => 'required|mimes:jpeg,jpg,png',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada Kesalahan',
+                'data' =>$validator->errors()
+            ], 401);
+        }
+
+        $ktp = $request->file('foto_ktp');
+        $npwp = $request->file('foto_npwp');
+        $ktp->storeAs('public/image', $ktp->hashName());
+        $npwp->storeAs('public/image', $npwp->hashName());
+        $data = PesertaNpl::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'nik' => $request->nik,
+            'npwp' => $request->npwp,
+            'foto_ktp' => $ktp->hashName(),
+            'foto_npwp' => $npwp->hashName(),
+        ]);
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $data
+        ]);
+     }
+     public function add_npl(Request $request){
+        $validator = Validator::make($request->all(), [
+            'event_lelang_id'     => 'required',
+            'peserta_npl_id'     => 'required',
+            'no_rekening'     => 'required',
+            'nama_pemilik'     => 'required',
+            'nominal'     => 'required',
+            'tgl_transfer'     => 'required',
+            'harga_npl'     => 'required',
+            'bukti'     => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada Kesalahan',
+                'data' =>$validator->errors()
+            ], 401);
+        }
+
+        $bukti = $request->file('bukti');
+        $bukti->storeAs('public/image', $bukti->hashName());
+
+        $pembelian_npl = PembelianNpl::create([
+                'event_lelang_id' => $request->event_lelang_id,
+                'peserta_npl_id' => $request->peserta_npl_id,
+                'type_pembelian' => 'online',
+                'type_transaksi' => 'transaksi',
+                'no_rek' => $request->no_rekening,
+                'nama_pemilik' => $peserta->nama,
+                'nominal' => $harga_nominal,
+                'tgl_transfer' => $request->tgl_transfer,
+                'harga_npl' => $harga_npl,
+                'bukti' => $bukti->hashName(),
+        ]);
+
+        return response()->json([
+            'data' => $pembelian_npl
+        ]);
+
+    }
 }

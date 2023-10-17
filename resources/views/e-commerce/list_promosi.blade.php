@@ -15,14 +15,6 @@
                     <a href="{{route('form-input-promosi')}}" class="btn btn-success">+ Tambah</a>
                 </div>
                 <div class="card-body">
-                    @if(session('success'))
-                    <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
-                        <strong>{{ session('success') }}</strong>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
                     <table class="table table-striped w-100" id="tablepromo-produk">
                         <thead>
                             <tr>

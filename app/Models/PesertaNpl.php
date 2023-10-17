@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 // use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Model;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PesertaNpl extends Model
+class PesertaNpl extends Model implements MustVerifyEmail
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
+    
     protected $guarded = [''];
 
     public function pembelian_npl()
