@@ -557,8 +557,11 @@ class MenuController extends Controller
     }
 
     public function add_event_lelang(Request $request){
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/image', $gambar->hashName());
 
         $event = EventLelang::create([
+            'gambar'     => $gambar->hashName(),
             'judul'     => $request->judul,
             'kategori_barang_id'     => $request->kategori_id,
             'waktu'     => $request->waktu,
@@ -588,24 +591,54 @@ class MenuController extends Controller
     }
     public function update_event_lelang(Request $request, $id)
     {
-
         $data = EventLelang::find($id);
-        $data->update([
-            'judul'     => $request->judul,
-            'kategori_barang_id'     => $request->kategori_id,
-            'waktu'     => $request->waktu,
-            'alamat'     => $request->alamat,
-            'link_lokasi'     => $request->link_lokasi,
-            'deskripsi'     => $request->deskripsi,
-        ]);
-        $lot = Lot::where('event_lelang_id',$id)->get();
-        $lot_item = LotItem::where('event_lelang_id',$id)->get();
-        $lot->each->update([
-            'tanggal' => $request->waktu
-        ]);
-        $lot_item->each->update([
-            'tanggal' => $request->waktu
-        ]);
+        if ($request->hasFile('gambar')) {
+
+            $gambar = $request->file('gambar');
+            $gambar->storeAs('public/image', $gambar->hashName());
+            Storage::delete('public/image/'.$data->gambar);
+
+            $data->update([
+                'gambar'     => $gambar->hashName(),
+                'judul'     => $request->judul,
+                'kategori_barang_id'     => $request->kategori_id,
+                'waktu'     => $request->waktu,
+                'alamat'     => $request->alamat,
+                'link_lokasi'     => $request->link_lokasi,
+                'deskripsi'     => $request->deskripsi,
+            ]);
+
+            $lot = Lot::where('event_lelang_id',$id)->get();
+            $lot_item = LotItem::where('event_lelang_id',$id)->get();
+            $lot->each->update([
+                'tanggal' => $request->waktu
+            ]);
+            $lot_item->each->update([
+                'tanggal' => $request->waktu
+            ]);
+
+        } else {
+
+            $data->update([
+                'judul'     => $request->judul,
+                'kategori_barang_id'     => $request->kategori_id,
+                'waktu'     => $request->waktu,
+                'alamat'     => $request->alamat,
+                'link_lokasi'     => $request->link_lokasi,
+                'deskripsi'     => $request->deskripsi,
+            ]);
+
+            $lot = Lot::where('event_lelang_id',$id)->get();
+            $lot_item = LotItem::where('event_lelang_id',$id)->get();
+            $lot->each->update([
+                'tanggal' => $request->waktu
+            ]);
+            $lot_item->each->update([
+                'tanggal' => $request->waktu
+            ]);
+        }
+        
+
 
         //redirect to index
         return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Diubah!']);

@@ -105,7 +105,8 @@ class FrontEndController extends Controller
         $url = route('verify-email-user',$encrypt_id);  
         Mail::to($user->email)->send(new VerifyRegisterUser($user, $url));
        
-        return redirect('/user-login')->with('message','Registrasi berhasil silahkan verifikasi email anda!');
+        // return redirect()->route('verify-email-register')->with('user', $user);
+        return redirect('/user-login')->with('message','Registrasi berhasil, silahkan verifikasi email anda');
     }
 
     public function proses_login(LoginRequest $request){
@@ -202,7 +203,7 @@ class FrontEndController extends Controller
         }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
 
         $id_peserta = Auth::guard('peserta')->user()->id;
-        $npl = Npl::where('status_npl','aktif')->where('status','active')->where('peserta_npl_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
+        $npl = Npl::where('status_npl','aktif')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('peserta_npl_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
         // dd($npl);
         return view('front-end/bidding',compact('lot_item','npl'));
     }

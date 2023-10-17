@@ -27,6 +27,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Poster</th>
                                         <th>Event</th>
                                         <th>Tanggal Event</th>
                                         <th>Lokasi</th>
@@ -42,6 +43,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Poster</th>
                                         <th>Event</th>
                                         <th>Tanggal Event</th>
                                         <th>Lokasi</th>
@@ -75,6 +77,13 @@
                          return meta.row + meta.settings._iDisplayStart + 1;
                      },
                  },
+                 {
+                    data: "gambar",
+                    render: function (data) {
+                        return '<img src="/storage/image/' + data +
+                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                    },
+                },
                  {
                      data: "judul",
                  },
@@ -127,6 +136,13 @@
                      },
                  },
                  {
+                    data: "gambar",
+                    render: function (data) {
+                        return '<img src="/storage/image/' + data +
+                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                    },
+                },
+                 {
                      data: "judul",
                  },
                  {
@@ -169,6 +185,11 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
+                        <label>Poster<small>(format poster: png, jpg, jpeg | disarankan: width 900px, height 470px)</small><span style="color: red">*</span></label>
+                        <input type="file" class="form-control" name="gambar" required id="gambar">
+                    <div id="preview" class="mt-3"></div>
+                    </div>
+                    <div class="form-group">
                         <label>Event <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="judul" placeholder="Judul event" required>
                     </div>
@@ -204,4 +225,37 @@
         </div>
     </div>
 </div>
+<script>
+    function previewImages() {
+        var preview = document.querySelector('#preview');
+
+        // Hapus semua elemen child di dalam elemen #preview
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (this.files) {
+            [].forEach.call(this.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            if (!/\.(jpe?g|png)$/i.test(file.name)) {
+                alert(file.name + " format tidak sesuai");
+                document.querySelector('#gambar').value = '';
+                preview.removeChild(preview.firstChild);
+                return;
+            }
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.width = 200;
+                image.title = file.name;
+                image.src = this.result;
+                preview.appendChild(image);
+            }, false);
+            reader.readAsDataURL(file);
+        }
+    }
+    document.querySelector('#gambar').addEventListener("change", previewImages);
+</script>
 @endsection

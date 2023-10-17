@@ -54,6 +54,9 @@ Route::middleware('peserta')->group(function () {
     Route::put('/pelunasan-barang-lelang/{id}/', [FrontEndController::class, 'pelunasan_barang'])->name('pelunasan-barang-lelang');
 });
 Route::get('/verify-email-user/{id}/', [VerifyEmailRegisterController::class, 'verifikasi_email_user'])->name('verify-email-user');
+// Route::get('/resend-code/{id}/', [VerifyEmailRegisterController::class, 'resend_code'])->name('resend-code');
+Route::get('/verify-email-register', [VerifyEmailRegisterController::class, 'verifikasi_email_register'])->name('verify-email-register');
+Route::post('/resend-email', [VerifyEmailRegisterController::class, 'resend_email'])->name('resend-email');
 
 
 
