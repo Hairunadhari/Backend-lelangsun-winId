@@ -1119,6 +1119,32 @@
                     }
                 }
             }
+        },
+        "/api/lelang/detail-barang-lelang/{id}/": {
+            "get": {
+                "tags": [
+                    "Event Lelang"
+                ],
+                "summary": "Menampilkan detail event lelang berdasarkan ID",
+                "description": "Menampilkan detail event lelang berdasarkan ID yg diberikan",
+                "operationId": "Detail-Event-Lelang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID event yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }
