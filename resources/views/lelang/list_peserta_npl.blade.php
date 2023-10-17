@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <h4 class="w-100">Daftar Peserta</h4>
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#pembeliannplmodal">
-                        <span class="text">+ Tambah Peserta</span>
+                        <span class="text">+ Tambah Pesertas</span>
                     </button>
                 </div>
                 <div class="card-body">
