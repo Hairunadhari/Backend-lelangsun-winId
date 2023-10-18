@@ -1145,6 +1145,143 @@
                     }
                 }
             }
+        },
+        "/api/lelang/registrasi-peserta-lelang": {
+            "post": {
+                "tags": [
+                    "Peserta Lelang"
+                ],
+                "summary": "peserta lelang",
+                "description": "",
+                "operationId": "peserta lelang",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "nama": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "no_hp": {
+                                        "type": "integer"
+                                    },
+                                    "alamat": {
+                                        "type": "string"
+                                    },
+                                    "nik": {
+                                        "type": "string"
+                                    },
+                                    "npwp": {
+                                        "type": "string"
+                                    },
+                                    "foto_ktp": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    },
+                                    "foto_npwp": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/npl/add-npl": {
+            "post": {
+                "tags": [
+                    "Npl"
+                ],
+                "summary": "npl",
+                "description": "",
+                "operationId": "npl",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "peserta_npl_id": {
+                                        "type": "integer"
+                                    },
+                                    "event_lelang_id": {
+                                        "type": "string"
+                                    },
+                                    "harga_npl": {
+                                        "type": "integer"
+                                    },
+                                    "jumlah_tiket": {
+                                        "type": "integer"
+                                    },
+                                    "nominal_transfer": {
+                                        "type": "integer"
+                                    },
+                                    "no_rekening": {
+                                        "type": "integer"
+                                    },
+                                    "nama_pemilik_rekening": {
+                                        "type": "integer"
+                                    },
+                                    "tgl_transfer": {
+                                        "type": "date-time"
+                                    },
+                                    "bukti": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/list-npl-peserta/{id}/": {
+            "get": {
+                "tags": [
+                    "Peserta Lelang"
+                ],
+                "summary": "Menampilkan List Npl berdasrkan id peserta lelang",
+                "description": "",
+                "operationId": "List Npl Peserta",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id peserta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }

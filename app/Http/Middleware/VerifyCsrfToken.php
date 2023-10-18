@@ -23,6 +23,8 @@ class VerifyCsrfToken extends Middleware
         '/api/update-akun/{id}/',
         '/api/detail-kategori-toko',
         '/api/form-peserta-event',
+        '/api/lelang/registrasi-peserta-lelang',
+        '/api/lelang/npl/add-npl',
     ];
     
 }

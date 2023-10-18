@@ -223,9 +223,9 @@
                             <tr>
                                 <td>{{$no++}}</td>
                                 <td>{{$p->event_lelang->judul}}</td>
-                                <td>{{$p->no_npl}}</td>
+                                <td>{{$p->kode_npl}}</td>
                                 <td>
-                                    @if ($p->status_npl == 1)
+                                    @if ($p->status_npl == 'verifikasi')
                                     <span class=" badge bg-warning">Verifikasi</span>
                                     @elseif($p->status_npl == 'pengajuan')
                                     <span class=" badge bg-primary">Pengajuan</span>

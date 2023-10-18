@@ -10,8 +10,8 @@
         <div class="card-body">
             <form>
                 <div class="form-group">
-                    <label>No NPL</label>
-                    <input type="text" class="form-control" value="{{$data->no_npl}}" readonly>
+                    <label>Kode NPL</label>
+                    <input type="text" class="form-control" value="{{$data->kode_npl}}" readonly>
                 </div>
                 <div class="form-group">
                     <label>Event</label>

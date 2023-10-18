@@ -60,7 +60,7 @@
                     data: "peserta_npl.no_hp"
                 },
                 {
-                    data: "no_npl"
+                    data: "kode_npl"
                 },
                 {
                     data: null,

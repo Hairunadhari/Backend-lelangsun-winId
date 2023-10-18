@@ -176,14 +176,12 @@ class FrontEndController extends Controller
                 'nama_pemilik' => $peserta->nama,
                 'nominal' => $harga_nominal,
                 'tgl_transfer' => $request->tgl_transfer,
-                'harga_npl' => $harga_npl,
                 'bukti' => $bukti->hashName(),
         ]);
         
         for ($i = 0; $i < $request->jumlah_tiket; $i++) {
             $npl = Npl::create([
-                'no_npl' => 'SUN_0'. $pembelian_npl->id . Str::random(5),
-                'npl' => Str::random(64),
+                'kode_npl' => 'SUN_0'. $pembelian_npl->id . Str::random(5),
                 'harga_item' => $harga_npl,
                 'peserta_npl_id' => $pembelian_npl->peserta_npl_id,
                 'pembelian_npl_id' => $pembelian_npl->id,

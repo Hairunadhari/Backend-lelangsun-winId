@@ -67,6 +67,7 @@ class MenuController extends Controller
     public function list_toko(){
         $id = Auth::user()->id;
         $toko = Toko::with('user')->where('user_id',$id)->first();
+        $role = Role::where('role','Admin')->get();
         if (request()->ajax()) {
             $status = request('status');
 
@@ -79,7 +80,7 @@ class MenuController extends Controller
             return DataTables::of($data)->make(true);
         }
 
-        return view('e-commerce/list_toko',compact('toko'));
+        return view('e-commerce/list_toko',compact('toko','role'));
     }
 
     public function add_toko(Request $request){
@@ -1922,7 +1923,7 @@ class MenuController extends Controller
     public function add_admin(Request $request){
         $this->validate($request, [
             'toko'     => 'required|min:3',
-            'logo'     => 'required|image|mimes:jpeg,jpg,png,webp',
+            'logo'     => 'required|image|mimes:jpeg,jpg,png',
             'name' => 'max:280',
             'email' => ['string', 'email', 'max:255', 'unique:'.User::class],
             'password' => 'min:10',
@@ -2204,14 +2205,13 @@ class MenuController extends Controller
             'nama_pemilik' => $peserta->nama,
             'nominal' => $harga_nominal,
             'tgl_transfer' => $request->tgl_transfer,
-            'harga_npl' => $harga_npl,
             'jumlah_tiket' => $request->jumlah_tiket,
             'pesan_verifikasi' => null,
             'bukti' => $bukti->hashName(),
         ]);
         Npl::create([
-            'no_npl' => 'SUN_0'. $pembelian->id,
-            'npl' => Str::random(64),
+            'kode_npl' => 'SUN_0'. $pembelian->id,
+            'harga_item' => $harga_npl,
             'peserta_npl_id' => $request->peserta_npl_id,
             'pembelian_npl_id' => $pembelian->id,
             'event_lelang_id' => $request->event_lelang_id,

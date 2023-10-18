@@ -8,6 +8,7 @@ use Validator;
 use DateTimeZone;
 use Carbon\Carbon;
 use App\Models\Lot;
+use App\Models\Npl;
 use App\Models\Toko;
 use App\Models\User;
 use App\Models\Event;
@@ -1709,7 +1710,7 @@ class ApiController extends Controller
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d');
 
-        $data = EventLelang::where('status_data',1)->where('waktu', '>=', $now)->get();
+        $data = EventLelang::with('kategori_barang')->where('status_data',1)->where('waktu', '>=', $now)->get();
         $data->each(function ($item){
             $item->gambar = env('APP_URL').'/storage/image/'. $item->gambar;
         });
@@ -1776,6 +1777,39 @@ class ApiController extends Controller
         ]);
      }
 
+    
+     
+      /**
+     * @OA\Post(
+     *      path="/api/lelang/registrasi-peserta-lelang",
+     *      tags={"Peserta Lelang"},
+     *      summary="peserta lelang",
+     *      description="",
+     *      operationId="peserta lelang",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                   @OA\Property(property="nama", type="string"),
+     *                  @OA\Property(property="email", type="string", format="email"),
+     *                  @OA\Property(property="no_hp", type="integer"),
+     *                  @OA\Property(property="alamat", type="string"),
+     *                  @OA\Property(property="nik", type="string"),
+     *                  @OA\Property(property="npwp", type="string"),
+     *                  @OA\Property(property="foto_ktp", type="file", format="binary"),
+     *                  @OA\Property(property="foto_npwp", type="file", format="binary"),
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+
      public function registrasi_peserta_lelang(Request $request){
         $validator = Validator::make($request->all(), [
             'nama'     => 'required',
@@ -1816,16 +1850,52 @@ class ApiController extends Controller
             'data' => $data
         ]);
      }
+
+
+
+     /**
+     * @OA\Post(
+     *      path="/api/lelang/npl/add-npl",
+     *      tags={"Npl"},
+     *      summary="npl",
+     *      description="",
+     *      operationId="npl",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  @OA\Property(property="peserta_npl_id", type="integer"),
+     *                  @OA\Property(property="event_lelang_id", type="string"),
+     *                  @OA\Property(property="harga_npl", type="integer"),
+     *                  @OA\Property(property="jumlah_tiket", type="integer"),
+     *                  @OA\Property(property="nominal_transfer", type="integer"),
+     *                  @OA\Property(property="no_rekening", type="integer"),
+     *                  @OA\Property(property="nama_pemilik_rekening", type="integer"),
+     *                  @OA\Property(property="tgl_transfer", type="date-time"),
+     *                  @OA\Property(property="bukti", type="file", format="binary"),
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+
      public function add_npl(Request $request){
         $validator = Validator::make($request->all(), [
             'event_lelang_id'     => 'required',
             'peserta_npl_id'     => 'required',
             'no_rekening'     => 'required',
-            'nama_pemilik'     => 'required',
-            'nominal'     => 'required',
+            'nama_pemilik_rekening'     => 'required',
+            'nominal_transfer'     => 'required',
             'tgl_transfer'     => 'required',
             'harga_npl'     => 'required',
-            'bukti'     => 'required',
+            'jumlah_tiket'     => 'required',
+            'bukti'     => 'required|mimes:jpeg,jpg,png',
         ]);
 
         if($validator->fails()){
@@ -1838,22 +1908,65 @@ class ApiController extends Controller
 
         $bukti = $request->file('bukti');
         $bukti->storeAs('public/image', $bukti->hashName());
-
         $pembelian_npl = PembelianNpl::create([
-                'event_lelang_id' => $request->event_lelang_id,
-                'peserta_npl_id' => $request->peserta_npl_id,
-                'type_pembelian' => 'online',
-                'type_transaksi' => 'transaksi',
-                'no_rek' => $request->no_rekening,
-                'nama_pemilik' => $peserta->nama,
-                'nominal' => $harga_nominal,
-                'tgl_transfer' => $request->tgl_transfer,
-                'harga_npl' => $harga_npl,
-                'bukti' => $bukti->hashName(),
+            'event_lelang_id' => $request->event_lelang_id,
+            'peserta_npl_id' => $request->peserta_npl_id,
+            'type_pembelian' => 'online',
+            'type_transaksi' => 'transfer',
+            'no_rek' => $request->no_rekening,
+            'nama_pemilik' => $request->nama_pemilik_rekening,
+            'nominal' => $request->nominal_transfer,
+            'tgl_transfer' => $request->tgl_transfer,
+            'bukti' => $bukti->hashName(),
         ]);
+        
+        for ($i = 0; $i < $request->jumlah_tiket; $i++) {
+            $npl = Npl::create([
+                'kode_npl' => 'SUN_0'. $pembelian_npl->id . Str::random(5),
+                'harga_item' => $request->harga_npl,
+                'peserta_npl_id' => $pembelian_npl->peserta_npl_id,
+                'pembelian_npl_id' => $pembelian_npl->id,
+                'event_lelang_id' => $pembelian_npl->event_lelang_id,
+            ]);
+        }
 
         return response()->json([
-            'data' => $pembelian_npl
+            'message' => 'success',
+            'data_pembelian' => $pembelian_npl,
+        ]);
+
+        
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/lelang/list-npl-peserta/{id}/",
+     *      tags={"Peserta Lelang"},
+     *      summary="Menampilkan List Npl berdasrkan id peserta lelang",
+     *      description="",
+     *      operationId="List Npl Peserta",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="id peserta",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function list_npl_berdasarkan_id_peserta_npl($id){
+        $peserta = PesertaNpl::find($id);
+        $npl = Npl::where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('peserta_npl_id',$peserta->id)->orderBy('created_at','desc')->get();
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $npl,
         ]);
 
     }
