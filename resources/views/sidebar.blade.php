@@ -43,7 +43,7 @@
           <li class="{{ request()->routeIs('setting') ? 'active' : '' }}"><a href="{{route('setting')}}"><i class="fas fa-cogs"></i><span>Setting</span></a></li>
         </ul>
         @else
-        <li class="menu-header">Win Belanja</li>
+        <li class="menu-header">Win Belanjang</li>
         <li class="{{ request()->routeIs('profil-toko') ? 'active' : '' }}"><a href="{{route('profil-toko')}}"><i class="fas fa-store"></i><span>Toko Saya</span></a></li>
         <li class="{{ request()->routeIs('kategori-produk') ? 'active' : '' }}"><a href="{{route('kategori-produk')}}"><i class="fas fa-th-large"></i><span>Kategori Produk</span></a></li>
         <li class="{{ request()->routeIs('produk') ? 'active' : '' }}"><a href="{{route('produk')}}"><i class="fas fa-shopping-bag"></i><span>Produk</span></a></li>
