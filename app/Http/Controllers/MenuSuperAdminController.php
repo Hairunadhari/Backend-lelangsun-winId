@@ -1791,9 +1791,9 @@ class MenuSuperAdminController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = User::with('role')->whereNotNull('role_id', )->where('status','active')->get();
+                $data = User::with('role')->whereNotNull('role_id')->where('status','active')->get();
             } elseif ($status == 'not-active') {
-                $data = User::with('role')->whereNotNull('role_id', )->where('status','not-active')->get();
+                $data = User::with('role')->whereNotNull('role_id')->where('status','not-active')->get();
             }
             return DataTables::of($data)->make(true);
         }
