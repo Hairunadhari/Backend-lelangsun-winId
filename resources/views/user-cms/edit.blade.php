@@ -20,11 +20,8 @@
                             <div class="form-group">
                                 <label for="email">Email <span
                                     style="color: red">*</span></label>
-                                <input id="email" type="email" class="form-control" name="email"
+                                <input id="email" type="email" class="form-control" readonly
                                     value="{{$data->email}}">
-                                @if ($errors->has('email'))
-                                <small class="text-danger">Email Sudah Terdaftar!</small>
-                                @endif
                             </div>
                             <div class=" form-group">
                                 <label for="password" class="d-block">Password <span

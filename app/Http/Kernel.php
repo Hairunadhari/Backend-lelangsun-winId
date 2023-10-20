@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // \App\Http\Middleware\Role::class,
         ],
 
         'api' => [
@@ -55,6 +56,9 @@ class Kernel extends HttpKernel
      */
     protected $middlewareAliases = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+        // 'Admin' => \App\Http\Middleware\Admin::class,
+        // 'SuperAdmin' => \App\Http\Middleware\SuperAdmin::class,
+        'role' => \App\Http\Middleware\Role::class,
         'peserta' => \App\Http\Middleware\Peserta::class,
         'auth.peserta' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

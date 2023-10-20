@@ -18,7 +18,7 @@ channel.bind('my-event', function(data) {
       <h4>Super Admin Win</h4>
     </div>
     <div class="card-body">
-      <p>Selamat Datang di aplikasi super admin Win</p>
+      <p>Selamat Datang di aplikasi Win</p>
     </div>
   </div>
 </div>

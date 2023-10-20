@@ -16,6 +16,7 @@
         <div class="card-body">
             <form action="{{route('addproduk')}}" method="post" enctype="multipart/form-data">
                 @csrf
+                @if (Auth::user()->role->role == 'Super Admin')
                     <div class="form-group">
                         <select class="form-control select2" id="tokos" name="toko_id">
                             <option selected disabled>-- Pilih Toko --</option>
@@ -25,12 +26,26 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Kategori <span style="color: red">*</span></label>
                         <select class="form-control select2" id="kategoris" name="kategoriproduk_id" required>
-                          </select>
-                          @if ($errors->has('kategoriproduk_id'))
-                    <small class="text-danger">Kategori tidak boleh kosong!</small>
-                    @endif
+                        </select>
+                        @if ($errors->has('kategoriproduk_id'))
+                        <small class="text-danger">Kategori tidak boleh kosong!</small>
+                        @endif
                     </div>
+                @else
+                    <div class="form-group" hidden>
+                        <input type="text" name="toko_id" value="{{$idToko->id}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Kategori <span style="color: red">*</span></label>
+                        <select class="form-control select2" name="kategoriproduk_id">
+                            @foreach ($kategori_bedasarkan_toko as $item)
+                            <option value="{{ $item->id }}">{{ $item->kategori }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
                     <div class="form-group">
                         <label>Nama Produk <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="nama" required>

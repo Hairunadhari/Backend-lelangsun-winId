@@ -34,10 +34,10 @@
         <li class="{{ request()->routeIs('lot') ? 'active' : '' }}"><a href="{{route('lot')}}"><i class="fas fa-star"></i><span>Lot</span></a></li>
         <li class="{{ request()->routeIs('peserta-npl') ? 'active' : '' }}"><a href="{{route('peserta-npl')}}"><i class="fas fa-users"></i><span>Peserta & NPL Lelang</span></a></li>
         <li class="{{ request()->routeIs('pemenang') ? 'active' : '' }}"><a href="{{route('pemenang')}}"><i class="fas fa-trophy"></i><span>Pemenang</span></a></li>
-        {{-- <ul class="sidebar-menu">
+        <ul class="sidebar-menu">
           <li class="menu-header">User Management</li>
           <li class="{{ request()->routeIs('user-cms') ? 'active' : '' }}"><a href="{{route('user-cms')}}"><i class="fas fa-users"></i><span>User</span></a></li>
-        </ul> --}}
+        </ul>
         <ul class="sidebar-menu">
           <li class="menu-header">Setting</li>
           <li class="{{ request()->routeIs('setting') ? 'active' : '' }}"><a href="{{route('setting')}}"><i class="fas fa-cogs"></i><span>Setting</span></a></li>
@@ -48,7 +48,7 @@
         <li class="{{ request()->routeIs('kategori-produk') ? 'active' : '' }}"><a href="{{route('kategori-produk')}}"><i class="fas fa-th-large"></i><span>Kategori Produk</span></a></li>
         <li class="{{ request()->routeIs('produk') ? 'active' : '' }}"><a href="{{route('produk')}}"><i class="fas fa-shopping-bag"></i><span>Produk</span></a></li>
         <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a href="{{route('promosi')}}"><i class="fas fa-tags"></i><span>Promo Produk</span></a></li>
-      <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
+      {{-- <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li> --}}
             
         @endif
       </ul>

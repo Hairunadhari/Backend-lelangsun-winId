@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
             if ($user->role_id != null && $user->status == 'active') {
                 $request->authenticate();
                 $request->session()->regenerate();
-                return redirect()->intended(RouteServiceProvider::HOME);
+                return redirect()->route('dashboard');
             }else {
                 return redirect('login')->with(['pesan' => 'Ada Kesalahan']);            
             }

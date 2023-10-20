@@ -59,16 +59,27 @@
                                 </tr>
                             </thead>
                             <tbody >
-                                @forelse ($produk as $p)
-                                <tr>
-                                    <td><input type="checkbox" name="produk_id[]" value="{{$p->id}}"></td>
-                                    <td>{{$p->nama}}</td>
-                                    <td>
-                                        <img src="{{ asset('/storage/image/'.$p->thumbnail) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
-                                    </td>
-                                </tr>
-                                @empty
-                                @endforelse
+                                @if (Auth::user()->role->role == 'Super Admin')
+                                    @foreach ($produk as $p)
+                                    <tr>
+                                        <td><input type="checkbox" name="produk_id[]" value="{{$p->id}}"></td>
+                                        <td>{{$p->nama}}</td>
+                                        <td>
+                                            <img src="{{ asset('/storage/image/'.$p->thumbnail) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    @foreach ($produk_berdasarkan_toko as $p)
+                                    <tr>
+                                        <td><input type="checkbox" name="produk_id[]" value="{{$p->id}}"></td>
+                                        <td>{{$p->nama}}</td>
+                                        <td>
+                                            <img src="{{ asset('/storage/image/'.$p->thumbnail) }}" class="rounded m-2" style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; ">
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>

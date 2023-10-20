@@ -4,14 +4,6 @@
     <div class="row mt-sm-4">
         <div class="col">
             <div class="card profile-widget">
-                @if(session('success'))
-                <div class="alert alert-success alert-dismissible text-center fade show m-4" role="alert">
-                    <strong>{{ session('success') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @endif
                 <div class="profile-widget-header mt-5 text-center">
                     <img alt="image" src="{{ asset('storage/image/'.$toko->logo) }}" class="w-50 me-5"
                         style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
@@ -48,21 +40,21 @@
                         <div class="row">
                             <div class="form-group col-md-12 col-12">
                                 <label>Email</label>
-                                <input type="email" class="form-control" name="email" value="{{$toko->user->email}}" required="">
+                                <input type="email" class="form-control" readonly value="{{$toko->user->email}}" >
                                 @error('email')
                                     <small class="text-danger">Email Sudah Terdaftar</small>
                                 @enderror  
                             </div>
                             <div class="form-group col-md-6 col-12">
-                                <label>Password <span style="color: red">*</span><small>(min 10 karakter)</small></label>
-                                <input type="password" class="form-control" required name="password">
+                                <label>Password<small>(min 10 karakter)</small></label>
+                                <input type="password" class="form-control" name="password">
                                 @error('password')
                                     <small class="text-danger">password min 10 karakter</small>
                                 @enderror
                             </div>
                             <div class="form-group col-md-6 col-12">
-                                <label for="password_confirmation" class="d-block">Password Confirmation <span style="color: red">*</span></label>
-                                <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required>
+                                <label for="password_confirmation" class="d-block">Password Confirmation</label>
+                                <input id="password_confirmation" type="password" class="form-control" name="password_confirmation">
                                 @error('password_confirmation')
                                     <small class="text-danger">password tidak cocok</small>
                                 @enderror
@@ -76,6 +68,9 @@
                                     <input type="file" name="logo" id="image-upload">
                                 </div>
                             </div>
+                            @error('logo')
+                                <small class="text-danger">format jpeg,jpg,png. max: 2048 kb</small>
+                            @enderror
                         </div>
                     </div>
                     <div class="card-footer text-right">

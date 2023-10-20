@@ -24,7 +24,8 @@ class RedirectIfAuthenticated
                 return redirect(RouteServiceProvider::PESERTA_HOME);
             }
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                return redirect()->route('dashboard');
+                // return redirect('superadmin/dashboard');
             }
         }
 

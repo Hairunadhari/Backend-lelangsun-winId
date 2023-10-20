@@ -6,8 +6,8 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="w-100">Daftar User CMS</h4>
-                    <a href="{{route('tambah-user')}}" class="btn btn-success">+ Tambah SuperAdmin</a>
-                    <a href="{{route('tambah-admin')}}" class="btn btn-success" style="margin-left: 10px">+ Tambah Admin</a>
+                    {{-- <a href="{{route('tambah-user')}}" class="btn btn-success">+ Tambah SuperAdmin</a>
+                    <a href="{{route('tambah-admin')}}" class="btn btn-success" style="margin-left: 10px">+ Tambah Admin</a> --}}
                 </div>
                 <div class="card-body">
                     @if(session('success'))
