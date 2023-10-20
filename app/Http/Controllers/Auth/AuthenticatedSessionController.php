@@ -33,10 +33,10 @@ class AuthenticatedSessionController extends Controller
                 $request->session()->regenerate();
                 return redirect()->route('dashboard');
             }else {
-                return redirect('login')->with(['pesan' => 'Ada Kesalahan']);            
+                return redirect()->back()->with(['pesan' => 'Ada Kesalahan']);            
             }
         } else {
-            return redirect('login')->with(['pesan' => 'Email tidak ditemukan']);            
+            return redirect()->back()->with(['pesan' => 'Email tidak ditemukan']);            
         }
     }
 
