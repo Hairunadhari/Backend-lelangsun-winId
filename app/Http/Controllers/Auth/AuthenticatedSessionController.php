@@ -31,7 +31,14 @@ class AuthenticatedSessionController extends Controller
             if ($user->role_id != null && $user->status == 'active') {
                 $request->authenticate();
                 $request->session()->regenerate();
-                return redirect()->route('dashboard');
+                if ($user->role_id == 1) {
+                    return redirect('superadmin/dashboard');
+                    # code...
+                } else {
+                    # code...
+                    return redirect('admin/dashboard');
+                }
+                
             }else {
                 return redirect()->back()->with(['pesan' => 'Ada Kesalahan']);            
             }

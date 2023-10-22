@@ -18,7 +18,6 @@ class Role
 
         // return redirect()->back();
         return response()->json('anda tidak boleh akses halamn ini');
-        // return redirect()->route('dashboard');
     }
 
 }
