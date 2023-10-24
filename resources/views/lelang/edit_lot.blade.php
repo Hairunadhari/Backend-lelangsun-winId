@@ -28,7 +28,7 @@
                 </button>
             </div>
             @endif
-            <form action="{{route('update-lot',$lot->id)}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.update-lot',$lot->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="table-responsive">

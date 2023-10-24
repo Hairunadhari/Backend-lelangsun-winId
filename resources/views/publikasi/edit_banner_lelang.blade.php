@@ -10,7 +10,7 @@
         <div class="card-header">
             <h4>Edit Banner</h4>
         </div>
-        <form action="{{route('update-banner-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('superadmin.update-banner-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="card-body">

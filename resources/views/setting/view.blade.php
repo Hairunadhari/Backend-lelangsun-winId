@@ -24,7 +24,7 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <form action="{{route('update-setting-metadata',$data->id)}}" method="post" enctype="multipart/form-data">
+                            <form action="{{route('superadmin.update-setting-metadata',$data->id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
                                 <div class="form-group">
@@ -57,7 +57,7 @@
                             </form>
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <form action="{{route('update-setting-kontak',$data->id)}}" method="post" enctype="multipart/form-data">
+                            <form action="{{route('superadmin.update-setting-kontak',$data->id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
                                 <div class="row">
@@ -105,7 +105,7 @@
                             </form>
                         </div>
                         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                            <form action="{{route('update-setting-lelang',$data->id)}}" method="post" enctype="multipart/form-data">
+                            <form action="{{route('superadmin.update-setting-lelang',$data->id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
                                 <div class="form-group">
@@ -133,7 +133,7 @@
             console.log(keyId);
             $.ajax({
                 method: 'post',
-                url: '/delete-keyword/' + keyId,
+                url: '/superadmin/delete-keyword/' + keyId,
                 data: {
                     _method: 'PUT',
                 },

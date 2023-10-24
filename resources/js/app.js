@@ -6,10 +6,13 @@ window.Alpine = Alpine;
 
 Alpine.start();
 $(document).ready(function () {
+
+    
+
     let event_lelang_id = $('#event_lelang_id').val();
     let lot_item_id = $('#lot_item_id').val();
     let event_lelang_id_crypt = $('#event_lelang_id_crypt').val();
-   
+
     // <------------------------------------------------ FUNGSI LIAT STORY BIDDING --------------------------------------------------->
 
     $.ajax({
@@ -41,21 +44,26 @@ $(document).ready(function () {
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
+    let timer_bid = localStorage.getItem('timer_bid');
 
-    function toggleTimer() { // <-- Fungsi untuk memulai timer
+    if (timer_bid && timer_bid > 0) {
+        toggleTimer(timer_bid);
+    }
+
+
+    function toggleTimer(data) { // <-- Fungsi untuk memulai timer
         if (!isTimerRunning) { // <-- apakah timer false
             const timerElement = document.getElementById('timer');
-            let seconds = parseInt(timerElement.getAttribute('data-seconds')); 
-
             countdown = setInterval(() => {
-                seconds--; // kurangi second 1
-                if (seconds >= 0) {
-                    timerElement.textContent = formatTime(seconds);
+                data--; // kurangi second 1
+                if (data >= 0) {
+                    timerElement.textContent = formatTime(data);
+                    localStorage.setItem('timer_bid', data);
                 } else { // <-- ketika timer sudah habis
+                    localStorage.removeItem('timer_bid');
                     clearInterval(countdown); // Hentikan timer saat mencapai 0
-                    //   alert("Waktu habis");
-                    timer_habis(); // panggil fungsi timer habis
-                    isTimerRunning = false; // Setel timer ke non-berjalan setelah selesai
+                    timer_habis(); 
+                    isTimerRunning = false; 
                     document.getElementById('start-bid').disabled = false; // Aktifkan kembali tombol "Start Bid"
                 }
             }, 1000);
@@ -65,20 +73,47 @@ $(document).ready(function () {
         }
     }
 
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    let button = getCookie("button-bid");
+    if (button != "") {
+        $('#con-bid').css('display', 'block');
+        $('#start-bid').css('display', 'none');
+        $('#user-send-bidding').css('display', 'block');
+        // toggleTimer();
+    } 
+
+        
+
     // kode tampilkan button bidding di user, button stop, bid dan jalankan timer
     $(document).on('click', '#start-bid', function (e) {
         $('#con-bid').css('display', 'block');
         $('#start-bid').css('display', 'none');
-        // conBidElement.style.display = 'block';
-        // startBidButton.style.display = 'none';
+        const timerElement = document.getElementById('timer');
+        let seconds = parseInt(timerElement.getAttribute('data-seconds'));
         $.ajax({
             method: 'post',
-            url: '/open-button',
+            url: '/superadmin/open-button',
             data: {
                 button: 'open',
             },
             success: function (res) {
-                // toggleTimer();
+                toggleTimer(seconds);
+                
             }
         });
     });
@@ -87,7 +122,7 @@ $(document).ready(function () {
     function timer_habis() {
         $.ajax({
             method: 'post',
-            url: '/search-pemenang-event',
+            url: '/superadmin/search-pemenang-event',
             data: {
                 event_lelang_id: event_lelang_id,
                 lot_item_id: lot_item_id,
@@ -105,25 +140,29 @@ $(document).ready(function () {
                     if (nextlot) {
                         $.ajax({
                             method: 'post',
-                            url: '/next-lot',
+                            url: '/superadmin/next-lot',
                             data: {
                                 event_lelang_id: event_lelang_id,
                                 lot_item_id: lot_item_id,
                             },
                             success: function (res) {
                                 if (res.lot_item.length > 0) {
-                                    window.location.href = '/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
+                                    window.location.href = '/superadmin/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
+                                    document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                    localStorage.removeItem('timer_bid');
+                                    clearInterval(countdown);
                                 } else {
                                     $.ajax({
                                         method: 'post',
-                                        url: '/delete-event-lelang/' + event_lelang_id,
+                                        url: '/superadmin/delete-event-lelang/' + event_lelang_id,
                                         data: {
                                             _method: 'PUT',
                                         },
                                         success: function (res) {
+                                                document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
                                         }
                                     });
-                                    window.location.href = '/event-lelang';
+                                    window.location.href = '/superadmin/event-lelang';
                                 }
                             },
 
@@ -135,15 +174,14 @@ $(document).ready(function () {
         });
     }
 
-    // Simpan value harga bidding dan konversi ke tipe data float
-    
+
     // <------------------------------------------------ FUNGSI KLIK BIDDING ------------------------------------------------------->
     $(document).on('click', '#send_bidding', function (e) {
         e.preventDefault();
-         
+
         let kelipatanBidding = parseFloat($('#harga_bidding').val());
         let harga_bidding = parseFloat($('#harga_awal').val()) + kelipatanBidding;
-        
+
         // Update nilai input harga_awal
         $('#harga_awal').val(harga_bidding);
         let email = $('#email').val();
@@ -151,11 +189,11 @@ $(document).ready(function () {
         let peserta_npl_id = $('#peserta_npl_id').val();
         let lot_item_id = $('#lot_item_id').val();
         let npl_id = $('#npl_id').val();
-        
+
 
         $.ajax({
             method: 'post',
-            url: '/send-bidding',
+            url: '/superadmin/send-bidding',
             data: {
                 email: email,
                 event_lelang_id: event_lelang_id,
@@ -183,58 +221,7 @@ $(document).ready(function () {
             })
             .then((win) => {
                 if (win) {
-                    let event_lelang_id = $('#event_lelang_id').val();
-                    
-                    let lot_item_id = $('#lot_item_id').val();
-                    $.ajax({
-                        method: 'post',
-                        url: '/search-pemenang-event',
-                        data: {
-                            event_lelang_id: event_lelang_id,
-                            lot_item_id: lot_item_id,
-                        },
-                        success: function (res) {
-                            const message = res.email ? "Pemenang Dari LOT Ini Adalah " + res.email + " dengan harga " + res.harga_bidding + "!" : "LOT tidak memiliki pemenang.";
-                            swal(message, {
-                                icon: "success",
-                                buttons: {
-                                    confirm: {
-                                        text: "Next Bidding",
-                                    },
-                                },
-                                closeOnClickOutside: false,
-                            }).then((nextlot) => {
-                                if (nextlot) {
-                                    $.ajax({
-                                        method: 'post',
-                                        url: '/next-lot',
-                                        data: {
-                                            event_lelang_id: event_lelang_id,
-                                            lot_item_id: lot_item_id,
-                                        },
-                                        success: function (res) {
-                                            if (res.lot_item.length > 0) {
-                                                window.location.href = '/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
-                                            } else {
-                                                $.ajax({
-                                                    method: 'post',
-                                                    url: '/delete-event-lelang/' + event_lelang_id,
-                                                    data: {
-                                                        _method: 'PUT',
-                                                    },
-                                                    success: function (res) {
-                                                    }
-                                                });
-                                                window.location.href = '/event-lelang';
-                                            }
-                                        },
-
-                                    });
-                                }
-                            });
-
-                        }
-                    });
+                    timer_habis();
                 }
             });
     });
@@ -276,32 +263,56 @@ $(document).ready(function () {
 
 
 window.Echo.channel('chat')
-    .listen('.message', (e) => {
+     .listen('.message', (e) => {
         // console.log(e);
         $('#log-bid').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' + e.email + ' ' + ': ' + e.harga_bidding + '</h5></div>');
         $('#log-bid-user').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' + e.email + ' ' + ': ' + e.harga_bidding + '</h5></div>');
-        // let kelipatanBidding = parseFloat($('#harga_bidding').val());
-        // let harga_bidding = parseFloat($('#harga_awal').val()) + kelipatanBidding;
+
         $('#harga_awal').val(e.harga_bidding);
         $('#harga_awal_user').val(e.harga_bidding);
 
-        
-        // let kelipatanBidding_user = parseFloat($('#harga_bidding_user').val());
-        // // Dapatkan nilai harga bidding saat ini dan tambahkan kelipatan bidding
-        // let harga_bidding_user = parseFloat($('#harga_awal_user').val()) + kelipatanBidding_user;
-        
-        // // Update nilai input harga_awal
-        // $('#harga_awal_user').val(harga_bidding_user);
 
     });
 window.Echo.channel('button')
     .listen('.respon-button', (e) => {
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+            let button = getCookie("button-bid");
+            if (button != "") {
+                // alert("Welcome again " + button);
+            } else {
+                button = "true";
+                if (button != "" && button != null) {
+                    setCookie("button-bid", button, 1);
+                }
+            }
         $('#user-send-bidding').css('display', 'block');
     });
 window.Echo.channel('search-pemenang-lot')
     .listen('.pemenang-lot', (e) => {
         console.log(e);
-        
+
         var meta = document.getElementsByTagName('meta');
         for (let idx = 0; idx < meta.length; idx++) {
             const el = meta[idx];
@@ -310,7 +321,7 @@ window.Echo.channel('search-pemenang-lot')
                 if (e.bid !== null) {
                     var message = "Pemenang Dari LOT Ini Adalah " + e.bid.email + " dengan harga " + e.bid.harga_bidding + "!";
                 } else {
-                    var message ="LOT tidak memiliki pemenang.";
+                    var message = "LOT tidak memiliki pemenang.";
                 }
                 swal({
                     title: "WAKTU HABIS !!!",
@@ -330,6 +341,7 @@ window.Echo.channel('next-lot')
 
         if (e.lot_item.length > 0) {
             window.location.href = '/user-bidding/' + id_event_crypt + '?lot=' + e.lot_item[0].id;
+            document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         } else {
             swal({
                 title: "Event Selesai !!!",
@@ -339,13 +351,6 @@ window.Echo.channel('next-lot')
                 closeOnClickOutside: false,
             });
             window.location.href = '/';
+            document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         }
     });
-
-// window.Echo.channel('log-bid')
-// .listen('.bids', (e) => {
-//     console.log(e);
-//     $.each(e, function (key, value) {
-//         $('#log-bid-user').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">'+ value.email+' '+ ': ' + value.harga_bidding+'</h5></div>');
-//     }); 
-// });

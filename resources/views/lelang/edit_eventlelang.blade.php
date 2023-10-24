@@ -6,7 +6,7 @@
             <div class="card-header">
                 <h4>Edit Event</h4>
             </div>
-            <form action="{{route('update-event-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.update-event-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="card-body">

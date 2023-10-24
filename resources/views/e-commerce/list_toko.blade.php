@@ -9,7 +9,7 @@
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#tokomodal">
                         <span class="text">+ Tambah Toko</span>
                     </button>
-                    <a href="{{route('tambah-admin')}}" class="btn btn-success" style="margin-left: 10px">+ Tambah Toko & Admin</a>
+                    <a href="{{route('superadmin.tambah-admin')}}" class="btn btn-success" style="margin-left: 10px">+ Tambah Toko & Admin</a>
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-pills" id="myTab3" role="tablist">
@@ -89,8 +89,8 @@
                 {
                     data: null,
                     render: function (data) {
-                        var deleteUrl = '/deletetoko/' + data.id;
-                        var editUrl = '/edittoko/' + data.id;
+                        var deleteUrl = '/superadmin/deletetoko/' + data.id;
+                        var editUrl = '/superadmin/edittoko/' + data.id;
                         return `
                     <div class="dropdown d-inline">
                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
@@ -140,7 +140,7 @@
                 {
                     data: null,
                     render: function (data) {
-                        var activeUrl = '/activetoko/' + data.id;
+                        var activeUrl = '/superadmin/activetoko/' + data.id;
                         return `
                     <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengAktifkan Kembali Toko ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -169,7 +169,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('addtoko')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.addtoko')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">

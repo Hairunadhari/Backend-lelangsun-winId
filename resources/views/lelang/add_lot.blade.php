@@ -28,7 +28,7 @@
                 </button>
             </div>
             @endif
-            <form action="{{route('add-lot')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.add-lot')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="table-responsive">
                     <label for="">List Barang <span style="color: red">*</span></label>

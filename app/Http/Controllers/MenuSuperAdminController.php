@@ -98,7 +98,7 @@ class MenuSuperAdminController extends Controller
             'status'     => 'active',
         ]);
 
-        return redirect()->route('toko')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.toko')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_toko($id)
@@ -142,7 +142,7 @@ class MenuSuperAdminController extends Controller
         }
 
         //redirect to index
-        return redirect()->route('toko')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.toko')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_toko($id)
@@ -172,7 +172,7 @@ class MenuSuperAdminController extends Controller
         $wishlist =     Wishlist::whereIn('produk_id',$array_id_produk)->get();
         $wishlist->each->delete();
 
-        return redirect()->route('toko')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.toko')->with(['success' => 'Data Berhasil Dihapus!']);
     }
     public function active_toko($id)
     {
@@ -188,7 +188,7 @@ class MenuSuperAdminController extends Controller
             ]);
         }
 
-        return redirect()->route('toko')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
+        return redirect()->route('superadmin.toko')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
     }
 
     public function kategori_produk(){
@@ -575,7 +575,7 @@ class MenuSuperAdminController extends Controller
             'tanggal' => $request->waktu
         ]);
 
-        return redirect('/event-lelang')->with('success', 'Data Berhasil ditambahkan');
+        return redirect()->route('superadmin.event-lelang')->with('success', 'Data Berhasil ditambahkan');
     }
     public function detail_event_lelang($id)
     {
@@ -642,7 +642,7 @@ class MenuSuperAdminController extends Controller
 
 
         //redirect to index
-        return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.event-lelang')->with(['success' => 'Data Berhasil Diubah!']);
     }
     public function delete_event_lelang($id)
     {
@@ -660,7 +660,7 @@ class MenuSuperAdminController extends Controller
             'status_item' => 'not-active',
             'status' => 'not-active',
         ]);
-        return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
     public function active_event_lelang($id)
     {
@@ -672,7 +672,7 @@ class MenuSuperAdminController extends Controller
         $lot->each->update([
             'status' => 'active'
         ]);
-        return redirect()->route('event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function list_promosi(){
@@ -886,7 +886,7 @@ class MenuSuperAdminController extends Controller
             'harga_npl'     => $harga_npl,
         ]);
 
-        return redirect('/kategori-lelang')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.kategori-lelang')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_kategori_lelang($id)
@@ -907,7 +907,7 @@ class MenuSuperAdminController extends Controller
                 'harga_npl'     => $harga_npl,
             ]);
 
-        return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.kategori-lelang')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_kategori_lelang($id)
@@ -916,7 +916,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status' => 0
         ]);
-        return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.kategori-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function active_kategori_lelang($id)
@@ -925,7 +925,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status' => 1
         ]);
-        return redirect()->route('kategori-lelang')->with(['success' => 'Data Berhasil Aktifkan Kembali!']);
+        return redirect()->route('superadmin.kategori-lelang')->with(['success' => 'Data Berhasil Aktifkan Kembali!']);
     }
     
 
@@ -1015,7 +1015,7 @@ class MenuSuperAdminController extends Controller
             }
         }
 
-        return redirect('/barang-lelang')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.barang-lelang')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function detail_barang_lelang($id)
@@ -1194,7 +1194,7 @@ class MenuSuperAdminController extends Controller
         }
 
 
-        return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.barang-lelang')->with(['success' => 'Data Berhasil Diubah!']);
     }
    
 
@@ -1204,7 +1204,7 @@ class MenuSuperAdminController extends Controller
         $barang->update([
             'status' => 0
         ]);
-        return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.barang-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function active_barang_lelang($id)
@@ -1213,7 +1213,7 @@ class MenuSuperAdminController extends Controller
         $barang->update([
             'status' => 1
         ]);
-        return redirect()->route('barang-lelang')->with(['success' => 'Data Berhasil DiAktfikan kembali!']);
+        return redirect()->route('superadmin.barang-lelang')->with(['success' => 'Data Berhasil DiAktfikan kembali!']);
     }
 
     public function list_banner_utama(){
@@ -1236,7 +1236,7 @@ class MenuSuperAdminController extends Controller
             'gambar'     => $gambar->hashName(),
         ]);
 
-        return redirect()->route('banner-utama')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.banner-utama')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_banner_utama($id)
@@ -1267,7 +1267,7 @@ class MenuSuperAdminController extends Controller
             ]);
 
         } 
-        return redirect()->route('banner-utama')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.banner-utama')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_banner_utama($id)
@@ -1275,7 +1275,7 @@ class MenuSuperAdminController extends Controller
         $data = BannerUtama::findOrFail($id);
         Storage::delete('public/image/'. $data->gambar);
         $data->delete();
-        return redirect()->route('banner-utama')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.banner-utama')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function list_banner_diskon(){
@@ -1298,7 +1298,7 @@ class MenuSuperAdminController extends Controller
             'gambar'     => $gambar->hashName(),
         ]);
 
-        return redirect()->route('banner-diskon')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.banner-diskon')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_banner_diskon($id)
@@ -1329,7 +1329,7 @@ class MenuSuperAdminController extends Controller
             ]);
 
         } 
-        return redirect()->route('banner-diskon')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.banner-diskon')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_banner_diskon($id)
@@ -1337,7 +1337,7 @@ class MenuSuperAdminController extends Controller
         $data = BannerDiskon::findOrFail($id);
         Storage::delete('public/image/'. $data->gambar);
         $data->delete();
-        return redirect()->route('banner-diskon')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.banner-diskon')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function list_banner_spesial(){
@@ -1360,7 +1360,7 @@ class MenuSuperAdminController extends Controller
             'gambar'     => $gambar->hashName(),
         ]);
 
-        return redirect()->route('banner-spesial')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.banner-spesial')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_banner_spesial($id)
@@ -1391,7 +1391,7 @@ class MenuSuperAdminController extends Controller
             ]);
 
         } 
-        return redirect()->route('banner-spesial')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.banner-spesial')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_banner_spesial($id)
@@ -1399,7 +1399,7 @@ class MenuSuperAdminController extends Controller
         $data = BannerSpesial::findOrFail($id);
         Storage::delete('public/image/'. $data->gambar);
         $data->delete();
-        return redirect()->route('banner-spesial')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.banner-spesial')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function detail_pesanan($id){
@@ -1591,7 +1591,7 @@ class MenuSuperAdminController extends Controller
             ]);
         }
 
-    return redirect('/event')->with('success', 'Data Berhasil Ditambahkan');
+    return redirect()->route('superadmin.event')->with('success', 'Data Berhasil Ditambahkan');
 
     }
 
@@ -1710,7 +1710,7 @@ class MenuSuperAdminController extends Controller
                     'harga'     => $harga,
                 ]);
             }
-        return redirect()->route('event')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.event')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_event($id){
@@ -1718,7 +1718,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status_data' => 0
         ]);
-        return redirect()->route('event')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.event')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function active_event($id){
@@ -1726,7 +1726,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status_data' => 1
         ]);
-        return redirect()->route('event')->with(['success' => 'Data Berhasil Diaktifkan!']);
+        return redirect()->route('superadmin.event')->with(['success' => 'Data Berhasil Diaktifkan!']);
     }
 
     public function list_banner_lelang(){
@@ -1743,7 +1743,7 @@ class MenuSuperAdminController extends Controller
             'status' => 1
         ]);
 
-        return redirect('/banner-lelang')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.banner-lelang')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_banner_lelang($id)
@@ -1766,7 +1766,7 @@ class MenuSuperAdminController extends Controller
             'gambar'     => $gambar->hashName(),
         ]);
 
-        return redirect()->route('banner-lelang')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.banner-lelang')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_banner_lelang($id)
@@ -1775,7 +1775,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status' => 0
         ]);
-        return redirect()->route('banner-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.banner-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
     public function active_banner_lelang($id)
     {
@@ -1783,7 +1783,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status' => 1
         ]);
-        return redirect()->route('banner-lelang')->with(['success' => 'Data Berhasil Diaktifkan!']);
+        return redirect()->route('superadmin.banner-lelang')->with(['success' => 'Data Berhasil Diaktifkan!']);
     }
 
     public function list_user(){
@@ -1820,7 +1820,7 @@ class MenuSuperAdminController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.user-cms')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_user($id)
@@ -1845,7 +1845,7 @@ class MenuSuperAdminController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->route('user-cms')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.user-cms')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_user($id)
@@ -1854,7 +1854,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status' => 'not-active'
         ]);
-        return redirect()->route('user-cms')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.user-cms')->with(['success' => 'Data Berhasil Dihapus!']);
     }
     public function active_user($id)
     {
@@ -1862,7 +1862,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status' => 'active'
         ]);
-        return redirect()->route('user-cms')->with(['success' => 'Data Berhasil DiAktifkan!']);
+        return redirect()->route('superadmin.user-cms')->with(['success' => 'Data Berhasil DiAktifkan!']);
     }
 
     public function setting(){
@@ -1951,7 +1951,7 @@ class MenuSuperAdminController extends Controller
             'user_id'     => $user->id,
         ]);
 
-        return redirect()->route('toko')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.toko')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function profil_toko(){
@@ -2077,7 +2077,7 @@ class MenuSuperAdminController extends Controller
             'foto_npwp' => $npwp->hashName(),
         ]);
 
-        return redirect('/peserta-npl')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_peserta_npl($id){
@@ -2151,7 +2151,7 @@ class MenuSuperAdminController extends Controller
                 'npwp' => $request->npwp,
             ]);
         }
-        return redirect('/peserta-npl')->with('success', 'Data Berhasil Diubah!');
+        return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Diubah!');
     }
 
     public function delete_peserta_npl($id){
@@ -2159,7 +2159,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status' => 'not-active'
         ]);
-        return redirect('/peserta-npl')->with('success', 'Data Berhasil Dihapus!');
+        return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Dihapus!');
     }
 
     public function active_peserta_npl($id){
@@ -2167,7 +2167,7 @@ class MenuSuperAdminController extends Controller
         $data->update([
             'status' => 'active'
         ]);
-        return redirect('/peserta-npl')->with('success', 'Data Berhasil Diaktfikan!');
+        return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Diaktfikan!');
     }
     public function npl($id){
         $event = EventLelang::with('kategori_barang')->where('status_data',1)->get();
@@ -2285,7 +2285,7 @@ class MenuSuperAdminController extends Controller
             // die;
         }
 
-        return redirect('/lot')->with('success', 'Data Berhasil diEdit!');
+        return redirect()->route('superadmin.lot')->with('success', 'Data Berhasil diEdit!');
     }
     public function verify_npl($id){
         $pembelian_npl = PembelianNpl::find($id);
@@ -2351,59 +2351,59 @@ class MenuSuperAdminController extends Controller
         // dd($npl);
         // dd($bid);
         
-        if (!empty($bid->harga_bidding)) { // kalo ada yg masang harga tertinggi
-                $pemenang = Pemenang::create([
-                    'bidding_id' => $bid->id,
-                    'npl_id' => $bid->npl_id ?? null,
-                    'no_rek' => $bid->peserta_npl->no_rek ?? null,
-                    'nama_pemilik' => $bid->peserta_npl->nama ?? null,
-                    'nominal' => $bid->harga_bidding,
-                    'tgl_transfer' => null,
-                    'bukti' => null,
-                    'tipe_pelunasan' => null,
-                ]);
+        // if (!empty($bid->harga_bidding)) { // kalo ada yg masang harga tertinggi
+        //         $pemenang = Pemenang::create([
+        //             'bidding_id' => $bid->id,
+        //             'npl_id' => $bid->npl_id ?? null,
+        //             'no_rek' => $bid->peserta_npl->no_rek ?? null,
+        //             'nama_pemilik' => $bid->peserta_npl->nama ?? null,
+        //             'nominal' => $bid->harga_bidding,
+        //             'tgl_transfer' => null,
+        //             'bukti' => null,
+        //             'tipe_pelunasan' => null,
+        //         ]);
 
-                $lot->barang_lelang->update([
-                    'status' => 0
-                ]);
-                $lot->update([
-                    'status_item' => 'sold',
-                    'status' => 'not-active',
-                ]);
-                if (!empty($npl)) {
-                    $npl->update([
-                        'status_npl' => 'not-active',
-                        'status' => 'not-active',
-                    ]);
-                }
-                if (!empty($bid->peserta_npl_id)) {
-                    Notifikasi::create([
-                        'peserta_npl_id' => $bid->peserta_npl_id,
-                        'type' => 'menang lelang',
-                        'judul' => 'Anda Menang Event Lelang',
-                        'pesan' => 'Selamat Anda memenangkan lot event "'.$bid->event_lelang->judul.'", untuk mengambil barang silahkan melunasi barang tersebut!',
-                    ]);
-                }
-        } else {
-            $lot->update([
-                'status_item' => 'not-active',
-                'status' => 'not-active',
-            ]);
-        }
+        //         $lot->barang_lelang->update([
+        //             'status' => 0
+        //         ]);
+        //         $lot->update([
+        //             'status_item' => 'sold',
+        //             'status' => 'not-active',
+        //         ]);
+        //         if (!empty($npl)) {
+        //             $npl->update([
+        //                 'status_npl' => 'not-active',
+        //                 'status' => 'not-active',
+        //             ]);
+        //         }
+        //         if (!empty($bid->peserta_npl_id)) {
+        //             Notifikasi::create([
+        //                 'peserta_npl_id' => $bid->peserta_npl_id,
+        //                 'type' => 'menang lelang',
+        //                 'judul' => 'Anda Menang Event Lelang',
+        //                 'pesan' => 'Selamat Anda memenangkan lot event "'.$bid->event_lelang->judul.'", untuk mengambil barang silahkan melunasi barang tersebut!',
+        //             ]);
+        //         }
+        // } else {
+        //     $lot->update([
+        //         'status_item' => 'not-active',
+        //         'status' => 'not-active',
+        //     ]);
+        // }
         event(new SearchPemenangLot($bid));
         return response()->json($bid);
     }
 
     public function next_lot(Request $request){
-        $lot_item_id = $request->lot_item_id;
+        // $lot_item_id = $request->lot_item_id;
 
-        $bid = Bidding::where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
+        // $bid = Bidding::where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
         
-        // nonaktfikan bidding sesuai event id dan lot item id yg sedang lg bidding
-        $bidding = Bidding::where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->get();
-        $bidding->each->update([
-            'status'=> 'not-active'
-        ]);
+        // // nonaktfikan bidding sesuai event id dan lot item id yg sedang lg bidding
+        // $bidding = Bidding::where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->get();
+        // $bidding->each->update([
+        //     'status'=> 'not-active'
+        // ]);
         // cek apakah masih ada lot item di suatu event 
         $lot_item = LotItem::where('event_lelang_id',$request->event_lelang_id)->where('status_item','active')->where('status','active')->get();
         event(new NextLot($lot_item));
@@ -2439,7 +2439,7 @@ class MenuSuperAdminController extends Controller
             'pesan' => 'Selamat,  NPL anda berhasil direfund dengan nominal tranfer sebesar Rp' . number_format($refund->npl->harga_item),
         ]);
         
-        return redirect('/peserta-npl')->with('success', 'Data berhasil di Refund !');
+        return redirect()->route('superadmin.peserta-npl')->with('success', 'Data berhasil di Refund !');
     }
 
     public function list_pemenang(){

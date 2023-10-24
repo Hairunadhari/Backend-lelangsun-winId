@@ -4,7 +4,7 @@
         <div class="card-header">
             <h4>Edit Toko</h4>
         </div>
-        <form action="{{route('verify-pemenang', $data->id)}}" method="post" enctype="multipart/form-data" onsubmit="return confirm('Apakah anda yakin akan memVerifikasi data ini ?');">
+        <form action="{{route('superadmin.verify-pemenang', $data->id)}}" method="post" enctype="multipart/form-data" onsubmit="return confirm('Apakah anda yakin akan memVerifikasi data ini ?');">
             @csrf
             @method('PUT')
             <div class="card-body">

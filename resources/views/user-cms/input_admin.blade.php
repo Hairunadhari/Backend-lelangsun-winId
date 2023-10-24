@@ -8,7 +8,7 @@
                     <h4 class="w-100">Input Toko & Admin</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{route('add-admin')}}" method="post" enctype="multipart/form-data">
+                    <form action="{{route('superadmin.add-admin')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
                             <div class="form-group">

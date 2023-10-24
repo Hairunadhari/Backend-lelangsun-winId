@@ -24,7 +24,7 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <form action="{{route('update-banner-web',$data->id)}}" method="post" enctype="multipart/form-data">
+                            <form action="{{route('superadmin.update-banner-web',$data->id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
                                 <div class="form-group">

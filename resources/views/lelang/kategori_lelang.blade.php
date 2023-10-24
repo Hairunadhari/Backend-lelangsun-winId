@@ -107,8 +107,8 @@
                 {
                 data: null,
                     render: function (data) {
-                    var deleteUrl = '/delete-kategori-lelang/' + data.id;
-                    var editUrl = '/edit-kategori-lelang/' + data.id;
+                    var deleteUrl = '/superadmin/delete-kategori-lelang/' + data.id;
+                    var editUrl = '/superadmin/edit-kategori-lelang/' + data.id;
                     return `
                         <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
                         <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
@@ -170,8 +170,7 @@
                 {
                 data: null,
                     render: function (data) {
-                    var activeurl = '/active-kategori-lelang/' + data.id;
-                    var editUrl = '/edit-kategori-lelang/' + data.id;
+                    var activeurl = '/superadmin/active-kategori-lelang/' + data.id;
                     return `
                         <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -199,7 +198,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('add-kategori-lelang')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.add-kategori-lelang')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">

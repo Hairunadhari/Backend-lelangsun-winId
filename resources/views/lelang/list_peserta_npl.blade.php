@@ -152,8 +152,8 @@
                 {
                     data: null,
                     render: function (data) {
-                        var deleteUrl = '/delete-peserta-npl/' + data.id;
-                        var editUrl = '/edit-peserta-npl/' + data.id;
+                        var deleteUrl = '/superadmin/delete-peserta-npl/' + data.id;
+                        var editUrl = '/superadmin/edit-peserta-npl/' + data.id;
                         return `
                 <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
                   <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
@@ -205,7 +205,7 @@
                 {
                     data: null,
                     render: function (data) {
-                        var activeUrl = '/active-peserta-npl/' + data.id;
+                        var activeUrl = '/superadmin/active-peserta-npl/' + data.id;
                         return `
                     <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -264,7 +264,7 @@
                 {
                     data: null,
                     render: function (data) {
-                        var activeUrl = '/verify-npl/' + data.id;
+                        var activeUrl = '/superadmin/verify-npl/' + data.id;
                         return `
                     <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan memverifikasi data ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -324,8 +324,8 @@
                 {
                     data: null,
                     render: function (data) {
-                        var activeUrl = '/verify-npl/' + data.id;
-                        var refund = '/form-refund/' + data.id;
+                        var activeUrl = '/superadmin/verify-npl/' + data.id;
+                        var refund = '/superadmin/form-refund/' + data.id;
                         return `
                         <span><a class="btn btn-success" href="${refund}"><i class="fas fa-check"></i></a></span>
                     `;
@@ -357,7 +357,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('add-peserta-npl')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.add-peserta-npl')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">

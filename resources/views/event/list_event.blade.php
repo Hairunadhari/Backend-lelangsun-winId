@@ -122,15 +122,15 @@
                 {
                     data: null,
                     render: function (data) {
-                        var list = '/list-member-event/' + data.id;
+                        var list = '/superadmin/list-member-event/' + data.id;
                         return `<a class="btn btn-warning" href="${list}"><i class="fas fa-users"></i></a>`
                     }
                 },
                 {
                     data: null,
                     render: function (data) {
-                        var deleteUrl = '/delete-event/' + data.id;
-                        var editUrl = '/edit-event/' + data.id;
+                        var deleteUrl = '/superadmin/delete-event/' + data.id;
+                        var editUrl = '/superadmin/edit-event/' + data.id;
                         return `
                     <div class="dropdown d-inline">
                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
@@ -187,7 +187,7 @@
                 {
                     data: null,
                     render: function (data) {
-                        var activeurl = '/active-event/' + data.id;
+                        var activeurl = '/superadmin/active-event/' + data.id;
                         return `
                         <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -214,7 +214,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('add-event')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.add-event')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="row">

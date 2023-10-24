@@ -61,8 +61,8 @@
                  {
                      data: null,
                      render: function (data,type,row,meta) {
-                         var addUrl = '/form-add-lot/' + data.id;
-                         var editUrl = '/form-edit-lot/' + data.id;
+                         var addUrl = '/superadmin/form-add-lot/' + data.id;
+                         var editUrl = '/superadmin/form-edit-lot/' + data.id;
                              return `
                             <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i></a></span>
                             `;

@@ -22,7 +22,7 @@
 </style>
 <div class="section-body">
     <div class="container-fluid">
-        <form action="{{route('update-barang-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('superadmin.update-barang-lelang', $data->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('put')
             <div class="card">

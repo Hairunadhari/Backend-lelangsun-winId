@@ -13,14 +13,6 @@
                     </form> --}}
                 </div>
                 <div class="card-body">
-                    @if(session('success'))
-                    <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
-                        <strong>{{ session('success') }}</strong>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
                             <table class="table table-striped w-100" id="event">
                                 <thead>
                                     <tr>
@@ -90,7 +82,7 @@
                 {
                     data: "pembayaran_event.bukti_bayar",
                     render: function (data, type, row, meta){
-                            var verif = '/send-email-member/' + row.id;
+                            var verif = '/superadmin/send-email-member/' + row.id;
                         return `<form action="${verif}" method="POST" onsubmit="return confirm('Apakah anda yakin akan memverifikasi data ini ? jika ya member akan dikirimkan info tentang event ini');">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="_method" value="POST">
@@ -101,7 +93,7 @@
                 {
                     data:null,
                     render: function (data){
-                        var delet = '/delete-member-event/' + data.id;
+                        var delet = '/superadmin/delete-member-event/' + data.id;
                         return `<form action="${delet}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus permanen data ini ?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="DELETE">

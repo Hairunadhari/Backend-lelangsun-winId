@@ -8,7 +8,7 @@
                     <h4 class="w-100">Edit UserCMS</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{route('update-user', $data->id)}}" method="post" enctype="multipart/form-data">
+                    <form action="{{route('superadmin.update-user', $data->id)}}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="modal-body">

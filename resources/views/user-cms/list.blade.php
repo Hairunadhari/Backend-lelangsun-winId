@@ -10,14 +10,6 @@
                     <a href="{{route('tambah-admin')}}" class="btn btn-success" style="margin-left: 10px">+ Tambah Admin</a> --}}
                 </div>
                 <div class="card-body">
-                    @if(session('success'))
-                    <div class="alert alert-success alert-dismissible text-center fade show" role="alert">
-                        <strong>{{ session('success') }}</strong>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
                     <ul class="nav nav-pills" id="myTab3" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
@@ -95,8 +87,8 @@
                 {
                 data: null,
                 render: function (data) {
-                    var deleteUrl = '/delete-user/' + data.id;
-                    var editUrl = '/edit-user/' + data.id;
+                    var deleteUrl = '/superadmin/delete-user/' + data.id;
+                    var editUrl = '/superadmin/edit-user/' + data.id;
                     return `
                     <div class="dropdown d-inline">
                         <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
@@ -147,7 +139,7 @@
                 {
                 data: null,
                 render: function (data) {
-                    var activeUrl = '/active-user/' + data.id;
+                    var activeUrl = '/superadmin/active-user/' + data.id;
                     return `
                     <form action="${activeUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">

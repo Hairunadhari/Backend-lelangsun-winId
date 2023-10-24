@@ -98,11 +98,11 @@
                     data: null,
                     render: function (data, type, row, meta) {
                         // console.log(data.lot_item);
-                        var deleteUrl = '/delete-event-lelang/' + data.id;
-                        var editUrl = '/edit-event-lelang/' + data.id;
+                        var deleteUrl = '/superadmin/delete-event-lelang/' + data.id;
+                        var editUrl = '/superadmin/edit-event-lelang/' + data.id;
                         var bidding = '';
                         if (data && data.lot_item && data.lot_item[0] && data.lot_item[0].id) {
-                            bidding = '/bidding-event-lelang/' + data.encrypted_id + '?lot=' + data.lot_item[0].id;
+                            bidding = '/superadmin/bidding-event-lelang/' + data.encrypted_id + '?lot=' + data.lot_item[0].id;
                         }
                         var eventDate = new Date(row.waktu);
                         var today = new Date();
@@ -154,7 +154,7 @@
                  {
                      data: null,
                      render: function (data) {
-                         var activeurl = '/active-event-lelang/' + data.id;
+                         var activeurl = '/superadmin/active-event-lelang/' + data.id;
                          return `
                          <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -181,7 +181,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('add-event-lelang')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.add-event-lelang')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">

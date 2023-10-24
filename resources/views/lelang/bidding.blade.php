@@ -47,6 +47,11 @@
                                             <input type="hidden" name="harga_bidding" id="harga_bidding" value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
                                             {{-- <input type="text" id="role" value="{{Auth::user()->role->role}}" class="form-control"> --}}
                                                 <div id="con-bid" class="button-center w-100" style="display:none">
+                                                    {{-- <div class="d-flex justify-content-center mb-2">
+                                                        <span class="badge badge-secondary text-center">
+                                                            <div id="timer" data-seconds="30">00:30</div>
+                                                        </span>
+                                                    </div> --}}
                                                     <div class="d-flex justify-content-center mb-2">
                                                         <span class="badge badge-secondary text-center">
                                                             <div id="timer" data-seconds="<?= $setting->waktu_bid ?>">00:{{$setting->waktu_bid}}</div>

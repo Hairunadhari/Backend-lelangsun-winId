@@ -127,7 +127,7 @@
                 {
                     data: null,
                     render: function (data) {
-                        var activeUrl = '/form-verify-pemenang/' + data.id;
+                        var activeUrl = '/superadmin/form-verify-pemenang/' + data.id;
                         return `
                     <a class="btn btn-success" href="${activeUrl}"><i class="fas fa-check"></i></a>
                     `;
