@@ -94,7 +94,7 @@
                 var tokosId = this.value;
                 $('#kategoris').html('');
                 $.ajax({
-                    url: "get-kategori-by-toko/"+tokosId,
+                    url: "/superadmin/get-kategori-by-toko/"+tokosId,
                     type: 'get',
                     success: function (res) {
                         $('#kategoris').html('<option value="" selected disabled>-- Pilih Kategori --</option>');

@@ -188,7 +188,12 @@ class MenuSuperAdminController extends Controller
             ]);
         }
 
-        return redirect()->route('superadmin.toko')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
+        if (Auth::user()->role->role == 'Super Admin') {
+            return redirect()->route('superadmin.toko')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
+        } else {
+            return redirect()->route('superadmin.toko')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
+        }
+        
     }
 
     public function kategori_produk(){
@@ -223,7 +228,6 @@ class MenuSuperAdminController extends Controller
     }
 
     public function add_kategori_produk(Request $request){
-       
         // Periksa apakah kategori sudah ada sebelumnya
         $Kategori = KategoriProduk::where('toko_id', $request->toko_id)->where('kategori', $request->kategori)->first();
         
@@ -233,7 +237,7 @@ class MenuSuperAdminController extends Controller
             'toko_id' => $request->toko_id,
         ]);
         
-        return redirect('/kategori-produk')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit_kategori_produk($id)
@@ -252,7 +256,12 @@ class MenuSuperAdminController extends Controller
             
 
         //redirect to index
-        return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
+        if (Auth::user()->role->role == 'Super Admin') {
+            return redirect()->route('superadmin.kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
+        } else {
+            return redirect()->route('admin.kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
+        }
+        
     }
 
     public function delete_kategori_produk($id)
@@ -274,7 +283,12 @@ class MenuSuperAdminController extends Controller
         $promo_produk->each->delete();
         $keranjang->each->delete();
         $wishlist->each->delete();
-        return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil Dihapus!']);
+
+        if (Auth::user()->role->role == 'Super Admin') {
+            return redirect()->route('superadmin.kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
+        } else {
+            return redirect()->route('admin.kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
+        }
     }
 
     public function active_kategori_produk($id)
@@ -284,7 +298,11 @@ class MenuSuperAdminController extends Controller
             'status' => 'active'
         ]);
         
-        return redirect()->route('kategori-produk')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
+        if (Auth::user()->role->role == 'Super Admin') {
+            return redirect()->route('superadmin.kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
+        } else {
+            return redirect()->route('admin.kategori-produk')->with(['success' => 'Data Berhasil Diubah!']);
+        }
     }
    
     public function list_pesanan(){
@@ -386,7 +404,11 @@ class MenuSuperAdminController extends Controller
                 ]);
             }
 
-        return redirect('/produk')->with('success', 'Data Berhasil Ditambahkan');
+            if (Auth::user()->role->role == 'Super Admin') {
+                return redirect()->route('superadmin.produk')->with(['success' => 'Data Berhasil Ditambah!']);
+            } else {
+                return redirect()->route('admin.produk')->with(['success' => 'Data Berhasil Ditambah!']);
+            }
     }
 
     public function detail_produk($id)
@@ -510,7 +532,11 @@ class MenuSuperAdminController extends Controller
             ]);
         }
 
-        return redirect()->route('produk')->with(['success' => 'Data Berhasil Diubah!']);
+        if (Auth::user()->role->role == 'Super Admin') {
+            return redirect()->route('superadmin.produk')->with(['success' => 'Data Berhasil Diubah!']);
+        } else {
+            return redirect()->route('admin.produk')->with(['success' => 'Data Berhasil Diubah!']);
+        }
     }
    
 
@@ -526,7 +552,11 @@ class MenuSuperAdminController extends Controller
         $keranjang->each->delete();
         $wishlist = Wishlist::where('produk_id', $id)->get();
         $wishlist->each->delete();
-        return redirect()->route('produk')->with(['success' => 'Data Berhasil Dihapus!']);
+        if (Auth::user()->role->role == 'Super Admin') {
+            return redirect()->route('superadmin.produk')->with(['success' => 'Data Berhasil Dihapus!']);
+        } else {
+            return redirect()->route('admin.produk')->with(['success' => 'Data Berhasil Dihapus!']);
+        }
     }
     public function active_produk($id)
     {
@@ -534,7 +564,11 @@ class MenuSuperAdminController extends Controller
         $produk->update([
             'status' => 'active'
         ]);
-        return redirect()->route('produk')->with(['success' => 'Data Berhasil DiAktifkan Kembali!']);
+        if (Auth::user()->role->role == 'Super Admin') {
+            return redirect()->route('superadmin.produk')->with(['success' => 'Data Berhasil Diaktifkasn kembali!']);
+        } else {
+            return redirect()->route('admin.produk')->with(['success' => 'Data Berhasil Diaktifkasn kembali!']);
+        }
     }
 
     public function list_event_lelang(){
@@ -743,7 +777,7 @@ class MenuSuperAdminController extends Controller
             }
             
         }
-        return redirect('/promosi')->with('success', 'Data Berhasil ditambahkan');
+        return redirect()->route('superadmin.promosi')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function detail_promosi($id)
@@ -846,7 +880,7 @@ class MenuSuperAdminController extends Controller
         }
 
         //redirect to index
-        return redirect()->route('promosi')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('superadmin.promosi')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_promosi($id)
@@ -857,7 +891,7 @@ class MenuSuperAdminController extends Controller
         ProdukPromo::where('promosi_id', $id)->delete();
         $data->delete();
 
-        return redirect()->route('promosi')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('superadmin.promosi')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function list_kategori_lelang(){

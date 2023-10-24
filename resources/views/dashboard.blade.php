@@ -15,7 +15,13 @@ channel.bind('my-event', function(data) {
 <div class="section-body">
   <div class="card">
     <div class="card-header">
+      @if (Auth::user()->role->role == 'Super Admin')
       <h4>Super Admin Win</h4>
+      
+      @else
+      <h4>Admin Win</h4>
+          
+      @endif
     </div>
     <div class="card-body">
       <p>Selamat Datang di aplikasi Win</p>

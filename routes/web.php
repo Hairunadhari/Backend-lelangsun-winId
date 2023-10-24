@@ -5,9 +5,10 @@ use App\Events\StartBid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MenuSuperAdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontEndController;
+use App\Http\Controllers\MenuAdminController;
+use App\Http\Controllers\MenuSuperAdminController;
 use App\Http\Controllers\SendEmailMemberController;
 use App\Http\Controllers\VerifyEmailRegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -275,6 +276,7 @@ Route::post('/resend-email', [VerifyEmailRegisterController::class, 'resend_emai
 
     
 // });
+
 Route::middleware(['auth','role:Super Admin'])->group(function () {
     Route::prefix('superadmin')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('.edit');
@@ -293,31 +295,31 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
 
         // route kategori produk
         Route::get('/kategori-produk', [MenuSuperAdminController::class, 'kategori_produk'])->name('superadmin.kategori-produk');
-        Route::post('/add-kategori-produk', [MenuSuperAdminController::class, 'add_kategori_produk'])->name('superadmin.add-kategori-produk');
+        // Route::post('/add-kategori-produk', [MenuSuperAdminController::class, 'add_kategori_produk'])->name('superadmin.add-kategori-produk');
         Route::get('/detail-kategori-produk/{id}/', [MenuSuperAdminController::class, 'detail_kategori_produk'])->name('superadmin.detail-kategori-produk');
-        Route::get('/edit-kategori-produk/{id}/', [MenuSuperAdminController::class, 'edit_kategori_produk'])->name('superadmin.edit-kategori-produk');
-        Route::put('/update-kategori-produk/{id}/', [MenuSuperAdminController::class, 'update_kategori_produk'])->name('superadmin.update-kategori-produk');
-        Route::put('/delete-kategori-produk/{id}/', [MenuSuperAdminController::class, 'delete_kategori_produk'])->name('superadmin.delete-kategori-produk');
-        Route::put('/active-kategori-produk/{id}/', [MenuSuperAdminController::class, 'active_kategori_produk'])->name('superadmin.active-kategori-produk');
+        // Route::get('/edit-kategori-produk/{id}/', [MenuSuperAdminController::class, 'edit_kategori_produk'])->name('superadmin.edit-kategori-produk');
+        // Route::put('/update-kategori-produk/{id}/', [MenuSuperAdminController::class, 'update_kategori_produk'])->name('superadmin.update-kategori-produk');
+        // Route::put('/delete-kategori-produk/{id}/', [MenuSuperAdminController::class, 'delete_kategori_produk'])->name('superadmin.delete-kategori-produk');
+        // Route::put('/active-kategori-produk/{id}/', [MenuSuperAdminController::class, 'active_kategori_produk'])->name('superadmin.active-kategori-produk');
 
         // route produk
         Route::get('/produk', [MenuSuperAdminController::class, 'list_produk'])->name('superadmin.produk');
-        Route::post('/addproduk', [MenuSuperAdminController::class, 'add_produk'])->name('superadmin.addproduk');
-        Route::get('/detailproduk/{id}/', [MenuSuperAdminController::class, 'detail_produk'])->name('superadmin.detailproduk');
-        Route::get('/editproduk/{id}/', [MenuSuperAdminController::class, 'edit_produk'])->name('superadmin.editproduk');
-        Route::put('/updateproduk/{id}/', [MenuSuperAdminController::class, 'update_produk'])->name('superadmin.updateproduk');
-        Route::put('/deleteproduk/{id}/', [MenuSuperAdminController::class, 'delete_produk'])->name('superadmin.deleteproduk');
-        Route::put('/activeproduk/{id}/', [MenuSuperAdminController::class, 'active_produk'])->name('superadmin.activeproduk');
-        Route::get('/form-input-produk', [MenuSuperAdminController::class, 'form_input_produk'])->name('superadmin.form-input-produk');
+        // Route::post('/addproduk', [MenuSuperAdminController::class, 'add_produk'])->name('superadmin.addproduk');
+        // Route::get('/detailproduk/{id}/', [MenuSuperAdminController::class, 'detail_produk'])->name('superadmin.detailproduk');
+        // Route::get('/editproduk/{id}/', [MenuSuperAdminController::class, 'edit_produk'])->name('superadmin.editproduk');
+        // Route::put('/updateproduk/{id}/', [MenuSuperAdminController::class, 'update_produk'])->name('superadmin.updateproduk');
+        // Route::put('/deleteproduk/{id}/', [MenuSuperAdminController::class, 'delete_produk'])->name('superadmin.deleteproduk');
+        // Route::put('/activeproduk/{id}/', [MenuSuperAdminController::class, 'active_produk'])->name('superadmin.activeproduk');
+        // Route::get('/form-input-produk', [MenuSuperAdminController::class, 'form_input_produk'])->name('superadmin.form-input-produk');
 
         // route promo produk
         Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('superadmin.promosi');
-        Route::get('/form-input-promosi', [MenuSuperAdminController::class, 'form_input_promosi'])->name('superadmin.form-input-promosi');
-        Route::post('/addpromosi', [MenuSuperAdminController::class, 'add_promosi'])->name('superadmin.addpromosi');
-        Route::get('/detailpromosi/{id}/', [MenuSuperAdminController::class, 'detail_promosi'])->name('superadmin.detailpromosi');
-        Route::get('/editpromosi/{id}/', [MenuSuperAdminController::class, 'edit_promosi'])->name('superadmin.editpromosi');
-        Route::put('/updatepromosi/{id}/', [MenuSuperAdminController::class, 'update_promosi'])->name('superadmin.updatepromosi');
-        Route::delete('/deletepromosi/{id}/', [MenuSuperAdminController::class, 'delete_promosi'])->name('superadmin.deletepromosi');
+        // Route::get('/form-input-promosi', [MenuSuperAdminController::class, 'form_input_promosi'])->name('superadmin.form-input-promosi');
+        // Route::post('/addpromosi', [MenuSuperAdminController::class, 'add_promosi'])->name('superadmin.addpromosi');
+        // Route::get('/detailpromosi/{id}/', [MenuSuperAdminController::class, 'detail_promosi'])->name('superadmin.detailpromosi');
+        // Route::get('/editpromosi/{id}/', [MenuSuperAdminController::class, 'edit_promosi'])->name('superadmin.editpromosi');
+        // Route::put('/updatepromosi/{id}/', [MenuSuperAdminController::class, 'update_promosi'])->name('superadmin.updatepromosi');
+        // Route::delete('/deletepromosi/{id}/', [MenuSuperAdminController::class, 'delete_promosi'])->name('superadmin.deletepromosi');
         Route::get('/pembayaran', [MenuSuperAdminController::class, 'list_pembayaran'])->name('superadmin.pembayaran');
         Route::get('/pengiriman', [MenuSuperAdminController::class, 'list_pengiriman'])->name('superadmin.pengiriman');
 
@@ -491,10 +493,31 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
     });
 });
 
+// route ga pake midleware
+Route::post('/add-kategori-produk', [MenuSuperAdminController::class, 'add_kategori_produk'])->name('add-kategori-produk');
+Route::get('/edit-kategori-produk/{id}/', [MenuSuperAdminController::class, 'edit_kategori_produk'])->name('edit-kategori-produk');
+Route::put('/update-kategori-produk/{id}/', [MenuSuperAdminController::class, 'update_kategori_produk'])->name('update-kategori-produk');
+Route::put('/delete-kategori-produk/{id}/', [MenuSuperAdminController::class, 'delete_kategori_produk'])->name('delete-kategori-produk');
+Route::put('/active-kategori-produk/{id}/', [MenuSuperAdminController::class, 'active_kategori_produk'])->name('active-kategori-produk');
+Route::post('/addproduk', [MenuSuperAdminController::class, 'add_produk'])->name('addproduk');
+Route::get('/detailproduk/{id}/', [MenuSuperAdminController::class, 'detail_produk'])->name('detailproduk');
+Route::get('/editproduk/{id}/', [MenuSuperAdminController::class, 'edit_produk'])->name('editproduk');
+Route::put('/updateproduk/{id}/', [MenuSuperAdminController::class, 'update_produk'])->name('updateproduk');
+Route::put('/deleteproduk/{id}/', [MenuSuperAdminController::class, 'delete_produk'])->name('deleteproduk');
+Route::put('/activeproduk/{id}/', [MenuSuperAdminController::class, 'active_produk'])->name('activeproduk');
+Route::get('/form-input-produk', [MenuSuperAdminController::class, 'form_input_produk'])->name('form-input-produk');
+Route::get('/form-input-promosi', [MenuSuperAdminController::class, 'form_input_promosi'])->name('form-input-promosi');
+Route::post('/addpromosi', [MenuSuperAdminController::class, 'add_promosi'])->name('addpromosi');
+Route::get('/detailpromosi/{id}/', [MenuSuperAdminController::class, 'detail_promosi'])->name('detailpromosi');
+Route::get('/editpromosi/{id}/', [MenuSuperAdminController::class, 'edit_promosi'])->name('editpromosi');
+Route::put('/updatepromosi/{id}/', [MenuSuperAdminController::class, 'update_promosi'])->name('updatepromosi');
+Route::delete('/deletepromosi/{id}/', [MenuSuperAdminController::class, 'delete_promosi'])->name('deletepromosi');
+
+
 Route::middleware(['auth','role:Admin'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('admin.dashboard');
-        Route::get('/profil-toko', [MenuSuperAdminController::class, 'profil_toko'])->name('admin.admin.profil-toko');
+        Route::get('/profil-toko', [MenuSuperAdminController::class, 'profil_toko'])->name('admin.profil-toko');
         Route::put('/update-akun-toko/{id}/', [MenuSuperAdminController::class, 'update_akun_toko'])->name('admin.update-akun-toko');
         
         // route toko
@@ -508,31 +531,31 @@ Route::middleware(['auth','role:Admin'])->group(function () {
 
         // route kategori produk
         Route::get('/kategori-produk', [MenuSuperAdminController::class, 'kategori_produk'])->name('admin.kategori-produk');
-        Route::post('/add-kategori-produk', [MenuSuperAdminController::class, 'add_kategori_produk'])->name('admin.add-kategori-produk');
+        // Route::post('/add-kategori-produk', [MenuAdminController::class, 'add_kategori_produk'])->name('admin.add-kategori-produk');
         Route::get('/detail-kategori-produk/{id}/', [MenuSuperAdminController::class, 'detail_kategori_produk'])->name('admin.detail-kategori-produk');
-        Route::get('/edit-kategori-produk/{id}/', [MenuSuperAdminController::class, 'edit_kategori_produk'])->name('admin.edit-kategori-produk');
-        Route::put('/update-kategori-produk/{id}/', [MenuSuperAdminController::class, 'update_kategori_produk'])->name('admin.update-kategori-produk');
-        Route::put('/delete-kategori-produk/{id}/', [MenuSuperAdminController::class, 'delete_kategori_produk'])->name('admin.delete-kategori-produk');
-        Route::put('/active-kategori-produk/{id}/', [MenuSuperAdminController::class, 'active_kategori_produk'])->name('admin.active-kategori-produk');
+        // Route::get('/edit-kategori-produk/{id}/', [MenuSuperAdminController::class, 'edit_kategori_produk'])->name('admin.edit-kategori-produk');
+        // Route::put('/update-kategori-produk/{id}/', [MenuSuperAdminController::class, 'update_kategori_produk'])->name('admin.update-kategori-produk');
+        // Route::put('/delete-kategori-produk/{id}/', [MenuSuperAdminController::class, 'delete_kategori_produk'])->name('admin.delete-kategori-produk');
+        // Route::put('/active-kategori-produk/{id}/', [MenuSuperAdminController::class, 'active_kategori_produk'])->name('admin.active-kategori-produk');
 
         // route produk
         Route::get('/produk', [MenuSuperAdminController::class, 'list_produk'])->name('admin.produk');
-        Route::post('/addproduk', [MenuSuperAdminController::class, 'add_produk'])->name('admin.addproduk');
-        Route::get('/detailproduk/{id}/', [MenuSuperAdminController::class, 'detail_produk'])->name('admin.detailproduk');
-        Route::get('/editproduk/{id}/', [MenuSuperAdminController::class, 'edit_produk'])->name('admin.editproduk');
-        Route::put('/updateproduk/{id}/', [MenuSuperAdminController::class, 'update_produk'])->name('admin.updateproduk');
-        Route::put('/deleteproduk/{id}/', [MenuSuperAdminController::class, 'delete_produk'])->name('admin.deleteproduk');
-        Route::put('/activeproduk/{id}/', [MenuSuperAdminController::class, 'active_produk'])->name('admin.activeproduk');
-        Route::get('/form-input-produk', [MenuSuperAdminController::class, 'form_input_produk'])->name('admin.form-input-produk');
+        // Route::post('/addproduk', [MenuSuperAdminController::class, 'add_produk'])->name('admin.addproduk');
+        // Route::get('/detailproduk/{id}/', [MenuSuperAdminController::class, 'detail_produk'])->name('admin.detailproduk');
+        // Route::get('/editproduk/{id}/', [MenuSuperAdminController::class, 'edit_produk'])->name('admin.editproduk');
+        // Route::put('/updateproduk/{id}/', [MenuSuperAdminController::class, 'update_produk'])->name('admin.updateproduk');
+        // Route::put('/deleteproduk/{id}/', [MenuSuperAdminController::class, 'delete_produk'])->name('admin.deleteproduk');
+        // Route::put('/activeproduk/{id}/', [MenuSuperAdminController::class, 'active_produk'])->name('admin.activeproduk');
+        // Route::get('/form-input-produk', [MenuSuperAdminController::class, 'form_input_produk'])->name('admin.form-input-produk');
 
         // route promo produk
-        Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('admin.promosi');
-        Route::get('/form-input-promosi', [MenuSuperAdminController::class, 'form_input_promosi'])->name('admin.form-input-promosi');
-        Route::post('/addpromosi', [MenuSuperAdminController::class, 'add_promosi'])->name('admin.addpromosi');
-        Route::get('/detailpromosi/{id}/', [MenuSuperAdminController::class, 'detail_promosi'])->name('admin.detailpromosi');
-        Route::get('/editpromosi/{id}/', [MenuSuperAdminController::class, 'edit_promosi'])->name('admin.editpromosi');
-        Route::put('/updatepromosi/{id}/', [MenuSuperAdminController::class, 'update_promosi'])->name('admin.updatepromosi');
-        Route::delete('/deletepromosi/{id}/', [MenuSuperAdminController::class, 'delete_promosi'])->name('admin.deletepromosi');
+        // Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('admin.promosi');
+        // Route::get('/form-input-promosi', [MenuSuperAdminController::class, 'form_input_promosi'])->name('admin.form-input-promosi');
+        // Route::post('/addpromosi', [MenuSuperAdminController::class, 'add_promosi'])->name('admin.addpromosi');
+        // Route::get('/detailpromosi/{id}/', [MenuSuperAdminController::class, 'detail_promosi'])->name('admin.detailpromosi');
+        // Route::get('/editpromosi/{id}/', [MenuSuperAdminController::class, 'edit_promosi'])->name('admin.editpromosi');
+        // Route::put('/updatepromosi/{id}/', [MenuSuperAdminController::class, 'update_promosi'])->name('admin.updatepromosi');
+        // Route::delete('/deletepromosi/{id}/', [MenuSuperAdminController::class, 'delete_promosi'])->name('admin.deletepromosi');
 
     });
     

@@ -19,7 +19,7 @@
         </div>
         <div class="col-12 col-md-12 col-lg-7">
             <div class="card">
-                <form method="post" action="{{route('update-akun-toko', $toko->user->id)}}" class="needs-validation"
+                <form method="post" action="{{route('admin.update-akun-toko', $toko->user->id)}}" class="needs-validation"
                     enctype="multipart/form-data" novalidate="">
                     @csrf
                     @method('PUT')
