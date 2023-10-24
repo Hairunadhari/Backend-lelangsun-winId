@@ -61,7 +61,7 @@
                         {{$hiddenEmail}}, Jika Anda tidak menerima email tersebut silahkan kirim ulang dengan mengklik
                         link dibawah ini.</p>
                     </form>
-                    <button id="send-email" class="btn btn-primary">Resend Verification Email</button>
+                    <button id="send-email" class="btn btn-primary">Resend Verifications Email</button>
             </div>
 
         </div>
