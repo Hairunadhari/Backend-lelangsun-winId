@@ -1238,7 +1238,8 @@
                                         "type": "integer"
                                     },
                                     "tgl_transfer": {
-                                        "type": "date-time"
+                                        "type": "date-time",
+                                        "example": "2017-01-01 12:20:00"
                                     },
                                     "bukti": {
                                         "type": "file",

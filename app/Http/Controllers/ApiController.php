@@ -1873,7 +1873,7 @@ class ApiController extends Controller
      *                  @OA\Property(property="nominal_transfer", type="integer"),
      *                  @OA\Property(property="no_rekening", type="integer"),
      *                  @OA\Property(property="nama_pemilik_rekening", type="integer"),
-     *                  @OA\Property(property="tgl_transfer", type="date-time"),
+     *                  @OA\Property(property="tgl_transfer", type="date-time", example="2017-01-01 12:20:00"),
      *                  @OA\Property(property="bukti", type="file", format="binary"),
      *              )
      *          )
@@ -1892,7 +1892,7 @@ class ApiController extends Controller
             'no_rekening'     => 'required',
             'nama_pemilik_rekening'     => 'required',
             'nominal_transfer'     => 'required',
-            'tgl_transfer'     => 'required',
+            'tgl_transfer'     => 'required|date_format:Y-m-d H:i:s',
             'harga_npl'     => 'required',
             'jumlah_tiket'     => 'required',
             'bukti'     => 'required|mimes:jpeg,jpg,png',
