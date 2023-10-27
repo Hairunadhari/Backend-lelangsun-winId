@@ -234,7 +234,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($p->status_npl == 'aktif' && $p->event_lelang->waktu < $hours_now)
+                                    @if ($p->status_npl == 'aktif' && $p->event_lelang->waktu < $hours_now || $p->status_npl == 'aktif' && $p->event_lelang->status_data == 0)
                                     <form action="{{route('user-refund', $p->id)}}" method="POST" onsubmit="return confirm('Apakah anda yakin akan melakukan refund ?');">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="_method" value="PUT">

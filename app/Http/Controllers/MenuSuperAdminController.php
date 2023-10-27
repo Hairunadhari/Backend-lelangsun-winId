@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use DataTables;
 use Validator;
+use DataTables;
 use Carbon\Carbon;
 use App\Models\Lot;
 use App\Models\Npl;
@@ -18,6 +18,7 @@ use App\Events\LogBid;
 use App\Models\Produk;
 use App\Models\Refund;
 use App\Models\Review;
+use App\Models\Ulasan;
 use App\Events\Message;
 use App\Events\NextLot;
 use App\Models\Bidding;
@@ -2509,7 +2510,7 @@ class MenuSuperAdminController extends Controller
             'pesan' => $request->pesan ?? null
         ]);
 
-        return redirect('/pemenang')->with('success', 'Data berhasil di Verifikasi !');
+        return redirect()->route('superadmin.pemenang')->with('success', 'Data berhasil di Verifikasi !');
     }
 
     public function update_banner_web(Request $request, $id){
@@ -2543,6 +2544,21 @@ class MenuSuperAdminController extends Controller
         }
 
         return redirect()->back()->with('success', 'Data berhasil di Update !');
+    }
+
+    public function list_ulasan(){
+        if (request()->ajax()) {
+            $data = Ulasan::all();
+            return DataTables::of($data)->make(true);
+        }
+
+        return view('lelang/ulasan');
+    }
+    public function delete_ulasan($id){
+        $ulasan = Ulasan::find($id);
+        $ulasan->delete();
+
+        return redirect()->route('superadmin.ulasan')->with('success', 'Data berhasil di hapus !');
     }
     
 }   

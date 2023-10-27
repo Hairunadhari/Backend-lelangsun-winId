@@ -11,7 +11,7 @@
         <div class="card-header">
             <h4>Edit Event</h4>
         </div>
-        <form action="{{route('verify-refund', $refund->id)}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('superadmin.verify-refund', $refund->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="card-body">
@@ -25,7 +25,7 @@
                     </div>
                     <div class="form-group">
                         <label>Kode NPL</label>
-                        <input type="text" readonly class="form-control" name="judul" value="{{$refund->npl->no_npl}}">
+                        <input type="text" readonly class="form-control" name="judul" value="{{$refund->npl->kode_npl}}">
                     </div>
                     <div class="form-group">
                         <label>Nominal</label>

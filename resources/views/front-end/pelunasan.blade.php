@@ -212,38 +212,5 @@
     
 
 @endforeach
-    {{-- <script>
-         function previewImages() {
-            var preview = document.querySelector('#preview');
-    
-            // Hapus semua elemen child di dalam elemen #preview
-            while (preview.firstChild) {
-                preview.removeChild(preview.firstChild);
-            }
-    
-            if (this.files) {
-                [].forEach.call(this.files, readAndPreview);
-            }
-    
-            function readAndPreview(file) {
-                if (!/\.(jpe?g|png)$/i.test(file.name)) {
-                    alert(file.name + " format tidak sesuai");
-                    document.querySelector('#gambar').value = '';
-                    preview.removeChild(preview.firstChild);
-                    return;
-                }
-                var reader = new FileReader();
-                reader.addEventListener("load", function () {
-                    var image = new Image();
-                    image.width = 200;
-                    image.title = file.name;
-                    image.src = this.result;
-                    preview.appendChild(image);
-                }, false);
-                reader.readAsDataURL(file);
-            }
-        }
-        document.querySelector('#gambar').addEventListener("change", previewImages);
-    </script> --}}
 </section>
 @endsection

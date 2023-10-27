@@ -60,7 +60,7 @@
                     <p class="card-text">Terima kasih telah mendaftar! Kami baru saja mengirim link ke email
                         {{$hiddenEmail}}, Jika Anda tidak menerima email tersebut silahkan kirim ulang dengan mengklik
                         link dibawah ini.</p>
-                    </form>
+                    </form> 
                     <button id="send-email" class="btn btn-primary">Resend Verifications Email</button>
             </div>
 

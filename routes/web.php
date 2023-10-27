@@ -53,6 +53,7 @@ Route::middleware('peserta')->group(function () {
     Route::get('/user-pesan', [FrontEndController::class, 'pesan'])->name('front-end-pesan');
     Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
     Route::put('/pelunasan-barang-lelang/{id}/', [FrontEndController::class, 'pelunasan_barang'])->name('pelunasan-barang-lelang');
+    Route::put('/beri-ulasan/{id}/', [FrontEndController::class, 'beri_ulasan'])->name('beri-ulasan');
 });
 Route::get('/verify-email-user/{id}/', [VerifyEmailRegisterController::class, 'verifikasi_email_user'])->name('verify-email-user');
 // Route::get('/resend-code/{id}/', [VerifyEmailRegisterController::class, 'resend_code'])->name('resend-code');
@@ -488,8 +489,10 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::get('/pemenang', [MenuSuperAdminController::class, 'list_pemenang'])->name('superadmin.pemenang');
         Route::get('/form-verify-pemenang/{id}/', [MenuSuperAdminController::class, 'form_verify_pemenang'])->name('superadmin.form-verify-pemenang');
         Route::put('/verify-pemenang/{id}/', [MenuSuperAdminController::class, 'verify_pemenang'])->name('superadmin.verify-pemenang');
-
+        
         Route::put('/update-banner-web/{id}/', [MenuSuperAdminController::class, 'update_banner_web'])->name('superadmin.update-banner-web');
+        Route::get('/ulasan', [MenuSuperAdminController::class, 'list_ulasan'])->name('superadmin.ulasan');
+        Route::delete('/delete-ulasan/{id}/', [MenuSuperAdminController::class, 'delete_ulasan']);
     });
 });
 

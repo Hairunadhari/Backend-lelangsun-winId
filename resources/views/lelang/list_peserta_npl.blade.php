@@ -307,7 +307,7 @@
                     data: "npl.peserta_npl.email",
                 },
                 {
-                    data: "npl.no_npl",
+                    data: "npl.kode_npl",
                 },
                 {
                     data: "npl.harga_item",
@@ -324,7 +324,6 @@
                 {
                     data: null,
                     render: function (data) {
-                        var activeUrl = '/superadmin/verify-npl/' + data.id;
                         var refund = '/superadmin/form-refund/' + data.id;
                         return `
                         <span><a class="btn btn-success" href="${refund}"><i class="fas fa-check"></i></a></span>

@@ -96,12 +96,7 @@
         <h5 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
     </div>
 
-    @if (Session::has('message'))
-        <script>
-            swal("Success","{{Session::get('message')}}",'success',{
-            });
-        </script>
-    @endif
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
     </script>

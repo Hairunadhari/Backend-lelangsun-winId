@@ -334,45 +334,44 @@
     <div class="testimoni">
         <h1 class="text-white text-center">TESTIMONIAL</h1>
         <div class="testimoni-bungkus-card">
+            @foreach ($ulasan as $item)
             <div class="card">
                 <img src="{{ asset('asset-lelang/profile_picture.png') }}" width="50" alt="">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora culpa hic, minus dolor laborum eos doloremque qui labore numquam! Voluptates.</p>
+                <p>{{$item->ulasan}}</p>
                 <hr>
                 <div class="cardcild">
-                    <p>Ahmad</p>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
+                    <p>{{$item->nama}}</p>
+                    @switch($item->bintang)
+                        @case(1)
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                            @break
+                        @case(2)
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                            @break
+                        @case(3)
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                            @break
+                        @case(4)
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                            @break
+                        @case(5)
+                            
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                        <i class="fas fa-star" style="color: #f8fd08;"></i>
+                            @break
+                    @endswitch
                 </div>
             </div>
-            <div class="card">
-                <img src="{{ asset('asset-lelang/profile_picture.png') }}" width="50" alt="">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora culpa hic, minus dolor laborum eos doloremque qui labore numquam! Voluptates.</p>
-                <hr>
-                <div class="cardcild">
-                    <p>Ahmad</p>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                </div>
-            </div>
-            <div class="card">
-                <img src="{{ asset('asset-lelang/profile_picture.png') }}" width="50" alt="">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora culpa hic, minus dolor laborum eos doloremque qui labore numquam! Voluptates.</p>
-                <hr>
-                <div class="cardcild">
-                    <p>Ahmad</p>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                    <i class="fas fa-star" style="color: #f8fd08;"></i>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>

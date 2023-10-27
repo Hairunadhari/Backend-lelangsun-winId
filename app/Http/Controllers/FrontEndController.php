@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Lot;
 use App\Models\Npl;
 use App\Models\Refund;
+use App\Models\Ulasan;
 use App\Events\Message;
 use App\Models\Bidding;
 use App\Models\LotItem;
@@ -34,8 +35,9 @@ class FrontEndController extends Controller
     public function beranda(){
         $data = BannerLelang::where('status','active')->first();
         $banner = BannerLelangImage::where('banner_lelang_id',$data->id)->get();
+        $ulasan = Ulasan::all();
         // dd($banner);
-        return view('front-end/beranda',compact('data','banner'));
+        return view('front-end/beranda',compact('data','banner','ulasan'));
     }
     public function lot(){
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
@@ -147,7 +149,7 @@ class FrontEndController extends Controller
         $notif->each->update([
             'is_read' => 'dibaca'
         ]);
-        $data = Notifikasi::where('peserta_npl_id',$id)->orderBy('created_at','desc')->get();
+        $data = Notifikasi::where('peserta_npl_id',$id)->where('status','active')->orderBy('created_at','desc')->get();
         return view('front-end/pesan',compact('data'));
     }
     public function harganpl_by_event($id){
@@ -191,7 +193,7 @@ class FrontEndController extends Controller
 
         
 
-        return redirect()->back()->with('success', 'Pembelian NPL berhasil! data anda sedang diverifikasi oleh admin');
+        return redirect()->back()->with('message', 'Pembelian NPL berhasil! data anda sedang diverifikasi oleh admin');
     }
 
     public function bidding($id){
@@ -272,7 +274,7 @@ class FrontEndController extends Controller
                 'npwp' => $request->npwp,
             ]);
         }
-        return redirect()->back()->with('success', 'Data Berhasil Diubah!');
+        return redirect()->back()->with('message', 'Data Berhasil Diubah!');
     }
     
     public function refund($id){
@@ -284,7 +286,7 @@ class FrontEndController extends Controller
         Refund::create([
             'npl_id' => $id,
         ]);
-        return redirect()->back()->with('success', 'SUCCESS! data anda sedang di verifikasi oleh admin');
+        return redirect()->back()->with('message', 'SUCCESS! data anda sedang di verifikasi oleh admin');
     }
 
     public function send_bidding(Request $request){
@@ -322,6 +324,19 @@ class FrontEndController extends Controller
             'tipe_pelunasan' => $request->tipe_pelunasan,
             'status_verif' => 'Verifikasi',
         ]);
-        return redirect()->back()->with('success', 'SUCCESS! data anda sedang di verifikasi oleh admin');
+        return redirect()->back()->with('message', 'SUCCESS! data anda sedang di verifikasi oleh admin');
+    }
+    public function beri_ulasan(Request $request, $id){
+        $nama = Auth::guard('peserta')->user()->nama;
+        $notif = Notifikasi::find($id);
+        $notif->update([
+            'status' => 'not-active'
+        ]);
+        Ulasan::create([
+            'nama' => $nama,
+            'bintang' => $request->bintang,
+            'ulasan' => $request->ulasan,
+        ]);
+        return redirect()->back()->with('message', 'SUCCESS! Ulasan berhasil di kirim!');
     }
 }
