@@ -10,7 +10,7 @@
 
 </style>
 <div class="section-body">
-    <form action="{{route('update-peserta-npl', $data->id)}}" method="post" enctype="multipart/form-data">
+    <form action="{{route('superadmin.update-peserta-npl', $data->id)}}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="card">

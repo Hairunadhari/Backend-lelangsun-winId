@@ -11,21 +11,21 @@
                     </button>
                 </div>
                 <div class="card-body">
-                <table class="table table-striped w-100" id="tablebanner-1">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Gambar</th>
-                            <th>Opsi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                    <table class="table table-striped w-100" id="tablebanner-1">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Gambar</th>
+                                <th>Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -53,13 +53,13 @@
                         var deleteUrl = '/superadmin/delete-banner-utama/' + data.id;
                         var editUrl = '/superadmin/edit-banner-utama/' + data.id;
                         return `
-                <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                  <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
-                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
-                </form>
-              `;
+                            <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                            <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
+                            </form>
+                        `;
                     },
                 },
             ],
