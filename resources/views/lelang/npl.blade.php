@@ -97,7 +97,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('add-npl')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('superadmin.add-npl')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" class="form-control" name="peserta_npl_id" value="{{$id}}" required>

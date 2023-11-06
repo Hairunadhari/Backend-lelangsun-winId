@@ -144,7 +144,7 @@
                 {
                     data: null,
                     render: function (data, row, type, meta) {
-                        var npl = '/npl/' + data.id;
+                        var npl = 'webnpl/' + data.id;
                         var total =  data.npl.length;
                         return `<a class="btn btn-warning fs-5" href="${npl}">${total}</a>`;
                     }

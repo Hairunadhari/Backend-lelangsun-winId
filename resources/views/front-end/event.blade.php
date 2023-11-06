@@ -68,7 +68,7 @@
             <div class="bungkus-lot">
                 @foreach ($event as $item)
                 <div class="card">
-                    <img src="/asset-lelang/event-content.jpg"  alt="...">
+                    <img src="{{ asset('storage/image/'.$item->gambar) }}"  alt="...">
                     <div class="card-body">
                       <h5 class="card-title">{{$item->judul}}</h5>
                       <p class="card-text"><i class="fas fa-map-marker-alt"></i> {{$item->alamat}}</p>
