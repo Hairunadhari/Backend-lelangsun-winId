@@ -63,7 +63,10 @@ class FrontEndController extends Controller
     }
     public function detail_event($id){
         $event_id = Crypt::decrypt($id);
-        $event = EventLelang::with('lot_item.barang_lelang.gambarlelang')->find($event_id);
+        $event = EventLelang::with(['lot_item'=>function($query){
+            $query->where('status_item','active');
+        }],'lot_item.barang_lelang.gambarlelang')->find($event_id);
+        // dd($event);
         return view('front-end/detail_event',compact('event'));
     }
     public function kontak(){
