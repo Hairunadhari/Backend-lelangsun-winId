@@ -1722,7 +1722,7 @@ class ApiController extends Controller
 
      /**
      * @OA\Get(
-     *      path="/api/lelang/detail-barang-lelang/{id}/",
+     *      path="/lelang/event/detail/{id}/
      *      tags={"Event Lelang"},
      *      summary="Menampilkan detail event lelang berdasarkan ID",
      *      description="Menampilkan detail event lelang berdasarkan ID yg diberikan",
