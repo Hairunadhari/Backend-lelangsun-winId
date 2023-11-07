@@ -1120,7 +1120,7 @@
                 }
             }
         },
-        "/api/lelang/detail-barang-lelang/{id}/": {
+        "/lelang/event/detail/{id}/": {
             "get": {
                 "tags": [
                     "Event Lelang"
