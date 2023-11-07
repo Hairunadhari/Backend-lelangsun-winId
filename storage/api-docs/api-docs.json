@@ -1120,7 +1120,7 @@
                 }
             }
         },
-        "/lelang/event/detail/{id}/": {
+        "/api/lelang/event/detail/{id}/": {
             "get": {
                 "tags": [
                     "Event Lelang"

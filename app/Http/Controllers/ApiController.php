@@ -1722,7 +1722,7 @@ class ApiController extends Controller
 
      /**
      * @OA\Get(
-     *      path="/lelang/event/detail/{id}/",
+     *      path="/api/lelang/event/detail/{id}/",
      *      tags={"Event Lelang"},
      *      summary="Menampilkan detail event lelang berdasarkan ID",
      *      description="Menampilkan detail event lelang berdasarkan ID yg diberikan",
@@ -1755,8 +1755,8 @@ class ApiController extends Controller
             'lot_item.barang_lelang.gambarlelang' => function ($query){
                 //
             }
-        ])->find($id);
-
+            ])->find($id);
+            // dd($data);
         $data->gambar = env('APP_URL').'/storage/image/'. $data->gambar;
 
         $data->lot_item->each(function ($lot){
