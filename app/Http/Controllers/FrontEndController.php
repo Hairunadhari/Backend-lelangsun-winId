@@ -494,4 +494,10 @@ class FrontEndController extends Controller
         }
         return redirect()->back()->with('message', 'SUCCESS! Ulasan berhasil di kirim!');
     }
+    public function detail_lot($id){
+        $lot_id = Crypt::decrypt($id);
+        $data = LotItem::with('barang_lelang.gambarlelang')->find($lot_id);
+        // dd($data);
+        return view('front-end/detail-lot',compact('data'));
+    }
 }

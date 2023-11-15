@@ -54,6 +54,7 @@ Route::middleware('peserta')->group(function () {
     Route::post('/add-user-npl', [FrontEndController::class, 'add_npl'])->name('add-npl-user');
     Route::put('/pelunasan-barang-lelang/{id}/', [FrontEndController::class, 'pelunasan_barang'])->name('pelunasan-barang-lelang');
     Route::put('/beri-ulasan/{id}/', [FrontEndController::class, 'beri_ulasan'])->name('beri-ulasan');
+    Route::get('/detail-lot/{id}/', [FrontEndController::class, 'detail_lot']);
 });
 Route::get('/verify-email-user/{id}/', [VerifyEmailRegisterController::class, 'verifikasi_email_user'])->name('verify-email-user');
 // Route::get('/resend-code/{id}/', [VerifyEmailRegisterController::class, 'resend_code'])->name('resend-code');
