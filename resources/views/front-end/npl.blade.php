@@ -121,12 +121,6 @@
                     <a href="{{route('front-end-pelunasan')}}">Pelunasan Barang Lelang</a>
                     <a href="{{route('front-end-pesan')}}">Notifikasi</a>
                 </div>
-                @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>{{ session('success') }}</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                @endif
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-success m-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <i class="fas fa-plus"></i> Beli NPL
@@ -146,8 +140,8 @@
                                 <form action="{{route('add-npl-user')}}" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <div class="modal-body">
-                                        <input type="hidden" class="form-control" name="peserta_npl_id"
-                                            value="{{Auth::guard('peserta')->user()->id}}">
+                                        <input type="hidden" class="form-control" name="user_id"
+                                            value="{{Auth::user()->id}}">
                                         <input type="hidden" class="form-control" name="type_pembelian" value="online"
                                             required>
                                         <div class="form-group mb-3">
@@ -180,14 +174,10 @@
                                             <label>No Rekening<span style="color: red">*</span></label>
                                             <input type="text" class="form-control" name="no_rek" required>
                                         </div>
-                                        <div class="form-group mb-3">
-                                            <label>Waktu Transfer<span style="color: red">*</span></label>
-                                            <input type="datetime-local" class="form-control" name="tgl_transfer"
-                                                required>
-                                        </div>
+                                        
                                         <div class="form-group mb-3">
                                             <label>Bukti Transfer <span style="color: red">*</span></label>
-                                            <input type="file" class="form-control" name="bukti" required
+                                            <input type="file" class="form-control" name="bukti" required accept=".jpg,.png,.jpeg"
                                                 id="gambarktp">
                                             <div id="previewktp" class="mt-3"></div>
                                         </div>

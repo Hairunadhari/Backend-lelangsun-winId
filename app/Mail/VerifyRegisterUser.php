@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use App\Models\PesertaNpl;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -19,7 +20,7 @@ class VerifyRegisterUser extends Mailable
     public $user; // Menambahkan properti $user
     public $url; // Menambahkan properti $user
 
-    public function __construct(PesertaNpl $user, $url)
+    public function __construct(User $user, $url)
     {
         $this->user = $user;
         $this->url = $url;

@@ -10,9 +10,9 @@
     <div class="container p-3">
         <div style="font-weight: bold; color: black">Hello!</div>
         <div>Please click the button below to verify your email address.</div>
-        <div class="mt-3">
-            <a href="{!!$url!!}" class="btn btn-primary">Verify Email Addres</a>
-        </div>
+        <div class="mt-3" style="background-color: #0D6EFD; padding: 5px; border-radius: 5px; text-align: center; width: 200px; margin-top: 5px;">
+          <a href="{!!$url!!}" style="color: white; text-decoration: none;">Verify Email Addres</a>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

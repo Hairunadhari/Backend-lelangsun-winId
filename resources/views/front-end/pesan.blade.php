@@ -130,6 +130,7 @@
                                 <th>Judul</th>
                                 <th>Pesan</th>
                                 <th>Aksi</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -186,9 +187,15 @@
                         @method('PUT')
                         <div class="form-group mb-3">
                             <label>Bintang <span style="color: red">*</span></label>
-                            <input type="number" name="bintang" class="form-control" min="1" max="5" pattern="[1-5]" title="Harap masukkan angka antara 1 hingga 5">
-
+                            <select class="form-control" name="bintang">
+                                <option value="1">&#9733;</option>
+                                <option value="2">&#9733;&#9733;</option>
+                                <option value="3">&#9733;&#9733;&#9733;</option>
+                                <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+                                <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+                            </select>
                         </div>
+                        
                         <div class="form-group mb-3">
                             <label>Ulasan Anda <span style="color: red">*</span></label>
                             <textarea name="ulasan" id="" cols="10" rows="5" class="form-control"></textarea>

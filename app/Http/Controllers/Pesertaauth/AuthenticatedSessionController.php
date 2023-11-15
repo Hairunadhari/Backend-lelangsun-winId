@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pesertaauth;
 
+use Throwable;
 use App\Models\User;
 use Illuminate\View\View;
 use App\Models\PesertaNpl;
@@ -31,19 +32,22 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // ambil data all status
-        $user = PesertaNpl::where('email', $request->email)->first();
-        // dd($user);
-        if ($user) {
-            if ($user->status == 'active' && $user->verified_email == 'active') {
-                $request->authenticate();
-                $request->session()->regenerate();
-                return redirect()->intended(RouteServiceProvider::PESERTA);
-            } else {
-                return redirect('/user-login')->with(['pesan' => 'Akun belum Terverivikasi!']);            
+        try {
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                if ($user->status == 'active' && $user->email_verified_at != null) {
+                    $request->authenticate();
+                    $request->session()->regenerate();
+                    return redirect()->intended(RouteServiceProvider::PESERTA);
+                } else {
+                    return redirect('/user-login')->with(['warning' => 'Akun belum Terverivikasi! Silahkan verifikasi email anda!']);            
+                }
+            }else{
+                return redirect('/user-login')->with(['error' => 'Email Belum Terdaftar!']);            
             }
-        }else{
-            return redirect('/user-login')->with(['pesan' => 'Email Belum Terdaftar!']);            
+        } catch (Throwable $th) {
+            // dd($th);
+            return redirect('/user-login')->with(['error' => 'Gagal Login! Silahkan cek ulang email dan password anda!']);            
         }
     }
 

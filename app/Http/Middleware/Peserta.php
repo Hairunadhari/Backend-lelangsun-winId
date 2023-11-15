@@ -11,8 +11,7 @@ class Peserta
 {
     public function handle($request, Closure $next)
     {
-        // dd($next);
-        if (Auth::guard('peserta')->user()) {
+        if (Auth::user()->role_id == null) {
             return $next($request);
         }
         return redirect()->back();

@@ -20,16 +20,16 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Nama <span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="nama" value="{{$data->nama}}" required>
+                    <input type="text" class="form-control" name="name" value="{{$data->name}}" required>
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
                         <label>Email <span style="color: red">*</span></label>
-                        <input type="email" class="form-control" name="email" value="{{$data->email}}" required>
+                        <input type="email" class="form-control"  value="{{$data->email}}" readonly>
                     </div>
                     <div class="form-group col-6">
                         <label>Telepon <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="no_hp" value="{{$data->no_hp}}" required>
+                        <input type="text" class="form-control" name="no_telp" value="{{$data->no_telp}}" required>
                     </div>
                 </div>
                 <div class="form-group">

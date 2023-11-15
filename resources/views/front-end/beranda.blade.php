@@ -88,16 +88,18 @@
         padding-top: 50px;
     }
     .testimoni-bungkus-card{
-        padding: 100px;
+        padding: 50px;
         display: flex;
         justify-content: center;
     }
     .testimoni-bungkus-card .card{
         margin-left: 20px;
         border: 1px solid white;
-        padding: 10px
+        padding: 10px;
+        width: 30vw;
         
     }
+    
 
     @media (max-width: 600px){
         .container-fluid .logosun {
@@ -171,6 +173,7 @@
             border: 1px solid white;
             padding: 10px;
             margin-bottom: 20px;
+            width: 100%;
             
         }
         #content-4 {

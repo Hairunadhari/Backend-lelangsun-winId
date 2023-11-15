@@ -128,11 +128,11 @@
                     <div class="row mb-3">
                         <div class="col-6">
                             <label for="" class="form-label">Nama</label>
-                            <input type="text" class="form-control" name="nama" value="{{$data->nama}}">
+                            <input type="text" class="form-control" name="name" value="{{$data->name}}">
                         </div>
                         <div class="col-6">
                             <label for="" class="form-label">No Hp</label>
-                            <input type="number" class="form-control" name="no_hp" value="{{$data->no_hp}}">
+                            <input type="number" class="form-control" name="no_telp" value="{{$data->no_telp}}">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -156,12 +156,12 @@
                     <div class="row">
                         <div class="col-6">
                             <label for="" class="form-label">Foto KTP</label>
-                            <input type="file" class="form-control" name="foto_ktp" id="gambarktp">
+                            <input type="file" class="form-control" name="foto_ktp" accept=".jpg,.png,.jpeg" id="gambarktp">
                             <div id="previewktp" class="mt-3"></div>
                         </div>
                         <div class="col-6">
                             <label for="" class="form-label">Foto NPWP</label>
-                            <input type="file" class="form-control" name="foto_npwp" id="gambarnpwp">
+                            <input type="file" class="form-control" name="foto_npwp" accept=".jpg,.png,.jpeg" id="gambarnpwp">
                             <div id="previewnpwp" class="mt-3"></div>
                         </div>
                     </div>

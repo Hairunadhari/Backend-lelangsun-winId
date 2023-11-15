@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DateTime;
 use Exception;
+use Throwable;
 use Validator;
 use DateTimeZone;
 use Carbon\Carbon;
@@ -15,6 +16,8 @@ use App\Models\Event;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Review;
+use App\Events\Message;
+use App\Models\Bidding;
 use App\Models\LotItem;
 use App\Models\Promosi;
 use App\Models\Tagihan;
@@ -40,6 +43,7 @@ use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
 use App\Models\PembayaranEvent;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -1968,6 +1972,36 @@ class ApiController extends Controller
             'message' => 'success',
             'data' => $npl,
         ]);
+
+    }
+
+    public function send_bidding(Request $request){
+        try {
+            DB::beginTransaction();
+            $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+            $bid = Bidding::where('lot_item_id',$request->lot_item_id)->where('status','active')->orderBy('harga_bidding','desc')->first();
+            $bids = $bid->harga_bidding + $request->harga_bidding;
+            $now = $konvers_tanggal->format('Y-m-d H:i:s');
+            $data = Bidding::create([
+                'kode_event' => Str::random(64),
+                'email' => $request->email,
+                'event_lelang_id' => $request->event_lelang_id,
+                'peserta_npl_id' => $request->peserta_npl_id,
+                'lot_item_id' => $request->lot_item_id,
+                'npl_id' => $request->npl_id,
+                'harga_bidding' => $bids,
+                'waktu' => $now,
+            ]);
+            event(new Message($request->email, $request->harga_bidding));
+            DB::commit();
+            return response()->json([
+                'data'=> $data,
+                'message'=>'success'
+            ]);
+
+        } catch (Throwable $th) {
+            DB::rollBack();
+        }
 
     }
 }

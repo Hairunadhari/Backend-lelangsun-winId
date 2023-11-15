@@ -12,7 +12,7 @@ class Admin
     public function handle($request, Closure $next, $role)
     {
         // dd(Auth::user()->role->role);
-        // dd($next);
+        dd($next);
         if(Auth::check() && Auth::user()->role->role == $role){
             return $next($request);
         }

@@ -142,7 +142,15 @@
                                 <td>{{$id++}}</td>
                                 <td>{{$item->pemenang->bidding->lot_item->barang_lelang->barang}}</td>
                                 <td>Rp {{number_format($item->pemenang->nominal - $item->pemenang->npl->harga_item,0,'.','.')}}</td>
-                                <td><span class="badge bg-secondary">{{$item->pemenang->status_verif}}</span></td>
+                                <td>
+                                    @if ($item->pemenang->status_verif == 'Terverifikasi')
+                                        
+                                    <span class="badge bg-dark">{{$item->pemenang->status_verif}}</span>
+                                    @else
+                                        
+                                    <span class="badge bg-secondary">{{$item->pemenang->status_verif}}</span>
+                                    @endif
+                                </td>
                                     @if ($item->pemenang->status_verif == '-')
                                     <td>
                                         <button type="button" class="btn btn-success" data-bs-toggle="modal"
@@ -185,11 +193,6 @@
                             <label>Total Transfer<span style="color: red">*</span></label>
                             <input type="text" class="form-control" value="{{number_format($item->pemenang->nominal - $item->pemenang->npl->harga_item,0,'.','.')}}"
                                 readonly>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label>Waktu Transfer<span style="color: red">*</span></label>
-                            <input type="datetime-local" class="form-control" name="tgl_transfer"
-                                required>
                         </div>
                         <div class="form-group mb-3">
                             <label>Bukti Transfer <span style="color: red">*</span></label>

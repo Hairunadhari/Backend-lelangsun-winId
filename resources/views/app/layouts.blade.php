@@ -118,6 +118,15 @@
           });
       </script>
     @endif
+   @if (Session::has('error'))
+      <script>
+          iziToast.error({
+            title: 'Error',
+            message: "{{Session::get('error')}}",
+            position: 'topRight'
+          });
+      </script>
+    @endif
    <script>
      $.ajaxSetup({
            headers: {

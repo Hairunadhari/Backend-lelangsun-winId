@@ -14,9 +14,9 @@ class Bidding extends Model
     {
         return $this->belongsTo(LotItem::class);
     }
-    public function peserta_npl()
+    public function user()
     {
-        return $this->belongsTo(PesertaNpl::class);
+        return $this->belongsTo(User::class);
     }
     public function event_lelang()
     {

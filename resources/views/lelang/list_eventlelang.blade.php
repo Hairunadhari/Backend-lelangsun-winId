@@ -186,7 +186,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Poster<small>(format poster: png, jpg, jpeg | disarankan: width 900px, height 470px)</small><span style="color: red">*</span></label>
-                        <input type="file" class="form-control" name="gambar" required id="gambar">
+                        <input type="file" class="form-control" name="gambar" required id="gambar" accept=".jpg,.png,.jpeg">
                     <div id="preview" class="mt-3"></div>
                     </div>
                     <div class="form-group">

@@ -11,6 +11,7 @@
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        
 
 </head>
 <style>
@@ -67,12 +68,6 @@
         <div class="sec-login">
             <div class="isian-login">
                 <h1 class="text-center">Login Lelang</h1>
-                @if (session('pesan'))
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                      <strong>{{ session('pesan') }}</strong>
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
                 <form method="POST" action="{{route('peserta.login')}}" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
@@ -95,7 +90,24 @@
     <div class="last-text">
         <h5 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
     </div>
-
+    @if (Session::has('message'))
+        <script>
+            swal("SUCCESS","{{Session::get('message')}}",'success',{
+            });
+        </script>
+    @endif
+    @if (Session::has('warning'))
+        <script>
+            swal("Ada Kesalahan","{{Session::get('warning')}}",'warning',{
+            });
+        </script>
+    @endif
+    @if (Session::has('error'))
+        <script>
+            swal("Ups!","{{Session::get('error')}}",'error',{
+            });
+        </script>
+    @endif
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">

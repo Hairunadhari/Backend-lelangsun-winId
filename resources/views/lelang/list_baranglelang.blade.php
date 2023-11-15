@@ -308,11 +308,12 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Pilih Kategori Barang Lelang <span style="color: red">*</span></label>
+                        <label>Kategori Barang Lelang <span style="color: red">*</span></label>
                         <select class="form-control selectric" name="kategoribarang_id" id="id_kategoribarang"
                             onchange="toggleDiv(this.value)">
+                            <option readonly>-- Pilih Kategori --</option>
                             @foreach ($kategori as $item)
-                            <option value="{{ $item->id }}">{{ strtoupper($item->kategori) }}</option>
+                            <option value="{{ $item->id }}" data-kategori="{{$item->kategori}}">{{ strtoupper($item->kategori) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -526,7 +527,7 @@
                     </div>
                     <div class="form-group">
                         <label>Gambar <span style="color: red">*</span><small>(bisa pilih lebih dari satu gambar)</small></label>
-                        <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
+                        <input type="file" class="form-control" name="gambar[]" id="gambar" accept=".jpg,.png,.jpeg" required multiple>
                     </div>
                     <div id="preview" class="review"></div>
                     <div class="form-group">
@@ -543,32 +544,33 @@
     </div>
 </div>
 <script>
-    window.onload = function () {
-        const selectElement = document.getElementById("id_kategoribarang");
-        const inpKendaraan = document.getElementById("inpKendaraan");
 
-        if (selectElement.value == 1) {
-            inpKendaraan.style.display = "block";
-        } else if (selectElement.value == 2) {
-            inpKendaraan.style.display = "block";
-        } else {
-            inpKendaraan.style.display = "none";
-        }
-    };
+    // Asumsikan kode ini berada di dalam sebuah tag <script> atau file JavaScript
+function toggleDiv(value) {
+    const inpKendaraan = document.getElementById("inpKendaraan");
+    const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
+    const selectedOption = document.getElementById("id_kategoribarang").options[document.getElementById("id_kategoribarang").selectedIndex];
+    const dataKategori = selectedOption.getAttribute("data-kategori");
 
-    function toggleDiv(value) {
-        const inpKendaraan = document.getElementById("inpKendaraan");
-        const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
-        // const selectgroup = inpKendaraan.querySelector(".selectgroup");
-        if (value == 1 || value == 2) {
-            inpKendaraan.style.display = "block";
-        } else {
-            inpKendaraan.style.display = "none";
-            inputsInpKendaraan.forEach(input => {
-                input.removeAttribute("required");
-            });
-        }
+    if (dataKategori === "motor" || dataKategori === "mobil") {
+        console.log('tess', dataKategori);
+        inpKendaraan.style.display = "block";
+
+        // Tambahkan atribut "required" kembali pada elemen input
+        inputsInpKendaraan.forEach(input => {
+            input.setAttribute("required", "required");
+        });
+    } else {
+        inpKendaraan.style.display = "none";
+
+        // Hapus atribut "required" dari elemen input
+        inputsInpKendaraan.forEach(input => {
+            input.removeAttribute("required");
+        });
     }
+}
+
+
 
     function previewImages() {
         var preview = document.querySelector('#preview');

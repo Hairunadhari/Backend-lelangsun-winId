@@ -34,7 +34,7 @@
                         <label>Pilih Kategori Barang Lelang</label>
                         <select class="form-control selectric" name="kategoribarang_id" id="id_kategoribarangs" onchange="toggleDiv(this.value)">
                             @foreach ($kategori as $item)
-                            <option value="{{ $item->id }}"
+                            <option value="{{ $item->id }}" data-kategori="{{$item->kategori}}"
                                 {{ $item->id == $data->kategoribarang->id ? 'selected' : '' }}>
                                 {{ $item->kategori }}
                             </option>
@@ -278,26 +278,51 @@
 </div>
 <script>
     window.onload = function () {
-        const selectElement = document.getElementById("id_kategoribarangs");
-        const editinpKendaraan = document.getElementById("editinpKendaraan");
+        const selectElement = document.getElementById("id_kategoribarang");
+        const inpKendaraan = document.getElementById("editinpKendaraan");
+        const selectedOption = document.getElementById("id_kategoribarangs").options[document.getElementById("id_kategoribarangs").selectedIndex];
+        const dataKategori = selectedOption.getAttribute("data-kategori");
+        if (dataKategori == "motor" || dataKategori == "mobil") {
+        console.log('tess', dataKategori);
+        inpKendaraan.style.display = "block";
 
-        if (selectElement.value == 1) {
-            editinpKendaraan.style.display = "block";
-        } else if (selectElement.value == 2) {
-            editinpKendaraan.style.display = "block";
-        } else {
-            editinpKendaraan.style.display = "none";
-        }
+        // Tambahkan atribut "required" kembali pada elemen input
+        inputsInpKendaraan.forEach(input => {
+            input.setAttribute("required", "required");
+        });
+    } else {
+        inpKendaraan.style.display = "none";
+
+        // Hapus atribut "required" dari elemen input
+        inputsInpKendaraan.forEach(input => {
+            input.removeAttribute("required");
+        });
+    }
     };
 
     function toggleDiv(value) {
-        const editinpKendaraan = document.getElementById("editinpKendaraan");
-        if (value == 1 || value == 2) {
-            editinpKendaraan.style.display = "block";
-        } else {
-            editinpKendaraan.style.display = "none";
-        }
+    const inpKendaraan = document.getElementById("editinpKendaraan");
+    const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
+    const selectedOption = document.getElementById("id_kategoribarangs").options[document.getElementById("id_kategoribarangs").selectedIndex];
+    const dataKategori = selectedOption.getAttribute("data-kategori");
+
+    if (dataKategori === "motor" || dataKategori === "mobil") {
+        console.log('tess', dataKategori);
+        inpKendaraan.style.display = "block";
+
+        // Tambahkan atribut "required" kembali pada elemen input
+        inputsInpKendaraan.forEach(input => {
+            input.setAttribute("required", "required");
+        });
+    } else {
+        inpKendaraan.style.display = "none";
+
+        // Hapus atribut "required" dari elemen input
+        inputsInpKendaraan.forEach(input => {
+            input.removeAttribute("required");
+        });
     }
+}
 
     function previewImages() {
         var preview = document.querySelector('#preview');

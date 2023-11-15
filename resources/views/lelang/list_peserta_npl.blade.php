@@ -11,14 +11,6 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
-                        <strong>{{ session('error') }}</strong>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
                     <ul class="nav nav-pills" id="myTab3" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
@@ -79,7 +71,6 @@
                                         <th>No</th>
                                         <th>Nama</th>
                                         <th>Email</th>
-                                        <th>Tgl Transfer</th>
                                         <th>Nominal</th>
                                         <th>Bukti Transfer</th>
                                         <th>Opsi</th>
@@ -130,21 +121,38 @@
                     },
                 },
                 {
-                    data: "nama",
+                    data: "name",
                 },
                 {
                     data: "email",
                 },
                 {
-                    data: "no_hp",
+                    data: "no_telp",
+                    render: function (data) {
+                        if (data != null) {
+                            return `<span>`+data+`</span>`
+                        } else {
+                            return `<span>-</span>`
+                            
+                        }
+                    }
                 },
                 {
                     data: "alamat",
+                    render: function (data) {
+                        if (data != null) {
+                            return `<span>`+data+`</span>`
+                        } else {
+                            return `<span>-</span>`
+                            
+                        }
+                    }
+                    
                 },
                 {
                     data: null,
                     render: function (data, row, type, meta) {
-                        var npl = 'webnpl/' + data.id;
+                        var npl = 'npl/' + data.id;
                         var total =  data.npl.length;
                         return `<a class="btn btn-warning fs-5" href="${npl}">${total}</a>`;
                     }
@@ -184,16 +192,32 @@
                     },
                 },
                 {
-                    data: "nama",
+                    data: "name",
                 },
                 {
                     data: "email",
                 },
                 {
-                    data: "no_hp",
+                    data: "no_telp",
+                    render: function (data) {
+                        if (data != null) {
+                            return `<span>`+data+`</span>`
+                        } else {
+                            return `<span>-</span>`
+                            
+                        }
+                    }
                 },
                 {
                     data: "alamat",
+                    render: function (data) {
+                        if (data != null) {
+                            return `<span>`+data+`</span>`
+                        } else {
+                            return `<span>-</span>`
+                            
+                        }
+                    }
                 },
                 {
                     data: null,
@@ -235,13 +259,10 @@
                     },
                 },
                 {
-                    data: "peserta_npl.nama",
+                    data: "user.name",
                 },
                 {
-                    data: "peserta_npl.email",
-                },
-                {
-                    data: "tgl_transfer",
+                    data: "user.email",
                 },
                 {
                     data: "nominal",
@@ -293,7 +314,7 @@
                     },
                 },
                 {
-                    data: "npl.peserta_npl.nama",
+                    data: "npl.user.name",
                     render: function (data, type, row, meta) {
                         if (data == null) {
                             return `-`;
@@ -304,7 +325,7 @@
                     },
                 },
                 {
-                    data: "npl.peserta_npl.email",
+                    data: "npl.user.email",
                 },
                 {
                     data: "npl.kode_npl",
@@ -379,23 +400,23 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-6">
-                            <label>NIK <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="nik" required>
+                            <label>NIK</label>
+                            <input type="text" class="form-control" name="nik">
                         </div>
                         <div class="form-group col-6">
-                            <label>NPWP <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="npwp" required>
+                            <label>NPWP</label>
+                            <input type="text" class="form-control" name="npwp">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-6">
-                            <label>Foto KTP <span style="color: red">*</span></label>
-                            <input type="file" class="form-control" name="foto_ktp" required id="gambarktp">
+                            <label>Foto KTP</label>
+                            <input type="file" class="form-control" accept=".jpg,.png,.jpeg" name="foto_ktp" id="gambarktp">
                             <div id="previewktp" class="mt-3"></div>
                         </div>
                         <div class="form-group col-6">
-                            <label>Foto NPWP <span style="color: red">*</span></label>
-                            <input type="file" class="form-control" name="foto_npwp" required id="gambarnpwp">
+                            <label>Foto NPWP</label>
+                            <input type="file" class="form-control" accept=".jpg,.png,.jpeg" name="foto_npwp" id="gambarnpwp">
                             <div id="previewnpwp" class="mt-3"></div>
                         </div>
                     </div>

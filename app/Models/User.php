@@ -26,6 +26,12 @@ class User extends Authenticatable
         'foto',
         'role_id',
         'status',
+        'email_verified_at',
+        'nik',
+        'foto_ktp',
+        'npwp',
+        'foto_npwp',
+        'no_rek',
     ];
 
     /**
@@ -74,5 +80,21 @@ class User extends Authenticatable
     public function pembayaran_event()
     {
         return $this->hasMany(PembayaranEvent::class);
+    }
+    public function pembelian_npl()
+    {
+        return $this->hasMany(PembelianNpl::class);
+    }
+    public function npl()
+    {
+        return $this->hasMany(Npl::class);
+    }
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
+    public function bidding()
+    {
+        return $this->hasMany(Bidding::class);
     }
 }

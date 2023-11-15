@@ -25,7 +25,6 @@ $(document).ready(function () {
         success: function (res) {
             // console.log(res);
             $.each(res, function (key, value) {
-                // $('#log-bid-user').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">'+ value.email+' '+ ': ' + value.harga_bidding+'</h5></div>');
                 $('#log-bid').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' + value.email + ' ' + ': ' + value.harga_bidding + '</h5></div>');
             });
         }
@@ -112,6 +111,7 @@ $(document).ready(function () {
                 button: 'open',
             },
             success: function (res) {
+                console.log('start-bid',res);
                 toggleTimer(seconds);
                 
             }
@@ -128,12 +128,16 @@ $(document).ready(function () {
                 lot_item_id: lot_item_id,
             },
             success: function (res) {
+                console.log('timer-hbis',res);
+                $('#con-bid').css('display', 'none');
+                    $('#loading').css('display', 'block');
                 const message = res.email ? "Pemenang Dari LOT Ini Adalah " + res.email + " dengan harga " + res.harga_bidding + "!" : "LOT tidak memiliki pemenang.";
                 swal(message, {
                     icon: "success",
                     buttons: {
                         confirm: {
                             text: "Next Bidding",
+                            closeOnClickOutside: false,
                         },
                     },
                 }).then((nextlot) => {
@@ -146,6 +150,7 @@ $(document).ready(function () {
                                 lot_item_id: lot_item_id,
                             },
                             success: function (res) {
+                                console.log('next-bid',res);
                                 if (res.lot_item.length > 0) {
                                     window.location.href = '/superadmin/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
                                     document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -159,6 +164,7 @@ $(document).ready(function () {
                                             _method: 'PUT',
                                         },
                                         success: function (res) {
+                                            console.log('delete-event',res);
                                                 document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
                                         }
                                     });
@@ -178,15 +184,15 @@ $(document).ready(function () {
     // <------------------------------------------------ FUNGSI KLIK BIDDING ------------------------------------------------------->
     $(document).on('click', '#send_bidding', function (e) {
         e.preventDefault();
+        $('#con-bid').css('display', 'none');
+        $('#loading').css('display', 'block');
 
-        let kelipatanBidding = parseFloat($('#harga_bidding').val());
-        let harga_bidding = parseFloat($('#harga_awal').val()) + kelipatanBidding;
+        let kelipatan_bid = parseFloat($('#kelipatan_bid').val());
+        let harga_awal = parseFloat($('#harga_awal').val());
 
-        // Update nilai input harga_awal
-        $('#harga_awal').val(harga_bidding);
         let email = $('#email').val();
         let event_lelang_id = $('#event_lelang_id').val();
-        let peserta_npl_id = $('#peserta_npl_id').val();
+        let user_id = $('#user_id').val();
         let lot_item_id = $('#lot_item_id').val();
         let npl_id = $('#npl_id').val();
 
@@ -197,13 +203,17 @@ $(document).ready(function () {
             data: {
                 email: email,
                 event_lelang_id: event_lelang_id,
-                peserta_npl_id: peserta_npl_id,
+                user_id: user_id,
                 lot_item_id: lot_item_id,
                 npl_id: npl_id,
-                harga_bidding: harga_bidding
+                harga_awal: harga_awal,
+                kelipatan_bid: kelipatan_bid,
             },
             success: function (res) {
-                // Lakukan sesuatu dengan respon dari AJAX jika diperlukan
+                console.log('send-bidding',res);
+                $('#con-bid').css('display', 'block');
+                $('#loading').css('display', 'none');
+                
             }
         });
     });
@@ -212,15 +222,17 @@ $(document).ready(function () {
     // <------------------------------------------------ FUNGSI STOP BIDDING ------------------------------------------------------->
     $(document).on('click', '#stop-bidding', function (e) {
         e.preventDefault();
-
         swal({
                 title: "Anda Yakin Akan Menghentikan Lelang Ini?",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
+                closeOnClickOutside: false,
             })
             .then((win) => {
                 if (win) {
+                    $('#con-bid').css('display', 'none');
+                    $('#loading').css('display', 'block');
                     timer_habis();
                 }
             });
@@ -230,41 +242,47 @@ $(document).ready(function () {
 
     // <------------------------------------------------ FUNGSI BID USER ------------------------------------------------------->
 
-    let email_user = $('#email_user').val();
-    let event_lelang_id_user = $('#event_lelang_id_user').val();
-    let peserta_npl_id_user = $('#peserta_npl_id_user').val();
-    let lot_item_id_user = $('#lot_item_id_user').val();
-    let npl_id_user = $('#npl_id_user').val();
-    let kelipatanBidding_user = parseFloat($('#harga_bidding_user').val());
+    
     $(document).on('click', '#user-send-bidding', function (e) {
+        let email_user = $('#email_user').val();
+        let event_lelang_id_user = $('#event_lelang_id_user').val();
+        let user_id_web = $('#user_id_web').val();
+        let lot_item_id_user = $('#lot_item_id_user').val();
+        let npl_id_user = $('#npl_id_user').val();
+        let kelipatan_bid_user = $('#kelipatan_bid_user').val();
+        let harga_awal_user = $('#harga_awal_user').val();
+
         e.preventDefault();
-        // tambah kelipatan bid setiap klik
-        let harga_bidding_user = parseFloat($('#harga_awal_user').val()) + kelipatanBidding_user;
-        // Update nilai input harga_awal
-        $('#harga_awal_user').val(harga_bidding_user);
+
+        $('#user-send-bidding').css('display', 'none');
+        $('#loading').css('display', 'block');
         $.ajax({
             method: 'post',
             url: '/send-bidding-user',
             data: {
                 email: email_user,
                 event_lelang_id: event_lelang_id_user,
-                peserta_npl_id: peserta_npl_id_user,
+                user_id: user_id_web,
                 lot_item_id: lot_item_id_user,
                 npl_id: npl_id_user,
-                harga_bidding: harga_bidding_user
+                kelipatan_bid_user: kelipatan_bid_user,
+                harga_awal_user: harga_awal_user
             },
             success: function (res) {
-                // Lakukan sesuatu dengan respon dari AJAX jika diperlukan
+                console.log('send-bid-user',res);
+
+                $('#user-send-bidding').css('display', 'block');
+                $('#loading').css('display', 'none');
             }
         });
     });
 
 });
 
-
-window.Echo.channel('chat')
+let event_lelang_id = $('#event_lelang_id_web_user').val();
+window.Echo.channel('bid-event.'+event_lelang_id)
      .listen('.message', (e) => {
-        // console.log(e);
+        console.log(e);
         $('#log-bid').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' + e.email + ' ' + ': ' + e.harga_bidding + '</h5></div>');
         $('#log-bid-user').prepend('<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' + e.email + ' ' + ': ' + e.harga_bidding + '</h5></div>');
 

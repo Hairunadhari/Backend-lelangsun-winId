@@ -330,7 +330,7 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::get('/detail-peserta-npl/{id}/', [MenuSuperAdminController::class, 'detail_peserta_npl'])->name('superadmin.detail-peserta-npl');
         Route::get('/edit-peserta-npl/{id}/', [MenuSuperAdminController::class, 'edit_peserta_npl'])->name('superadmin.edit-peserta-npl');
         Route::put('/update-peserta-npl/{id}/', [MenuSuperAdminController::class, 'update_peserta_npl'])->name('superadmin.update-peserta-npl');
-        Route::put('/delete-peserta-npl/{id}/', [MenuSuperAdminController::class, 'delete_peserta_npl'])->name('superadmin.delete-peserta-npl');
+    Route::put('/delete-peserta-npl/{id}/', [MenuSuperAdminController::class, 'delete_peserta_npl'])->name('superadmin.delete-peserta-npl');
         Route::put('/active-peserta-npl/{id}/', [MenuSuperAdminController::class, 'active_peserta_npl'])->name('superadmin.active-peserta-npl');
         Route::get('/npl/{id}/', [MenuSuperAdminController::class, 'npl'])->name('superadmin.npl');
         Route::get('/npl/get-harganpl-by-event/{id}/', [MenuSuperAdminController::class, 'harganpl_by_event']);

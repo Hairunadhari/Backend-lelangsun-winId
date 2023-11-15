@@ -3,7 +3,7 @@
 <style>
     #satu {
         background-image: url('detail_event.jpg');
-        height: 100vh;
+        height: auto;
         background-position: left;
         background-size: cover;
         background-repeat: no-repeat;
@@ -23,7 +23,7 @@
     #satu .items {
         width: 100%;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
         grid-gap: 0px; /* Spasi antara card */
         padding: 0px; /* Spasi kiri dan kanan dari container */
         justify-content: center;
@@ -70,18 +70,17 @@
         </div>
         <div class="lelang">
             <div class="bungkus-lot">
-                <div class="card m-3">
-                    <div class="card-body">
-                      <h5 class="card-title">{{$event->judul}}</h5>
+                <div class="card p-2">
+                    <img src="{{ asset('storage/image/'.$event->gambar) }}"  alt="...">
+                        <h5 class="card-title">{{$event->judul}}</h5>
                       <p class="card-text"><i class="fas fa-map-marker-alt"></i> {{$event->alamat}}</p>
                       <p class="card-text"><i class="fas fa-calendar-alt"></i> {{$event->tanggal}} WIB</p>
-                    </div>
                   </div>
             </div>
-            <h1>List Barang Lelang</h1>
+            <h1>List Lot</h1>
             <div class="items">
                 @foreach ($event->lot_item as $item)
-                <div class=" item-barang">
+                <div class="card item-barang">
                     <img src="{{asset('storage/image/'.$item->barang_lelang->gambarlelang[0]->gambar)}}"  alt="...">
                     <div class="card-body">
                         <h5 class="card-title">{{$item->barang_lelang->barang}}</h5>

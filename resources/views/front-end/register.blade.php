@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </head>
 <style>
@@ -71,12 +72,15 @@
                 <h1 class="text-center">Registrasi</h1>
                 <div class="row">
                     <div class="mb-1 col-6">
-                        <label class="form-label">Nama</label>
+                        <label class="form-label">Nama <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="nama" required>
+                        @if ($errors->has('nama'))
+                        <div class="warn"><small class="text-alert">eror!</small></div>
+                        @endif
 
                     </div>
                     <div class="mb-1 col-6">
-                        <label class="form-label">Email</label>
+                        <label class="form-label">Email <span style="color: red">*</span></label>
                         <input type="email" class="form-control" name="email" required>
                         @if ($errors->has('email'))
                         <div class="warn"><small class="text-alert">Email Sudah Terdaftar!</small></div>
@@ -85,47 +89,53 @@
                 </div>
                 <div class="row">
                     <div class="mb-1 col-6">
-                        <label class="form-label">Telepon</label>
-                        <input type="text" class="form-control" name="no_hp" required>
+                        <label class="form-label">Telepon <span style="color: red">*</span></label>
+                        <input type="number" class="form-control" name="no_telp" required>
+                        @if ($errors->has('no_telp'))
+                        <div class="warn"><small class="text-alert">eror!</small></div>
+                        @endif
                     </div>
                     <div class="mb-1 col-6">
                         <label class="form-label">Nik</label>
-                        <input type="text" class="form-control" name="nik" required>
+                        <input type="text" class="form-control" name="nik">
                     </div>
                 </div>
                 <div class="row">
                     <div class="mb-1 col-6">
                         <label class="form-label">Npwp</label>
-                        <input type="text" class="form-control" name="npwp" required>
+                        <input type="text" class="form-control" name="npwp">
                     </div>
                     <div class="mb-1 col-6">
                         <label class="form-label">No Rekening</label>
-                        <input type="text" class="form-control" name="no_rek" required>
+                        <input type="text" class="form-control" name="no_rek">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                         <label for="" class="form-label">Foto KTP</label>
-                        <input type="file" class="form-control" name="foto_ktp" id="gambarktp">
+                        <input type="file" class="form-control" name="foto_ktp" accept=".jpg,.png,.jpeg" id="gambarktp">
                     </div>
                     <div class="col-6">
                         <label for="" class="form-label">Foto NPWP</label>
-                        <input type="file" class="form-control" name="foto_npwp" id="gambarnpwp">
+                        <input type="file" class="form-control" name="foto_npwp" accept=".jpg,.png,.jpeg" id="gambarnpwp">
                     </div>
                 </div>
                 <div class="mb-1">
-                    <label class="form-label">Alamat</label>
+                    <label class="form-label">Alamat <span style="color: red">*</span></label>
                     <textarea class="form-control" name="alamat" required></textarea>
+                    @if ($errors->has('alamat'))
+                    <div class="warn"><small class="text-alert">eror!</small></div>
+                    @endif
                 </div>
                 <div class="mb-1">
-                    <label class="form-label">Password</label>
+                    <label class="form-label">Password <span style="color: red">*</span></label>
                     <input type="password" class="form-control" name="password" required>
                     @if ($errors->has('password'))
                     <div class="warn"><small class="text-alert">Password harus memiliki 5 karakter!</small></div>
                     @endif
                 </div>
                 <div class="mb-1">
-                    <label class="form-label">Confirm Password</label>
+                    <label class="form-label">Confirm Password <span style="color: red">*</span></label>
                     <input type="password" class="form-control" name="confirm_password" required>
                     @if ($errors->has('confirm_password'))
                     <div class="warn"><small class="text-alert">Konfirmasi Password Tidak Cocok!</small></div>

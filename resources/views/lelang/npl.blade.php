@@ -51,13 +51,21 @@
                     },
                 },
                 {
-                    data: "peserta_npl.nama"
+                    data: "user.name"
                 },
                 {
-                    data: "peserta_npl.email"
+                    data: "user.email"
                 },
                 {
-                    data: "peserta_npl.no_hp"
+                    data: "user.no_telp",
+                    render: function (data) {
+                        if (data != null) {
+                            return `<span>`+data+`</span>`
+                        } else {
+                            return `<span>-</span>`
+                            
+                        }
+                    }
                 },
                 {
                     data: "kode_npl"
@@ -65,7 +73,7 @@
                 {
                     data: null,
                     render: function (data) {
-                        var detailUrl = '/detail-npl/' + data.id;
+                        var detailUrl = '/superadmin/detail-npl/' + data.id;
                         return `
                             <span><a class="btn btn-primary" href="${detailUrl}"><i class="fas fa-info"></i></a></span>
                         `;
@@ -100,7 +108,7 @@
             <form action="{{route('superadmin.add-npl')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" class="form-control" name="peserta_npl_id" value="{{$id}}" required>
+                    <input type="hidden" class="form-control" name="user_id" value="{{$id}}" required>
                     <input type="hidden" class="form-control" name="type_pembelian" value="offline" required>
                     <div class="form-group">
                         <label>Event <span style="color: red">*</span></label>
@@ -128,25 +136,21 @@
                         <label>No Rekening<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="no_rek" required>
                     </div>
-                    <div class="form-group">
-                        <label>Waktu Transfer<span style="color: red">*</span></label>
-                        <input type="datetime-local" class="form-control" name="tgl_transfer" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Bukti Transfer <span style="color: red">*</span></label>
-                        <input type="file" class="form-control" name="bukti" required id="gambarktp">
-                        <div id="previewktp" class="mt-3"></div>
-                    </div>
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" id="customRadioInline1" name="type_transaksi" value="cash"
-                            class="custom-control-input">
+                        class="custom-control-input" checked>
                         <label class="custom-control-label" for="customRadioInline1">Cash dengan admin SUN</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" id="customRadioInline2" name="type_transaksi" value="transfer"
-                            class="custom-control-input">
+                        class="custom-control-input">
                         <label class="custom-control-label" for="customRadioInline2">Transfer</label>
                     </div>
+                    {{-- <div class="form-group">
+                        <label>Bukti Transfer <span style="color: red">*</span></label>
+                        <input type="file" class="form-control" name="bukti" required id="gambarktp" accept=".jpg,.png,.jpeg">
+                        <div id="previewktp" class="mt-3"></div>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>

@@ -16,16 +16,18 @@ class Message implements ShouldBroadcast
 
     public $email;
     public $harga_bidding;
+    public $id_event;
 
-    public function __construct($email,$harga_bidding)
+    public function __construct($email, $harga_bidding, $id_event)
     {
         $this->email = $email;
         $this->harga_bidding = $harga_bidding;
+        $this->id_event = $id_event;
     }
 
     public function broadcastOn()
     {
-        return new Channel('chat');
+        return new Channel('bid-event.'.$this->id_event);
     }
 
     public function broadcastAs()

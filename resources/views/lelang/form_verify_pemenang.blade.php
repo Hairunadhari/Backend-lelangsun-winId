@@ -25,10 +25,10 @@
                     @endif
                 </div>
                 @if ($data->npl !== null)
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label>Tgl Transfer:</label>
                     <input type="text" class="form-control" value="{{ $data->tgl_transfer }}" name="toko" readonly>
-                </div>
+                </div> --}}
                 <div class="form-group">
                     <label>Bukti Transfer:</label>
                     <br>

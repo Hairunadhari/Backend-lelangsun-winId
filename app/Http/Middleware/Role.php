@@ -11,9 +11,11 @@ class Role
 {
     public function handle($request, Closure $next, $role)
     {
-        if (Auth::user()->role->role == $role) {
-            return $next($request);
-        }
+            if (Auth::user()->role == null) {
+                return redirect('/');
+            }elseif(Auth::user()->role->role == $role){
+                return $next($request);
+            }
         
 
         // return redirect()->back();

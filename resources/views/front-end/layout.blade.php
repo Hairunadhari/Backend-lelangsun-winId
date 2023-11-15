@@ -24,6 +24,7 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     @vite(['resources/css/app.css' , 'resources/js/app.js'])
 
 </head>
@@ -109,42 +110,43 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    @if (Auth::guard('peserta')->user())
-                    <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
-                    <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a>
-                    <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
-                    <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
-                    <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
-                    {{-- ambil model notifikasi --}}
-                    @inject('notifikasi', 'App\Models\Notifikasi')
-                    @php
-                        $id = Auth::guard('peserta')->user()->id;
-                        $total_pesan = $notifikasi::where('peserta_npl_id', $id)->where('is_read','belum dibaca')->count();
-                    @endphp
-                    <a class="nav-link fw-semibold" href="{{route('front-end-notif')}}" style="position: relative;">
-                        <i class="fas fa-bell"></i>
-                        <span
-                            style="position: absolute; top: 0; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 4px 7px; font-size: 12px;">{{$total_pesan}}</span>
-                    </a>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-user"></i> {{Auth::guard('peserta')->user()->nama}}
+                    {{-- @if (Auth::user()) --}}
+                @if (Auth::user())
+                        <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
+                        {{-- <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a> --}}
+                        <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
+                        <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
+                        <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
+                        {{-- ambil model notifikasi --}}
+                        @inject('notifikasi', 'App\Models\Notifikasi')
+                        @php
+                            $id = Auth::user()->id;
+                            $total_pesan = $notifikasi::where('user_id', $id)->where('is_read','belum dibaca')->count();
+                        @endphp
+                        <a class="nav-link fw-semibold" href="{{route('front-end-notif')}}" style="position: relative;">
+                            <i class="fas fa-bell"></i>
+                            <span
+                                style="position: absolute; top: 0; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 4px 7px; font-size: 12px;">{{$total_pesan}}</span>
                         </a>
-                        <ul class="dropdown-menu">
-                            <form method="POST" action="{{ route('peserta.logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item has-icon text-danger"
-                                    style="cursor: pointer">
-                                    <i class="fas fa-sign-out-alt mt-2"></i> <span style="font-size: 14px">Logout</span>
-                                </button>
-                            </form>
-                        </ul>
-                    </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="fas fa-user"></i> {{Auth::user()->name}}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <form method="POST" action="{{ route('peserta.logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item has-icon text-danger"
+                                        style="cursor: pointer">
+                                        <i class="fas fa-sign-out-alt mt-2"></i> <span style="font-size: 14px">Logout</span>
+                                    </button>
+                                </form>
+                            </ul>
+                        </li>
                     @else
                     <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
-                    <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a>
+                    {{-- <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a> --}}
                     <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
@@ -189,6 +191,12 @@
     @if (Session::has('message'))
         <script>
             swal("SUCCESS","{{Session::get('message')}}",'success',{
+            });
+        </script>
+    @endif
+    @if (Session::has('error'))
+        <script>
+            swal("Upsss","{{Session::get('error')}}",'error',{
             });
         </script>
     @endif
