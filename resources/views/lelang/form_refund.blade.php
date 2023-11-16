@@ -17,11 +17,11 @@
             <div class="card-body">
                     <div class="form-group">
                         <label>Nama</label>
-                        <input type="text" readonly class="form-control" name="penyelenggara" value="{{$refund->npl->peserta_npl->nama}}" >
+                        <input type="text" readonly class="form-control" name="penyelenggara" value="{{$refund->npl->user->name}}" >
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" readonly class="form-control" name="judul" value="{{$refund->npl->peserta_npl->email}}">
+                        <input type="text" readonly class="form-control" name="judul" value="{{$refund->npl->user->email}}">
                     </div>
                     <div class="form-group">
                         <label>Kode NPL</label>
@@ -33,7 +33,7 @@
                     </div>
                 <div class="form-group">
                     <label>Bukti Transfer <small>(png, jpg, jpeg)</small></label>
-                    <input type="file" class="form-control" name="bukti" required  id="gambar">
+                    <input type="file" class="form-control" name="bukti" required accept=".jpg,.png,.jpeg" id="gambar">
                 <div id="preview" class="mt-3"></div>
                 </div>
                 
