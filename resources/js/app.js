@@ -93,7 +93,7 @@ $(document).ready(function () {
         $('#con-bid').css('display', 'block');
         $('#start-bid').css('display', 'none');
         $('#user-send-bidding').css('display', 'block');
-        // toggleTimer();
+        toggleTimer();
     } 
 
         
@@ -112,7 +112,7 @@ $(document).ready(function () {
             },
             success: function (res) {
                 console.log('start-bid',res);
-                // toggleTimer(seconds);
+                toggleTimer(seconds);
                 
             }
         });
