@@ -25,6 +25,8 @@ class VerifyCsrfToken extends Middleware
         '/api/form-peserta-event',
         '/api/lelang/registrasi-peserta-lelang',
         '/api/lelang/npl/add-npl',
+        '/api/lelang/send-bidding',
+        '/api/lelang/log-bidding',
     ];
     
 }

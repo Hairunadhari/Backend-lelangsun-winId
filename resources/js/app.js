@@ -112,7 +112,7 @@ $(document).ready(function () {
             },
             success: function (res) {
                 console.log('start-bid',res);
-                toggleTimer(seconds);
+                // toggleTimer(seconds);
                 
             }
         });

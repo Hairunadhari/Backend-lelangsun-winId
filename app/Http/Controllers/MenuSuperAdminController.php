@@ -2911,11 +2911,11 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
 
-            dd($th);
+            // dd($th);
             return response()->json([
                 'data'=> $th,
                 'message'=>'FAILED'
-            ],500);
+            ],401);
         }
         return response()->json([
             'data'=> $data,

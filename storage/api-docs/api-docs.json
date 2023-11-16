@@ -1146,61 +1146,6 @@
                 }
             }
         },
-        "/api/lelang/registrasi-peserta-lelang": {
-            "post": {
-                "tags": [
-                    "Peserta Lelang"
-                ],
-                "summary": "peserta lelang",
-                "description": "",
-                "operationId": "peserta lelang",
-                "requestBody": {
-                    "description": "",
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "nama": {
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "no_hp": {
-                                        "type": "integer"
-                                    },
-                                    "alamat": {
-                                        "type": "string"
-                                    },
-                                    "nik": {
-                                        "type": "string"
-                                    },
-                                    "npwp": {
-                                        "type": "string"
-                                    },
-                                    "foto_ktp": {
-                                        "type": "file",
-                                        "format": "binary"
-                                    },
-                                    "foto_npwp": {
-                                        "type": "file",
-                                        "format": "binary"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
         "/api/lelang/npl/add-npl": {
             "post": {
                 "tags": [
@@ -1216,7 +1161,7 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
-                                    "peserta_npl_id": {
+                                    "user_id": {
                                         "type": "integer"
                                     },
                                     "event_lelang_id": {
@@ -1237,10 +1182,6 @@
                                     "nama_pemilik_rekening": {
                                         "type": "integer"
                                     },
-                                    "tgl_transfer": {
-                                        "type": "date-time",
-                                        "example": "2017-01-01 12:20:00"
-                                    },
                                     "bukti": {
                                         "type": "file",
                                         "format": "binary"
@@ -1258,25 +1199,109 @@
                 }
             }
         },
-        "/api/lelang/list-npl-peserta/{id}/": {
+        "/api/lelang/list-npl-user/{id}/": {
             "get": {
                 "tags": [
-                    "Peserta Lelang"
+                    "Npl"
                 ],
-                "summary": "Menampilkan List Npl berdasrkan id peserta lelang",
+                "summary": "Menampilkan List Npl berdasrkan id user",
                 "description": "",
-                "operationId": "List Npl Peserta",
+                "operationId": "List Npl user",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id peserta",
+                        "description": "id user",
                         "required": true,
                         "schema": {
                             "type": "integer"
                         }
                     }
                 ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/send-bidding": {
+            "post": {
+                "tags": [
+                    "Bidding"
+                ],
+                "summary": "Send Bidding",
+                "description": "",
+                "operationId": "Send Bidding",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "event_lelang_id": {
+                                        "type": "integer"
+                                    },
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "lot_item_id": {
+                                        "type": "integer"
+                                    },
+                                    "npl_id": {
+                                        "type": "integer"
+                                    },
+                                    "harga_awal_lot": {
+                                        "type": "integer"
+                                    },
+                                    "kelipatan_bid": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/log-bidding": {
+            "post": {
+                "tags": [
+                    "Bidding"
+                ],
+                "summary": "Log Bidding",
+                "description": "",
+                "operationId": "Log Bidding",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "event_lelang_id": {
+                                        "type": "integer"
+                                    },
+                                    "lot_item_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "default": {
                         "description": ""
