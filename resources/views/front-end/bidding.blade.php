@@ -110,29 +110,31 @@
                     <div class="text-center" id="log-bid-user"></div>
                 </div>
             </div>
-            @if ($npl->count() > 0) {{--apakah user punya npl event--}}
             <form action="#" method="post" id="message_form" onsubmit="return submitForm(this);">
                 <div class="mb-3">
+                    @if (Auth::user()) {{--apakah user terautentikasi--}}
                     <input type="hidden" class="form-control" name="email" id="email_user"
                         value="{{Auth::user()->email}}" readonly>
+                        <input type="hidden" readonly name="user_id" id="user_id_web"
+                            value="{{Auth::user()->id}}" class="form-control">
+                    @endif
                     <input type="hidden" readonly name="event_lelang_id" id="event_lelang_id_user"
                         value="{{$lot_item[0]->event_lelang->id}}" class="form-control">
                     <input type="hidden" readonly name="event_lelang_id" id="event_lelang_id_web_user"
                         value="{{$lot_item[0]->event_lelang->id}}" class="form-control">
-                    <input type="hidden" readonly name="user_id" id="user_id_web"
-                        value="{{Auth::user()->id}}" class="form-control">
-                    <input type="hidden" readonly name="npl_id" id="npl_id_user" value="{{$npl[0]->id}}"
+                        <input type="hidden" readonly name="lot_id" id="lot_item_id_user" value="{{$lot_item[0]->id}}"
                         class="form-control">
-                    <input type="hidden" readonly name="lot_id" id="lot_item_id_user" value="{{$lot_item[0]->id}}"
-                        class="form-control">
-                    <input type="hidden" readonly name="harga_awal" id="harga_awal_user"
+                        <input type="hidden" readonly name="harga_awal" id="harga_awal_user"
                         value="{{ (!empty($lot_item) && !empty($lot_item[0]->bidding) && count($lot_item[0]->bidding) > 0) ? $lot_item[0]->bidding[0]->harga_bidding : $lot_item[0]->harga_awal }}"
                         class="form-control">
-                    <input type="hidden" readonly name="kelipatan_bid_user" id="kelipatan_bid_user"
+                        <input type="hidden" readonly name="kelipatan_bid_user" id="kelipatan_bid_user"
                         value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}" class="form-control">
-                </div>
-
-            </form>
+                    </div>
+                    
+                </form>
+            @if ($npl->count() > 0) {{--apakah user punya npl event--}}
+            <input type="hidden" readonly name="npl_id" id="npl_id_user" value="{{$npl[0]->id}}"
+                    class="form-control">
             <button class="btn btn-success w-100" id="user-send-bidding" style="display:none">Bidding</button>
             <div id="loading" style="background-color: #191d21; box-shadow: 0 2px 6px #728394; display: none;" class="p-1 text-center">
                 <div class="spinner-border " role="status">

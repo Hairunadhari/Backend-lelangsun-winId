@@ -14,18 +14,29 @@ class StartBid implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $button;
-    public function __construct($button)
+    public $event_lelang_id;
+    public function __construct($button,$event_lelang_id)
     {
         $this->button = $button;
+        $this->event_lelang_id = $event_lelang_id;
     }
 
     public function broadcastOn()
     {
-        return new Channel('button');
+        return new Channel('lelang');
     }
 
     public function broadcastAs()
     {
-        return 'respon-button';
+        return 'button-bid-event-'.$this->event_lelang_id;
     }
+    // public function broadcastOn()
+    // {
+    //     return new Channel('lelang');
+    // }
+
+    // public function broadcastAs()
+    // {
+    //     return 'respon-button';
+    // }
 }

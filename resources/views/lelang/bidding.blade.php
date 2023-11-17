@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-6 col-md-6 col-lg-6">
                         <div class="lot-judul" style="padding-top: 20px; padding-left: 20px;">
-                            <h4>LOT 00{{$lot_item[0]->id}}</h4>
+                            <h4>LOT {{$lot_item[0]->id}}</h4>
                             <h4>Rp {{$lot_item[0]->harga_awal}}</h4>
                         </div>
                         <div class="card chat-box" id="mychatbox"

@@ -25,13 +25,22 @@ class Message implements ShouldBroadcast
         $this->id_event = $id_event;
     }
 
+    // public function broadcastOn()
+    // {
+    //     return new Channel('bid-event.'.$this->id_event);
+    // }
+
+    // public function broadcastAs()
+    // {
+    //     return 'message';
+    // }
     public function broadcastOn()
     {
-        return new Channel('bid-event.'.$this->id_event);
+        return new Channel('lelang');
     }
 
     public function broadcastAs()
     {
-        return 'message';
+        return 'bidding-event-'.$this->id_event;
     }
 }

@@ -15,18 +15,29 @@ class NextLot implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $lot_item;
-    public function __construct($lot_item)
+    public $event_lelang_id;
+    public function __construct($lot_item,$event_lelang_id)
     {
         $this->lot_item = $lot_item;
+        $this->event_lelang_id = $event_lelang_id;
     }
 
+    // public function broadcastOn()
+    // {
+    //     return new Channel('next-lot');
+    // }
+
+    // public function broadcastAs()
+    // {
+    //     return 'lot';
+    // }
     public function broadcastOn()
     {
-        return new Channel('next-lot');
+        return new Channel('lelang');
     }
 
     public function broadcastAs()
     {
-        return 'lot';
+        return 'next-lot-event-'.$this->event_lelang_id;
     }
 }

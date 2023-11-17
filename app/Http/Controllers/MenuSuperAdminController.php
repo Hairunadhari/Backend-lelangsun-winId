@@ -2980,7 +2980,7 @@ class MenuSuperAdminController extends Controller
                     'status' => 'not-active',
                 ]);
             }
-            event(new SearchPemenangLot($bid));
+            event(new SearchPemenangLot($bid, $request->event_lelang_id));
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
@@ -3006,7 +3006,7 @@ class MenuSuperAdminController extends Controller
             ]);
             // cek apakah masih ada lot item di suatu event 
             $lot_item = LotItem::where('event_lelang_id',$request->event_lelang_id)->where('status_item','active')->where('status','active')->get();
-            event(new NextLot($lot_item));
+            event(new NextLot($lot_item,$request->event_lelang_id));
             DB::commit();
 
         } catch (Throwable $th) {

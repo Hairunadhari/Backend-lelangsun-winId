@@ -15,18 +15,29 @@ class SearchPemenangLot implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $bid;
-    public function __construct($bid)
+    public $event_lelang_id;
+    public function __construct($bid,$event_lelang_id)
     {
         $this->bid = $bid;
+        $this->event_lelang_id = $event_lelang_id;
     }
 
     public function broadcastOn()
     {
-        return new Channel('search-pemenang-lot');
+        return new Channel('lelang');
     }
 
     public function broadcastAs()
     {
-        return 'pemenang-lot';
+        return 'pemenang-lot-event-'.$this->event_lelang_id;
     }
+    // public function broadcastOn()
+    // {
+    //     return new Channel('lelang');
+    // }
+
+    // public function broadcastAs()
+    // {
+    //     return 'pemenang-lot';
+    // }
 }

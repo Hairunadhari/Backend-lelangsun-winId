@@ -483,7 +483,7 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::post('send-bidding',[MenuSuperAdminController::class, 'send_bidding']);
         
         Route::post('open-button',function (Request $request){
-            event(new StartBid($request->button));
+            event(new StartBid($request->button, $request->event_lelang_id));
             return ['success' => true];
             });
 
