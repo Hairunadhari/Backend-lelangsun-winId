@@ -474,10 +474,18 @@ class ApiController extends Controller
             'pengiriman'     => 'required',
             'lokasi_pengiriman'     => 'required',
             'sub_total'     => 'required',
+            // 'longitude'     => 'required',
+            // 'langitude'     => 'required',
         ]);
-        
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Ada Kesalahan',
+                'data' => $validator->errors()
+            ]);
+        }
+
         try {
-           
+           DB::beginTransaction();
             $user = User::where('id', $request->user_id)->first();
             $order = Order::create([
                 'user_id' => $user->id
@@ -518,7 +526,7 @@ class ApiController extends Controller
             $secret_key = 'Basic '.config('xendit.key_auth');
             $timestamp = time();
             $strRandom = Str::random(5);
-            $external_id = "invoice-win-{$timestamp}-{$strRandom}";
+            $external_id = "INV-WIN-{$timestamp}-{$strRandom}";
 
             $data_request = Http::withHeaders([
                 'Authorization' => $secret_key
@@ -580,7 +588,9 @@ class ApiController extends Controller
                 'result' => json_encode($res),
             ]);
 
-        } catch (Exception $e) {
+            DB::commit();
+        } catch (Throwable $th) {
+            DB::rollBack();
             $success = false;
             $message = 'Data Order Gagal Ditambahkan';
             $res = [
@@ -618,59 +628,76 @@ class ApiController extends Controller
             ]);
             
         }
+
         return response()->json($res);
     }
 
     public function callback_xendit(Request $request){
-        
-        $invoice = Tagihan::with('user', 'order')->where('external_id', $request->external_id)->first();
-        $invoice->update([
-            'status' => $request->status,
-        ]);
+        try {
+            DB::beginTransaction();
+            $invoice = Tagihan::with('user', 'order')->where('external_id', $request->external_id)->first();
+                $invoice->update([
+                    'status' => $request->status,
+            ]);
             
-        // ambil id produk berasrkan order id
-        $ambil_produk_id = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
-        // ambil qty orderan 
-        $qty_order = OrderItem::where('order_id', $invoice->order->id)->pluck('qty');
-        $produks = Produk::whereIn('id', $ambil_produk_id)->get();
-        $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
-        
-        if ($invoice->status == 'PAID') {
-            foreach ($produks as $index => $p) {
-                $p->update([
-                    'stok' => $p->stok - $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
+            // ambil id produk berasrkan order id
+            $ambil_produk_id = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
+            // ambil qty orderan 
+            $qty_order = OrderItem::where('order_id', $invoice->order->id)->pluck('qty');
+            $produks = Produk::whereIn('id', $ambil_produk_id)->get();
+            $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
+            
+            if ($invoice->status == 'PAID') {
+                foreach ($produks as $index => $p) {
+                    if ($p->stok < $qty_order[$index]) {
+                        return response()->json([
+                            'message'=>'error',
+                            'data'=>'qty melebihi jumlah stok produk',
+                        ]);
+                    }
+                    $p->update([
+                        'stok' => $p->stok - $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
+                    ]);
+                }
+                $ambil_produkid_berdasarkan_userid->each->delete();
+
+                $bayar = Pembayaran::create([
+                    'external_id' => $request->external_id,
+                    'metode_pembayaran' => $request->payment_method,
+                    'email_user' => $invoice->user->email,
+                    'status' => $request->status,
+                    'total_pembayaran' => $request->paid_amount,
+                    'bank_code' => $request->bank_code,
+                    'tagihan_id' => '1',
                 ]);
+        
+                $res = [
+                    'message' => 'success',
+                    'data' => $bayar
+                ];
+                
+                TLogApi::create([
+                    'k_t' => 'terima',
+                    'object' => 'xendit',
+                    'data' => json_encode($request->all()),
+                    'result' => json_encode($res)
+                ]);
+            } else {
+                $res = [
+                    'message' => 'success',
+                    'payment' => 'EXPIRED'
+                ];
             }
-            $ambil_produkid_berdasarkan_userid->each->delete();
-
-            $bayar = Pembayaran::create([
-                'external_id' => $request->external_id,
-                'metode_pembayaran' => $request->payment_method,
-                'email_user' => $invoice->user->email,
-                'status' => $request->status,
-                'total_pembayaran' => $request->paid_amount,
-                'bank_code' => $request->bank_code,
-                'tagihan_id' => '1',
+        
+            DB::commit();
+        } catch (Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'ERROR',
+                'data'=>$th,
             ]);
-    
-            $res = [
-                'message' => 'success',
-                'data' => $bayar
-            ];
-            
-            TLogApi::create([
-                'k_t' => 'terima',
-                'object' => 'xendit',
-                'data' => json_encode($request->all()),
-                'result' => json_encode($res)
-            ]);
-        } else {
-            $res = [
-                'message' => 'success',
-                'payment' => 'EXPIRED'
-            ];
+            //throw $th;
         }
-
         
         return response()->json($res);
 

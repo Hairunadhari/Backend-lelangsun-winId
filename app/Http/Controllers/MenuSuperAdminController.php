@@ -430,14 +430,15 @@ class MenuSuperAdminController extends Controller
             'harga'     => 'required',
             'video'     => 'required',
         ]);
-
-        $harga = preg_replace('/\D/', '', $request->harga); 
-        $hargaProduk = trim($harga);
+        try {
+            DB::beginTransaction();
+            $harga = preg_replace('/\D/', '', $request->harga); 
+            $hargaProduk = trim($harga);
 
             $gambar = $request->file('gambar');
             $thumbnail = $request->file('thumbnail');
             $thumbnail->storeAs('public/image', $thumbnail->hashName());
-
+            
             $produk = Produk::create([
                 'toko_id'     => $request->toko_id,
                 'kategoriproduk_id'     => $request->kategoriproduk_id,
@@ -460,6 +461,16 @@ class MenuSuperAdminController extends Controller
                     'gambar' => $file->hashName(),
                 ]);
             }
+                DB::commit();
+            } catch (Throwable $th) {
+                DB::rollBack();
+                //throw $th;
+                if (Auth::user()->role->role == 'Super Admin') {
+                    return redirect()->route('superadmin.produk')->with(['error' => 'Data Gagal Ditambah!']);
+                } else {
+                    return redirect()->route('admin.produk')->with(['error' => 'Data Gagal Ditambah!']);
+                }
+            }
 
             if (Auth::user()->role->role == 'Super Admin') {
                 return redirect()->route('superadmin.produk')->with(['success' => 'Data Berhasil Ditambah!']);
@@ -467,7 +478,7 @@ class MenuSuperAdminController extends Controller
                 return redirect()->route('admin.produk')->with(['success' => 'Data Berhasil Ditambah!']);
             }
     }
-
+    
     public function detail_produk($id)
     {
         $data = Produk::with('toko','kategoriproduk')->find($id);

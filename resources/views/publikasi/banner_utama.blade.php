@@ -87,7 +87,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1">Gambar <small>(png, jpg, jpeg)</small><span
                                 style="color: red">*</span></label>
-                        <input type="file" class="form-control" name="gambar" required id="gambar">
+                        <input type="file" class="form-control" accept=".jpg, .png, .jpeg" name="gambar" required id="gambar">
                     </div>
                     <div id="preview"></div>
                 </div>

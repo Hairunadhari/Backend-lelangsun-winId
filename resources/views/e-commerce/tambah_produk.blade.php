@@ -18,6 +18,7 @@
                 @csrf
                 @if (Auth::user()->role->role == 'Super Admin')
                     <div class="form-group">
+                        <label>Toko <span style="color: red">*</span></label>
                         <select class="form-control select2" id="tokos" name="toko_id">
                             <option selected disabled>-- Pilih Toko --</option>
                             @foreach ($toko as $item)
@@ -71,14 +72,14 @@
                         <div class="col-sm-12 col-md-7">
                             <div id="image-preview" class="image-preview">
                                 <label for="image-upload" id="image-label">Choose File</label>
-                                <input type="file" name="thumbnail" id="image-upload" required>
+                                <input type="file" accept=".jpg, .png, .jpeg" name="thumbnail" id="image-upload" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar) </small><span
                                 style="color: red">*</span></label>
-                        <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
+                        <input type="file" class="form-control" accept=".jpg, .png, .jpeg" name="gambar[]" id="gambar" required multiple>
                     </div>
                     <div id="preview" class="review"></div>
                 <div class="card-footer text-right">
