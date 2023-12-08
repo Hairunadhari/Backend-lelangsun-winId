@@ -280,13 +280,13 @@
                     </div>
                     <div class="form-group">
                         <label>Poster Utama<small>(format poster: png, jpg, jpeg | disarankan: width 900px, height 470px)</small><span style="color: red">*</span></label>
-                        <input type="file" class="form-control" name="gambar" required id="gambar">
+                        <input type="file" accept=".png, .jpg, .jpeg" class="form-control" name="gambar" required id="gambar">
                     <div id="preview" class="mt-3"></div>
                     </div>
                      <div class="form-group">
                         <label>Poster Detail Event <small>(bisa pilih lebih dari satu gambar | format gambar: png, jpg, jpeg | disarankan: width 900px, height 470px) </small><span
                                 style="color: red">*</span></label>
-                        <input type="file" class="form-control" name="poster[]" id="gambars" required multiple>
+                        <input type="file" accept=".png, .jpg, .jpeg" class="form-control" name="poster[]" id="gambars" required multiple>
                     </div>
                     <div id="previews" class="reviews"></div>
                 </div>

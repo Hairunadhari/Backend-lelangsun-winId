@@ -45,7 +45,7 @@
                     </div>
                     <div class="form-group">
                         <label>Gambar Promo <small>(png, jpg, jpeg)</small><span style="color: red">*</span></label>
-                        <input type="file" class="form-control" name="gambar" required id="gambar">
+                        <input type="file" class="form-control" accept=".jpg, .png, .jpeg" name="gambar" required id="gambar">
                         <div id="preview" class="mt-2"></div>
                     </div>
                     <label for="">Pilih Produk <span style="color: red">*</span></label>

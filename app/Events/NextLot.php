@@ -16,10 +16,12 @@ class NextLot implements ShouldBroadcast
 
     public $lot_item;
     public $event_lelang_id;
-    public function __construct($lot_item,$event_lelang_id)
+    public $status;
+    public function __construct($lot_item,$event_lelang_id,$status)
     {
         $this->lot_item = $lot_item;
         $this->event_lelang_id = $event_lelang_id;
+        $this->status = $status;
     }
 
     // public function broadcastOn()

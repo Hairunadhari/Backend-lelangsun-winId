@@ -2,7 +2,7 @@
 @section('content')
 <style>
     #satu {
-        background-image: url('detail_event.jpg');
+        background-image: url('/asset-lelang/detail_event.jpg');
         height: auto;
         background-position: left;
         background-size: cover;

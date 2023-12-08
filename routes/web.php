@@ -88,7 +88,6 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::get('/produk', [MenuSuperAdminController::class, 'list_produk'])->name('superadmin.produk');
 
         // route promo produk
-        Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('superadmin.promosi');
 
         Route::get('/pembayaran', [MenuSuperAdminController::class, 'list_pembayaran'])->name('superadmin.pembayaran');
         Route::get('/pengiriman', [MenuSuperAdminController::class, 'list_pengiriman'])->name('superadmin.pengiriman');
@@ -181,7 +180,7 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
       
 
         // route transaksi
-        Route::get('/pesanan', [MenuSuperAdminController::class, 'list_pesanan'])->name('superadmin.pesanan');
+        // Route::get('/pesanan', [MenuSuperAdminController::class, 'list_pesanan'])->name('superadmin.pesanan');
         // Route::get('/detail-pesanan/{id}/', [MenuSuperAdminController::class, 'detail_pesanan'])->name('superadmin.detail-pesanan');
         
         // rute profil akun
@@ -265,6 +264,8 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
     });
 });
 
+Route::middleware(['auth','allrole'])->group(function (){
+
     Route::post('/add-kategori-produk', [MenuSuperAdminController::class, 'add_kategori_produk'])->name('add-kategori-produk');
     Route::get('/edit-kategori-produk/{id}/', [MenuSuperAdminController::class, 'edit_kategori_produk'])->name('edit-kategori-produk');
     Route::put('/update-kategori-produk/{id}/', [MenuSuperAdminController::class, 'update_kategori_produk'])->name('update-kategori-produk');
@@ -284,6 +285,11 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
     Route::put('/updatepromosi/{id}/', [MenuSuperAdminController::class, 'update_promosi'])->name('updatepromosi');
     Route::delete('/deletepromosi/{id}/', [MenuSuperAdminController::class, 'delete_promosi'])->name('deletepromosi');
     Route::get('/detail-pesanan/{id}/', [MenuSuperAdminController::class, 'detail_pesanan'])->name('detail-pesanan');
+    Route::get('/pesanan', [MenuSuperAdminController::class, 'list_pesanan'])->name('pesanan');
+    Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('promosi');
+
+
+});
 
 
 Route::middleware(['auth','role:Admin'])->group(function () {

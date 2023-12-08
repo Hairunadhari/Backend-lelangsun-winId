@@ -469,6 +469,7 @@ class ApiController extends Controller
      */
 
     public function add_order(Request $request){
+
         $validator = Validator::make($request->all() , [
             'user_id'     => 'required',
             'pengiriman'     => 'required',
@@ -485,33 +486,42 @@ class ApiController extends Controller
         }
 
         try {
-           DB::beginTransaction();
+            DB::beginTransaction();
             $user = User::where('id', $request->user_id)->first();
             $order = Order::create([
                 'user_id' => $user->id
             ]);
-
+            
             $items = $request->items;
-
+            
             $produkIds = array_column($items, 'produk_id');
-
+            $qtys = array_column($items, 'qty');
             $produks = Produk::whereIn('id', $produkIds)->get();
-            
-            
-            // fungsi untuk looping orderan
-            foreach ($items as $item) {
+            // dd($produks);
 
-                if ($produks) {
-                    $orderitem = OrderItem::create([
-                        'order_id' => $order->id ?? null,
-                        'produk_id' => $item['produk_id'] ?? null,
-                        'qty' => $item['qty'] ?? null,
-                        'harga' => $item['harga'] ?? null,
-                        'nama_produk' => $item['nama_produk'] ?? null,
-                        'promosi_id' => $item['promosi_id'] ?? null,
-                        'harga_x_qty' => $item['total_harga'] ?? null,
+            foreach ($produks as $key => $value) {
+                if ($qtys[$key] > $value->stok) {
+                    return response()->json([
+                        'success'=> false,
+                        'message'=>'jumlah qty order melebihi jumlah stok produk',
                     ]);
                 }
+                $value->update([
+                    'stok'=>$value->stok - $qtys[$key],// Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
+                ]);
+            }
+            
+            // fungsi untuk looping orderan
+            foreach ($items as $item => $i) {
+                $orderitem = OrderItem::create([
+                    'order_id' => $order->id ?? null,
+                    'produk_id' => $i['produk_id'] ?? null,
+                    'qty' => $i['qty'] ?? null,
+                    'harga' => $i['harga'] ?? null,
+                    'nama_produk' => $i['nama_produk'] ?? null,
+                    'promosi_id' => $i['promosi_id'] ?? null,
+                    'harga_x_qty' => $i['total_harga'] ?? null,
+                ]);
             }
             
             $pengiriman = Pengiriman::create([
@@ -591,10 +601,12 @@ class ApiController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
+            dd($th);
             $success = false;
             $message = 'Data Order Gagal Ditambahkan';
             $res = [
                 'success' => $success,
+                'data' => $th,
                 'message' => $message,
                 'name' => $user->name ?? null,
                 'status' => $tagihan->status ?? null,
@@ -636,29 +648,21 @@ class ApiController extends Controller
         try {
             DB::beginTransaction();
             $invoice = Tagihan::with('user', 'order')->where('external_id', $request->external_id)->first();
-                $invoice->update([
-                    'status' => $request->status,
+            $invoice->update([
+                'status' => $request->status,
             ]);
             
             // ambil id produk berasrkan order id
             $ambil_produk_id = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
+
+            // dd($ambil_produk_id);
             // ambil qty orderan 
             $qty_order = OrderItem::where('order_id', $invoice->order->id)->pluck('qty');
             $produks = Produk::whereIn('id', $ambil_produk_id)->get();
             $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
             
             if ($invoice->status == 'PAID') {
-                foreach ($produks as $index => $p) {
-                    if ($p->stok < $qty_order[$index]) {
-                        return response()->json([
-                            'message'=>'error',
-                            'data'=>'qty melebihi jumlah stok produk',
-                        ]);
-                    }
-                    $p->update([
-                        'stok' => $p->stok - $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
-                    ]);
-                }
+               
                 $ambil_produkid_berdasarkan_userid->each->delete();
 
                 $bayar = Pembayaran::create([
@@ -668,7 +672,7 @@ class ApiController extends Controller
                     'status' => $request->status,
                     'total_pembayaran' => $request->paid_amount,
                     'bank_code' => $request->bank_code,
-                    'tagihan_id' => '1',
+                    'tagihan_id' => $invoice->id,
                 ]);
         
                 $res = [
@@ -682,10 +686,22 @@ class ApiController extends Controller
                     'data' => json_encode($request->all()),
                     'result' => json_encode($res)
                 ]);
-            } else {
+            } elseif ($invoice->status == 'EXPIRED') {
+                foreach ($produks as $index => $p) {
+                   
+                    $p->update([
+                        'stok' => $p->stok + $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
+                    ]);
+                }
                 $res = [
                     'message' => 'success',
                     'payment' => 'EXPIRED'
+                ];
+
+            }else {
+                $res = [
+                    'message' => 'success',
+                    'payment' => 'ERROR'
                 ];
             }
         

@@ -14,11 +14,11 @@ class SearchPemenangLot implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $bid;
+    public $pemenang_bid;
     public $event_lelang_id;
-    public function __construct($bid,$event_lelang_id)
+    public function __construct($pemenang_bid,$event_lelang_id)
     {
-        $this->bid = $bid;
+        $this->pemenang_bid = $pemenang_bid;
         $this->event_lelang_id = $event_lelang_id;
     }
 

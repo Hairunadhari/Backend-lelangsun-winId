@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
         // 'Admin' => \App\Http\Middleware\Admin::class,
         // 'SuperAdmin' => \App\Http\Middleware\SuperAdmin::class,
         'role' => \App\Http\Middleware\Role::class,
+        'allrole' => \App\Http\Middleware\AllRole::class,
         'peserta' => \App\Http\Middleware\Peserta::class,
         'auth.peserta' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

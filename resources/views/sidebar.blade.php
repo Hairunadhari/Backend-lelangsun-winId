@@ -21,8 +21,8 @@
           <li class="{{ request()->routeIs('superadmin.toko') ? 'active' : '' }}"><a href="{{route('superadmin.toko')}}"><i class="fas fa-store"></i><span>Toko</span></a></li>
           <li class="{{ request()->routeIs('superadmin.kategori-produk') ? 'active' : '' }}"><a href="{{route('superadmin.kategori-produk')}}"><i class="fas fa-th-large"></i><span>Kategori Produk</span></a></li>
           <li class="{{ request()->routeIs('superadmin.produk') ? 'active' : '' }}"><a href="{{route('superadmin.produk')}}"><i class="fas fa-shopping-bag"></i><span>Produk</span></a></li>
-          <li class="{{ request()->routeIs('superadmin.promosi') ? 'active' : '' }}"><a href="{{route('superadmin.promosi')}}"><i class="fas fa-tags"></i><span>Promo Produk</span></a></li>
-        <li class="{{ request()->routeIs('superadmin.pesanan') ? 'active' : '' }}"><a href="{{route('superadmin.pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
+          <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a href="{{route('promosi')}}"><i class="fas fa-tags"></i><span>Promo Produk</span></a></li>
+        <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
         <!-- {{-- <li><a class="nav-link {{ request()->routeIs('superadmin.list-review') ? 'active' : '' }}" href="{{route('superadmin.list-review')}}"><i class="fas fa-comment-alt"></i><span>Review</span></a></li> --}} -->
         <li class="menu-header">Events</li>
         <li class="{{ request()->routeIs('superadmin.event') ? 'active' : '' }}"><a href="{{route('superadmin.event')}}"><i class="fas fa-calendar-alt"></i><span>Win Event</span></a></li>
@@ -48,8 +48,8 @@
         <li class="{{ request()->routeIs('admin.profil-toko') ? 'active' : '' }}"><a href="{{route('admin.profil-toko')}}"><i class="fas fa-store"></i><span>Toko Saya</span></a></li>
         <li class="{{ request()->routeIs('admin.kategori-produk') ? 'active' : '' }}"><a href="{{route('admin.kategori-produk')}}"><i class="fas fa-th-large"></i><span>Kategori Produk</span></a></li>
         <li class="{{ request()->routeIs('admin.produk') ? 'active' : '' }}"><a href="{{route('admin.produk')}}"><i class="fas fa-shopping-bag"></i><span>Produk</span></a></li>
-        {{-- <li class="{{ request()->routeIs('admin.promosi') ? 'active' : '' }}"><a href="{{route('admin.promosi')}}"><i class="fas fa-tags"></i><span>Promo Produk</span></a></li> --}}
-      {{-- <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li> --}}
+        <li class="{{ request()->routeIs('promosi') ? 'active' : '' }}"><a href="{{route('promosi')}}"><i class="fas fa-tags"></i><span>Promo Produk</span></a></li>
+      <li class="{{ request()->routeIs('pesanan') ? 'active' : '' }}"><a href="{{route('pesanan')}}"><i class="fas fa-credit-card"></i><span>Pesanan</span></a></li>
             
         @endif
       </ul>

@@ -365,7 +365,24 @@ class MenuSuperAdminController extends Controller
     public function list_pesanan(){
         $idAdmin = Auth::user()->id;
         $idToko = Toko::where('user_id',$idAdmin)->first();
-
+        // $data = Order::with('tagihan')
+        // ->whereHas('orderitem.produk', function($query) {
+        //     $query->where('toko_id', Auth::user()->toko->id);
+        // })
+        // ->orderBy('created_at', 'desc')
+        // ->get();
+        // $data = DB::table('orders')
+        // ->select('orders.id', 'tagihans.external_id', 'tagihans.status', 'users.name', DB::raw('SUM(order_items.harga_x_qty) as total_harga_x_qty'), 'produks.toko_id')
+        // ->leftJoin('tagihans', 'orders.id', '=', 'tagihans.order_id')
+        // ->leftJoin('users', 'orders.user_id', '=', 'users.id')
+        // ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
+        // ->leftJoin('produks', 'order_items.produk_id', '=', 'produks.id')
+        // ->where('produks.toko_id', Auth::user()->toko->id)
+        // ->groupBy('orders.id', 'produks.toko_id', 'users.name', 'tagihans.status', 'tagihans.external_id')
+        // ->get();
+    
+        // dd($data);
+         
         if (request()->ajax()) {
             $status = request('status');
 
@@ -375,7 +392,15 @@ class MenuSuperAdminController extends Controller
                     $data = Order::with('user','orderitem.produk','tagihan')->orderBy('created_at','desc')->get();                    
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
-                    $data = Order::with('user','orderitem.produk','tagihan')->orderBy('created_at','desc')->get();                    
+                $data = DB::table('orders')
+                ->select('orders.id', 'tagihans.external_id', 'tagihans.status', 'users.name', DB::raw('SUM(order_items.harga_x_qty) as total_harga_x_qty'), 'produks.toko_id')
+                ->leftJoin('tagihans', 'orders.id', '=', 'tagihans.order_id')
+                ->leftJoin('users', 'orders.user_id', '=', 'users.id')
+                ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
+                ->leftJoin('produks', 'order_items.produk_id', '=', 'produks.id')
+                ->where('produks.toko_id', Auth::user()->toko->id)
+                ->groupBy('orders.id', 'produks.toko_id', 'users.name', 'tagihans.status', 'tagihans.external_id')
+                ->get();        
             }
             
             return DataTables::of($data)->make(true);
@@ -502,7 +527,7 @@ class MenuSuperAdminController extends Controller
             'kategoriproduk_id'     => 'required',
         ]);
         try {
-            DB::beginTrasaction();
+            DB::beginTransaction();
             $produk = Produk::find($id);
             $gambarProduk = GambarProduk::where('produk_id', $id)->get();
 
@@ -604,6 +629,7 @@ class MenuSuperAdminController extends Controller
 
         } catch (Throwable $th) {
             DB::rollBack();
+            // dd($th);
             if (Auth::user()->role->role == 'Super Admin') {
                 return redirect()->route('superadmin.produk')->with(['error' => 'Data Gagal diUpdate!']);
             } else {
@@ -909,9 +935,9 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.promosi')->with('error', 'Data gagal ditambahkan');
+            return redirect()->route('promosi')->with('error', 'Data gagal ditambahkan');
         }
-        return redirect()->route('superadmin.promosi')->with('success', 'Data Berhasil ditambahkan');
+        return redirect()->route('promosi')->with('success', 'Data Berhasil ditambahkan');
     }
 
     public function detail_promosi($id)
@@ -1017,12 +1043,12 @@ class MenuSuperAdminController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
-            return redirect()->route('superadmin.promosi')->with(['error' => 'Data gagal Diubah!']);
+            return redirect()->route('promosi')->with(['error' => 'Data gagal Diubah!']);
             //throw $th;
         }
 
         //redirect to index
-        return redirect()->route('superadmin.promosi')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('promosi')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function delete_promosi($id)
@@ -1038,10 +1064,10 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.promosi')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('promosi')->with(['error' => 'Data Gagal Dihapus!']);
         }
 
-        return redirect()->route('superadmin.promosi')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('promosi')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
     public function list_kategori_lelang(){
@@ -1699,21 +1725,29 @@ class MenuSuperAdminController extends Controller
     }
 
     public function detail_pesanan($id){
-        try {
-            //code...
+        if (Auth::user()->role->role == 'Super Admin') {
             $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
             $pengiriman = Pengiriman::where('order_id', $id)->first();
             $itemproduk = OrderItem::with('produk','promosi.produkpromo')->where('order_id', $id)->get();
-            $hargaPromo = $itemproduk->promosi->produkpromo->whereIn('produk_id', $itemproduk->produk->id)->get();
-                
-            return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','hargaPromo'));
+        return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
 
-        } catch (Exception $e) {
-            
-            $hargaPromo = null;
-            return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','hargaPromo'));
-            
+        } else {
+            $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
+            $pengiriman = Pengiriman::where('order_id', $id)->first();
+            // DB::raw('SUM(produk_promos.total_diskon) as harga_diskon'
+            $itemproduk = DB::table('order_items')
+            ->select('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.promosi_id','produk_promos.total_diskon')
+            ->leftJoin('produk_promos','order_items.promosi_id','=','produk_promos.promosi_id')
+            ->groupBy('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.promosi_id','produk_promos.total_diskon')
+            ->where('order_items.order_id',$id)
+            ->get();
+            dd($itemproduk);
+            $sub_total_pertoko = OrderItem::with('produk')->whereHas('produk', function($query){
+                $query->where('toko_id',Auth::user()->toko->id);
+            })->where('order_id', $id)->sum('harga_x_qty');
+            return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','sub_total_pertoko'));
         }
+        
     }
 
     public function profil($id){
@@ -2375,7 +2409,7 @@ class MenuSuperAdminController extends Controller
             'logo'     => 'required|image|mimes:jpeg,jpg,png',
             'name' => 'max:280',
             'email' => ['string', 'email', 'max:255', 'unique:'.User::class],
-            'password' => 'min:10',
+            'password' => 'min:8',
             'password_confirmation' => 'same:password',
             
         ]);
@@ -2948,6 +2982,12 @@ class MenuSuperAdminController extends Controller
             $lot_item_id = $request->lot_item_id;
 
             $bid = Bidding::with('user')->where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->orderBy('harga_bidding','desc')->first();
+            $pemenang_bid = DB::table('biddings')
+            ->select('email','harga_bidding')
+            ->where('event_lelang_id', $request->event_lelang_id)
+            ->where('lot_item_id',$lot_item_id)
+            ->orderBy('harga_bidding','desc')
+            ->first();
             $lot = LotItem::find($lot_item_id);
             $npl = Npl::find($bid->npl_id ?? null);
             // dd($npl);
@@ -2991,7 +3031,7 @@ class MenuSuperAdminController extends Controller
                     'status' => 'not-active',
                 ]);
             }
-            event(new SearchPemenangLot($bid, $request->event_lelang_id));
+            event(new SearchPemenangLot($pemenang_bid, $request->event_lelang_id));
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
@@ -3017,7 +3057,13 @@ class MenuSuperAdminController extends Controller
             ]);
             // cek apakah masih ada lot item di suatu event 
             $lot_item = LotItem::where('event_lelang_id',$request->event_lelang_id)->where('status_item','active')->where('status','active')->get();
-            event(new NextLot($lot_item,$request->event_lelang_id));
+            if (count($lot_item) == 0) {
+                $status= 'Lot Barang Habis';
+            } else {
+                $status = 'Lot Barang Tersedia';
+            }
+            
+            event(new NextLot($lot_item,$request->event_lelang_id,$status));
             DB::commit();
 
         } catch (Throwable $th) {
