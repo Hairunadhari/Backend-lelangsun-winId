@@ -72,32 +72,15 @@
                 <tr>
                   <td>{{$no++}}</td>
                   <td>{{$ip->nama_produk}}</td>
-                  <td class="text-center">Rp. {{number_format($ip->harga)}}</td>
+                  <td class="text-center">Rp. {{number_format($ip->harga)}} 
+                    @if ($ip->diskon != null)
+                    <label class="badge badge-sm badge-dark"><i class="fa fa-tag"></i> diskon</label>
+                    @endif
+                  </td> 
                   <td class="text-center">{{$ip->qty}}</td>
                   <td class="text-right">Rp. {{number_format($ip->harga_x_qty)}}</td>
                 </tr>
                 @endforeach
-              {{-- @if ($hargaPromo == null)
-                @foreach ($itemproduk as $ip)
-                <tr>
-                  <td>{{$no++}}</td>
-                  <td>{{$ip->nama_produk}}</td>
-                  <td class="text-center">Rp. {{number_format($ip->harga)}}</td>
-                  <td class="text-center">{{$ip->qty}}</td>
-                  <td class="text-right">Rp. {{number_format($ip->harga_x_qty)}}</td>
-                </tr>
-                @endforeach
-              @else
-                @foreach ($itemproduk as $ip)
-                <tr>
-                  <td>{{$no++}}</td>
-                  <td>{{$ip->nama_produk}} (Promo)</td>
-                  <td class="text-center">Rp. {{number_format($hargaPromo->total_diskon)}}</td>
-                  <td class="text-center">{{$ip->qty}}</td>
-                  <td class="text-right">Rp. {{number_format($ip->harga_x_qty)}}</td>
-                </tr>
-                @endforeach
-              @endif --}}
             </tbody>
           </table>
           </div>

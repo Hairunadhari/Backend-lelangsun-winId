@@ -365,23 +365,6 @@ class MenuSuperAdminController extends Controller
     public function list_pesanan(){
         $idAdmin = Auth::user()->id;
         $idToko = Toko::where('user_id',$idAdmin)->first();
-        // $data = Order::with('tagihan')
-        // ->whereHas('orderitem.produk', function($query) {
-        //     $query->where('toko_id', Auth::user()->toko->id);
-        // })
-        // ->orderBy('created_at', 'desc')
-        // ->get();
-        // $data = DB::table('orders')
-        // ->select('orders.id', 'tagihans.external_id', 'tagihans.status', 'users.name', DB::raw('SUM(order_items.harga_x_qty) as total_harga_x_qty'), 'produks.toko_id')
-        // ->leftJoin('tagihans', 'orders.id', '=', 'tagihans.order_id')
-        // ->leftJoin('users', 'orders.user_id', '=', 'users.id')
-        // ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
-        // ->leftJoin('produks', 'order_items.produk_id', '=', 'produks.id')
-        // ->where('produks.toko_id', Auth::user()->toko->id)
-        // ->groupBy('orders.id', 'produks.toko_id', 'users.name', 'tagihans.status', 'tagihans.external_id')
-        // ->get();
-    
-        // dd($data);
          
         if (request()->ajax()) {
             $status = request('status');
@@ -389,7 +372,7 @@ class MenuSuperAdminController extends Controller
             // get data role superadmin
             if (Auth::user()->role->role == 'Super Admin') {
                     // $data = OrderItem::with('produk','order')->orderBy('created_at','desc')->get();                    
-                    $data = Order::with('user','orderitem.produk','tagihan')->orderBy('created_at','desc')->get();                    
+                    $data = Order::with('user','orderitem.produk','tagihan')->get();                    
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
                 $data = DB::table('orders')
@@ -868,12 +851,12 @@ class MenuSuperAdminController extends Controller
         if (request()->ajax()) {
             // get data khusus role super admin
             if (Auth::user()->role->role == 'Super Admin') {
-                $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->orderBy('created_at','desc')->get();
+                $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->where('status','active')->orderBy('created_at','desc')->get();
                 return DataTables::of($data)->make(true);
                 
             // get data khusus role admin
             } elseif (Auth::user()->role->role == 'Admin') {
-                $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->where('toko_id',$toko->id)->orderBy('created_at','desc')->get();
+                $data = Promosi::select('id','promosi','gambar','diskon','tanggal_mulai','tanggal_selesai')->where('status','active')->where('toko_id',$toko->id)->orderBy('created_at','desc')->get();
                 return DataTables::of($data)->make(true);
             }
             
@@ -952,13 +935,31 @@ class MenuSuperAdminController extends Controller
 
     public function edit_promosi($id)
     {
-        $data = Promosi::find($id);
-        $produk = Produk::where('status','active')->orderBy('nama', 'asc')->get();
-        $produkPromo = ProdukPromo::where('promosi_id', $id)->get();
-        $produkTerpilih = [];
+        if (Auth::user()->role->role == 'Super Admin') {
+            
+            $data = Promosi::find($id);
+            $query = Produk::where('status','active');
+            if ($data->toko_id != null) {
+                $query->where('toko_id',$data->toko_id);
+            }
+            $produk = $query->orderBy('nama', 'asc')->get();
 
-        foreach ($produkPromo as $item) {
-            $produkTerpilih[$item->produk_id] = $item->produk_id;
+            $produkPromo = ProdukPromo::where('promosi_id', $id)->get();
+            $produkTerpilih = [];
+            
+            foreach ($produkPromo as $item) {
+                $produkTerpilih[$item->produk_id] = $item->produk_id;
+            }
+        } else {
+            $data = Promosi::find($id);
+            $produk = Produk::where('status','active')->orderBy('nama', 'asc')->where('toko_id',Auth::user()->toko->id)->get();
+            $produkPromo = ProdukPromo::where('promosi_id', $id)->get();
+            $produkTerpilih = [];
+            
+            foreach ($produkPromo as $item) {
+                $produkTerpilih[$item->produk_id] = $item->produk_id;
+            }
+            
         }
 
         // Render view with post
@@ -1057,13 +1058,13 @@ class MenuSuperAdminController extends Controller
             DB::beginTransaction();
             $data = Promosi::findOrFail($id);
             // dd($data);
-            Storage::delete('public/image/'. $data->gambar);
-            ProdukPromo::where('promosi_id', $id)->delete();
-            $data->delete();
+            ProdukPromo::where('promosi_id', $id)->update(['status'=>'not-active']);
+            $data->update(['status'=>'not-active']);
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
+            dd($th);
             return redirect()->route('promosi')->with(['error' => 'Data Gagal Dihapus!']);
         }
 
@@ -1728,20 +1729,27 @@ class MenuSuperAdminController extends Controller
         if (Auth::user()->role->role == 'Super Admin') {
             $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
             $pengiriman = Pengiriman::where('order_id', $id)->first();
-            $itemproduk = OrderItem::with('produk','promosi.produkpromo')->where('order_id', $id)->get();
+            $itemproduk = DB::table('order_items')
+            ->select('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.harga_x_qty','produk_promos.diskon','produk_promos.promosi_id')
+            ->leftJoin('produks','order_items.produk_id','=','produks.id')
+            ->leftJoin('produk_promos','order_items.promosi_id','=','produk_promos.promosi_id')
+            ->where('order_items.order_id',$id)
+            ->groupBy('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.harga_x_qty','produk_promos.diskon','produk_promos.promosi_id')
+            ->get();
         return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
 
         } else {
             $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
             $pengiriman = Pengiriman::where('order_id', $id)->first();
-            // DB::raw('SUM(produk_promos.total_diskon) as harga_diskon'
             $itemproduk = DB::table('order_items')
-            ->select('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.promosi_id','produk_promos.total_diskon')
+            ->select('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.harga_x_qty','produk_promos.diskon','produk_promos.promosi_id')
+            ->leftJoin('produks','order_items.produk_id','=','produks.id')
             ->leftJoin('produk_promos','order_items.promosi_id','=','produk_promos.promosi_id')
-            ->groupBy('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.promosi_id','produk_promos.total_diskon')
+            ->where('produks.toko_id',Auth::user()->toko->id)
             ->where('order_items.order_id',$id)
+            ->groupBy('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.harga_x_qty','produk_promos.diskon','produk_promos.promosi_id')
             ->get();
-            dd($itemproduk);
+            // dd($itemproduk);
             $sub_total_pertoko = OrderItem::with('produk')->whereHas('produk', function($query){
                 $query->where('toko_id',Auth::user()->toko->id);
             })->where('order_id', $id)->sum('harga_x_qty');
