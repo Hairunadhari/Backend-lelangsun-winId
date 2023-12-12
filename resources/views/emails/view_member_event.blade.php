@@ -17,8 +17,8 @@
             <p>Link Meeting : {{ $data->event->link }}</p>
             <p>Alamat Lokasi : {{ $data->event->alamat_lokasi }}</p>
             <p>Link Lokasi : {{ $data->event->link_lokasi }}</p>
-            <p>tes : {{ asset('storage/qrcode/qrcode-'.$data->id.'.png') }}</p>
-            <img src="{{ asset('storage/qrcode/qrcode-'.$data->id.'.png') }}" style="width: 100px; height:100px;" alt="">
+            <p>url : {{ asset('storage/qrcode/qrcode-'.$data->id.'.png') }}</p>
+            <img src="{{ asset('storage/qrcode/qrcode-'.$data->id.'.png') }}" style="width: 200px; height:200px; text-center;" alt="">
         </div>
     </div>
 

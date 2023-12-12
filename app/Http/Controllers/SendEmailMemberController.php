@@ -39,23 +39,5 @@ class SendEmailMemberController extends Controller
         return redirect()->back()->with(['success' => 'Data berhasil diverifikasi!']);
 
 
-       
-        // $barcodeHTML = $barcode->getBarcodeHTML($data->nama, 'QRCODE');
-        // $barcodeHTML = $barcode->getBarcodePNGPath($data->nama, 'QRCODE');
-        // $qr = \DNS2D::getBarcodePNGPath('tes', 'QRCODE');
-        // dd($qr);
-        // $barcodeHTML->move(public_path().'/storage/qrcode/', 'tes');
-        // echo DNS1D::getBarcodeSVG('4445645656', 'PHARMA2T');
-        // echo DNS1D::getBarcodeHTML('4445645656', 'PHARMA2T');
-        // echo '<img src="data:image/png,' . DNS1D::getBarcodePNG('4', 'C39+') . '" alt="barcode"   />';
-        // echo DNS1D::getBarcodePNGPath('4445645656', 'PHARMA2T');
-        // echo '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG('4', 'C39+') . '" alt="barcode"   />';
-        // return 'sukses';
-        // Mail::to($data->email)->send(new SendEmailMember($data, $barcodeHTML));
-        // $data->update([
-        //     'status_verif' => 1
-        // ]);
- 
-        // return redirect()->back()->with(['success' => 'Data berhasil diverifikasi!']);
     }
 }
