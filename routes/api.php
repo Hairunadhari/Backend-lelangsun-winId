@@ -78,3 +78,5 @@ Route::get('/lelang/event/detail/{id}/', [ApiController::class, 'detail_event_le
 Route::get('/lelang/list-npl-user/{id}/', [ApiController::class, 'list_npl_berdasarkan_id_peserta_npl']);
 Route::post('/lelang/send-bidding', [ApiController::class, 'send_bidding']);
 Route::post('/lelang/log-bidding', [ApiController::class, 'log_bidding']);
+Route::get('/lelang/list-pelunasan-barang/{id}', [ApiController::class, 'list_pelunasan_barang_lelang']);
+Route::post('/lelang/pembayaran-pelunasan-barang', [ApiController::class, 'pembayaran_pelunasan_lelang']);

@@ -1308,6 +1308,67 @@
                     }
                 }
             }
+        },
+        "/api/lelang/list-pelunasan-barang/{id}": {
+            "get": {
+                "tags": [
+                    "Pelunasan Barang"
+                ],
+                "summary": "List Pelunasan Barang",
+                "description": "Menampilkan list pelunasan barang berdasarkan user ID yg diberikan",
+                "operationId": "List Pelunasan Barang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/pembayaran-pelunasan-barang": {
+            "post": {
+                "tags": [
+                    "Pelunasan Barang"
+                ],
+                "summary": "Pembayaran Pelunasan barang",
+                "description": "masukkan npl id, bukti pembayaran",
+                "operationId": "pembayaran pelunasan barang",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "npl_id": {
+                                        "type": "integer"
+                                    },
+                                    "bukti_pembayaran": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }

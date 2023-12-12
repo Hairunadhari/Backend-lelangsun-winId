@@ -27,6 +27,7 @@ class VerifyCsrfToken extends Middleware
         '/api/lelang/npl/add-npl',
         '/api/lelang/send-bidding',
         '/api/lelang/log-bidding',
+        '/api/lelang/pembayaran-pelunasan-barang',
     ];
     
 }

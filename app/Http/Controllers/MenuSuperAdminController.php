@@ -3010,6 +3010,7 @@ class MenuSuperAdminController extends Controller
                         'tgl_transfer' => null,
                         'bukti' => null,
                         'tipe_pelunasan' => null,
+                        'user_id' => $bid->user_id,
                     ]);
 
                     $lot->barang_lelang->update([

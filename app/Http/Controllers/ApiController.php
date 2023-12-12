@@ -22,6 +22,7 @@ use App\Models\LotItem;
 use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\TLogApi;
+use App\Models\Pemenang;
 use App\Models\Wishlist;
 use App\Models\Keranjang;
 use App\Models\OrderItem;
@@ -2114,5 +2115,112 @@ class ApiController extends Controller
             'message'=>'SUCCESS',
             'data'=>$bidding,
         ]);
+    }
+
+      /**
+     * @OA\Get(
+     *      path="/api/lelang/list-pelunasan-barang/{id}",
+     *      tags={"Pelunasan Barang"},
+     *      summary="List Pelunasan Barang",
+     *      description="Menampilkan list pelunasan barang berdasarkan user ID yg diberikan",
+     *      operationId="List Pelunasan Barang",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function list_pelunasan_barang_lelang($id){
+
+        $data = DB::table('pemenangs')->select('pemenangs.status_pembayaran','pemenangs.nominal','pemenangs.created_at','barang_lelangs.barang','pemenangs.npl_id','pemenangs.status_verif','npls.harga_item')
+        ->leftJoin('biddings','pemenangs.bidding_id','biddings.id')
+        ->leftJoin('lot_items','biddings.lot_item_id','lot_items.id')
+        ->leftJoin('barang_lelangs','lot_items.barang_lelang_id','barang_lelangs.id')
+        ->leftJoin('npls','pemenangs.npl_id','npls.id')
+        ->where('pemenangs.user_id',$id)->orderBy('created_at','desc')->get();
+        foreach ($data as $value) {
+            $value->nominal = $value->nominal - $value->harga_item;
+        }
+        return response()->json([
+            'message' => 'success',
+            'data_npl' => $data
+        ]);
+    }
+
+     /**
+     * @OA\Post(
+     *      path="/api/lelang/pembayaran-pelunasan-barang",
+     *      tags={"Pelunasan Barang"},
+     *      summary="Pembayaran Pelunasan barang",
+     *      description="masukkan npl id, bukti pembayaran",
+     *      operationId="pembayaran pelunasan barang",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  @OA\Property(property="npl_id", type="integer"),
+     *                  @OA\Property(property="bukti_pembayaran", type="file", format="binary"),
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function pembayaran_pelunasan_lelang(Request $request){
+        $validator = Validator::make($request->all(), [
+            'npl_id'     => 'required',
+            'bukti_pembayaran'     => 'required|image|mimes:jpeg,jpg,png',
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada Kesalahan',
+                'data' => $validator->errors()
+            ], 401);
+
+        }
+        try {
+            DB::beginTransaction();
+            $data = Pemenang::where('npl_id',$request->npl_id)->first();
+            $bukti = $request->file('bukti_pembayaran');
+            $bukti->storeAs('public/image', $bukti->hashName());
+            $data->update([
+                'tgl_transfer' => date("Y-m-d H:i:s"),
+                'bukti' => $bukti->hashName(),
+                'tipe_pelunasan' => 'transfer',
+                'status_verif' => 'Verifikasi',
+            ]);
+            DB::commit();
+        } catch (Throwable $th) {
+            DB::rollBack();
+            //throw $th;
+            return response()->json([
+                'success'=>'false',
+                'message'=>'data gagal terkirim',
+            ]);
+        }
+            return response()->json([
+                'success'=>true,
+                'message'=>'Data anda sedang di verifikasi oleh admin',
+                'data'=>[
+                    'tipe_pelunasan'=>$data->tipe_pelunasan,
+                    'bukti'=>$data->bukti,
+                    'status_verif'=>$data->status_verif,
+                ]
+            ]);
     }
 }

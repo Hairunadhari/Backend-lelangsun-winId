@@ -113,7 +113,7 @@
                   @php
                       $hashid = Crypt::encrypt($item->id)
                   @endphp
-                      <a href="{{ route('user-bidding', ['id' => $hashid, 'lot' => $item->lot_item[0]->id]) }}"
+                      <a href="{{ route('user-bidding', ['id' => $hashid, 'lot' => $item->lot_item[0]->id ?? null]) }}"
                         class="btn btn-danger w-100"><span>Masuk</span></a>
                 </div>
               </div>
