@@ -1725,7 +1725,7 @@ class ApiController extends Controller
             },
             'lot_item.event_lelang' => function($query){
                 $query->where('status_data', 1);
-            }
+            },'kategoribarang'
         ])->where('status', 1)->get();
         
         $data->each(function ($item) use ($now){
