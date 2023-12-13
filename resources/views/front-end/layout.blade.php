@@ -172,9 +172,9 @@
                 <h4>MENU</h4>
                 <ul>
                     <li>Beranda</li>
-                    <li>Lot</li>
                     <li>Lelang</li>
-                    <li>Event</li>
+                    <li>Events</li>
+                    <li>Kontak</li>
                 </ul>
             </div>
             <div class="card-footer">

@@ -11,7 +11,7 @@ class Peserta
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->role_id == null) {
+        if (Auth::user() && Auth::user()->role_id == null) {
             return $next($request);
         }
         return redirect()->back();

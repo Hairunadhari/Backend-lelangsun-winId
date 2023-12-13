@@ -705,6 +705,10 @@ class MenuSuperAdminController extends Controller
     }
 
     public function add_event_lelang(Request $request){
+        if ($request->kategori_id == null) {
+        return redirect()->back()->with('error', 'Kategori barang harus diisi!');
+            
+        }
         $gambar = $request->file('gambar');
         $gambar->storeAs('public/image', $gambar->hashName());
 
@@ -1165,6 +1169,10 @@ class MenuSuperAdminController extends Controller
     
 
     public function add_barang_lelang(Request $request){
+        if ($request->kategoribarang_id == null) {
+            return redirect()->route('superadmin.barang-lelang')->with('error', 'Kategori barang harus diisi!');
+            
+        }
         try {
             DB::beginTransaction();
             if ($request->nomer_rangka == null) {

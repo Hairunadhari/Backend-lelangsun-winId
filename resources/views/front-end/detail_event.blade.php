@@ -32,11 +32,12 @@
         height: 200px;
     }
     .item-barang img{
-        width: 200px;
+        /* width: 200px; */
         height: 200px;
     }
     .items img{
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; 
+        /* box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;  */
+
     }
     @media (max-width: 600px) {
         #satu {
@@ -80,7 +81,7 @@
             <h1>List Lot</h1>
             <div class="items">
                 @foreach ($event->lot_item as $item)
-                <div class="card item-barang">
+                <div class="card item-barang m-2">
                     <img src="{{asset('storage/image/'.$item->barang_lelang->gambarlelang[0]->gambar)}}"  alt="...">
                     <div class="card-body">
                         <h5 class="card-title">{{$item->barang_lelang->barang}}</h5>

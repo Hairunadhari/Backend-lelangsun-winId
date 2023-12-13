@@ -109,7 +109,7 @@
                                             <h5 class="card-text">Transisi Kendaraan : {{$data->barang_lelang->transisi_mobil}}</h5>
                                     </div>
                                     <div class="col-4">
-                                            <h5 class="card-text">Bahan Bakara : {{$data->barang_lelang->bahan_bakar}}</h5>
+                                            <h5 class="card-text">Bahan Bakar : {{$data->barang_lelang->bahan_bakar}}</h5>
                                             <h5 class="card-text">Odometer : {{$data->barang_lelang->odometer}}</h5>
                                             <h5 class="card-text">Grade Utama : {{$data->barang_lelang->grade_utama}}</h5>
                                             <h5 class="card-text">Grade Mesin : {{$data->barang_lelang->grade_mesin}}</h5>
