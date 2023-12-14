@@ -313,7 +313,7 @@
                             onchange="toggleDiv(this.value)">
                             <option readonly>-- Pilih Kategori --</option>
                             @foreach ($kategori as $item)
-                            <option value="{{ $item->id }}" data-kategori="{{$item->kategori}}">{{ strtoupper($item->kategori) }}</option>
+                            <option value="{{ $item->id }}" data-kategori="{{$item->kategori}}">{{ $item->kategori }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -552,7 +552,7 @@ function toggleDiv(value) {
     const selectedOption = document.getElementById("id_kategoribarang").options[document.getElementById("id_kategoribarang").selectedIndex];
     const dataKategori = selectedOption.getAttribute("data-kategori");
 
-    if (dataKategori === "Motor" || dataKategori === "Mobil") {
+    if (dataKategori === "Motor" || dataKategori === "Mobil" || dataKategori === "motor" || dataKategori === "mobil") {
         console.log('tess', dataKategori);
         inpKendaraan.style.display = "block";
 
