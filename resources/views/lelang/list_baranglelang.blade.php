@@ -552,7 +552,7 @@ function toggleDiv(value) {
     const selectedOption = document.getElementById("id_kategoribarang").options[document.getElementById("id_kategoribarang").selectedIndex];
     const dataKategori = selectedOption.getAttribute("data-kategori");
 
-    if (dataKategori === "motor" || dataKategori === "mobil") {
+    if (dataKategori === "Motor" || dataKategori === "Mobil") {
         console.log('tess', dataKategori);
         inpKendaraan.style.display = "block";
 
