@@ -281,6 +281,8 @@
         const selectElement = document.getElementById("id_kategoribarang");
         const inpKendaraan = document.getElementById("editinpKendaraan");
         const selectedOption = document.getElementById("id_kategoribarangs").options[document.getElementById("id_kategoribarangs").selectedIndex];
+    const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
+
         const dataKategori = selectedOption.getAttribute("data-kategori");
         if (dataKategori == "motor" || dataKategori == "mobil") {
         console.log('tess', dataKategori);
