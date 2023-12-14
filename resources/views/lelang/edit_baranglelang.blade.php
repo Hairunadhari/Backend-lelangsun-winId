@@ -308,7 +308,7 @@
     const selectedOption = document.getElementById("id_kategoribarangs").options[document.getElementById("id_kategoribarangs").selectedIndex];
     const dataKategori = selectedOption.getAttribute("data-kategori");
 
-    if (dataKategori == "motor" || dataKategori == "mobil") {
+    if (dataKategori === "Motor" || dataKategori === "Mobil") {
         console.log('tess', dataKategori);
         inpKendaraan.style.display = "block";
 
