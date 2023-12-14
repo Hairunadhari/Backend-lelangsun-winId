@@ -1690,7 +1690,7 @@ class ApiController extends Controller
 
         $data = BarangLelang::with(['lot_item' => function ($query) use($now){
             $query->where('status','active')->where('status_item','active')->whereDate('tanggal','>=',$now);
-        }])->find($id);
+        },'kategoribarang'])->find($id);
         $data->gambarlelang->each(function ($item){
          $item->gambar = env('APP_URL').'/storage/image/'. $item->gambar;
         });
