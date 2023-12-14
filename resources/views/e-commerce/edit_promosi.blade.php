@@ -132,10 +132,6 @@
     }
     document.querySelector('#gambar').addEventListener("change", previewImages);
 
-    document.querySelector('#resetButton').addEventListener('click', function () {
-        document.querySelector('#preview').innerHTML = '';
-    });
-
     function formatPromo(input) {
         // Menghilangkan karakter selain angka
         var num = input.value.replace(/[^0-9]/g, '');

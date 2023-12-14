@@ -1175,7 +1175,7 @@ class MenuSuperAdminController extends Controller
         }
         try {
             DB::beginTransaction();
-            if ($request->nomer_rangka == null) {
+            if ($request->no_polisi == null) {
                 $lelang = BarangLelang::create([
                     'kategoribarang_id'     => $request->kategoribarang_id,
                     'barang'     => $request->barang,

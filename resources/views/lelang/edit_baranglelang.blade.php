@@ -284,7 +284,7 @@
     const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
 
         const dataKategori = selectedOption.getAttribute("data-kategori");
-        if (dataKategori == "motor" || dataKategori == "mobil") {
+        if (dataKategori == "motor" || dataKategori == "mobil" || dataKategori == "Motor" || dataKategori == "Mobil") {
         console.log('tess', dataKategori);
         inpKendaraan.style.display = "block";
 

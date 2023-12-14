@@ -338,12 +338,12 @@
                         <h5>Spesifikasi Kendaraan</h5>
                         <div class="row">
                             <div class="form-group col-6">
-                                <label>Nomer Rangka <span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="nomer_rangka" required>
+                                <label>Nomer Rangka</label>
+                                <input type="text" class="form-control" name="nomer_rangka">
                             </div>
                             <div class="form-group col-6">
-                                <label>Nomer Mesin <span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="nomer_mesin" required>
+                                <label>Nomer Mesin</label>
+                                <input type="text" class="form-control" name="nomer_mesin">
                             </div>
                             <div class="form-group col-6">
                                 <label>Tipe Kendaraan <span style="color: red">*</span></label>
@@ -364,8 +364,8 @@
                                 </select>
                             </div>
                             <div class="form-group col-6">
-                                <label>Odometer <span style="color: red">*</span></label>
-                                <input type="number" class="form-control" name="odometer" required>
+                                <label>Odometer</label>
+                                <input type="number" class="form-control" name="odometer">
                             </div>
                         </div>
                         <hr>
