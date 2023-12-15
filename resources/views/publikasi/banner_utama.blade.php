@@ -85,7 +85,7 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Gambar <small>(png, jpg, jpeg)</small><span
+                        <label for="exampleInputEmail1">Gambar <small>(png, jpg, jpeg, disarankan: width 250px, height 140px)</small><span
                                 style="color: red">*</span></label>
                         <input type="file" class="form-control" accept=".jpg, .png, .jpeg" name="gambar" required id="gambar">
                     </div>
