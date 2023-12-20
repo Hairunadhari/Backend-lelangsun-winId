@@ -210,7 +210,6 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::post('/add-banner-lelang', [MenuSuperAdminController::class, 'add_banner_lelang'])->name('superadmin.add-banner-lelang');
         Route::get('/edit-banner-lelang/{id}/', [MenuSuperAdminController::class, 'edit_banner_lelang'])->name('superadmin.edit-banner-lelang');
         Route::put('/update-banner-lelang/{id}/', [MenuSuperAdminController::class, 'update_banner_lelang'])->name('superadmin.update-banner-lelang');
-        Route::put('/delete-banner-lelang/{id}/', [MenuSuperAdminController::class, 'delete_banner_lelang'])->name('superadmin.delete-banner-lelang');
         Route::put('/active-banner-lelang/{id}/', [MenuSuperAdminController::class, 'active_banner_lelang'])->name('superadmin.active-banner-lelang');
         
         // route user superadmin
@@ -229,6 +228,7 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::put('/update-setting-lelang/{id}/', [MenuSuperAdminController::class, 'update_setting_lelang'])->name('superadmin.update-setting-lelang');
         Route::put('/delete-keyword/{id}/', [MenuSuperAdminController::class, 'delete_keyword']);
         Route::put('/delete-gambar-lelang/{id}/', [MenuSuperAdminController::class, 'delete_gambar_lelang']);
+        Route::put('/delete-banner-lelang/{id}/', [MenuSuperAdminController::class, 'delete_banner_lelang']);
 
         // route user admin
         Route::get('/tambah-admin', [MenuSuperAdminController::class, 'tambah_admin'])->name('superadmin.tambah-admin');

@@ -267,7 +267,7 @@
                         <br>
                         @foreach ($data->gambarlelang as $item)
                         <div class="image-container">
-                                <img class="ms-auto gambar-lelang" src="{{ asset('storage/image/'.$item->gambar) }}" style="width:150px; height:150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; margin-left: 10px;">
+                                <img class="ms-auto gambar-lelang" src="{{ asset('storage/image/'.$item->gambar) }}" style="width:150px; height:150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; margin-left: 10px; margin-bottom:10px;">
                                 <button class="btn-delete" id="deletegambar" data-image-id="{{ $item->id }}">X</button>
                         </div>
                         @endforeach

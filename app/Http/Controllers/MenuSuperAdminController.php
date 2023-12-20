@@ -2188,22 +2188,7 @@ class MenuSuperAdminController extends Controller
         return redirect()->route('superadmin.banner-lelang')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
-    public function delete_banner_lelang($id)
-    {
-        try {
-            DB::beginTransaction();
-            $data = BannerLelang::findOrFail($id);
-            $data->update([
-                'status' => 0
-            ]);
-            DB::commit();
-        } catch (Throwable $th) {
-            DB::rollBack();
-            //throw $th;
-            return redirect()->route('superadmin.banner-lelang')->with(['error' => 'Data Gagal Dihapus!']);
-        }
-        return redirect()->route('superadmin.banner-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
-    }
+    
     public function active_banner_lelang($id)
     {
         try {
@@ -3174,17 +3159,12 @@ class MenuSuperAdminController extends Controller
         try {
             DB::beginTransaction();
             $data = BannerLelang::find($id);
-            $gambarlelang = BannerLelangImage::where('banner_lelang_id', $id)->get();
         if ($request->hasFile('gambar')) {
             $data->update([
                 'judul' => $request->judul,
                 'deskripsi' => $request->deskripsi,
             ]);
             
-            foreach ($gambarlelang as $gambar) {
-                Storage::delete('public/image/'.$gambar->gambar);
-                $gambar->delete();  
-            }
             
             $gambars = $request->file('gambar');
             foreach ($gambars as $file) {
@@ -3241,5 +3221,11 @@ class MenuSuperAdminController extends Controller
         $data->delete();
         return response()->json('success');
     }
-    
+    public function delete_banner_lelang($id)
+    {
+        $data = BannerLelangImage::find($id);
+        Storage::delete('public/image/'.$data->gambar);
+        $data->delete();
+            return response()->json('success');
+    }
 }   

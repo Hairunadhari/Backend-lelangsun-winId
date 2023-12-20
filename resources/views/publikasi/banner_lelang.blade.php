@@ -1,11 +1,22 @@
 @extends('app.layouts')
 @section('content')
 <style>
-    .review img {
-        margin-bottom: 20px;
-        margin-left: 20px;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    }
+    .image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-delete {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    background-color: rgba(0,0,0,.5); /* Ganti warna sesuai kebutuhan */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
 </style>
 <div class="section-body">
@@ -39,17 +50,19 @@
                                 <div class="form-group" >
                                     <label for="">Banner Web:</label>
                                     <br>
+
                                     @foreach ($data->banner_lelang_image as $item)
-                                    <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}"
-                                        style="width:100px; height:60px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                                    <div class="image-container">
+                                            <img class="ms-auto gambar-lelang" src="{{ asset('storage/image/'.$item->gambar) }}" style="width:150px; height:150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; margin-left: 10px; margin-bottom:10px;">
+                                            <button class="btn-delete" id="deletegambar" data-image-id="{{ $item->id }}">X</button>
+                                    </div>
                                     @endforeach
                                 </div>
                                 <div class="form-group">
-                                    <label>Banner Web <small>(disarankan : upload 3 file, width:1000px height:900px) </small><span
+                                    <label>Banner Web <small>(disarankan : width:1000px height:900px) </small><span
                                             style="color: red">*</span></label>
-                                    <input type="file" class="form-control" name="gambar[]" id="gambar" required multiple>
+                                                <div class="input-images"></div>
                                 </div>
-                                <div id="preview" class="review"></div>
                                 <div class="d-flex justify-content-end">
                                     <button class="me-auto btn btn-success mt-3" type="submit">Simpan</button>
                                 </div>
@@ -63,42 +76,27 @@
     </div>
 </div>
 <script>
-     function previewImages() {
-        var preview = document.querySelector('#preview');
+    $('.input-images').imageUploader({
+        imagesInputName: 'gambar',
+        maxSize: 2 * 1024 * 1024,
 
-        // Hapus semua elemen child di dalam elemen #preview
-        while (preview.firstChild) {
-            preview.removeChild(preview.firstChild);
-        }
-
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
-                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
-                document.querySelector('#gambar').value = '';
-                return;
+    });
+    $(document).on('click', '#deletegambar', function (e) {
+        e.preventDefault();
+        let id = $(this).data('image-id');
+        let elementToRemove = $(this).closest('.image-container'); 
+        console.log(id);
+        $.ajax({
+            method: 'post',
+            url: '/superadmin/delete-banner-lelang/' + id,
+            data: {
+                _method: 'put',
+            },
+            success: function (res) {
+                console.log(res);
+                elementToRemove.remove();
             }
-            if (file.size > 400 * 1024) {
-                alert("Ukuran file melebihi batas maksimum 400 KB.");
-                document.querySelector('#gambar').value = '';
-                return;
-            }
-
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-    document.querySelector('#gambar').addEventListener("change", previewImages);
-
+        });
+    });
 </script>
 @endsection
