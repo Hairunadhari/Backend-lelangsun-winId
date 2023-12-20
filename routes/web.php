@@ -228,6 +228,7 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::put('/update-setting-kontak/{id}/', [MenuSuperAdminController::class, 'update_setting_kontak'])->name('superadmin.update-setting-kontak');
         Route::put('/update-setting-lelang/{id}/', [MenuSuperAdminController::class, 'update_setting_lelang'])->name('superadmin.update-setting-lelang');
         Route::put('/delete-keyword/{id}/', [MenuSuperAdminController::class, 'delete_keyword']);
+        Route::put('/delete-gambar-lelang/{id}/', [MenuSuperAdminController::class, 'delete_gambar_lelang']);
 
         // route user admin
         Route::get('/tambah-admin', [MenuSuperAdminController::class, 'tambah_admin'])->name('superadmin.tambah-admin');

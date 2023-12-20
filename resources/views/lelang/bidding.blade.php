@@ -11,8 +11,10 @@
                             <div class="card-header">
                                 <h4>Detail Barang Lelang</h4>
                             </div>
+                            @if ($lot_item[0]->barang_lelang->gambarlelang !== null)
                             <img src="{{asset('storage/image/'.$lot_item[0]->barang_lelang->gambarlelang[0]->gambar)}}"
                                 alt="..." style="width:auto; ">
+                            @endif
                             <div class="card-body">
                                 <h1 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h1>
                                 <h5 class="card-text">BRAND : {{$lot_item[0]->barang_lelang->brand}}</h5>
@@ -94,8 +96,10 @@
                             @if ($index > 0)
                             <div class="card col-4 m-1 p-1"
                                 style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6;">
+                                @if (count($item->barang_lelang->gambarlelang) > 0)
                                 <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}"
                                     class="card-img-top" alt="..." style="height:100px; width:auto;">
+                                @endif
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $item->barang_lelang->barang }}</h5>
                                     <p class="card-text">{{ $item->barang_lelang->brand }}</p>

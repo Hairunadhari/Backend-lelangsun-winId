@@ -16,9 +16,9 @@ if(window.Chart) {
 }
 
 // DropzoneJS
-if(window.Dropzone) {
-  Dropzone.autoDiscover = false;
-}
+// if(window.Dropzone) {
+//   Dropzone.autoDiscover = false;
+// }
 
 // Basic confirm box
 $('[data-confirm]').each(function() {

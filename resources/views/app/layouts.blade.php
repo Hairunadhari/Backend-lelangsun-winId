@@ -6,19 +6,9 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="page" data-page="admin">
   <title>WIN</title>
-  
-  <!-- General CSS Files -->
-  {{-- <script src="https://code.jquery.com/jquery-3.6.4.slim.js" integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4=" crossorigin="anonymous"></script> --}}
-  {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> --}}
-
-  <!-- CSS Libraries -->
-  {{-- <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}"> --}}
-  {{-- <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css')}}"> --}}
-  {{-- <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.min.css')}}"> --}}
-  {{-- <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css')}}"> --}}
 
   <!-- General CSS Files -->
-  <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap/css/bootstrap.min.css')}}">
+   <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap/css/bootstrap.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/fontawesome/css/all.min.css')}}">
 
   <!-- CSS Libraries -->
@@ -30,6 +20,7 @@
   <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css')}}">
+  <link rel="stylesheet" href="{{ asset('image-uploader/dist/image-uploader.min.css')}}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -37,6 +28,8 @@
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/css/components.css')}}">
+  <script src="{{ asset('image-uploader/src/image-uploader.js')}}"></script>
+
   @vite(['resources/css/app.css' , 'resources/js/app.js'])
 <!-- Start GA -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
@@ -73,14 +66,6 @@
     </div>
   </div>
   
-  <!-- JS Libraies -->
-  {{-- <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script> --}}
-  {{-- <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script> --}}
-  {{-- <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js')}}"></script> --}}
-
-  <!-- Page Specific JS File -->
-  {{-- <script src="{{ asset('assets/js/page/modules-datatables.js')}}"></script> --}}
-  {{-- <script src="{{ asset('assets/js/page/index.js')}}"></script> --}}
   
   <!-- General JS Scripts -->
    <script src="{{ asset('assets/modules/jquery.min.js')}}"></script>
@@ -99,16 +84,17 @@
    <script src="{{ asset('assets/modules/summernote/summernote-bs4.js')}}"></script>
    <script src="{{ asset('assets/modules/upload-preview/assets/js/jquery.uploadPreview.min.js')}}"></script>
    <script src="{{ asset('assets/modules/izitoast/js/iziToast.min.js')}}"></script>
+
  
    <!-- Page Specific JS File -->
    <script src="{{ asset('assets/js/page/forms-advanced-forms.js')}}"></script>
    <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script> 
-   {{-- <script src="{{asset('assets/js/page/components-chat-box.js')}}"></script> --}}
    <script src="{{ asset('assets/js/page/modules-toastr.js')}}"></script>
    
    <!-- Template JS File -->
    <script src="{{ asset('assets/js/scripts.js')}}"></script>
    <script src="{{ asset('assets/js/custom.js')}}"></script>
+   
    @if (Session::has('success'))
       <script>
           iziToast.success({

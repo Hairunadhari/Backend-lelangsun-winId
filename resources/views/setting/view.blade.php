@@ -36,7 +36,7 @@
                                     <br>
                                     @foreach ($data->keyword as $item)
                                         
-                                        <span class="badge bg-primary text-white" ">{{$item->key}} 
+                                        <span class="badge  bg-primary text-white" ">{{$item->key}} 
                                             <button type="button" id="delete-key" class="btn btn-danger btn-sm " data-keyid="{{$item->id}}">x</button>
                                         </span>
                                     @endforeach

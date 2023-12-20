@@ -1262,7 +1262,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
-            // dd($th);
+            dd($th);
             return redirect()->route('superadmin.barang-lelang')->with('error', 'Data Gagal Ditambahkan');
         }
         
@@ -1289,7 +1289,6 @@ class MenuSuperAdminController extends Controller
         try {
             DB::beginTransaction();
             $barang = BarangLelang::find($id);
-            $gambarlelang = GambarLelang::where('barang_lelang_id', $id)->get();
 
         if ($request->kategoribarang_id == 1 || $request->kategoribarang_id == 2) {
             if ($request->hasFile('gambar')) {
@@ -1322,10 +1321,6 @@ class MenuSuperAdminController extends Controller
                     'keterangan'     => $request->keterangan,
                 ]);
 
-                foreach ($gambarlelang as $gambar) {
-                    Storage::delete('public/image/'.$gambar->gambar);
-                    $gambar->delete();  
-                }
                 
                 $gambars = $request->file('gambar');
                 foreach ($gambars as $file) {
@@ -3237,6 +3232,14 @@ class MenuSuperAdminController extends Controller
         }
 
         return redirect()->route('superadmin.ulasan')->with('success', 'Data berhasil di hapus !');
+    }
+
+    public function delete_gambar_lelang($id){
+         
+        $data = GambarLelang::find($id);
+        Storage::delete('public/image/'.$data->gambar);
+        $data->delete();
+        return response()->json('success');
     }
     
 }   

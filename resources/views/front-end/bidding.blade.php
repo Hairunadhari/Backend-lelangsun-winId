@@ -96,7 +96,10 @@
     <div class="row">
         <div class="card col-6">
             <h3>Lot : {{$lot_item[0]->id}}</h3>
+            @if ($lot_item[0]->barang_lelang->gambarlelang !== null)
+                
             <img src="{{asset('storage/image/'.$lot_item[0]->barang_lelang->gambarlelang[0]->gambar)}}" class="my-2"
+            @endif
                 alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{ $lot_item[0]->barang_lelang->barang }}</h5>
@@ -155,8 +158,10 @@
             @if ($index > 0)
             <div class="card col-3 m-1 p-1"
                 style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6;">
-                <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}"
+                @if (count($item->barang_lelang->gambarlelang) > 0)
+                 <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}"
                     class="card-img-top" alt="..." style=" width:auto;">
+                @endif
                 <div class="card-body">
                     <h5 class="card-title">{{ $item->barang_lelang->barang }}</h5>
                     <p class="card-text">{{ $item->barang_lelang->brand }}</p>

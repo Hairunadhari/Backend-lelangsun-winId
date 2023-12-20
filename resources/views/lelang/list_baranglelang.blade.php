@@ -10,14 +10,6 @@
     .selectgroup-item input[value="tidak ada"]:checked~.selectgroup-button {
         background-color: #FC5448;
     }
-
-    #preview img,
-    .form-group img {
-        margin-bottom: 20px;
-        margin-left: 20px;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    }
-
 </style>
 <div class="section-body">
     <div class="row">
@@ -42,7 +34,7 @@
                     </ul>
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
-                            <table class="table table-striped w-100" id="barang-lelang" >
+                            <table class="table table-striped w-100" id="barang-lelang">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -58,7 +50,7 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                            <table class="table table-striped w-100" id="barang-lelang-notactive" >
+                            <table class="table table-striped w-100" id="barang-lelang-notactive">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -105,75 +97,94 @@
                 {
                     data: "gambarlelang",
                     render: function (data) {
-                            return '<img src="/storage/image/' + data[0].gambar +
-                                '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                        let a = ''; // Deklarasikan variabel di luar kondisi if-else
+
+                        if (data !== null && data.length > 0) { // Periksa apakah data tidak null dan memiliki elemen
+                            a = '<img src="/storage/image/' + data[0].gambar + '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                        }
+
+                        return a;
                     },
                 },
-                
+
                 {
-                // This column displays STNK and BPKB data
-                data: null,
-                render: function (data) {
-                    if (data.kategoribarang_id == 1 || data.kategoribarang_id == 2) {
-                        let output = ''; // Initialize the output variable
+                    // This column displays STNK and BPKB data
+                    data: null,
+                    render: function (data) {
+                        if (data.kategoribarang_id == 1 || data.kategoribarang_id == 2) {
+                            let output = ''; // Initialize the output variable
 
-                        // Check STNK status and add corresponding information to the output
-                        if (data.stnk === 'ada') {
-                            output += `<div>1. STNK: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.stnk === 'tidak ada') {
-                            output += `<div>1. STNK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
+                            // Check STNK status and add corresponding information to the output
+                            if (data.stnk === 'ada') {
+                                output +=
+                                    `<div>1. STNK: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.stnk === 'tidak ada') {
+                                output +=
+                                    `<div>1. STNK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
 
-                        if (data.bpkb === 'ada') {
-                            output += `<div>2. BPKB: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.bpkb === 'tidak ada') {
-                            output += `<div>2. BPKB: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
+                            if (data.bpkb === 'ada') {
+                                output +=
+                                    `<div>2. BPKB: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.bpkb === 'tidak ada') {
+                                output +=
+                                    `<div>2. BPKB: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
 
-                        if (data.faktur === 'ada') {
-                            output += `<div>3. Faktur: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.faktur === 'tidak ada') {
-                            output += `<div>3. Faktur: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
+                            if (data.faktur === 'ada') {
+                                output +=
+                                    `<div>3. Faktur: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.faktur === 'tidak ada') {
+                                output +=
+                                    `<div>3. Faktur: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
 
-                        if (data.ktp === 'ada') {
-                            output += `<div>4. KTP PEMILIK: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.ktp === 'tidak ada') {
-                            output += `<div>4. KTP PEMILIK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
-                        
-                        if (data.kwitansi === 'ada') {
-                            output += `<div>5. KWITANSI: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.kwitansi === 'tidak ada') {
-                            output += `<div>5. KWITANSI: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
-                        
-                        if (data.sph === 'ada') {
-                            output += `<div>6. SPH: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.sph === 'tidak ada') {
-                            output += `<div>6. SPH: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
-                        if (data.kir === 'ada') {
-                            output += `<div>7. KIR: <span class="badge badge-success">Ada</span></div>`;
-                        } else if (data.kir === 'tidak ada') {
-                            output += `<div>7. KIR: <span class="badge badge-danger">Tidak Ada</span></div>`;
-                        }
+                            if (data.ktp === 'ada') {
+                                output +=
+                                    `<div>4. KTP PEMILIK: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.ktp === 'tidak ada') {
+                                output +=
+                                    `<div>4. KTP PEMILIK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
 
-                        // Return the final output
-                        return output;
-                    } else {
-                        return '-'; // Display '-' if kategoribarang_id is neither 1 nor 2
+                            if (data.kwitansi === 'ada') {
+                                output +=
+                                    `<div>5. KWITANSI: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.kwitansi === 'tidak ada') {
+                                output +=
+                                    `<div>5. KWITANSI: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
+
+                            if (data.sph === 'ada') {
+                                output +=
+                                    `<div>6. SPH: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.sph === 'tidak ada') {
+                                output +=
+                                    `<div>6. SPH: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
+                            if (data.kir === 'ada') {
+                                output +=
+                                    `<div>7. KIR: <span class="badge badge-success">Ada</span></div>`;
+                            } else if (data.kir === 'tidak ada') {
+                                output +=
+                                    `<div>7. KIR: <span class="badge badge-danger">Tidak Ada</span></div>`;
+                            }
+
+                            // Return the final output
+                            return output;
+                        } else {
+                            return '-'; // Display '-' if kategoribarang_id is neither 1 nor 2
+                        }
                     }
-                }
-            },
-                
+                },
+
 
                 {
                     data: null,
                     render: function (data) {
-                    var deleteUrl = '/superadmin/delete-barang-lelang/' + data.id;
-                    var editUrl = '/superadmin/edit-barang-lelang/' + data.id;
-                    return `
+                        var deleteUrl = '/superadmin/delete-barang-lelang/' + data.id;
+                        var editUrl = '/superadmin/edit-barang-lelang/' + data.id;
+                        return `
                         <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
                         <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i></a></span>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -183,7 +194,7 @@
                     `;
                     },
                 },
-                
+
             ],
         });
         $('#barang-lelang-notactive').DataTable({
@@ -210,74 +221,88 @@
                 {
                     data: "gambarlelang",
                     render: function (data) {
-                            return '<img src="/storage/image/' + data[0].gambar +
-                                '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                        return '<img src="/storage/image/' + data[0].gambar +
+                            '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
                     },
                 },
-                
+
                 {
-                // This column displays STNK and BPKB data
-                data: null,
-                render: function (data) {
-                    if (data.kategoribarang_id == 1 || data.kategoribarang_id == 2) {
-                        let output = ''; // Initialize the output variable
+                    // This column displays STNK and BPKB data
+                    data: null,
+                    render: function (data) {
+                        if (data.kategoribarang_id == 1 || data.kategoribarang_id == 2) {
+                            let output = ''; // Initialize the output variable
 
-                        // Check STNK status and add corresponding information to the output
-                        if (data.stnk === 'ada') {
-                            output += `<div>1. STNK: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.stnk === 'tidak ada') {
-                            output += `<div>1. STNK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
+                            // Check STNK status and add corresponding information to the output
+                            if (data.stnk === 'ada') {
+                                output +=
+                                    `<div>1. STNK: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.stnk === 'tidak ada') {
+                                output +=
+                                    `<div>1. STNK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
 
-                        if (data.bpkb === 'ada') {
-                            output += `<div>2. BPKB: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.bpkb === 'tidak ada') {
-                            output += `<div>2. BPKB: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
-                        if (data.faktur === 'ada') {
-                            output += `<div>3. Faktur: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.faktur === 'tidak ada') {
-                            output += `<div>3. Faktur: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
-                       
-                        if (data.ktp === 'ada') {
-                            output += `<div>4. KTP PEMILIK: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.ktp === 'tidak ada') {
-                            output += `<div>4. KTP PEMILIK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
-                        
-                        if (data.kwitansi === 'ada') {
-                            output += `<div>5. KWITANSI: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.kwitansi === 'tidak ada') {
-                            output += `<div>5. KWITANSI: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
+                            if (data.bpkb === 'ada') {
+                                output +=
+                                    `<div>2. BPKB: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.bpkb === 'tidak ada') {
+                                output +=
+                                    `<div>2. BPKB: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
+                            if (data.faktur === 'ada') {
+                                output +=
+                                    `<div>3. Faktur: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.faktur === 'tidak ada') {
+                                output +=
+                                    `<div>3. Faktur: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
 
-                        
-                        if (data.sph === 'ada') {
-                            output += `<div>6. SPH: <span class="badge badge-success mb-1">Ada</span></div>`;
-                        } else if (data.sph === 'tidak ada') {
-                            output += `<div>6. SPH: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
-                        }
-                        if (data.kir === 'ada') {
-                            output += `<div>7. KIR: <span class="badge badge-success">Ada</span></div>`;
-                        } else if (data.kir === 'tidak ada') {
-                            output += `<div>7. KIR: <span class="badge badge-danger">Tidak Ada</span></div>`;
-                        }
+                            if (data.ktp === 'ada') {
+                                output +=
+                                    `<div>4. KTP PEMILIK: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.ktp === 'tidak ada') {
+                                output +=
+                                    `<div>4. KTP PEMILIK: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
 
-                        // Return the final output
-                        return output;
-                    } else {
-                        return '-'; // Display '-' if kategoribarang_id is neither 1 nor 2
+                            if (data.kwitansi === 'ada') {
+                                output +=
+                                    `<div>5. KWITANSI: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.kwitansi === 'tidak ada') {
+                                output +=
+                                    `<div>5. KWITANSI: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
+
+
+                            if (data.sph === 'ada') {
+                                output +=
+                                    `<div>6. SPH: <span class="badge badge-success mb-1">Ada</span></div>`;
+                            } else if (data.sph === 'tidak ada') {
+                                output +=
+                                    `<div>6. SPH: <span class="badge badge-danger mb-1">Tidak Ada</span></div>`;
+                            }
+                            if (data.kir === 'ada') {
+                                output +=
+                                    `<div>7. KIR: <span class="badge badge-success">Ada</span></div>`;
+                            } else if (data.kir === 'tidak ada') {
+                                output +=
+                                    `<div>7. KIR: <span class="badge badge-danger">Tidak Ada</span></div>`;
+                            }
+
+                            // Return the final output
+                            return output;
+                        } else {
+                            return '-'; // Display '-' if kategoribarang_id is neither 1 nor 2
+                        }
                     }
-                }
-            },
-                
+                },
+
 
                 {
                     data: null,
                     render: function (data) {
-                    var activeurl = '/superadmin/active-barang-lelang/' + data.id;
-                    return `
+                        var activeurl = '/superadmin/active-barang-lelang/' + data.id;
+                        return `
                         <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="PUT">
@@ -286,24 +311,28 @@
                     `;
                     },
                 },
-                
+
             ],
         });
     });
+
 </script>
 @endsection
 @section('modal')
 <!-- Modal -->
+
 <div class="modal fade" id="baranglelangmodal" tabindex="-1" role="dialog" aria-labelledby="baranglelangmodalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
+
             <div class="modal-header">
                 <h5 class="modal-title" id="baranglelangmodalLabel">Form Input Barang Lelang</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <form action="{{route('superadmin.add-barang-lelang')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -313,7 +342,8 @@
                             onchange="toggleDiv(this.value)">
                             <option readonly>-- Pilih Kategori --</option>
                             @foreach ($kategori as $item)
-                            <option value="{{ $item->id }}" data-kategori="{{$item->kategori}}">{{ $item->kategori }}</option>
+                            <option value="{{ $item->id }}" data-kategori="{{$item->kategori}}">{{ $item->kategori }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -427,7 +457,8 @@
                                         <span class="selectgroup-button">ADA</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="stnk" value="tidak ada" class="selectgroup-input" checked>
+                                        <input type="radio" name="stnk" value="tidak ada" class="selectgroup-input"
+                                            checked>
                                         <span class="selectgroup-button">TIDAK ADA</span>
                                     </label>
                                 </div>
@@ -440,10 +471,11 @@
                                 <label>Tahun Produksi <span style="color: red">*</span></label>
                                 <select class="form-control selectric" name="tahun_produksi">
                                     <?php for($i = 1900; $i <= date('Y') + 10; $i++) { ?>
-                                        <option value="<?= $i ?>" <?php if($i == date('Y')) echo 'selected'; ?>><?= $i; ?></option>
+                                    <option value="<?= $i ?>" <?php if($i == date('Y')) echo 'selected'; ?>><?= $i; ?>
+                                    </option>
                                     <?php } ?>
                                 </select>
-                            </div>                                                       
+                            </div>
                             <div class="form-group col-6">
                                 <label>BPKB <span style="color: red">*</span></label>
                                 <div class="selectgroup w-100">
@@ -452,7 +484,8 @@
                                         <span class="selectgroup-button">ADA</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="bpkb" value="tidak ada" class="selectgroup-input" checked>
+                                        <input type="radio" name="bpkb" value="tidak ada" class="selectgroup-input"
+                                            checked>
                                         <span class="selectgroup-button">TIDAK ADA</span>
                                     </label>
                                 </div>
@@ -465,7 +498,8 @@
                                         <span class="selectgroup-button">ADA</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="faktur" value="tidak ada" class="selectgroup-input" checked>
+                                        <input type="radio" name="faktur" value="tidak ada" class="selectgroup-input"
+                                            checked>
                                         <span class="selectgroup-button">TIDAK ADA</span>
                                     </label>
                                 </div>
@@ -478,7 +512,8 @@
                                         <span class="selectgroup-button">ADA</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="sph" value="tidak ada" class="selectgroup-input" checked>
+                                        <input type="radio" name="sph" value="tidak ada" class="selectgroup-input"
+                                            checked>
                                         <span class="selectgroup-button">TIDAK ADA</span>
                                     </label>
                                 </div>
@@ -491,7 +526,8 @@
                                         <span class="selectgroup-button">ADA</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="kir" value="tidak ada" class="selectgroup-input" checked>
+                                        <input type="radio" name="kir" value="tidak ada" class="selectgroup-input"
+                                            checked>
                                         <span class="selectgroup-button">TIDAK ADA</span>
                                     </label>
                                 </div>
@@ -504,7 +540,8 @@
                                         <span class="selectgroup-button">ADA</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="ktp" value="tidak ada" class="selectgroup-input" checked>
+                                        <input type="radio" name="ktp" value="tidak ada" class="selectgroup-input"
+                                            checked>
                                         <span class="selectgroup-button">TIDAK ADA</span>
                                     </label>
                                 </div>
@@ -517,7 +554,8 @@
                                         <span class="selectgroup-button">ADA</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="kwitansi" value="tidak ada" class="selectgroup-input" checked>
+                                        <input type="radio" name="kwitansi" value="tidak ada" class="selectgroup-input"
+                                            checked>
                                         <span class="selectgroup-button">TIDAK ADA</span>
                                     </label>
                                 </div>
@@ -526,14 +564,13 @@
                         <hr>
                     </div>
                     <div class="form-group">
-                        <label>Gambar <span style="color: red">*</span><small>(bisa pilih lebih dari satu gambar)</small></label>
-                        <input type="file" class="form-control" name="gambar[]" id="gambar" accept=".jpg,.png,.jpeg" required multiple>
-                    </div>
-                    <div id="preview" class="review"></div>
-                    <div class="form-group">
                         <label>deskripsi <span style="color: red">*</span></label>
                         <textarea class="summernote-simple" placeholder="keterangan..." required
                             name="keterangan"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Gambar</label>
+                        <div class="input-images"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -544,61 +581,37 @@
     </div>
 </div>
 <script>
+    $('.input-images').imageUploader({
+        imagesInputName: 'gambar',
+        maxSize: 2 * 1024 * 1024,
 
+    });
     // Asumsikan kode ini berada di dalam sebuah tag <script> atau file JavaScript
-function toggleDiv(value) {
-    const inpKendaraan = document.getElementById("inpKendaraan");
-    const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
-    const selectedOption = document.getElementById("id_kategoribarang").options[document.getElementById("id_kategoribarang").selectedIndex];
-    const dataKategori = selectedOption.getAttribute("data-kategori");
+    function toggleDiv(value) {
+        const inpKendaraan = document.getElementById("inpKendaraan");
+        const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
+        const selectedOption = document.getElementById("id_kategoribarang").options[document.getElementById(
+            "id_kategoribarang").selectedIndex];
+        const dataKategori = selectedOption.getAttribute("data-kategori");
 
-    if (dataKategori === "Motor" || dataKategori === "Mobil" || dataKategori === "motor" || dataKategori === "mobil") {
-        console.log('tess', dataKategori);
-        inpKendaraan.style.display = "block";
+        if (dataKategori === "Motor" || dataKategori === "Mobil" || dataKategori === "motor" || dataKategori ===
+            "mobil") {
+            console.log('tess', dataKategori);
+            inpKendaraan.style.display = "block";
 
-        // Tambahkan atribut "required" kembali pada elemen input
-        inputsInpKendaraan.forEach(input => {
-            input.setAttribute("required", "required");
-        });
-    } else {
-        inpKendaraan.style.display = "none";
+            // Tambahkan atribut "required" kembali pada elemen input
+            inputsInpKendaraan.forEach(input => {
+                input.setAttribute("required", "required");
+            });
+        } else {
+            inpKendaraan.style.display = "none";
 
-        // Hapus atribut "required" dari elemen input
-        inputsInpKendaraan.forEach(input => {
-            input.removeAttribute("required");
-        });
-    }
-}
-
-
-
-    function previewImages() {
-        var preview = document.querySelector('#preview');
-
-        // Hapus semua elemen child di dalam elemen #preview
-        while (preview.firstChild) {
-            preview.removeChild(preview.firstChild);
-        }
-
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.height = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
+            // Hapus atribut "required" dari elemen input
+            inputsInpKendaraan.forEach(input => {
+                input.removeAttribute("required");
+            });
         }
     }
-
-    document.querySelector('#gambar').addEventListener("change", previewImages);
 
 </script>
 @endsection
