@@ -101,8 +101,10 @@
                         var deleteUrl = '/superadmin/delete-event-lelang/' + data.id;
                         var editUrl = '/superadmin/edit-event-lelang/' + data.id;
                         var bidding = '';
+                        var lot = 'lot';
                         if (data && data.lot_item && data.lot_item[0] && data.lot_item[0].id) {
                             bidding = '/superadmin/bidding-event-lelang/' + data.encrypted_id + '?lot=' + data.lot_item[0].id;
+                            lot +='ada';
                         }
                         var eventDate = new Date(row.waktu);
                         var today = new Date();
@@ -114,7 +116,7 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
                                 <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
-                                ${convert_eventDate == convert_today ? `<span><a class="btn btn-success"  href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>` : ''}
+                                ${convert_eventDate == convert_today ? `<span><a class="btn btn-success ${lot}"  href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>` : ''}
                             </form>`
                     }
                  },
@@ -167,7 +169,10 @@
              ],
          });
      });
-
+     $(document).on('click', '.lot', function (e) {
+        e.preventDefault();
+        swal ( "Oops" ,  "Silahkan pasang Lot terlebih dahulu!" ,  "info" )
+    });
 </script>
 @endsection
 @section('modal')

@@ -57,9 +57,9 @@
                                     </td>
                                     <td>
                                         @if(isset($barangTerpilih[$p->id]))
-                                            <input type="number" class="form-control" name="harga_awal[]" value="{{ $barangTerpilih[$p->id] }}">
+                                            <input type="text" class="form-control" name="harga_awal[]" onkeyup="formatNumber(this)" value="{{ $barangTerpilih[$p->id] }}">
                                         @else
-                                            <input type="number" class="form-control" name="harga_awal[]" style="display: none">
+                                            <input type="text" class="form-control"  name="harga_awal[]" onkeyup="formatNumber(this)" style="display: none">
                                         @endif
                                     </td>
                                 </tr>
@@ -80,6 +80,19 @@
 
 
 <script>
+     function formatNumber(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+
+        // Memformat angka menjadi format ribuan dan desimal
+        var formattedNum = new Intl.NumberFormat('id-ID', {
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(num);
+
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    }
    $(document).ready(function () {
     // Ketika checkbox di atas tabel dengan id "pilihsemua" dicentang
     $("#pilihsemua").click(function () {

@@ -2848,14 +2848,12 @@ class MenuSuperAdminController extends Controller
                 'status' => 'not-active',
             ]);
             $hargaAwal = array_values(array_filter($request->harga_awal));
-            // dd($request->barang_id);
+            foreach ($hargaAwal as $key => $value) {
+                $hargaAwal[$key] = preg_replace('/[^0-9]/', '', $value);
+            }
+
             // Loop melalui barang_id dan harga_awal yang diterima dari formulir
             foreach ($request->barang_id as $index => $barangId) {
-                // var_dump("index : ".$index);
-                // var_dump("hargaAwal : ".$hargaAwal[$index]);
-                // Periksa apakah indeks yang sesuai ada dalam array harga_awal
-                // $hargaAwal = isset($hargaAwal[$index]) ? $hargaAwal[$index] : 0;
-
                 LotItem::create([
                     'barang_lelang_id' => $barangId,
                     'event_lelang_id' => $request->event_id,
