@@ -535,10 +535,6 @@ class MenuSuperAdminController extends Controller
                 'thumbnail'     => $thumbnail->hashName(),
             ]);
 
-            foreach ($gambarProduk as $gambar) {
-                Storage::delete('public/image/'.$gambar->gambar);
-                $gambar->delete();  
-            }
             
             $gambars = $request->file('gambar');
             foreach ($gambars as $file) {
@@ -564,11 +560,6 @@ class MenuSuperAdminController extends Controller
                 'video'     => $request->video,
             ]);
 
-            foreach ($gambarProduk as $gambar) {
-                Storage::delete('public/image/'.$gambar->gambar);
-                $gambar->delete();  
-            }
-            
             $gambars = $request->file('gambar');
             foreach ($gambars as $file) {
                 $filename = $file->hashName();
@@ -3224,6 +3215,13 @@ class MenuSuperAdminController extends Controller
     public function delete_banner_lelang($id)
     {
         $data = BannerLelangImage::find($id);
+        Storage::delete('public/image/'.$data->gambar);
+        $data->delete();
+            return response()->json('success');
+    }
+    public function delete_gambar_produk($id)
+    {
+        $data = GambarProduk::find($id);
         Storage::delete('public/image/'.$data->gambar);
         $data->delete();
             return response()->json('success');

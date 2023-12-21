@@ -79,9 +79,8 @@
                     <div class="form-group">
                         <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar) </small><span
                                 style="color: red">*</span></label>
-                        <input type="file" class="form-control" accept=".jpg, .png, .jpeg" name="gambar[]" id="gambar" required multiple>
+                                <div class="input-images"></div>
                     </div>
-                    <div id="preview" class="review"></div>
                 <div class="card-footer text-right">
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
@@ -90,6 +89,11 @@
     </div>
 </div>
 <script>
+      $('.input-images').imageUploader({
+        imagesInputName: 'gambar',
+        maxSize: 2 * 1024 * 1024,
+
+    });
     $(document).ready(function () {
             $('#tokos').on('change', function () {
                 var tokosId = this.value;
@@ -109,38 +113,7 @@
             });
         });
 
-    function previewImages() {
-        var preview = document.querySelector('#preview');
-
-        // Hapus semua elemen child di dalam elemen #preview
-        while (preview.firstChild) {
-            preview.removeChild(preview.firstChild);
-        }
-
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
-                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
-                document.querySelector('#gambar').value = '';
-                return;
-            }
-
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-
-    document.querySelector('#gambar').addEventListener("change", previewImages);
+    
 
 
     function formatNumber(input) {

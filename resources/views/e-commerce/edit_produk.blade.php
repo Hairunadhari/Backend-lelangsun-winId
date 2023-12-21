@@ -1,12 +1,22 @@
 @extends('app.layouts')
 @section('content')
 <style>
-    #preview img, .form-group img {
-        margin-bottom: 20px;
-        margin-left: 20px;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    }
+ .image-container {
+    position: relative;
+    display: inline-block;
+}
 
+.btn-delete {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    background-color: rgba(0,0,0,.5); /* Ganti warna sesuai kebutuhan */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 </style>
 <div class="section-body">
         <form action="{{route('updateproduk', $data->id)}}" method="post" enctype="multipart/form-data">
@@ -82,15 +92,19 @@
                         <label for="">Gambar Detail Produk:</label>
                         <br>
                         @foreach ($gambar as $item)
-                        <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}"
-                            style="width:100px;box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                        <div class="image-container">
+                            <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}" 
+                        style="width:150px; height:150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; margin-left: 10px; margin-bottom:10px;">
+                        <button class="btn-delete" id="deletegambar" data-image-id="{{ $item->id }}">X</button>
+                        </div>
+
                         @endforeach
+
                     </div>
                     <div class="form-group gambar">
                         <label>Ganti Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar)</small></label>
                         <br>
-                        <input type="file" name="gambar[]" class="form-control mb-2" id="gambar" multiple>
-                        <div id="preview"></div>
+                        <div class="input-images"></div>
                     </div>
                 </div>
                 <div class="card-footer text-right">
@@ -100,6 +114,28 @@
 </div>
 </div>
 <script>
+    $('.input-images').imageUploader({
+        imagesInputName: 'gambar',
+        maxSize: 2 * 1024 * 1024,
+
+    });
+    $(document).on('click', '#deletegambar', function (e) {
+        e.preventDefault();
+        let id = $(this).data('image-id');
+        let elementToRemove = $(this).closest('.image-container'); 
+        console.log(id);
+        $.ajax({
+            method: 'post',
+            url: '/superadmin/delete-gambar-produk/' + id,
+            data: {
+                _method: 'delete',
+            },
+            success: function (res) {
+                console.log(res);
+                elementToRemove.remove();
+            }
+        });
+    });
         $(document).ready(function () {
             $('#tokos').on('change', function () {
                 var tokosId = this.value;
@@ -119,38 +155,6 @@
                 });
             });
         });
-   function previewImages() {
-        var preview = document.querySelector('#preview');
-
-        // Hapus semua elemen child di dalam elemen #preview
-        while (preview.firstChild) {
-            preview.removeChild(preview.firstChild);
-        }
-
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            if (!/\.(jpe?g|png)$/i.test(file.name)) {
-                alert(file.name + " format tidak sesuai");
-                document.querySelector('#gambar').value = '';
-                preview.removeChild(preview.firstChild);
-                return;
-            }
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-
-    document.querySelector('#gambar').addEventListener("change", previewImages);
 
     function formatNumber(input) {
       // Menghilangkan karakter selain angka
