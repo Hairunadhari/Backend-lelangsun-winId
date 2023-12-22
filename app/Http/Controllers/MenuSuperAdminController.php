@@ -1084,11 +1084,12 @@ class MenuSuperAdminController extends Controller
     public function add_kategori_lelang(Request $request){
 
         $npl = preg_replace('/\D/', '', $request->harga_npl);
+        $kelipatanBidding = preg_replace('/\D/', '', $request->kelipatan_bidding);
         $harga_npl = trim($npl);
         KategoriBarang::create([
             'kategori'     => $request->kategori,
             'status'     => 1,
-            'kelipatan_bidding'     => $request->kelipatan_bidding,
+            'kelipatan_bidding' => $kelipatanBidding,
             'harga_npl'     => $harga_npl,
         ]);
 

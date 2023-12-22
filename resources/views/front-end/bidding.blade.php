@@ -189,9 +189,11 @@
             success: function (res) {
                 console.log(res);
                 $.each(res, function (key, value) {
+                    var harga = value.harga_bidding; // Angka yang ingin diformat
+                    var hargaFormatted = harga.toLocaleString('id-ID', {currency: 'IDR' });
                     $('#log-bid-user').prepend(
                         '<div class="mb-3 px-3 py-2" style="background-color: green; color: white; border-radius: 10px"><h5 class="mb-0">' +
-                        value.email + ' ' + ': ' + value.harga_bidding + '</h5></div>');
+                        value.email + ' ' + ': Rp ' + hargaFormatted + '</h5></div>');
                 });
             }
         });

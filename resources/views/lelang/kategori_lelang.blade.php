@@ -207,7 +207,7 @@
                     </div>
                     <div class="form-group">
                         <label>Kelipatan Bidding <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="kelipatan_bidding" required>
+                        <input type="text" class="form-control" name="kelipatan_bidding" onkeyup="formatNumber(this)"  required>
                     </div>
                     <div class="form-group">
                         <label>Harga NPL <span style="color: red">*</span></label>
@@ -229,6 +229,19 @@
         // Memformat angka menjadi format ribuan dan desimal
         var formattedNum = new Intl.NumberFormat('id-ID', {
             style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(num);
+
+        // Memasukkan nilai format ke dalam input
+        input.value = formattedNum;
+    }
+    function formatNumber(input) {
+        // Menghilangkan karakter selain angka
+        var num = input.value.replace(/[^0-9]/g, '');
+
+        // Memformat angka menjadi format ribuan dan desimal
+        var formattedNum = new Intl.NumberFormat('id-ID', {
             currency: 'IDR',
             minimumFractionDigits: 0
         }).format(num);
