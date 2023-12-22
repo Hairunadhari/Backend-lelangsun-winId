@@ -49,31 +49,31 @@ $(document).ready(function () {
     let timer_bid = localStorage.getItem('timer_bid');
 
     if (timer_bid && timer_bid > 0) {
-        // toggleTimer(timer_bid);
+        toggleTimer(timer_bid);
     }
 
 
-    // function toggleTimer(data) { // <-- Fungsi untuk memulai timer
-    //     if (!isTimerRunning) { // <-- apakah timer false
-    //         const timerElement = document.getElementById('timer');
-    //         countdown = setInterval(() => {
-    //             data--; // kurangi second 1
-    //             if (data >= 0) {
-    //                 timerElement.textContent = formatTime(data);
-    //                 localStorage.setItem('timer_bid', data);
-    //             } else { // <-- ketika timer sudah habis
-    //                 localStorage.removeItem('timer_bid');
-    //                 clearInterval(countdown); // Hentikan timer saat mencapai 0
-    //                 timer_habis(); 
-    //                 isTimerRunning = false; 
-    //                 document.getElementById('start-bid').disabled = false; // Aktifkan kembali tombol "Start Bid"
-    //             }
-    //         }, 1000);
+    function toggleTimer(data) { // <-- Fungsi untuk memulai timer
+        if (!isTimerRunning) { // <-- apakah timer false
+            const timerElement = document.getElementById('timer');
+            countdown = setInterval(() => {
+                data--; // kurangi second 1
+                if (data >= 0) {
+                    timerElement.textContent = formatTime(data);
+                    localStorage.setItem('timer_bid', data);
+                } else { // <-- ketika timer sudah habis
+                    localStorage.removeItem('timer_bid');
+                    clearInterval(countdown); // Hentikan timer saat mencapai 0
+                    timer_habis(); 
+                    isTimerRunning = false; 
+                    document.getElementById('start-bid').disabled = false; // Aktifkan kembali tombol "Start Bid"
+                }
+            }, 1000);
 
-    //         isTimerRunning = true; // Setel timer ke berjalan
-    //         document.getElementById('start-bid').disabled = true; // Nonaktifkan tombol "Start Bid" saat timer berjalan
-    //     }
-    // }
+            isTimerRunning = true; // Setel timer ke berjalan
+            document.getElementById('start-bid').disabled = true; // Nonaktifkan tombol "Start Bid" saat timer berjalan
+        }
+    }
 
     function getCookie(cname) {
         let name = cname + "=";
@@ -96,7 +96,7 @@ $(document).ready(function () {
         $('#con-bid').css('display', 'block');
         $('#start-bid').css('display', 'none');
         $('#user-send-bidding').css('display', 'block');
-        // toggleTimer();
+        toggleTimer();
     } 
 
         
@@ -116,7 +116,7 @@ $(document).ready(function () {
             },
             success: function (res) {
                 console.log('start-bid',res);
-                // toggleTimer(seconds);
+                toggleTimer(seconds);
                 
             }
         });
