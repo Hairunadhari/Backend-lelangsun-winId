@@ -97,4 +97,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bidding::class);
     }
+    public function invoicestore()
+    {
+        return $this->hasMany(InvoiceStore::class);
+    }
 }

@@ -130,7 +130,7 @@
                     }
                 },
                 {
-                    data: "name",
+                    data: "nama_pembeli",
                 },
                 {
                     data: "status",
@@ -150,7 +150,7 @@
                     }
                 },
                 {
-                    data: "total_harga_x_qty",
+                    data: "harga_x_qty",
                     render: function(data, type, row, meta) {
                         if (data == null) {
                             a = `<span>-</span>`

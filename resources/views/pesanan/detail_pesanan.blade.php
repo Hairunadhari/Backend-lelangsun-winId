@@ -6,25 +6,25 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="invoice-title">
-            <h2>Pesanan</h2>
-            <div class="invoice-number">Invoice ID : {{$tagihan->external_id}}</div>
+            <h2>Detail Pesanan</h2>
+            <div class="invoice-number">Invoice ID : {{$invoice->external_id}}</div>
           </div>
           <hr>
           <div class="row">
             <div class="col-md-6">
               <address>
                 <strong>Info Pemesan:</strong><br>
-                  {{$tagihan->user->name}}<br>
-                  +62 {{$tagihan->user->no_telp}}<br>
-                  {{$tagihan->user->alamat}}<br>
+                  Nama :{{$invoice->nama_pembeli}}<br>
+                  No Telp : +62 {{$invoice->no_telp}}<br>
+                  Alamat : {{$invoice->alamat}}<br>
               </address>
             </div>
             <div class="col-md-6 text-md-right">
               <address>
                 <strong>Info Pengiriman:</strong><br>
-                {{$pengiriman->nama_pengirim}}<br>
+                {{-- {{$pengiriman->nama_pengirim}}<br>
                 {{$pengiriman->pengiriman}}<br>
-                {{$pengiriman->lokasi_pengiriman}}<br>
+                {{$pengiriman->lokasi_pengiriman}}<br> --}}
               </address>
             </div>
           </div>
@@ -32,21 +32,21 @@
             <div class="col-md-6 ">
               <address>
                 <strong>Order Date:</strong><br>
-                {{ date('d M Y', strtotime($tagihan->created_at)) }}<br>
+                {{ date('d M Y', strtotime($invoice->created_at)) }}<br>
               </address>
             </div>
             <div class="col-md-6 text-md-right">
               <address>
                 <strong>Exp Date:</strong><br>
-                {{ date('d M Y', strtotime($tagihan->exp_date)) }}<br>
+                {{ date('d M Y', strtotime($invoice->exp_date)) }}<br>
               </address>
             </div>
             <div class="col-md-6 ">
-              @if ($tagihan->status == 'PAID')
+              @if ($invoice->status == 'PAID')
               <address>
                 <strong>Metode Pembayaran:</strong><br>
-                {{$tagihan->pembayaran->bank_code}}<br>
-                {{$tagihan->pembayaran->email_user}}
+                {{$invoice->pembayaran->bank_code}}<br>
+                {{$invoice->pembayaran->email_user}}
               </address>
               @endif
             </div>
@@ -58,29 +58,26 @@
         <div class="col-md-12">
           <div class="section-title">Produk Pesanan</div>
           <div class="table-responsive">
-            <table class="table table-striped table-hover table-md">
-              <tbody>
+            <table class="table table-bordered">
+              <thead >
                 <tr>
-                  <th data-width="40">#</th>
-                  <th>Produk</th>
+                  <th>Nama Produk</th>
                   <th class="text-center">Harga</th>
                   <th class="text-center">Quantity</th>
                   <th class="text-right">Total</th>
                 </tr>
-              <?php $no = 1 ?>
-                @foreach ($itemproduk as $ip)
+              </thead>
+              <tbody>
                 <tr>
-                  <td>{{$no++}}</td>
-                  <td>{{$ip->nama_produk}}</td>
-                  <td class="text-center">Rp. {{number_format($ip->harga)}} 
-                    @if ($ip->diskon != null)
+                  <td>{{$invoice->nama_produk}}</td>
+                  <td class="text-center">Rp. {{number_format($invoice->harga)}} 
+                    {{-- @if ($invoice->diskon != null)
                     <label class="badge badge-sm badge-dark"><i class="fa fa-tag"></i> diskon</label>
-                    @endif
+                    @endif --}}
                   </td> 
-                  <td class="text-center">{{$ip->qty}}</td>
-                  <td class="text-right">Rp. {{number_format($ip->harga_x_qty)}}</td>
+                  <td class="text-center">{{$invoice->qty}}</td>
+                  <td class="text-right">Rp. {{number_format($invoice->harga_x_qty)}}</td>
                 </tr>
-                @endforeach
             </tbody>
           </table>
           </div>
@@ -94,7 +91,7 @@
                 @if (Auth::user()->role->role == 'Super Admin')
                 <div class="invoice-detail-value invoice-detail-value-lg">Rp. {{number_format($tagihan->total_pembayaran)}}</div>
                 @else
-                <div class="invoice-detail-value invoice-detail-value-lg">Rp. {{number_format($sub_total_pertoko)}}</div>
+                <div class="invoice-detail-value invoice-detail-value-lg">Rp. {{number_format($invoice->harga_x_qty)}}</div>
                 @endif
               </div>
             </div>

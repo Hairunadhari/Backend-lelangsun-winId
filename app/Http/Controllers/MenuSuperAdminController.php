@@ -46,6 +46,7 @@ use App\Models\BannerLelang;
 use App\Models\BarangLelang;
 use App\Models\GambarLelang;
 use App\Models\GambarProduk;
+use App\Models\InvoiceStore;
 use App\Models\PembelianNpl;
 use App\Models\PesertaEvent;
 use Illuminate\Http\Request;
@@ -364,7 +365,6 @@ class MenuSuperAdminController extends Controller
    
     public function list_pesanan(){
         $idAdmin = Auth::user()->id;
-        $idToko = Toko::where('user_id',$idAdmin)->first();
          
         if (request()->ajax()) {
             $status = request('status');
@@ -375,14 +375,7 @@ class MenuSuperAdminController extends Controller
                     $data = Order::with('user','orderitem.produk','tagihan')->get();                    
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
-                $data = DB::table('orders')
-                ->select('orders.id', 'tagihans.external_id', 'tagihans.status', 'users.name', DB::raw('SUM(order_items.harga_x_qty) as total_harga_x_qty'), 'produks.toko_id')
-                ->leftJoin('tagihans', 'orders.id', '=', 'tagihans.order_id')
-                ->leftJoin('users', 'orders.user_id', '=', 'users.id')
-                ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
-                ->leftJoin('produks', 'order_items.produk_id', '=', 'produks.id')
-                ->where('produks.toko_id', Auth::user()->toko->id)
-                ->groupBy('orders.id', 'produks.toko_id', 'users.name', 'tagihans.status', 'tagihans.external_id')
+                $data = InvoiceStore::where('toko_id',Auth::user()->toko->id)
                 ->get();        
             }
             
@@ -1734,21 +1727,14 @@ class MenuSuperAdminController extends Controller
         return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
 
         } else {
-            $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
-            $pengiriman = Pengiriman::where('order_id', $id)->first();
-            $itemproduk = DB::table('order_items')
-            ->select('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.harga_x_qty','produk_promos.diskon','produk_promos.promosi_id')
-            ->leftJoin('produks','order_items.produk_id','=','produks.id')
-            ->leftJoin('produk_promos','order_items.promosi_id','=','produk_promos.promosi_id')
-            ->where('produks.toko_id',Auth::user()->toko->id)
-            ->where('order_items.order_id',$id)
-            ->groupBy('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.harga_x_qty','produk_promos.diskon','produk_promos.promosi_id')
-            ->get();
-            // dd($itemproduk);
-            $sub_total_pertoko = OrderItem::with('produk')->whereHas('produk', function($query){
-                $query->where('toko_id',Auth::user()->toko->id);
-            })->where('order_id', $id)->sum('harga_x_qty');
-            return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk','sub_total_pertoko'));
+            $invoice = DB::table('invoice_stores')
+            ->select('invoice_stores.*','users.no_telp','users.alamat')
+            ->leftJoin('users','invoice_stores.user_id','=','users.id')
+            ->where('invoice_stores.id',$id)
+            ->first();
+            // dd($invoice);
+          
+            return view('pesanan.detail_pesanan', compact('invoice'));
         }
         
     }
