@@ -2957,46 +2957,46 @@ class MenuSuperAdminController extends Controller
             $npl = Npl::find($bid->npl_id ?? null);
             // dd($npl);
             
-            if (!empty($bid->harga_bidding)) { // kalo ada yg masang harga tertinggi
-                    $pemenang = Pemenang::create([
-                        'bidding_id' => $bid->id,
-                        'npl_id' => $bid->npl_id ?? null,
-                        'no_rek' => $bid->user->no_rek ?? null,
-                        'nama_pemilik' => $bid->user->name ?? null,
-                        'nominal' => $bid->harga_bidding,
-                        'tgl_transfer' => null,
-                        'bukti' => null,
-                        'tipe_pelunasan' => null,
-                        'user_id' => $bid->user_id,
-                    ]);
+            // if (!empty($bid->harga_bidding)) { // kalo ada yg masang harga tertinggi
+            //         $pemenang = Pemenang::create([
+            //             'bidding_id' => $bid->id,
+            //             'npl_id' => $bid->npl_id ?? null,
+            //             'no_rek' => $bid->user->no_rek ?? null,
+            //             'nama_pemilik' => $bid->user->name ?? null,
+            //             'nominal' => $bid->harga_bidding,
+            //             'tgl_transfer' => null,
+            //             'bukti' => null,
+            //             'tipe_pelunasan' => null,
+            //             'user_id' => $bid->user_id,
+            //         ]);
 
-                    $lot->barang_lelang->update([
-                        'status' => 0
-                    ]);
-                    $lot->update([
-                        'status_item' => 'sold',
-                        'status' => 'not-active',
-                    ]);
-                    if (!empty($npl)) {
-                        $npl->update([
-                            'status_npl' => 'not-active',
-                            'status' => 'not-active',
-                        ]);
-                    }
-                    if (!empty($bid->user_id)) {
-                        Notifikasi::create([
-                            'user_id' => $bid->user_id,
-                            'type' => 'menang lelang',
-                            'judul' => 'Anda Menang Event Lelang',
-                            'pesan' => 'Selamat Anda memenangkan lot event "'.$bid->event_lelang->judul.'", untuk mengambil barang silahkan melunasi barang tersebut!',
-                        ]);
-                    }
-            } else {
-                $lot->update([
-                    'status_item' => 'not-active',
-                    'status' => 'not-active',
-                ]);
-            }
+            //         $lot->barang_lelang->update([
+            //             'status' => 0
+            //         ]);
+            //         $lot->update([
+            //             'status_item' => 'sold',
+            //             'status' => 'not-active',
+            //         ]);
+            //         if (!empty($npl)) {
+            //             $npl->update([
+            //                 'status_npl' => 'not-active',
+            //                 'status' => 'not-active',
+            //             ]);
+            //         }
+            //         if (!empty($bid->user_id)) {
+            //             Notifikasi::create([
+            //                 'user_id' => $bid->user_id,
+            //                 'type' => 'menang lelang',
+            //                 'judul' => 'Anda Menang Event Lelang',
+            //                 'pesan' => 'Selamat Anda memenangkan lot event "'.$bid->event_lelang->judul.'", untuk mengambil barang silahkan melunasi barang tersebut!',
+            //             ]);
+            //         }
+            // } else {
+            //     $lot->update([
+            //         'status_item' => 'not-active',
+            //         'status' => 'not-active',
+            //     ]);
+            // }
             event(new SearchPemenangLot($pemenang_bid, $request->event_lelang_id));
             DB::commit();
         } catch (Throwable $th) {
@@ -3018,9 +3018,9 @@ class MenuSuperAdminController extends Controller
             
             // nonaktfikan bidding sesuai event id dan lot item id yg sedang lg bidding
             $bidding = Bidding::where('event_lelang_id', $request->event_lelang_id)->where('lot_item_id',$lot_item_id)->get();
-            $bidding->each->update([
-                'status'=> 'not-active'
-            ]);
+            // $bidding->each->update([
+            //     'status'=> 'not-active'
+            // ]);
             // cek apakah masih ada lot item di suatu event 
             $lot_item = LotItem::where('event_lelang_id',$request->event_lelang_id)->where('status_item','active')->where('status','active')->get();
             if (count($lot_item) == 0) {
