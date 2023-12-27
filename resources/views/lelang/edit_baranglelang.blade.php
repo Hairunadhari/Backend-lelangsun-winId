@@ -41,6 +41,7 @@
                     <div class="form-group">
                         <label>Pilih Kategori Barang Lelang</label>
                         <select class="form-control selectric" name="kategoribarang_id" id="id_kategoribarangs" onchange="toggleDiv(this.value)">
+                            <option value="" disabled>Pilih Barang</option>
                             @foreach ($kategori as $item)
                             <option value="{{ $item->id }}" data-kategori="{{$item->kategori}}"
                                 {{ $item->id == $data->kategoribarang->id ? 'selected' : '' }}>
@@ -312,11 +313,12 @@
         const selectElement = document.getElementById("id_kategoribarang");
         const inpKendaraan = document.getElementById("editinpKendaraan");
         const selectedOption = document.getElementById("id_kategoribarangs").options[document.getElementById("id_kategoribarangs").selectedIndex];
+        console.log(selectedOption.value);
     const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
 
         const dataKategori = selectedOption.getAttribute("data-kategori");
-        if (dataKategori == "motor" || dataKategori == "mobil" || dataKategori == "Motor" || dataKategori == "Mobil") {
-        console.log('tess', dataKategori);
+        if (selectedOption.value == 1 || selectedOption.value == 2) {
+        console.log('tess', selectedOption.value);
         inpKendaraan.style.display = "block";
 
         // Tambahkan atribut "required" kembali pada elemen input
@@ -339,8 +341,7 @@
     const selectedOption = document.getElementById("id_kategoribarangs").options[document.getElementById("id_kategoribarangs").selectedIndex];
     const dataKategori = selectedOption.getAttribute("data-kategori");
 
-    if (dataKategori === "Motor" || dataKategori === "Mobil" || dataKategori === "motor" || dataKategori === "mobil") {
-        console.log('tess', dataKategori);
+    if (value == 1 || value == 2) {
         inpKendaraan.style.display = "block";
 
         // Tambahkan atribut "required" kembali pada elemen input

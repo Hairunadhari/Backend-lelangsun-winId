@@ -464,8 +464,8 @@
                                 </div>
                             </div>
                             <div class="form-group col-6">
-                                <label>STNK Berlaku <span style="color: red">*</span></label>
-                                <input type="date" class="form-control" name="stnk_berlaku" required>
+                                <label>STNK Berlaku </label>
+                                <input type="date" class="form-control" name="stnk_berlaku">
                             </div>
                             <div class="form-group col-6">
                                 <label>Tahun Produksi <span style="color: red">*</span></label>
@@ -588,15 +588,14 @@
     });
     // Asumsikan kode ini berada di dalam sebuah tag <script> atau file JavaScript
     function toggleDiv(value) {
+        console.log(value);
         const inpKendaraan = document.getElementById("inpKendaraan");
         const inputsInpKendaraan = inpKendaraan.querySelectorAll("input[required]");
         const selectedOption = document.getElementById("id_kategoribarang").options[document.getElementById(
             "id_kategoribarang").selectedIndex];
-        const dataKategori = selectedOption.getAttribute("data-kategori");
-
-        if (dataKategori === "Motor" || dataKategori === "Mobil" || dataKategori === "motor" || dataKategori ===
-            "mobil") {
-            console.log('tess', dataKategori);
+        
+        if (value == 1 || value == 2) 
+        {
             inpKendaraan.style.display = "block";
 
             // Tambahkan atribut "required" kembali pada elemen input

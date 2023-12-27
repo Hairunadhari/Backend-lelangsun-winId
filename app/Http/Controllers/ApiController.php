@@ -1868,8 +1868,8 @@ class ApiController extends Controller
 
      public function add_npl(Request $request){
         $validator = Validator::make($request->all(), [
-            'event_lelang_id'     => 'required',
-            'user_id'     => 'required',
+            'event_lelang_id'     => 'required|integer|min:1',
+            'user_id'     => 'required|integer|min:1',
             'no_rekening'     => 'required',
             'nama_pemilik_rekening'     => 'required',
             'nominal_transfer'     => 'required',

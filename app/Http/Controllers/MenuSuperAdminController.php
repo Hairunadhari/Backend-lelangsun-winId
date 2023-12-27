@@ -1063,9 +1063,9 @@ class MenuSuperAdminController extends Controller
             $status = request('status');
 
             if ($status == 'active') {
-                $data = KategoriBarang::where('status', 1)->orderBy('created_at','desc')->get();
+                $data = KategoriBarang::where('status', 1)->get();
             } elseif ($status == 'not-active') {
-                $data = KategoriBarang::where('status', 0)->orderBy('created_at','desc')->get();
+                $data = KategoriBarang::where('status', 0)->get();
             }
 
             return DataTables::of($data)->make(true);
@@ -1101,10 +1101,11 @@ class MenuSuperAdminController extends Controller
             DB::beginTransaction();
             $data = KategoriBarang::findOrFail($id);
             $npl = preg_replace('/\D/', '', $request->harga_npl);
+            $kelipatanBidding = preg_replace('/\D/', '', $request->kelipatan_bidding);
             $harga_npl = trim($npl);
             $data->update([
                 'kategori'     => $request->kategori,
-                'kelipatan_bidding'     => $request->kelipatan_bidding,
+                'kelipatan_bidding'     => $kelipatanBidding,
                 'harga_npl'     => $harga_npl,
             ]);
             DB::commit();
@@ -1159,7 +1160,47 @@ class MenuSuperAdminController extends Controller
         }
         try {
             DB::beginTransaction();
-            if ($request->no_polisi == null) {
+            if ($request->kategoribarang_id == 1 || $request->kategoribarang_id == 2) {
+                $lelang = BarangLelang::create([
+                    'kategoribarang_id'     => $request->kategoribarang_id,
+                    'barang'     => $request->barang,
+                    'brand'     => $request->brand,
+                    'warna'     => $request->warna,
+                    'lokasi_barang'     => $request->lokasi_barang,
+                    'nomer_rangka'     => $request->nomer_rangka,
+                    'nomer_mesin'     => $request->nomer_mesin,
+                    'tipe_mobil'     => $request->tipe_mobil,
+                    'transisi_mobil'     => $request->transisi_mobil, 
+                    'bahan_bakar'     => $request->bahan_bakar,
+                    'odometer'     => $request->odometer,
+                    'grade_utama'     => $request->grade_utama,
+                    'grade_mesin'     => $request->grade_mesin,
+                    'grade_interior'     => $request->grade_interior,
+                    'grade_exterior'     => $request->grade_exterior,
+                    'no_polisi'     => $request->no_polisi,
+                    'stnk'     => $request->stnk,
+                    'stnk_berlaku'     => $request->stnk_berlaku,
+                    'tahun_produksi'     => $request->tahun_produksi,
+                    'bpkb'     => $request->bpkb,
+                    'faktur'     => $request->faktur,
+                    'sph'     => $request->sph,
+                    'kir'     => $request->kir,
+                    'ktp'     => $request->ktp,
+                    'kwitansi'     => $request->kwitansi,
+                    'keterangan'     => $request->keterangan,
+                    'status'     => 1,
+                ]);
+    
+                $gambar = $request->file('gambar');    
+    
+                foreach ($gambar as $file) {                
+                    $file->storeAs('public/image', $file->hashName());
+                    GambarLelang::create([
+                        'barang_lelang_id' => $lelang->id,
+                        'gambar' => $file->hashName(),
+                    ]);
+                }
+            } else {
                 $lelang = BarangLelang::create([
                     'kategoribarang_id'     => $request->kategoribarang_id,
                     'barang'     => $request->barang,
@@ -1200,47 +1241,7 @@ class MenuSuperAdminController extends Controller
                     ]);
                 }
     
-            } else {
-    
-                $lelang = BarangLelang::create([
-                    'kategoribarang_id'     => $request->kategoribarang_id,
-                    'barang'     => $request->barang,
-                    'brand'     => $request->brand,
-                    'warna'     => $request->warna,
-                    'lokasi_barang'     => $request->lokasi_barang,
-                    'nomer_rangka'     => $request->nomer_rangka,
-                    'nomer_mesin'     => $request->nomer_mesin,
-                    'tipe_mobil'     => $request->tipe_mobil,
-                    'transisi_mobil'     => $request->transisi_mobil, 
-                    'bahan_bakar'     => $request->bahan_bakar,
-                    'odometer'     => $request->odometer,
-                    'grade_utama'     => $request->grade_utama,
-                    'grade_mesin'     => $request->grade_mesin,
-                    'grade_interior'     => $request->grade_interior,
-                    'grade_exterior'     => $request->grade_exterior,
-                    'no_polisi'     => $request->no_polisi,
-                    'stnk'     => $request->stnk,
-                    'stnk_berlaku'     => $request->stnk_berlaku,
-                    'tahun_produksi'     => $request->tahun_produksi,
-                    'bpkb'     => $request->bpkb,
-                    'faktur'     => $request->faktur,
-                    'sph'     => $request->sph,
-                    'kir'     => $request->kir,
-                    'ktp'     => $request->ktp,
-                    'kwitansi'     => $request->kwitansi,
-                    'keterangan'     => $request->keterangan,
-                    'status'     => 1,
-                ]);
-    
-                $gambar = $request->file('gambar');    
-    
-                foreach ($gambar as $file) {                
-                    $file->storeAs('public/image', $file->hashName());
-                    GambarLelang::create([
-                        'barang_lelang_id' => $lelang->id,
-                        'gambar' => $file->hashName(),
-                    ]);
-                }
+               
             }
 
             DB::commit();
