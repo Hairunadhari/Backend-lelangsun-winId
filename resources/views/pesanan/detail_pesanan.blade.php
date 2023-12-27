@@ -73,7 +73,7 @@
                             @foreach ($invoice->invoice_store as $item)
                               <tr>
                                     
-                                <td>{{$item->toko->toko}}</td>
+                                <td>{{$item->name_toko}}</td>
                                 <td>{{$item->nama_produk}}</td>
                                 <td class="text-center">Rp {{number_format($item->harga,0,',','.')}}
                                   @if ($item->promo_diskon != null)

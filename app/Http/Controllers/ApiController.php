@@ -442,7 +442,7 @@ class ApiController extends Controller
      *          required=true,
      *          description="form data",
      *          @OA\JsonContent(
-     *              required={"user_id","pengiriman","lokasi_pengiriman","sub_total"},
+     *              required={""},
      *              @OA\Property(property="user_id", type="integer"),
      *              @OA\Property(
     *                  property="items",
@@ -453,13 +453,11 @@ class ApiController extends Controller
     *                      @OA\Property(property="harga", type="integer"),
     *                      @OA\Property(property="total_harga", type="integer"),
     *                      @OA\Property(property="nama_produk", type="string"),
-    *                      @OA\Property(property="id_promo", type="integer"),
+    *                      @OA\Property(property="promo_diskon", type="integer"),
+    *                      @OA\Property(property="toko_id", type="integer"),
+    *                      @OA\Property(property="nama_toko", type="string"),
     *                  )
     *              ),
-    *               @OA\Property(property="latitude", type="string"),
-    *               @OA\Property(property="longitude", type="string"),
-     *              @OA\Property(property="pengiriman", type="string"),
-     *              @OA\Property(property="lokasi_pengiriman", type="string"),
      *              @OA\Property(property="sub_total", type="integer"),
      *          )
      *      ),
@@ -473,181 +471,24 @@ class ApiController extends Controller
     public function add_order(Request $request){
 
         $validator = Validator::make($request->all() , [
-            'user_id'     => 'required',
-            'pengiriman'     => 'required',
-            'lokasi_pengiriman'     => 'required',
-            'sub_total'     => 'required',
-            // 'longitude'     => 'required',
-            // 'langitude'     => 'required',
+            'user_id'     => 'required|integer|min:1',
+            'items' => 'required|array',
+            'items.*.produk_id'     => 'required|integer|min:1',
+            'items.*.qty'     => 'required|integer|min:1',
+            'items.*.harga'     => 'required|integer|min:1',
+            'items.*.total_harga'     => 'required|integer|min:1',
+            'items.*.nama_produk'     => 'required',
+            'items.*.toko_id'     => 'required|integer|min:1',
+            'items.*.nama_toko'     => 'required',
+            'sub_total'     => 'required|integer|min:1',
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Ada Kesalahan',
+                'message' => 'Ada Kesalahan Validasi',
                 'data' => $validator->errors()
-            ]);
+            ],422);
         }
 
-        // try {
-        //     DB::beginTransaction();
-        //     // get data user
-        //     $user = User::where('id', $request->user_id)->first();
-        //     $order = Order::create([
-        //         'user_id' => $user->id
-        //     ]);
-            
-        //     $items = $request->items;
-            
-        //     // ambil colum produk_id 
-        //     $produkIds = array_column($items, 'produk_id');
-
-        //     // ambil colum qty
-        //     $qtys = array_column($items, 'qty');
-
-        //     // get data produk bedasarkan id
-        //     $produks = Produk::whereIn('id', $produkIds)->get();
-
-        //     // pengecekan jika qty order melebihi qty produk
-        //     foreach ($produks as $key => $value) {
-        //         if ($qtys[$key] > $value->stok) {
-        //             return response()->json([
-        //                 'success'=> false,
-        //                 'message'=>'jumlah qty order melebihi jumlah stok produk',
-        //             ]);
-        //         }
-        //         $value->update([
-        //             'stok'=>$value->stok - $qtys[$key],// Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
-        //         ]);
-        //     }
-            
-        //     // fungsi untuk looping orderan
-        //     foreach ($items as $item => $i) {
-        //         $orderitem = OrderItem::create([
-        //             'order_id' => $order->id ?? null,
-        //             'produk_id' => $i['produk_id'] ?? null,
-        //             'qty' => $i['qty'] ?? null,
-        //             'harga' => $i['harga'] ?? null,
-        //             'nama_produk' => $i['nama_produk'] ?? null,
-        //             'promosi_id' => $i['promosi_id'] ?? null,
-        //             'harga_x_qty' => $i['total_harga'] ?? null,
-        //         ]);
-        //     }
-            
-        //     $pengiriman = Pengiriman::create([
-        //         'order_id' => $order->id ?? null,
-        //         'pengiriman' => $request->pengiriman ?? null,
-        //         'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
-        //         'nama_pengirim' => '-',
-        //         'latitude' => $request->latitude,
-        //         'longitude' => $request->longitude
-        //     ]);
-            
-        //     $secret_key = 'Basic '.config('xendit.key_auth');
-        //     $timestamp = time();
-        //     $strRandom = Str::random(5);
-        //     $external_id = "INV-WIN-{$timestamp}-{$strRandom}";
-
-        //     $data_request = Http::withHeaders([
-        //         'Authorization' => $secret_key
-        //     ])->post('https://api.xendit.co/v2/invoices', [
-        //         'external_id' => $external_id,
-        //         'amount' => $request->sub_total,
-        //         'payer_email' => $user->email
-        //     ]);
-
-        //     $response = $data_request->object();
-        //     $dataExipre = $response->expiry_date;
-        //     $expiryDate = Carbon::parse($response->expiry_date, 'UTC')->setTimezone('Asia/Jakarta');
-        //     $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
-        //     $tagihan = Tagihan::create([
-        //         'order_id' => $order->id,
-        //         'user_id' => $order->user_id,
-        //         'external_id' => $external_id,
-        //         'status' => $response->status,
-        //         'total_pembayaran' => $request->sub_total,
-        //         'payment_link' => $response->invoice_url,
-        //         'exp_date' => $formattedExpiryDate
-        //     ]);
-        //     $success = true;
-        //     $message = 'Data Order Berhasil Ditambahkan';
-
-        //     $res = [
-        //         'success' => $success,
-        //         'message' => $message,
-        //         'name' => $user->name,
-        //         'status' => $tagihan->status ?? null,
-        //         'total_pembayaran' => $tagihan->total_pembayaran ?? null,
-        //         'payment_link' => $tagihan->payment_link ?? null,
-        //     ];
-
-        //     if($response){
-        //         TLogApi::create([
-        //             'k_t' => 'kirim',
-        //             'object' => 'xendit',
-        //             'data' => json_encode([
-        //                 'order' => $order,
-        //                 'orderitem' => $orderitem,
-        //                 'pengiriman' => $pengiriman,
-        //                 'responseData'=> $response
-        //             ]),
-        //             'result' => json_encode($res),
-        //         ]);
-        //     }
-
-        //     TLogApi::create([
-        //         'k_t' => 'terima',
-        //         'object' => 'mobile',
-        //         'data' => json_encode([
-        //             'order' => $order,
-        //             'tagihan' => $tagihan,
-        //             'orderitem' => $orderitem,
-        //             'pengiriman' => $pengiriman,
-        //             'responsedata' => $response,
-        //         ]),
-        //         'result' => json_encode($res),
-        //     ]);
-
-        //     DB::commit();
-        // } catch (Throwable $th) {
-        //     DB::rollBack();
-        //     dd($th);
-        //     $success = false;
-        //     $message = 'Data Order Gagal Ditambahkan';
-        //     $res = [
-        //         'success' => $success,
-        //         'data' => $th,
-        //         'message' => $message,
-        //         'name' => $user->name ?? null,
-        //         'status' => $tagihan->status ?? null,
-        //         'total_pembayaran' => $tagihan->total_pembayaran ?? null,
-        //         'payment_link' => $tagihan->payment_link ?? null,
-        //     ];
-        //     TLogApi::create([
-        //         'k_t' => 'terima',
-        //         'object' => 'mobile',
-        //         'data' => json_encode([
-        //             'order' => [
-        //                 'id' => $request->id,
-        //                 'user_id' => $request->user_id ?? null
-        //             ],
-        //             'orderitem' => [
-        //                 'id' => $request->id,
-        //                 'order_id' => $order->id ?? null,
-        //                 'produk_id' => $request->produk_id ?? null,
-        //                 'qty' => $request->qty ?? null,
-        //             ],
-        //             'pengiriman' => [
-        //                 'id' => $request->id,
-        //                 'order_id' => $order->id ?? null,
-        //                 'pengiriman' => $request->pengiriman ?? null,
-        //                 'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
-        //                 'nama_pengirim' => $request->nama_pengirim ?? null    
-        //             ],
-        //             'responseData' => $response ?? null
-        //         ]),
-        //         'result' => json_encode($res),
-        //     ]);
-            
-        // }
         try {
             DB::beginTransaction();
             
@@ -724,7 +565,8 @@ class ApiController extends Controller
                     'produk_id' => $i['produk_id'],
                     'nama_pembeli' => $user->name,
                     'email_pembeli' => $user->email,
-                    'promo_diskon' => $i['promo_diskon']
+                    'promo_diskon' => $i['promo_diskon'],
+                    'name_toko' => $i['nama_toko']
                 ]);
             }
             
@@ -769,17 +611,12 @@ class ApiController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
-            dd($th);
             $success = false;
             $message = 'Data Order Gagal Ditambahkan';
             $res = [
                 'success' => $success,
-                'data' => $th,
                 'message' => $message,
-                'name' => $user->name ?? null,
-                'status' => $order->status ?? null,
-                'total_pembayaran' => $order->sub_total ?? null,
-                'payment_link' => $order->link_payment_order ?? null,
+                'data' => $th,
             ];
             TLogApi::create([
                 'k_t' => 'terima',
@@ -808,63 +645,7 @@ class ApiController extends Controller
     public function callback_xendit(Request $request){
         try {
             DB::beginTransaction();
-            // $invoice = Tagihan::with('user', 'order')->where('external_id', $request->external_id)->first();
-            // $invoice->update([
-            //     'status' => $request->status,
-            // ]);
-            
-            // // ambil id produk berasrkan order id
-            // $ambil_produk_id = OrderItem::where('order_id', $invoice->order->id)->pluck('produk_id');
-
-            // // dd($ambil_produk_id);
-            // // ambil qty orderan 
-            // $qty_order = OrderItem::where('order_id', $invoice->order->id)->pluck('qty');
-            // $produks = Produk::whereIn('id', $ambil_produk_id)->get();
-            // $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $invoice->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
-            
-            // if ($invoice->status == 'PAID') {
-               
-            //     $ambil_produkid_berdasarkan_userid->each->delete();
-
-            //     $bayar = Pembayaran::create([
-            //         'external_id' => $request->external_id,
-            //         'metode_pembayaran' => $request->payment_method,
-            //         'email_user' => $invoice->user->email,
-            //         'status' => $request->status,
-            //         'total_pembayaran' => $request->paid_amount,
-            //         'bank_code' => $request->bank_code,
-            //         'tagihan_id' => $invoice->id,
-            //     ]);
-        
-            //     $res = [
-            //         'message' => 'success',
-            //         'data' => $bayar
-            //     ];
-                
-            //     TLogApi::create([
-            //         'k_t' => 'terima',
-            //         'object' => 'xendit',
-            //         'data' => json_encode($request->all()),
-            //         'result' => json_encode($res)
-            //     ]);
-            // } elseif ($invoice->status == 'EXPIRED') {
-            //     foreach ($produks as $index => $p) {
-                   
-            //         $p->update([
-            //             'stok' => $p->stok + $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
-            //         ]);
-            //     }
-            //     $res = [
-            //         'message' => 'success',
-            //         'payment' => 'EXPIRED'
-            //     ];
-
-            // }else {
-            //     $res = [
-            //         'message' => 'success',
-            //         'payment' => 'ERROR'
-            //     ];
-            // }
+           
             $order = Order::where('no_invoice',$request->external_id)->first();
             $order->update(['status'=>$request->status]);
 

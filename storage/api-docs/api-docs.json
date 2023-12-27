@@ -350,10 +350,7 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "user_id",
-                                    "pengiriman",
-                                    "lokasi_pengiriman",
-                                    "sub_total"
+                                    ""
                                 ],
                                 "properties": {
                                     "user_id": {
@@ -378,24 +375,18 @@
                                                 "nama_produk": {
                                                     "type": "string"
                                                 },
-                                                "id_promo": {
+                                                "promo_diskon": {
                                                     "type": "integer"
+                                                },
+                                                "toko_id": {
+                                                    "type": "integer"
+                                                },
+                                                "nama_toko": {
+                                                    "type": "string"
                                                 }
                                             },
                                             "type": "object"
                                         }
-                                    },
-                                    "latitude": {
-                                        "type": "string"
-                                    },
-                                    "longitude": {
-                                        "type": "string"
-                                    },
-                                    "pengiriman": {
-                                        "type": "string"
-                                    },
-                                    "lokasi_pengiriman": {
-                                        "type": "string"
                                     },
                                     "sub_total": {
                                         "type": "integer"
