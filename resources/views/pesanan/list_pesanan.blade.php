@@ -42,7 +42,7 @@
                     },
                 },
                 {
-                    data: "tagihan.external_id",
+                    data: "no_invoice",
                     render: function (data) {
                         if (data == null) {
                             a = `<span>-</span>`
@@ -53,10 +53,10 @@
                     }
                 },
                 {
-                    data: "user.name",
+                    data: "order_name",
                 },
                 {
-                    data: "tagihan.status",
+                    data: "status",
                     render: function(data, type, row, meta) {
                         if (data == "PENDING") {
                             badge = `<span class="badge badge-warning">PENDING</span>`
@@ -73,7 +73,7 @@
                     }
                 },
                 {
-                    data: "tagihan.total_pembayaran",
+                    data: "sub_total",
                     render: function(data, type, row, meta) {
                         if (data == null) {
                             a = `<span>-</span>`

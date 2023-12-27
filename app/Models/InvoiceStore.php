@@ -14,4 +14,12 @@ class InvoiceStore extends Model
     {
         return $this->hasMany(User::class);
     }
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+    public function toko()
+    {
+        return $this->belongsTo(Toko::class);
+    }
 }

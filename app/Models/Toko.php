@@ -21,4 +21,8 @@ class Toko extends Model
     {
         return $this->hasMany(KategoriProduk::class);
     }
+    public function invoice_store()
+    {
+        return $this->hasMany(InvoiceStore::class);
+    }
 }

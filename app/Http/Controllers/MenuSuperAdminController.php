@@ -371,8 +371,7 @@ class MenuSuperAdminController extends Controller
 
             // get data role superadmin
             if (Auth::user()->role->role == 'Super Admin') {
-                    // $data = OrderItem::with('produk','order')->orderBy('created_at','desc')->get();                    
-                    $data = Order::with('user','orderitem.produk','tagihan')->get();                    
+                $data = Order::all();
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
                 $data = InvoiceStore::where('toko_id',Auth::user()->toko->id)
@@ -1715,16 +1714,8 @@ class MenuSuperAdminController extends Controller
 
     public function detail_pesanan($id){
         if (Auth::user()->role->role == 'Super Admin') {
-            $tagihan = Tagihan::with('user','pembayaran')->where('order_id', $id)->first();
-            $pengiriman = Pengiriman::where('order_id', $id)->first();
-            $itemproduk = DB::table('order_items')
-            ->select('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.harga_x_qty','produk_promos.diskon','produk_promos.promosi_id')
-            ->leftJoin('produks','order_items.produk_id','=','produks.id')
-            ->leftJoin('produk_promos','order_items.promosi_id','=','produk_promos.promosi_id')
-            ->where('order_items.order_id',$id)
-            ->groupBy('order_items.id','order_items.qty','order_items.harga','order_items.nama_produk','order_items.harga_x_qty','produk_promos.diskon','produk_promos.promosi_id')
-            ->get();
-        return view('pesanan.detail_pesanan', compact('tagihan','pengiriman','itemproduk'));
+            $invoice = Order::with('invoice_store.toko')->find($id);
+          
 
         } else {
             $invoice = DB::table('invoice_stores')
@@ -1734,8 +1725,9 @@ class MenuSuperAdminController extends Controller
             ->first();
             // dd($invoice);
           
-            return view('pesanan.detail_pesanan', compact('invoice'));
         }
+        // dd($invoice);
+        return view('pesanan.detail_pesanan', compact('invoice'));
         
     }
 

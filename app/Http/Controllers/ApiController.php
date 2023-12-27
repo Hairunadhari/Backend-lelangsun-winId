@@ -707,15 +707,7 @@ class ApiController extends Controller
                 'exp_date_invoice' => $formattedExpiryDate,
                 'link_payment_order' => $response->invoice_url,
             ]);
-            $tagihan = Tagihan::create([
-                'order_id' =>  $order->id,
-                'user_id' => $request->user_id,
-                'external_id' => $external_id,
-                'status' => $response->status,
-                'total_pembayaran' => $request->sub_total,
-                'payment_link' => $response->invoice_url,
-                'exp_date' => $formattedExpiryDate
-            ]);
+           
             // fungsi untuk looping orderan
             foreach ($items as $item => $i) {
                 $invoiceStore = InvoiceStore::create([
@@ -732,17 +724,9 @@ class ApiController extends Controller
                     'produk_id' => $i['produk_id'],
                     'nama_pembeli' => $user->name,
                     'email_pembeli' => $user->email,
+                    'promo_diskon' => $i['promo_diskon']
                 ]);
             }
-            
-            $pengiriman = Pengiriman::create([
-                'order_id' => 1,
-                'pengiriman' => $request->pengiriman ?? null,
-                'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
-                'nama_pengirim' => '-',
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude
-            ]);
             
           
             $success = true;
@@ -752,9 +736,9 @@ class ApiController extends Controller
                 'success' => $success,
                 'message' => $message,
                 'name' => $user->name,
-                'status' => $tagihan->status ?? null,
-                'total_pembayaran' => $tagihan->total_pembayaran ?? null,
-                'payment_link' => $tagihan->payment_link ?? null,
+                'status' => $order->status ?? null,
+                'total_pembayaran' => $order->sub_total ?? null,
+                'payment_link' => $order->link_payment_order ?? null,
             ];
 
             if($response){
@@ -763,7 +747,7 @@ class ApiController extends Controller
                     'object' => 'xendit',
                     'data' => json_encode([
                         'order' => $request,
-                        'pengiriman' => $pengiriman,
+                        // 'pengiriman' => $pengiriman,
                         'responseData'=> $response
                     ]),
                     'result' => json_encode($res),
@@ -774,8 +758,9 @@ class ApiController extends Controller
                 'k_t' => 'terima',
                 'object' => 'mobile',
                 'data' => json_encode([
-                    'invoice' => $tagihan,
-                    'pengiriman' => $pengiriman,
+                    'order' => $order,
+                    'invoice_store' => $invoiceStore,
+                    // 'pengiriman' => $pengiriman,
                     'responsedata' => $response,
                 ]),
                 'result' => json_encode($res),
@@ -792,9 +777,9 @@ class ApiController extends Controller
                 'data' => $th,
                 'message' => $message,
                 'name' => $user->name ?? null,
-                'status' => $tagihan->status ?? null,
-                'total_pembayaran' => $tagihan->total_pembayaran ?? null,
-                'payment_link' => $tagihan->payment_link ?? null,
+                'status' => $order->status ?? null,
+                'total_pembayaran' => $order->sub_total ?? null,
+                'payment_link' => $order->link_payment_order ?? null,
             ];
             TLogApi::create([
                 'k_t' => 'terima',
