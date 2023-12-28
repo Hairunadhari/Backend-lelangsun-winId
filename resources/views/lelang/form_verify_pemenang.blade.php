@@ -2,7 +2,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h4>Edit Toko</h4>
+            <h4>Form Verifikasi Pemenang Lelang</h4>
         </div>
         <form action="{{route('superadmin.verify-pemenang', $data->id)}}" method="post" enctype="multipart/form-data" onsubmit="return confirm('Apakah anda yakin akan memVerifikasi data ini ?');">
             @csrf
@@ -25,10 +25,6 @@
                     @endif
                 </div>
                 @if ($data->npl !== null)
-                {{-- <div class="form-group">
-                    <label>Tgl Transfer:</label>
-                    <input type="text" class="form-control" value="{{ $data->tgl_transfer }}" name="toko" readonly>
-                </div> --}}
                 <div class="form-group">
                     <label>Bukti Transfer:</label>
                     <br>

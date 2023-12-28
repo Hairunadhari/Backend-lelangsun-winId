@@ -97,10 +97,11 @@
                 {
                     data: "gambarlelang",
                     render: function (data) {
-                        let a = ''; // Deklarasikan variabel di luar kondisi if-else
-
-                        if (data !== null && data.length > 0) { // Periksa apakah data tidak null dan memiliki elemen
-                            a = '<img src="/storage/image/' + data[0].gambar + '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                        a = '';
+                        if (data.length > 0) { // Periksa apakah data tidak null dan memiliki elemen
+                            a += '<img src="/storage/image/' + data[0].gambar + '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                        }else{
+                            a += 'Tidak Ada Foto'
                         }
 
                         return a;
@@ -201,6 +202,7 @@
             processing: true,
             ordering: false,
             serverSide: true,
+            responsive: true,
             ajax: {
                 url: '{{ url()->current() }}',
                 data: function (data) {
@@ -221,8 +223,14 @@
                 {
                     data: "gambarlelang",
                     render: function (data) {
-                        return '<img src="/storage/image/' + data[0].gambar +
-                            '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                        a = '';
+                        if (data.length > 0) { // Periksa apakah data tidak null dan memiliki elemen
+                            a += '<img src="/storage/image/' + data[0].gambar + '" style="max-width: 15vw; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
+                        }else{
+                            a += 'Tidak Ada Foto'
+                        }
+
+                        return a;
                     },
                 },
 
