@@ -8,13 +8,11 @@ Alpine.start();
 $(document).ready(function () {
 
     
-
     let event_lelang_id = $('#event_lelang_id').val();
     let lot_item_id = $('#lot_item_id').val();
     let event_lelang_id_crypt = $('#event_lelang_id_crypt').val();
 
     // <------------------------------------------------ FUNGSI LIAT STORY BIDDING --------------------------------------------------->
-
     $.ajax({
         method: 'post',
         url: '/log-bidding',
@@ -52,7 +50,6 @@ $(document).ready(function () {
         toggleTimer(timer_bid);
     }
 
-
     function toggleTimer(data) { // <-- Fungsi untuk memulai timer
         if (!isTimerRunning) { // <-- apakah timer false
             const timerElement = document.getElementById('timer');
@@ -71,7 +68,7 @@ $(document).ready(function () {
             }, 1000);
 
             isTimerRunning = true; // Setel timer ke berjalan
-            document.getElementById('start-bid').disabled = true; // Nonaktifkan tombol "Start Bid" saat timer berjalan
+            // document.getElementById('start-bid').disabled = true; // Nonaktifkan tombol "Start Bid" saat timer berjalan
         }
     }
 
@@ -96,7 +93,7 @@ $(document).ready(function () {
         $('#con-bid').css('display', 'block');
         $('#start-bid').css('display', 'none');
         $('#user-send-bidding').css('display', 'block');
-        toggleTimer();
+        // toggleTimer();
     } 
 
         
@@ -113,6 +110,7 @@ $(document).ready(function () {
             data: {
                 button: 'open',
                 event_lelang_id: event_lelang_id,
+                lot_item_id: lot_item_id,
             },
             success: function (res) {
                 console.log('start-bid',res);
@@ -161,6 +159,9 @@ $(document).ready(function () {
                                     localStorage.removeItem('timer_bid');
                                     clearInterval(countdown);
                                 } else {
+                                    document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                    localStorage.removeItem('timer_bid');
+                                    clearInterval(countdown); // Hentikan timer saat mencapai 0
                                     $.ajax({
                                         method: 'post',
                                         url: '/superadmin/delete-event-lelang/' + event_lelang_id,
@@ -169,7 +170,6 @@ $(document).ready(function () {
                                         },
                                         success: function (res) {
                                             console.log('delete-event',res);
-                                                document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
                                         }
                                     });
                                     window.location.href = '/superadmin/event-lelang';
@@ -188,6 +188,10 @@ $(document).ready(function () {
     // <------------------------------------------------ FUNGSI KLIK BIDDING ------------------------------------------------------->
     $(document).on('click', '#send_bidding', function (e) {
         e.preventDefault();
+        // localStorage.removeItem('timer_bid');
+        // clearInterval(countdown); // Hentikan timer saat mencapai 0
+        // isTimerRunning = false; 
+
         $('#con-bid').css('display', 'none');
         $('#loading').css('display', 'block');
 
@@ -374,7 +378,10 @@ window.Echo.channel('lelang')
                 buttons: false,
                 closeOnClickOutside: false,
             });
-            window.location.href = '/';
             document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            localStorage.removeItem('timer_bid');
+            clearInterval(countdown); 
+            window.location.href = '/';
+          
         }
     });

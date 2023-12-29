@@ -1715,8 +1715,28 @@ class ApiController extends Controller
         $now = $konvers_tanggal->format('Y-m-d');
 
         $data = BarangLelang::with(['lot_item' => function ($query) use($now){
-            $query->where('status','active')->where('status_item','active')->whereDate('tanggal','>=',$now);
-        },'kategoribarang'])->find($id);
+            $query->select('id','barang_lelang_id','tanggal','harga_awal','status_bid')->where('status','active')->where('status_item','active')->whereDate('tanggal','>=',$now);
+        },'kategoribarang' => function($query){
+            $query->select('id','kategori','kelipatan_bidding','harga_npl');
+        }])->select(
+            'id','kategoribarang_id','barang','brand','warna','lokasi_barang','nomer_rangka','nomer_mesin','tipe_mobil','transisi_mobil','bahan_bakar',
+            'odometer',
+            'grade_utama',
+            'grade_mesin',
+            'grade_interior',
+            'grade_exterior',
+            'no_polisi',
+            'stnk',
+            'tahun_produksi',
+            'bpkb',
+            'faktur',
+            'sph',
+            'kir',
+            'ktp',
+            'kwitansi',
+            'keterangan',
+            'stnk_berlaku',
+        )->find($id);
         $data->gambarlelang->each(function ($item){
          $item->gambar = env('APP_URL').'/storage/image/'. $item->gambar;
         });

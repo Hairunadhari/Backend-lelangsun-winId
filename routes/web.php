@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\Message;
+use App\Models\LotItem;
 use App\Events\StartBid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -253,7 +254,9 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         
         Route::post('open-button',function (Request $request){
             event(new StartBid($request->button, $request->event_lelang_id));
-            return ['success' => true];
+            $lot_item = LotItem::find($request->lot_item_id);
+            $lot_item->update(['status_bid'=>'sedang berjalan']);
+            return ['success' => true,'status_bid_lot'=>$lot_item];
             });
 
         Route::get('/pemenang', [MenuSuperAdminController::class, 'list_pemenang'])->name('superadmin.pemenang');
