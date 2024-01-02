@@ -2547,12 +2547,15 @@ class MenuSuperAdminController extends Controller
     }
 
     public function add_peserta_npl(Request $request){
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
+            'nama'     => 'required',
             'email'     => 'required|email|unique:users,email',
+            'alamat'     => 'required',
+            'no_telp'     => 'required|integer',
+            'password'     => 'required|min:5',
+            'confirm_password'     => 'required|same:password',
+            
         ]);
-        if($validator->fails()){
-            return redirect()->back()->with(['error' => "Email Sudah Terdaftar!"]);
-        }
         try {
             DB::beginTransaction();
             $ktp = $request->file('foto_ktp');
@@ -2572,6 +2575,7 @@ class MenuSuperAdminController extends Controller
                     'foto_ktp' => $ktp->hashName(),
                     'foto_npwp' => $npwp->hashName(),
                     'password' => Hash::make($request->password),
+                    'email_verified_at' => date("Y-m-d H:i:s"),
                 ]);
             }else if($request->hasFile('foto_ktp')) {
                 $user = User::create([
@@ -2584,6 +2588,7 @@ class MenuSuperAdminController extends Controller
                     'no_rek' => $request->no_rek,
                     'foto_ktp' => $ktp->hashName(),
                     'password' => Hash::make($request->password),
+                    'email_verified_at' => date("Y-m-d H:i:s"),
                 ]);
             }else if($request->hasFile('foto_npwp')){
                 $user = User::create([
@@ -2596,6 +2601,7 @@ class MenuSuperAdminController extends Controller
                     'no_rek' => $request->no_rek,
                     'foto_npwp' => $ktp->hashName(),
                     'password' => Hash::make($request->password),
+                    'email_verified_at' => date("Y-m-d H:i:s"),
                 ]);
                 
             }else{
@@ -2608,16 +2614,14 @@ class MenuSuperAdminController extends Controller
                     'npwp' => $request->npwp,
                     'no_rek' => $request->no_rek,
                     'password' => Hash::make($request->password),
+                    'email_verified_at' => date("Y-m-d H:i:s"),
                 ]);
             }
-    
+           
             DB::commit();
-
-            
         } catch (Throwable $th) {
             DB::rollBack();
-            // dd($th);
-            return redirect()->route('superadmin.peserta-npl')->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->back()->with('error', 'Data Gagal Ditambahkan');
         }
 
         return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Ditambahkan');
@@ -2629,6 +2633,10 @@ class MenuSuperAdminController extends Controller
     }
 
     public function update_peserta_npl(Request $request, $id){
+        $this->validate($request, [
+            'no_telp'     => 'required|integer',
+            
+        ]);
         try {
             DB::beginTransaction();
             $data = User::find($id);

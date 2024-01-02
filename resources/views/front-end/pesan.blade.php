@@ -120,7 +120,7 @@
                     <a href="{{route('front-end-notif')}}">Profile</a>
                     <a href="{{route('front-end-npl')}}">NPL</a>
                     <a href="{{route('front-end-pelunasan')}}">Pelunasan Barang Lelang</a>
-                    <a href="{{route('front-end-pesan')}}">Notifikasi</a>
+                    <a class="{{ request()->routeIs('front-end-pesan') ? 'badge text-bg-danger' : '' }}" href="{{route('front-end-pesan')}}">Notifikasi</a>
                 </div>
                 <div class="scroll">
                     <table class="table table-bordered">

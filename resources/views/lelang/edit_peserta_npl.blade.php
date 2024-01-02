@@ -19,31 +19,34 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Nama <span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="name" value="{{$data->name}}" required>
+                    <label>Nama</label>
+                    <input type="text" class="form-control" name="name" value="{{$data->name}}">
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
-                        <label>Email <span style="color: red">*</span></label>
+                        <label>Email</label>
                         <input type="email" class="form-control"  value="{{$data->email}}" readonly>
                     </div>
                     <div class="form-group col-6">
-                        <label>Telepon <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="no_telp" value="{{$data->no_telp}}" required>
+                        <label>Telepon</label>
+                        <input type="number" class="form-control" name="no_telp" value="{{$data->no_telp}}">
+                        @if ($errors->has('no_telp'))
+                        <div class="warn text-danger"><small class="text-alert">eror!</small></div>
+                        @endif
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Alamat <span style="color: red">*</span></label>
-                    <textarea class="form-control" name="alamat" required>{{$data->alamat}}</textarea>
+                    <label>Alamat</label>
+                    <textarea class="form-control" name="alamat">{{$data->alamat}}</textarea>
                 </div>
                 <div class="row mb-3">
                     <div class="form-group col-6">
-                        <label>NIK <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="nik" value="{{$data->nik}}" required>
+                        <label>NIK</label>
+                        <input type="text" class="form-control" name="nik" value="{{$data->nik}}">
                     </div>
                     <div class="form-group col-6">
-                        <label>NPWP <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="npwp" value="{{$data->npwp}}" required>
+                        <label>NPWP</label>
+                        <input type="text" class="form-control" name="npwp" value="{{$data->npwp}}">
                     </div>
                 </div>
                     <div class="row">

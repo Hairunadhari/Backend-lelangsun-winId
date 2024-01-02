@@ -267,6 +267,11 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::get('/ulasan', [MenuSuperAdminController::class, 'list_ulasan'])->name('superadmin.ulasan');
         Route::delete('/delete-ulasan/{id}/', [MenuSuperAdminController::class, 'delete_ulasan']);
         Route::get('aktifkan-email-peserta/{id}/', [MenuSuperAdminController::class, 'aktifkan_email_peserta'])->name('superadmin.aktifkan-email-peserta');
+        // Route::get('form-tambah-peserta', [MenuSuperAdminController::class, 'form_tambah_peserta'])->name('superadmin.form-tambah-peserta');
+        // Route::get('form-tambah-peserta', [MenuSuperAdminController::class, 'form_tambah_peserta'])->name('superadmin.form-tambah-peserta');
+        Route::get('form-tambah-peserta',function (){
+            return view('lelang.form-tambah-peserta');
+        })->name('superadmin.form-tambah-peserta');
     });
 });
 

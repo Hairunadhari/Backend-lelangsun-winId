@@ -117,7 +117,7 @@
                 @endif
             <div class="card-body">
                 <div class="heads">
-                    <a href="{{route('front-end-notif')}}">Profile</a>
+                    <a class="{{ request()->routeIs('front-end-notif') ? 'badge text-bg-danger' : '' }}" href="{{route('front-end-notif')}}">Profile</a>
                     <a href="{{route('front-end-npl')}}">NPL</a>
                     <a href="{{route('front-end-pelunasan')}}">Pelunasan Barang Lelang</a>
                     <a href="{{route('front-end-pesan')}}">Notifikasi</a>

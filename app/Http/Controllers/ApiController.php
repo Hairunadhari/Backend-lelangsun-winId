@@ -1647,45 +1647,60 @@ class ApiController extends Controller
      * )
      */
     public function daftar_lot(){
+        // $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        // $now = $konvers_tanggal->format('Y-m-d');
+        // $lot = LotItem::with(['barang_lelang'=>function($query){
+        //     $query->select('id',
+        //     'kategoribarang_id',
+        //     'barang',
+        //     'brand',
+        //     'warna',
+        //     'lokasi_barang',
+        //     'nomer_rangka',
+        //     'nomer_mesin',
+        //     'tipe_mobil',
+        //     'transisi_mobil',
+        //     'bahan_bakar',
+        //     'odometer',
+        //     'grade_utama',
+        //     'grade_mesin',
+        //     'grade_interior',
+        //     'grade_exterior',
+        //     'no_polisi',
+        //     'stnk',
+        //     'tahun_produksi',
+        //     'bpkb',
+        //     'faktur',
+        //     'sph',
+        //     'kir',
+        //     'ktp',
+        //     'kwitansi',
+        //     'keterangan',
+        //     'stnk_berlaku',
+        //     'created_at',
+        //     'updated_at',
+        // );}])->where('tanggal','>=',$now)->where('status','active')->where('status_item','active')->select('id','barang_lelang_id','event_lelang_id','lot_id','tanggal','status_item','status','harga_awal')->get();
+        // $lot->each(function ($item){
+        //     $item->barang_lelang->gambarlelang->each(function($itembarang){
+        //         $itembarang->gambar = env('APP_URL').'/storage/image/'. $itembarang->gambar;
+        //     });
+        // });
+        // return response()->json([
+        //     'lot_item' => $lot
+        // ]);
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d');
-        $lot = LotItem::with(['barang_lelang'=>function($query){
-            $query->select('id',
-            'kategoribarang_id',
-            'barang',
-            'brand',
-            'warna',
-            'lokasi_barang',
-            'nomer_rangka',
-            'nomer_mesin',
-            'tipe_mobil',
-            'transisi_mobil',
-            'bahan_bakar',
-            'odometer',
-            'grade_utama',
-            'grade_mesin',
-            'grade_interior',
-            'grade_exterior',
-            'no_polisi',
-            'stnk',
-            'tahun_produksi',
-            'bpkb',
-            'faktur',
-            'sph',
-            'kir',
-            'ktp',
-            'kwitansi',
-            'keterangan',
-            'stnk_berlaku',
-        );}])->where('tanggal','>=',$now)->where('status','active')->where('status_item','active')->select('id','barang_lelang_id','event_lelang_id','lot_id','tanggal','status_item','status','harga_awal')->get();
+        $lot = LotItem::with('barang_lelang.gambarlelang')->where('tanggal','>=',$now)->where('status','active')->where('status_item','active')->get();
         $lot->each(function ($item){
             $item->barang_lelang->gambarlelang->each(function($itembarang){
                 $itembarang->gambar = env('APP_URL').'/storage/image/'. $itembarang->gambar;
             });
         });
+       
         return response()->json([
             'lot_item' => $lot
         ]);
+
     }
 
      /**
