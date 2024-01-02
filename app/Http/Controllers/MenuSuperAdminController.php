@@ -2955,7 +2955,7 @@ class MenuSuperAdminController extends Controller
         return response()->json($bidding);
     }
 
-    public function  ch_pemenang_event(Request $request){
+    public function search_pemenang_event(Request $request){
         try {
             DB::beginTransaction();
             $lot_item_id = $request->lot_item_id;
