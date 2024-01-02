@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <h4 class="w-100">Daftar Peserta</h4>
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#pembeliannplmodal">
-                        <span class="text">+ Tambah Pesertas</span>
+                        <span class="text">+ Tambah Peserta</span>
                     </button>
                 </div>
                 <div class="card-body">
@@ -40,6 +40,7 @@
                                         <th>Telpon</th>
                                         <th>Alamat</th>
                                         <th>NPL</th>
+                                        <th>Email Verified</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -158,18 +159,43 @@
                     }
                 },
                 {
+                    data: 'email_verified_at',
+                    render: function (data) {
+                        if (data == null) {
+                            status = `<span class="badge badge-dark">Belum Aktif</span>`;
+                        } else {
+                            status = `<span class="badge badge-success">Aktif</span>`;
+                            
+                        }
+                        return status;
+                    }
+                },
+                {
                     data: null,
                     render: function (data) {
                         var deleteUrl = '/superadmin/delete-peserta-npl/' + data.id;
                         var editUrl = '/superadmin/edit-peserta-npl/' + data.id;
-                        return `
-                <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                  <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
-                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                  <input type="hidden" name="_method" value="PUT">
-                  <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
-                </form>
-              `;
+                        if (data.email_verified_at == null) {
+                            action = `
+                                    <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                                    <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
+                                    <a class="btn btn-success" onclick="return confirm('Apakah anda ingin mengaktifkan verifikasi email data ini?');" href="/superadmin/aktifkan-email-peserta/${data.id}"><i class="fas fa-user-check"></i></a>
+                                    </form>
+                                `;
+                        } else {
+                            action = `
+                                    <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
+                                    <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
+                                    </form>
+                                `;
+                        }
+                        return action;
                     },
                 },
             ],

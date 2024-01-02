@@ -2955,7 +2955,7 @@ class MenuSuperAdminController extends Controller
         return response()->json($bidding);
     }
 
-    public function search_pemenang_event(Request $request){
+    public function  ch_pemenang_event(Request $request){
         try {
             DB::beginTransaction();
             $lot_item_id = $request->lot_item_id;
@@ -3224,5 +3224,9 @@ class MenuSuperAdminController extends Controller
         Storage::delete('public/image/'.$data->gambar);
         $data->delete();
             return response()->json('success');
+    }
+    public function aktifkan_email_peserta($id){
+        User::find($id)->update(['email_verified_at' => date("Y-m-d H:i:s")]);
+        return redirect('/superadmin/peserta-npl')->with('success','Email verifikasi perserta berhasil di aktifkan');
     }
 }   

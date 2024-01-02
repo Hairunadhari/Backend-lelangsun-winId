@@ -266,6 +266,7 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::put('/update-banner-web/{id}/', [MenuSuperAdminController::class, 'update_banner_web'])->name('superadmin.update-banner-web');
         Route::get('/ulasan', [MenuSuperAdminController::class, 'list_ulasan'])->name('superadmin.ulasan');
         Route::delete('/delete-ulasan/{id}/', [MenuSuperAdminController::class, 'delete_ulasan']);
+        Route::get('aktifkan-email-peserta/{id}/', [MenuSuperAdminController::class, 'aktifkan_email_peserta'])->name('superadmin.aktifkan-email-peserta');
     });
 });
 
