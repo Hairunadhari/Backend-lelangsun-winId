@@ -1730,7 +1730,7 @@ class ApiController extends Controller
         $now = $konvers_tanggal->format('Y-m-d');
 
         $data = BarangLelang::with(['lot_item' => function ($query) use($now){
-            $query->select('id','barang_lelang_id','tanggal','harga_awal','status_bid')->where('status','active')->where('status_item','active')->whereDate('tanggal','>=',$now);
+            $query->where('status','active')->where('status_item','active')->whereDate('tanggal','>=',$now);
         },'kategoribarang' => function($query){
             $query->select('id','kategori','kelipatan_bidding','harga_npl');
         }])->select(
