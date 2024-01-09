@@ -270,12 +270,12 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-6">
-                            <label>Link Meeting <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="link" required>
+                            <label>Link Meeting<small>(isi - jika tidak ada link)</small><span style="color: red">*</span></label>
+                            <input type="text" class="form-control" name="link" required >
                         </div>
                         <div class="form-group col-6">
-                            <label>Link Lokasi <span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="link_lokasi" required>
+                            <label>Link Lokasi<small>(isi - jika tidak ada link)</small><span style="color: red">*</span></label>
+                            <input type="text" class="form-control" name="link_lokasi"  required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -284,9 +284,9 @@
                     <div id="preview" class="mt-3"></div>
                     </div>
                      <div class="form-group">
-                        <label>Poster Detail Event <small>(bisa pilih lebih dari satu gambar | format gambar: png, jpg, jpeg | disarankan: width 900px, height 470px) </small><span
+                        <label>Poster Detail Event <small>(disarankan: width 900px, height 470px) </small><span
                                 style="color: red">*</span></label>
-                        <input type="file" accept=".png, .jpg, .jpeg" class="form-control" name="poster[]" id="gambars" required multiple>
+                                <div class="input-images"></div>
                     </div>
                     <div id="previews" class="reviews"></div>
                 </div>
@@ -298,7 +298,11 @@
     </div>
 </div>
 <script>
+ $('.input-images').imageUploader({
+        imagesInputName: 'poster',
+        maxSize: 2 * 1024 * 1024,
 
+    });
     window.onload = function () {
         const tiket = document.getElementById("tiket");
         const inpharga = document.getElementById("inpharga");
@@ -374,38 +378,7 @@
         }
     };
 
-    function previewsImages() {
-        var previews = document.querySelector('#previews');
-
-        // Hapus semua elemen child di dalam elemen #previews
-        while (previews.firstChild) {
-            previews.removeChild(previews.firstChild);
-        }
-
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreviews);
-        }
-
-        function readAndPreviews(file) {
-            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
-                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
-                document.querySelector('#gambars').value = '';
-                return;
-            }
-
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                previews.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-
-    document.querySelector('#gambars').addEventListener("change", previewsImages);
+   
 
 </script>
 @endsection

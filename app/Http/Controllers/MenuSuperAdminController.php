@@ -371,7 +371,7 @@ class MenuSuperAdminController extends Controller
 
             // get data role superadmin
             if (Auth::user()->role->role == 'Super Admin') {
-                $data = Order::all();
+                $data = InvoiceStore::all();
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
                 $data = InvoiceStore::where('toko_id',Auth::user()->toko->id)
@@ -1718,19 +1718,13 @@ class MenuSuperAdminController extends Controller
     }
 
     public function detail_pesanan($id){
-        if (Auth::user()->role->role == 'Super Admin') {
-            $invoice = Order::with('invoice_store.toko')->find($id);
-          
-
-        } else {
+        
             $invoice = DB::table('invoice_stores')
             ->select('invoice_stores.*','users.no_telp','users.alamat')
             ->leftJoin('users','invoice_stores.user_id','=','users.id')
             ->where('invoice_stores.id',$id)
             ->first();
-            // dd($invoice);
           
-        }
         // dd($invoice);
         return view('pesanan.detail_pesanan', compact('invoice'));
         
