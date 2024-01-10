@@ -47,6 +47,13 @@
                         </select>
                     </div>
                 @endif
+                <div class="form-group">
+                    <label>Tipe Barang <span style="color: red">*</span></label>
+                    <select class="form-control select2" name="tipe_barang" id="tipebarang">
+                        <option value="barang">Barang</option>
+                        <option value="jasa">Jasa</option>
+                    </select>
+                </div>
                     <div class="form-group">
                         <label>Nama Produk <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="nama" required>
@@ -62,6 +69,10 @@
                     <div class="form-group">
                         <label>Stok <span style="color: red">*</span></label>
                         <input type="number" class="form-control" name="stok" required onkeyup="formatStok(this)">
+                    </div>
+                    <div class="form-group" id="inputberat">
+                        <label>Berat (gram)<small> note:harap masukkan berat produk jika tipe produknya barang</small></label>
+                        <input type="number" class="form-control" name="berat"  onkeyup="formatStok(this)">
                     </div>
                     <div class="form-group">
                         <label>Link Video <small>(isi - (strip) jika tidak punya link video)</small><span style="color: red">*</span></label>
@@ -111,6 +122,8 @@
                     }
                 });
             });
+
+         
         });
 
     

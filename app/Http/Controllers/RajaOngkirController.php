@@ -92,7 +92,7 @@ class RajaOngkirController extends Controller
                     ]);
                 }
 
-                echo 'Import provinsi RajaOngkir berhasil';
+                echo 'Import City RajaOngkir berhasil';
             } else {
                 echo 'Error in RajaOngkir API response';
             }

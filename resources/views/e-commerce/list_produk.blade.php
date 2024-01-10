@@ -27,6 +27,7 @@
                                         <th scope="col">No</th>
                                         <th scope="col">Nama Produk</th>
                                         <th scope="col">Cover Produk</th>
+                                        <th scope="col">Tipe Barang</th>
                                         <th scope="col">Harga</th>
                                         <th scope="col">Stok</th>
                                         <th scope="col">Opsi</th>
@@ -43,6 +44,7 @@
                                         <th scope="col">No</th>
                                         <th scope="col">Nama Produk</th>
                                         <th scope="col">Cover Produk</th>
+                                        <th scope="col">Tipe Barang</th>
                                         <th scope="col">Harga</th>
                                         <th scope="col">Stok</th>
                                         <th scope="col">Opsi</th>
@@ -86,6 +88,10 @@
                                 '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
                         },
                     },
+                    {
+                        data: "tipe_barang",
+                    },
+
                     {
                         data: "harga",
                         render: function(data, type, row, meta) {
@@ -152,6 +158,9 @@
                             return '<img src="/storage/image/' + data +
                                 '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
                         },
+                    },
+                    {
+                        data: "tipe_barang",
                     },
                     {
                         data: "harga",

@@ -406,17 +406,17 @@ class MenuSuperAdminController extends Controller
             // get data role superadmin
             if (Auth::user()->role->role == 'Super Admin') {
                 if ($status == 'active') {
-                    $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'active')->orderBy('created_at','desc')->get();
+                    $data = Produk::select('id','nama','thumbnail','harga','stok','tipe_barang')->where('status', 'active')->orderBy('created_at','desc')->get();
                 } elseif ($status == 'not-active') {
-                    $data = Produk::select('id','nama','thumbnail','harga','stok')->where('status', 'not-active')->orderBy('created_at','desc')->get();
+                    $data = Produk::select('id','nama','thumbnail','harga','stok','tipe_barang')->where('status', 'not-active')->orderBy('created_at','desc')->get();
                 }
 
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
                 if ($status == 'active') {
-                    $data = Produk::select('id','nama','thumbnail','harga','stok')->where('toko_id',$idToko->id)->where('status', 'active')->orderBy('created_at','desc')->get();
+                    $data = Produk::select('id','nama','thumbnail','harga','stok','tipe_barang')->where('toko_id',$idToko->id)->where('status', 'active')->orderBy('created_at','desc')->get();
                 } elseif ($status == 'not-active') {
-                    $data = Produk::select('id','nama','thumbnail','harga','stok')->where('toko_id',$idToko->id)->where('status', 'not-active')->orderBy('created_at','desc')->get();
+                    $data = Produk::select('id','nama','thumbnail','harga','stok','tipe_barang')->where('toko_id',$idToko->id)->where('status', 'not-active')->orderBy('created_at','desc')->get();
                 }
             }
             
@@ -463,6 +463,8 @@ class MenuSuperAdminController extends Controller
                 'keterangan'     => $request->keterangan,
                 'stok'     => $request->stok,
                 'harga'     => $hargaProduk,
+                'tipe_barang'     => $request->tipe_barang,
+                'berat'     => $request->berat,
                 'video'     => $request->video,
                 'thumbnail'     => $thumbnail->hashName(),
                 'status'     => 'active',
@@ -481,6 +483,7 @@ class MenuSuperAdminController extends Controller
                 DB::commit();
             } catch (Throwable $th) {
                 DB::rollBack();
+                // dd($th);
                 //throw $th;
                 if (Auth::user()->role->role == 'Super Admin') {
                     return redirect()->route('superadmin.produk')->with(['error' => 'Data Gagal Ditambah!']);

@@ -53,6 +53,18 @@
                     @endif
                     </div>
                     <div class="form-group">
+                        <label>Tipe Barang:</label>
+                        <select class="form-control select2" name="tipe_barang" id="tipebarang" required>
+                            <option value="barang"
+                                {{ 'barang' == $data->tipe_barang ? 'selected' : '' }}>
+                                Barang
+                            </option>
+                            <option value="jasa" {{ 'jasa' == $data->tipe_barang ? 'selected' : '' }}>
+                                Jasa
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Nama Produk: </label>
                         <input type="text" class="form-control" value="{{ old('nama', $data->nama) }}" name="nama">
                     </div>
@@ -67,6 +79,10 @@
                     <div class="form-group">
                         <label>Stok: </label>
                         <input type="number" class="form-control" value="{{ old('stok', $data->stok) }}" name="stok">
+                    </div>
+                    <div class="form-group" id="inputberat">
+                        <label>Berat (gram)<small>note:harap masukkan berat produk jika tipe produknya barang</small></label>
+                        <input type="number" class="form-control" value="{{$data->berat}}" name="berat"  onkeyup="formatStok(this)">
                     </div>
                 </div>
             </div>
@@ -136,6 +152,7 @@
             }
         });
     });
+    
         $(document).ready(function () {
             $('#tokos').on('change', function () {
                 var tokosId = this.value;
