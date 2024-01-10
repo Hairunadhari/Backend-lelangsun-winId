@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\RajaOngkirController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,3 +81,5 @@ Route::post('/lelang/send-bidding', [ApiController::class, 'send_bidding']);
 Route::post('/lelang/log-bidding', [ApiController::class, 'log_bidding']);
 Route::get('/lelang/list-pelunasan-barang/{id}', [ApiController::class, 'list_pelunasan_barang_lelang']);
 Route::post('/lelang/pembayaran-pelunasan-barang', [ApiController::class, 'pembayaran_pelunasan_lelang']);
+Route::get('/import-province', [RajaOngkirController::class, 'import_province']);
+Route::get('/import-city', [RajaOngkirController::class, 'import_city']);

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\MenuAdminController;
+use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\MenuSuperAdminController;
 use App\Http\Controllers\SendEmailMemberController;
 use App\Http\Controllers\VerifyEmailRegisterController;
@@ -330,7 +331,11 @@ Route::middleware(['auth','role:Admin'])->group(function () {
 
     Route::post('log-bidding',[MenuSuperAdminController::class, 'log_bidding']);
     Route::get('/download-apk', [MenuSuperAdminController::class, 'download_apk'])->name('download-apk');
- 
+    Route::get('/checkout',[PengirimanController::class, 'checkout']);
+    Route::get('/province',[PengirimanController::class, 'get_province']);
+    Route::get('/kota/{id}',[PengirimanController::class, 'get_kota']);
+    Route::get('/origin={city_origin}&destination={city_destination}&weight={weight}&courier={courier}',[PengirimanController::class, 'get_ongkir']);
+    Route::get('/get-city/{id}',[MenuSuperAdminController::class, 'get_kota_berdasarkan_id_provinsi']);
 require __DIR__.'/auth.php';
 
 require __DIR__.'/pesertaauth.php';

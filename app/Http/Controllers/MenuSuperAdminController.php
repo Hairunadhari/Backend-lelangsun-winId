@@ -9,6 +9,7 @@ use DataTables;
 use Carbon\Carbon;
 use App\Models\Lot;
 use App\Models\Npl;
+use App\Models\City;
 use App\Models\Role;
 use App\Models\Toko;
 use App\Models\User;
@@ -29,6 +30,7 @@ use App\Models\Promosi;
 use App\Models\Setting;
 use App\Models\Tagihan;
 use App\Models\Pemenang;
+use App\Models\Province;
 use App\Models\Wishlist;
 use App\Models\Keranjang;
 use App\Models\OrderItem;
@@ -261,14 +263,24 @@ class MenuSuperAdminController extends Controller
     }
 
     public function add_kategori_produk(Request $request){
-        // Periksa apakah kategori sudah ada sebelumnya
-        $Kategori = KategoriProduk::where('toko_id', $request->toko_id)->where('kategori', $request->kategori)->first();
-        
+        if (Auth::user()->role->role == 'Admin') {
+            if (Auth::user()->province_id == null || Auth::user()->city_id == null) {
+                return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
+            }
+        }
+        try {
+            DB::beginTransaction();
         KategoriProduk::create([
-            'kategori' => $request->kategori,
-            'status' => 'active',
-            'toko_id' => $request->toko_id,
-        ]);
+                'kategori' => $request->kategori,
+                'status' => 'active',
+                'toko_id' => $request->toko_id,
+            ]);
+            DB::commit();
+        } catch (Throwable $th) {
+            DB::rollback();
+            //throw $th;
+            return redirect()->back()->with('error', 'Data Gagal Ditambahkan');
+        }
         
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
     }
@@ -430,6 +442,11 @@ class MenuSuperAdminController extends Controller
             'harga'     => 'required',
             'video'     => 'required',
         ]);
+        if (Auth::user()->role->role == 'Admin') {
+            if (Auth::user()->province_id == null || Auth::user()->city_id == null) {
+                return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
+            }
+        }
         try {
             DB::beginTransaction();
             $harga = preg_replace('/\D/', '', $request->harga); 
@@ -860,6 +877,11 @@ class MenuSuperAdminController extends Controller
     }
 
     public function add_promosi(Request $request){
+        if (Auth::user()->role->role == 'Admin') {
+            if (Auth::user()->province_id == null || Auth::user()->city_id == null) {
+                return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
+            }
+        }
         try {
             DB::beginTransaction();
             if (is_null($request->produk_id)) {
@@ -2419,8 +2441,18 @@ class MenuSuperAdminController extends Controller
     public function profil_toko(){
         $id = Auth::user()->id;
         $toko = Toko::with('user')->where('user_id',$id)->first();
-        
-        return view('profile/profil_toko',compact('toko'));
+        $provinsi = Province::all();
+        $getProvinsibyToko = DB::table('users')
+        ->leftJoin('provinces','users.province_id','=','provinces.id')
+        ->select('provinces.provinsi')
+        ->where('users.id',$id)
+        ->first();
+        $getCitybyToko = DB::table('users')
+        ->leftJoin('cities','users.city_id','=','cities.id')
+        ->select('cities.city_name')
+        ->where('users.id',$id)
+        ->first();
+        return view('profile/profil_toko',compact('toko','provinsi','getProvinsibyToko','getCitybyToko'));
     }
     
     public function update_akun_toko(Request $request){
@@ -2428,6 +2460,8 @@ class MenuSuperAdminController extends Controller
             'password' => 'nullable|min:10',
             'password_confirmation' => 'nullable|same:password',
             'logo' => 'image|mimes:jpeg,png,jpg|max:2048', // Tambahkan validasi untuk logo
+            'city_id' => 'required',
+            'provinsi_id' => 'required',
         ]);
         try {
             DB::beginTransaction();
@@ -2448,6 +2482,7 @@ class MenuSuperAdminController extends Controller
                 $toko->update([
                     'toko' => $request->toko,
                     'logo' => $logo->hashName(),
+                   
                 ]);
             } else {
                 $toko->update([
@@ -2457,6 +2492,8 @@ class MenuSuperAdminController extends Controller
         
             $user->update([
                 'name' => $request->name,
+                'city_id' => $request->city_id,
+                'province_id' => $request->provinsi_id,
             ]); 
             DB::commit();
         } catch (Throwable $th) {
@@ -3230,5 +3267,9 @@ class MenuSuperAdminController extends Controller
     public function aktifkan_email_peserta($id){
         User::find($id)->update(['email_verified_at' => date("Y-m-d H:i:s")]);
         return redirect('/superadmin/peserta-npl')->with('success','Email verifikasi perserta berhasil di aktifkan');
+    }
+    public function get_kota_berdasarkan_id_provinsi($id){
+        $data = City::where('province_id',$id)->get();
+        return response()->json($data);
     }
 }   

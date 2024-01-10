@@ -44,7 +44,7 @@
           <li class="{{ request()->routeIs('setting') ? 'active' : '' }}"><a href="{{route('superadmin.setting')}}"><i class="fas fa-cogs"></i><span>Setting</span></a></li>
         </ul>
         @else
-        <li class="menu-header">Win Belanjang</li>
+        <li class="menu-header">Win Belanjan</li>
         <li class="{{ request()->routeIs('admin.profil-toko') ? 'active' : '' }}"><a href="{{route('admin.profil-toko')}}"><i class="fas fa-store"></i><span>Toko Saya</span></a></li>
         <li class="{{ request()->routeIs('admin.kategori-produk') ? 'active' : '' }}"><a href="{{route('admin.kategori-produk')}}"><i class="fas fa-th-large"></i><span>Kategori Produk</span></a></li>
         <li class="{{ request()->routeIs('admin.produk') ? 'active' : '' }}"><a href="{{route('admin.produk')}}"><i class="fas fa-shopping-bag"></i><span>Produk</span></a></li>

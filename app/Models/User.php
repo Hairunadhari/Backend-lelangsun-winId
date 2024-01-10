@@ -32,6 +32,8 @@ class User extends Authenticatable
         'npwp',
         'foto_npwp',
         'no_rek',
+        'city_id',
+        'province_id',
     ];
 
     /**

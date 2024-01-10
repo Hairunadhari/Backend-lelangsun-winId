@@ -113,6 +113,11 @@
           });
       </script>
     @endif
+   @if (Session::has('warning'))
+      <script>
+          swal ( "Oops" ,  "{{Session::get('warning')}}" ,  "warning" )
+      </script>
+    @endif
    <script>
      $.ajaxSetup({
            headers: {
