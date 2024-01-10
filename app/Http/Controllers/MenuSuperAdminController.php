@@ -544,6 +544,8 @@ class MenuSuperAdminController extends Controller
                 'stok' => $request->stok,
                 'harga' => $hargaProduk,
                 'video'     => $request->video,
+                'tipe_barang'     => $request->tipe_barang,
+                'berat'     => $request->berat,
                 'thumbnail'     => $thumbnail->hashName(),
             ]);
 
@@ -570,6 +572,8 @@ class MenuSuperAdminController extends Controller
                 'stok' => $request->stok,
                 'harga' => $hargaProduk,
                 'video'     => $request->video,
+                'tipe_barang'     => $request->tipe_barang,
+                'berat'     => $request->berat,
             ]);
 
             $gambars = $request->file('gambar');
@@ -597,6 +601,8 @@ class MenuSuperAdminController extends Controller
                 'stok' => $request->stok,
                 'harga' => $hargaProduk,
                 'video'     => $request->video,
+                'tipe_barang'     => $request->tipe_barang,
+                'berat'     => $request->berat,
                 'thumbnail'     => $thumbnail->hashName(),
             ]);
 
@@ -609,6 +615,8 @@ class MenuSuperAdminController extends Controller
                 'stok' => $request->stok,
                 'harga' => $hargaProduk,
                 'video'     => $request->video,
+                'tipe_barang'     => $request->tipe_barang,
+                'berat'     => $request->berat,
             ]);
         }
         DB::commit();
