@@ -596,7 +596,6 @@ class ApiController extends Controller
                 'payer_email' => $request->userData['email']
             ]);
             $response = $data_request->object();
-            dd($response);
             $dataExipre = $response->expiry_date;
             $expiryDate = Carbon::parse($response->expiry_date, 'UTC')->setTimezone('Asia/Jakarta');
             $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
