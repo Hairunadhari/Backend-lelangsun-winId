@@ -446,7 +446,7 @@ class ApiController extends Controller
            required=true,
            description="Data formulir",
            @OA\JsonContent(
-               required={"user_id", "items", "sub_total"},
+               required={},
                 @OA\Property(
             property="userData",
             type="object",

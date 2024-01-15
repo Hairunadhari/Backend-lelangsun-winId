@@ -349,11 +349,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "user_id",
-                                    "items",
-                                    "sub_total"
-                                ],
+                                "required": [],
                                 "properties": {
                                     "userData": {
                                         "properties": {
