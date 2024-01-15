@@ -597,6 +597,7 @@ class ApiController extends Controller
             ]);
             // dd($data_request);
             $response = $data_request->object();
+            dd($response);
             $dataExipre = $response->expiry_date;
             $expiryDate = Carbon::parse($response->expiry_date, 'UTC')->setTimezone('Asia/Jakarta');
             $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
