@@ -35,10 +35,10 @@
         <li class="{{ request()->routeIs('superadmin.peserta-npl') ? 'active' : '' }}"><a href="{{route('superadmin.peserta-npl')}}"><i class="fas fa-users"></i><span>Peserta & NPL Lelang</span></a></li>
         <li class="{{ request()->routeIs('superadmin.pemenang') ? 'active' : '' }}"><a href="{{route('superadmin.pemenang')}}"><i class="fas fa-trophy"></i><span>Pemenang</span></a></li>
         <li class="{{ request()->routeIs('superadmin.ulasan') ? 'active' : '' }}"><a href="{{route('superadmin.ulasan')}}"><i class="fas fa-comment-alt"></i><span>Ulasan</span></a></li>
-        <ul class="sidebar-menu">
+        {{-- <ul class="sidebar-menu">
           <li class="menu-header">User Management</li>
           <li class="{{ request()->routeIs('user-cms') ? 'active' : '' }}"><a href="{{route('superadmin.user-cms')}}"><i class="fas fa-users"></i><span>User</span></a></li>
-        </ul>
+        </ul> --}}
         <ul class="sidebar-menu">
           <li class="menu-header">Setting</li>
           <li class="{{ request()->routeIs('setting') ? 'active' : '' }}"><a href="{{route('superadmin.setting')}}"><i class="fas fa-cogs"></i><span>Setting</span></a></li>

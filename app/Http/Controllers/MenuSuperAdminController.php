@@ -377,17 +377,15 @@ class MenuSuperAdminController extends Controller
    
     public function list_pesanan(){
         $idAdmin = Auth::user()->id;
-         
         if (request()->ajax()) {
             $status = request('status');
 
             // get data role superadmin
             if (Auth::user()->role->role == 'Super Admin') {
-                $data = InvoiceStore::all();
+                $data = Order::all();
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
-                $data = InvoiceStore::where('toko_id',Auth::user()->toko->id)
-                ->get();        
+                $data = Order::where('toko_id',Auth::user()->toko->id)->get();    
             }
             
             return DataTables::of($data)->make(true);
@@ -639,7 +637,7 @@ class MenuSuperAdminController extends Controller
         }
     }
    
-
+    
     public function delete_produk($id)
     {
         try {
@@ -1751,15 +1749,13 @@ class MenuSuperAdminController extends Controller
     }
 
     public function detail_pesanan($id){
+        $order = Order::find($id);
+        $orderItems = OrderItem::where('order_id',$id)->get();
+            
         
-            $invoice = DB::table('invoice_stores')
-            ->select('invoice_stores.*','users.no_telp','users.alamat')
-            ->leftJoin('users','invoice_stores.user_id','=','users.id')
-            ->where('invoice_stores.id',$id)
-            ->first();
           
         // dd($invoice);
-        return view('pesanan.detail_pesanan', compact('invoice'));
+        return view('pesanan.detail_pesanan', compact('order','orderItems'));
         
     }
 
@@ -2453,15 +2449,15 @@ class MenuSuperAdminController extends Controller
         $id = Auth::user()->id;
         $toko = Toko::with('user')->where('user_id',$id)->first();
         $provinsi = Province::all();
-        $getProvinsibyToko = DB::table('users')
-        ->leftJoin('provinces','users.province_id','=','provinces.id')
+        $getProvinsibyToko = DB::table('tokos')
+        ->leftJoin('provinces','tokos.province_id','=','provinces.id')
         ->select('provinces.provinsi')
-        ->where('users.id',$id)
+        ->where('tokos.user_id',$id)
         ->first();
-        $getCitybyToko = DB::table('users')
-        ->leftJoin('cities','users.city_id','=','cities.id')
+        $getCitybyToko = DB::table('tokos')
+        ->leftJoin('cities','tokos.city_id','=','cities.id')
         ->select('cities.city_name')
-        ->where('users.id',$id)
+        ->where('tokos.user_id',$id)
         ->first();
         return view('profile/profil_toko',compact('toko','provinsi','getProvinsibyToko','getCitybyToko'));
     }
@@ -2493,18 +2489,21 @@ class MenuSuperAdminController extends Controller
                 $toko->update([
                     'toko' => $request->toko,
                     'logo' => $logo->hashName(),
+                    'city_id' => $request->city_id,
+                    'province_id' => $request->provinsi_id,
                    
                 ]);
             } else {
                 $toko->update([
                     'toko' => $request->toko,
+                    'city_id' => $request->city_id,
+                    'province_id' => $request->provinsi_id,
                 ]);
             }
         
             $user->update([
                 'name' => $request->name,
-                'city_id' => $request->city_id,
-                'province_id' => $request->provinsi_id,
+               
             ]); 
             DB::commit();
         } catch (Throwable $th) {
@@ -3282,5 +3281,17 @@ class MenuSuperAdminController extends Controller
     public function get_kota_berdasarkan_id_provinsi($id){
         $data = City::where('province_id',$id)->get();
         return response()->json($data);
+    }
+
+    public function edit_pesanan($id){
+        $data = Order::find($id);
+        return view('pesanan/edit',compact('data'));
+    }
+    public function update_pesanan(Request $request, $id){
+        $data = Order::find($id);
+        $data->update([
+            'no_resi'=> $request->no_resi
+        ]);
+        return redirect('/pesanan')->with('success','Data pesanan berhasil di update');
     }
 }   

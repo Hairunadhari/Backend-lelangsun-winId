@@ -1360,6 +1360,102 @@
                     }
                 }
             }
+        },
+        "/api/get-provinsi": {
+            "get": {
+                "tags": [
+                    "Wilayah"
+                ],
+                "summary": "List Provinsi",
+                "description": "menampilkan semua provinsi indonesia",
+                "operationId": "provinsi",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/get-city/{id}": {
+            "get": {
+                "tags": [
+                    "Wilayah"
+                ],
+                "summary": "List City by id provinsi",
+                "description": "Menampilkan list city/kabupaten berdasarkan id provinsi",
+                "operationId": "city",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/cost": {
+            "post": {
+                "tags": [
+                    "Tarif Pengiriman"
+                ],
+                "summary": "tarif pengiriman",
+                "description": "masukkan id_kota_asal, id_kota_tujuan, total_berat_produk, kurir",
+                "operationId": "tarif pengiriman",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id_kota_asal": {
+                                        "type": "integer"
+                                    },
+                                    "id_kota_tujuan": {
+                                        "type": "integer"
+                                    },
+                                    "total_berat_produk": {
+                                        "type": "integer"
+                                    },
+                                    "kurir": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/get-kurir": {
+            "get": {
+                "tags": [
+                    "Kurir"
+                ],
+                "summary": "List Kurir",
+                "description": "menampilkan jenis kurir",
+                "operationId": "kurir",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }

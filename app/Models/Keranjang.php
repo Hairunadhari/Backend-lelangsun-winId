@@ -14,4 +14,8 @@ class Keranjang extends Model
     {
         return $this->belongsTo(Produk::class);
     }
+    public function toko()
+    {
+        return $this->belongsTo(Toko::class);
+    }
 }

@@ -12,10 +12,10 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Invoice ID</th>
+                                <th>No Invoice</th>
+                                <th>No Resi</th>
                                 <th>Nama Pemesan</th>
                                 <th>Status</th>
-                                <th>Sub Total</th>
                                 <th>Opsi</th>
                             </tr>
                         </thead>
@@ -40,7 +40,7 @@
                     },
                 },
                 {
-                    data: "external_id",
+                    data: "no_invoice",
                     render: function (data) {
                         if (data == null) {
                             a = `<span>-</span>`
@@ -51,7 +51,18 @@
                     }
                 },
                 {
-                    data: "nama_pembeli",
+                    data: "no_resi",
+                    render: function (data) {
+                        if (data == null) {
+                            a = `<span>-</span>`
+                        }else{
+                            a= `<span>`+data+`</span>`
+                        }
+                        return a;
+                    }
+                },
+                {
+                    data: "order_name",
                 },
                 {
                     data: "status",
@@ -63,37 +74,21 @@
                         } else if(data == "EXPIRED"){
                             badge = `<span class="badge badge-dark">EXPIRED</span>`
                         } else if(data == "FAILED"){
-                            badge = `<span class="badge badge-danger">ERROR</span>`
-                        } else if(data == "ERROR"){
+                            badge = `<span class="badge badge-danger">FAILED</span>`
+                        } else{
                             badge = `<span class="badge badge-danger">ERROR</span>`
                         }
                         return badge;
                     }
                 },
                 {
-                    data: "harga_x_qty",
-                    render: function(data, type, row, meta) {
-                        if (data == null) {
-                            a = `<span>-</span>`
-                        } else{
-
-                            if (type === 'display') {
-                                a = parseInt(data).toLocaleString('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR',
-                                    minimumFractionDigits: 0
-                                });
-                            }
-                        }
-                        return a;
-                    }
-                },
-                {
                 data: null,
                 render: function (data) {
                     var detailUrl = '/detail-pesanan/' + data.id;
+                    var editUrl = '/edit-pesanan/' + data.id;
                     return `
-                        <span><a class="btn btn-primary" href="${detailUrl}"><i class="fas fa-search"></i> Detail</a></span>
+                        <span><a class="btn btn-dark" href="${detailUrl}"><i class="fas fa-search"></i> Detail</a></span>
+                        <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i> Edit</a></span>
                     `;
                 },
             },

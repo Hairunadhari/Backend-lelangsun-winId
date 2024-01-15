@@ -25,4 +25,8 @@ class Toko extends Model
     {
         return $this->hasMany(InvoiceStore::class);
     }
+    public function keranjang()
+    {
+        return $this->hasMany(Keranjang::class);
+    }
 }

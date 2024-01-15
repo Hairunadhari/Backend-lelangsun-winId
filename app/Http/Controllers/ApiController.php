@@ -10,9 +10,11 @@ use DateTimeZone;
 use Carbon\Carbon;
 use App\Models\Lot;
 use App\Models\Npl;
+use App\Models\City;
 use App\Models\Toko;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Kurir;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Review;
@@ -23,6 +25,7 @@ use App\Models\Promosi;
 use App\Models\Tagihan;
 use App\Models\TLogApi;
 use App\Models\Pemenang;
+use App\Models\Province;
 use App\Models\Wishlist;
 use App\Models\Keranjang;
 use App\Models\OrderItem;
@@ -467,25 +470,48 @@ class ApiController extends Controller
      *      )
      * )
      */
-
+    
     public function add_order(Request $request){
-
+        // dd($request->orderData->tokoObj);
         $validator = Validator::make($request->all() , [
-            'user_id'     => 'required|integer|min:1',
-            'items' => 'required|array',
-            'items.*.produk_id'     => 'required|integer|min:1',
-            'items.*.qty'     => 'required|integer|min:1',
-            'items.*.harga'     => 'required|integer|min:1',
-            'items.*.total_harga'     => 'required|integer|min:1',
-            'items.*.nama_produk'     => 'required',
-            'items.*.toko_id'     => 'required|integer|min:1',
-            'items.*.nama_toko'     => 'required',
-            'sub_total'     => 'required|integer|min:1',
+            'userData.user_id' => 'required|integer|min:1',
+            'userData.email' => 'required|email',
+            'userData.nama' => 'required|string',
+            'userData.no_telp' => 'required|numeric',
+            'userData.alamatObj.provinsi_id' => 'required|integer|min:1',
+            'userData.alamatObj.provinsi_name' => 'required|string',
+            'userData.alamatObj.city_id' => 'required|integer|min:1',
+            'userData.alamatObj.city_name' => 'required|string',
+            'userData.alamatObj.detail_alamat' => 'required|string',
+
+            'orderData.tokoObj.toko_id' => 'required|integer|min:1',
+            'orderData.tokoObj.provinsi_id' => 'required|integer|min:1',
+            'orderData.tokoObj.provinsi_name' => 'required|string',
+            'orderData.tokoObj.city_id' => 'required|integer|min:1',
+            'orderData.tokoObj.city_name' => 'required|string',
+            'orderData.tokoObj.detail_alamat' => 'required|string',
+        
+            'orderData.items.*.produk_id' => 'required|integer|min:1',
+            'orderData.items.*.qty' => 'required|integer|min:1',
+            'orderData.items.*.harga_item' => 'required|integer',
+            'orderData.items.*.total_harga_item' => 'required|integer',
+            'orderData.items.*.nama_item' => 'required|string',
+            'orderData.items.*.berat_item' => 'nullable|integer',
+            'orderData.items.*.promo_diskon' => 'nullable|numeric',
+            'orderData.items.*.toko_id' => 'required|integer|min:1',
+            'orderData.items.*.nama_toko' => 'required|string',
+        
+            'orderData.longitude' => 'nullable|string',
+            'orderData.langitude' => 'nullable|string',
+            'orderData.total_berat_item' => 'nullable|integer',
+            'orderData.total_harga_all_item' => 'required|integer',
+            'orderData.cost_shipping' => 'required|integer',
+            'orderData.sub_total' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Ada Kesalahan Validasi',
-                'data' => $validator->errors()
+                'success' => false,
+                'message' => $validator->errors(),
             ],422);
         }
 
@@ -495,14 +521,7 @@ class ApiController extends Controller
             $timestamp = time();
             $strRandom = Str::random(5);
             $external_id = "INV-WIN-{$timestamp}-{$strRandom}";  
-
-            // get data user
-            $user = User::where('id', $request->user_id)->first();
-            // $order = Order::create([
-            //     'user_id' => $user->id
-            // ]);
-            
-            $items = $request->items;
+            $items = $request->orderData['items'];
             
             // ambil colum produk_id 
             $produkIds = array_column($items, 'produk_id');
@@ -518,7 +537,7 @@ class ApiController extends Controller
                 if ($qtys[$key] > $value->stok) {
                     return response()->json([
                         'success'=> false,
-                        'message'=>'jumlah qty order melebihi jumlah stok produk',
+                        'message'=>'Jumlah qty order melebihi jumlah stok produk',
                     ],400);
                 }
                 $value->update([
@@ -531,42 +550,61 @@ class ApiController extends Controller
                 'Authorization' => $secret_key
             ])->post('https://api.xendit.co/v2/invoices', [
                 'external_id' => $external_id,
-                'amount' => $request->sub_total,
-                'payer_email' => $user->email
+                'amount' => $request->orderData['sub_total'],
+                'payer_email' => $request->userData['email']
             ]);
-
             $response = $data_request->object();
             $dataExipre = $response->expiry_date;
             $expiryDate = Carbon::parse($response->expiry_date, 'UTC')->setTimezone('Asia/Jakarta');
             $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
             $order = Order::create([
-                'user_id' => $user->id,
-                'order_name' => $user->name,
+                'user_id' => $request->userData['user_id'],
+                'order_name' => $request->userData['nama'],
                 'no_invoice' => $external_id,
                 'status' => $response->status,
-                'sub_total' => $request->sub_total,
+                'total_harga_all_item' => $request->orderData['total_harga_all_item'],
                 'exp_date_invoice' => $formattedExpiryDate,
                 'link_payment_order' => $response->invoice_url,
+                'province_id' => $request->userData['alamatObj']['provinsi_id'],
+                'province_name' => $request->userData['alamatObj']['provinsi_name'],
+                'city_id' => $request->userData['alamatObj']['city_id'],
+                'city_name' => $request->userData['alamatObj']['provinsi_name'],
+                'detail_alamat' => $request->userData['alamatObj']['detail_alamat'],
+                'notelp' => $request->userData['no_telp'],
+                'email_order' => $request->userData['email'],
+                'total_berat_item' => $request->orderData['total_berat_item'],
+                'sub_total' => $request->orderData['sub_total'],
+                'cost_shipping' => $request->orderData['cost_shipping'],
+                'longitude' => $request->orderData['longitude'],
+                'latitude' => $request->orderData['latitude'],
+                'kode_kurir' => $request->orderData['kode_kurir'],
+                'toko_id' => $request->orderData['tokoObj']['toko_id'],
+                'toko_provinsi_id' => $request->orderData['tokoObj']['provinsi_id'],
+                'toko_provinsi_name' => $request->orderData['tokoObj']['provinsi_name'],
+                'toko_city_id' => $request->orderData['tokoObj']['city_id'],
+                'toko_city_name' => $request->orderData['tokoObj']['city_name'],
+                'toko_detail_alamat' => $request->orderData['tokoObj']['detail_alamat'],
+                'service' => $request->orderData['service'],
+                'description_service' => $request->orderData['description_service'],
+                'etd' => $request->orderData['etd'],
             ]);
            
             // fungsi untuk looping orderan
             foreach ($items as $item => $i) {
-                $invoiceStore = InvoiceStore::create([
+                $orderItems = OrderItem::create([
                     'order_id' => $order->id,
-                    'external_id' => $external_id,
-                    'status' => $response->status,
-                    'exp_date' => $formattedExpiryDate,
-                    'user_id' => $request->user_id,
-                    'nama_produk' => $i['nama_produk'],
-                    'harga_x_qty' => $i['total_harga'],
-                    'harga' => $i['harga'],
-                    'qty' => $i['qty'],
-                    'toko_id' => $i['toko_id'],
                     'produk_id' => $i['produk_id'],
-                    'nama_pembeli' => $user->name,
-                    'email_pembeli' => $user->email,
+                    'qty' => $i['qty'],
+                    'harga' => $i['harga_item'],
+                    'total_harga_item' => $i['total_harga_item'],
+                    'nama_produk' => $i['nama_item'],
+                    'toko_id' => $i['toko_id'],
+                    'nama_order' => $request->userData['nama'],
+                    'email_order' => $request->userData['email'],
                     'promo_diskon' => $i['promo_diskon'],
-                    'name_toko' => $i['nama_toko']
+                    'nama_toko' => $i['nama_toko'],
+                    'user_id' => $request->userData['user_id'],
+                    'berat_item' => $i['berat_item'],
                 ]);
             }
             
@@ -577,10 +615,10 @@ class ApiController extends Controller
             $res = [
                 'success' => $success,
                 'message' => $message,
-                'name' => $user->name,
-                'status' => $order->status ?? null,
-                'total_pembayaran' => $order->sub_total ?? null,
-                'payment_link' => $order->link_payment_order ?? null,
+                'name' => $request->userData['nama'],
+                'status' => $order->status,
+                'total_pembayaran' => $order->sub_total,
+                'payment_link' => $order->link_payment_order,
             ];
 
             if($response){
@@ -588,8 +626,7 @@ class ApiController extends Controller
                     'k_t' => 'kirim',
                     'object' => 'xendit',
                     'data' => json_encode([
-                        'order' => $request,
-                        // 'pengiriman' => $pengiriman,
+                        'order' => $request->all(),
                         'responseData'=> $response
                     ]),
                     'result' => json_encode($res),
@@ -600,45 +637,36 @@ class ApiController extends Controller
                 'k_t' => 'terima',
                 'object' => 'mobile',
                 'data' => json_encode([
-                    'order' => $order,
-                    'invoice_store' => $invoiceStore,
-                    // 'pengiriman' => $pengiriman,
-                    'responsedata' => $response,
+                    'order' => $request->all(),
+                    'responsedata' => $response ?? null,
                 ]),
                 'result' => json_encode($res),
             ]);
 
             DB::commit();
         } catch (Throwable $th) {
+            // dd($th);
             DB::rollBack();
             $success = false;
             $message = 'Data Order Gagal Ditambahkan';
             $res = [
                 'success' => $success,
                 'message' => $message,
-                'data' => $th,
+                'description' => $th->getMessage(),
             ];
             TLogApi::create([
                 'k_t' => 'terima',
                 'object' => 'mobile',
                 'data' => json_encode([
-                    'inovice' => [
-                        'data' => $request->all(),
-                    ],
-                    'pengiriman' => [
-                        'id' => $request->id,
-                        'order_id' => $order->id ?? null,
-                        'pengiriman' => $request->pengiriman ?? null,
-                        'lokasi_pengiriman' => $request->lokasi_pengiriman ?? null,
-                        'nama_pengirim' => $request->nama_pengirim ?? null    
-                    ],
+                    'order' => $request->all(),
                     'responseData' => $response ?? null
                 ]),
                 'result' => json_encode($res),
             ]);
-            
+        
+            return response()->json([$res], 400);
         }
-
+        
         return response()->json($res);
     }
 
@@ -649,14 +677,12 @@ class ApiController extends Controller
             $order = Order::where('no_invoice',$request->external_id)->first();
             $order->update(['status'=>$request->status]);
 
-            $invoice = InvoiceStore::where('external_id',$request->external_id)->get();
-            $invoice->each->update(['status' => $request->status]);
             
             // ambil id produk berasrkan invoice id
-            $ambil_produk_id = InvoiceStore::where('external_id', $request->external_id)->pluck('produk_id');
+            $ambil_produk_id = OrderItem::where('order_id', $order->id)->pluck('produk_id');
             
             // ambil qty orderan 
-            $qty_order = InvoiceStore::where('external_id', $request->external_id)->pluck('qty');
+            $qty_order = OrderItem::where('order_id', $order->id)->pluck('qty');
             $produks = Produk::whereIn('id', $ambil_produk_id)->get();
             $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $order->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
             
@@ -664,14 +690,9 @@ class ApiController extends Controller
                
                 $ambil_produkid_berdasarkan_userid->each->delete();
 
-                $bayar = Pembayaran::create([
-                    'external_id' => $request->external_id,
+                $bayar = $order->update([
                     'metode_pembayaran' => $request->payment_method,
-                    'email_user' => $request->payer_email,
-                    'status' => $request->status,
-                    'total_pembayaran' => $request->paid_amount,
                     'bank_code' => $request->bank_code,
-                    'order_id' => $order->id,
                 ]);
         
                 $res = [
@@ -710,7 +731,7 @@ class ApiController extends Controller
             dd($th);
             return response()->json([
                 'message'=>'ERROR',
-                'data'=>$th,
+                'data'=> $th->getMessage(),
             ],400);
             //throw $th;
         }
@@ -1199,6 +1220,7 @@ class ApiController extends Controller
             'user_id' => $request->user_id,
             'produk_id' => $request->produk_id,
             'qty' => $request->qty,
+            'toko_id' => $request->toko_id,
         ]);
         return response()->json([
             'message' => 'SUUCCESS',
@@ -1229,16 +1251,24 @@ class ApiController extends Controller
      * )
      */
     public function list_keranjang($id){
-        $data = Keranjang::with(['produk' => function($query) {
-            $query->orderBy('created_at','desc');
-        }])->where('user_id', $id)->latest()->get();
-        
+        $data = Keranjang::with([
+            'toko',
+            'produk' => function($query) {
+                $query->orderBy('created_at','desc');
+            },
+        ])->where('user_id', $id)->latest()->get();
+        // pluck toko
         $data->each(function ($item) {
             $item->produk->thumbnail = env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
         });
+
+        $groupByToko = collect($data)->groupBy('toko.toko')->toArray();
+        $dataToko = collect($data)->pluck('toko')->unique()->each(function ($toko) use ($groupByToko, $data) {
+            $toko->produks = $groupByToko[$toko->toko];
+        });
         return response()->json([
             'message' => 'SUCCESS',
-            'keranjang' => $data
+            'keranjang' => $dataToko,
         ]);
     }
 
@@ -2286,5 +2316,142 @@ class ApiController extends Controller
                     'status_verif'=>$data->status_verif,
                 ]
             ]);
+    }
+
+      /**
+     * @OA\Get(
+     *      path="/api/get-provinsi",
+     *      tags={"Wilayah"},
+     *      summary="List Provinsi",
+     *      description="menampilkan semua provinsi indonesia",
+     *      operationId="provinsi",
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function get_provinsi(){
+        $data = Province::all();
+        return response()->json($data);
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/get-city/{id}",
+     *      tags={"Wilayah"},
+     *      summary="List City by id provinsi",
+     *      description="Menampilkan list city/kabupaten berdasarkan id provinsi",
+     *      operationId="city",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function get_city_by_id_provinsi($id){
+        $data = City::where('province_id',$id)->get();
+        return response()->json($data);
+    }
+
+      /**
+     * @OA\Post(
+     *      path="/api/cost",
+     *      tags={"Tarif Pengiriman"},
+     *      summary="tarif pengiriman",
+     *      description="masukkan id_kota_asal, id_kota_tujuan, total_berat_produk, kurir",
+     *      operationId="tarif pengiriman",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="id_kota_asal", type="integer"),
+     *              @OA\Property(property="id_kota_tujuan", type="integer"),
+     *              @OA\Property(property="total_berat_produk", type="integer"),
+     *              @OA\Property(property="kurir", type="string"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="default",
+     *          description=""
+     *      )
+     * )
+     */
+    public function tarif_pengiriman(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_kota_asal'     => 'required|integer|min:0',
+            'id_kota_tujuan'     => 'required|integer|min:0',
+            'total_berat_produk'     => 'required|integer',
+            'kurir'     => 'required',
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' =>$validator->errors()
+            ], 422);
+        }
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => "origin=$request->id_kota_asal&destination=$request->id_kota_tujuan&weight=$request->total_berat_produk&courier=$request->kurir",
+        CURLOPT_HTTPHEADER => array(
+            "content-type: application/x-www-form-urlencoded",
+            "key: ".env('API_KEY_RAJAONGKIR')."",
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        $responseArray = json_decode($response, true);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            // Tambahkan tanggapan kesalahan jika terjadi cURL error
+            return response()->json(['error' => "cURL Error #:" . $err]);
+        } else {
+            // Menggunakan $responseArray yang sudah diproses
+            if ($responseArray['rajaongkir']['status']['code'] == 400) {
+                return response()->json([$responseArray],400);
+            } else {
+                return response()->json($responseArray);
+                # code...
+            }
+            
+        }
+        
+    }
+    /**
+ * @OA\Get(
+ *      path="/api/get-kurir",
+ *      tags={"Kurir"},
+ *      summary="List Kurir",
+ *      description="menampilkan jenis kurir",
+ *      operationId="kurir",
+ *      @OA\Response(
+ *          response="default",
+ *          description=""
+ *      )
+ * )
+ */
+    public function list_kurir(){
+        $data = Kurir::all();
+        return response()->json($data);
     }
 }

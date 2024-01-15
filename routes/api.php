@@ -83,3 +83,7 @@ Route::get('/lelang/list-pelunasan-barang/{id}', [ApiController::class, 'list_pe
 Route::post('/lelang/pembayaran-pelunasan-barang', [ApiController::class, 'pembayaran_pelunasan_lelang']);
 Route::get('/import-province', [RajaOngkirController::class, 'import_province']);
 Route::get('/import-city', [RajaOngkirController::class, 'import_city']);
+Route::get('/get-provinsi', [ApiController::class, 'get_provinsi']);
+Route::get('/get-city/{id}', [ApiController::class, 'get_city_by_id_provinsi']);
+Route::post('/cost', [ApiController::class, 'tarif_pengiriman']);
+Route::get('/get-kurir', [ApiController::class, 'list_kurir']);

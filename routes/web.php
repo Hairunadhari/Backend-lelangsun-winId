@@ -66,13 +66,13 @@ Route::post('/resend-email', [VerifyEmailRegisterController::class, 'resend_emai
 
 
 
+Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard']);
 Route::middleware(['auth','role:Super Admin'])->group(function () {
     Route::prefix('superadmin')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-        Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('dashboard');
          // route toko
         Route::get('/toko', [MenuSuperAdminController::class, 'list_toko'])->name('superadmin.toko');
         Route::post('/addtoko', [MenuSuperAdminController::class, 'add_toko'])->name('superadmin.addtoko');
@@ -298,15 +298,17 @@ Route::middleware(['auth','allrole'])->group(function (){
     Route::delete('/deletepromosi/{id}/', [MenuSuperAdminController::class, 'delete_promosi'])->name('deletepromosi');
     Route::get('/detail-pesanan/{id}/', [MenuSuperAdminController::class, 'detail_pesanan'])->name('detail-pesanan');
     Route::get('/pesanan', [MenuSuperAdminController::class, 'list_pesanan'])->name('pesanan');
+    Route::get('/edit-pesanan/{id}', [MenuSuperAdminController::class, 'edit_pesanan']);
+    Route::put('/update-pesanan/{id}', [MenuSuperAdminController::class, 'update_pesanan'])->name('update-pesanan');
     Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('promosi');
 
 
 });
 
 
+Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard']);
 Route::middleware(['auth','role:Admin'])->group(function () {
     Route::prefix('admin')->group(function () {
-        Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/profil-toko', [MenuSuperAdminController::class, 'profil_toko'])->name('admin.profil-toko');
         Route::put('/update-akun-toko/{id}/', [MenuSuperAdminController::class, 'update_akun_toko'])->name('admin.update-akun-toko');
         
