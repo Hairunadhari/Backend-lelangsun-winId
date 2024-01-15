@@ -264,7 +264,7 @@ class MenuSuperAdminController extends Controller
 
     public function add_kategori_produk(Request $request){
         if (Auth::user()->role->role == 'Admin') {
-            if (Auth::user()->toko->province_id == null || Auth::user()->city_id == null) {
+            if (Auth::user()->toko->province_id == null || Auth::user()->toko->city_id == null) {
                 return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
             }
         }
@@ -441,7 +441,7 @@ class MenuSuperAdminController extends Controller
             'video'     => 'required',
         ]);
         if (Auth::user()->role->role == 'Admin') {
-            if (Auth::user()->toko->province_id == null || Auth::user()->city_id == null) {
+            if (Auth::user()->toko->province_id == null || Auth::user()->toko->city_id == null) {
                 return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
             }
         }
@@ -887,7 +887,7 @@ class MenuSuperAdminController extends Controller
 
     public function add_promosi(Request $request){
         if (Auth::user()->role->role == 'Admin') {
-            if (Auth::user()->toko->province_id == null || Auth::user()->city_id == null) {
+            if (Auth::user()->toko->province_id == null || Auth::user()->toko->city_id == null) {
                 return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
             }
         }
