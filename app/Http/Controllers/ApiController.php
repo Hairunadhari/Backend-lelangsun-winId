@@ -514,7 +514,7 @@ class ApiController extends Controller
 
     
     public function add_order(Request $request){
-        // dd($request->orderData->tokoObj);
+        // dd($request->userData['email']);
         $validator = Validator::make($request->all() , [
             'userData.user_id' => 'required|integer|min:1',
             'userData.email' => 'required|email',
@@ -595,7 +595,9 @@ class ApiController extends Controller
                 'amount' => $request->orderData['sub_total'],
                 'payer_email' => $request->userData['email']
             ]);
+            // dd($data_request);
             $response = $data_request->object();
+            dd($response);
             $dataExipre = $response->expiry_date;
             $expiryDate = Carbon::parse($response->expiry_date, 'UTC')->setTimezone('Asia/Jakarta');
             $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
