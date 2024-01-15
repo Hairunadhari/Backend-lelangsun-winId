@@ -357,6 +357,7 @@ class ApiController extends Controller
             $success['name'] = $auth->name;
             $success['email'] = $auth->email;
             $success['user_id'] = $auth->id;
+            $success['alamat'] = $auth->alamat;
 
             return response()->json([
                 'success' => true,
@@ -434,42 +435,83 @@ class ApiController extends Controller
     }
 
 
-     /**
-     * @OA\Post(
-     *      path="/api/add-order",
-     *      tags={"Order"},
-     *      summary="Order",
-     *      description="masukkan user id, produk id, qty, pengiriman, lokasi pengiriman, sub_total",
-     *      operationId="Order",
-     *      @OA\RequestBody(
-     *          required=true,
-     *          description="form data",
-     *          @OA\JsonContent(
-     *              required={""},
-     *              @OA\Property(property="user_id", type="integer"),
-     *              @OA\Property(
-    *                  property="items",
-    *                  type="array",
-    *                  @OA\Items(
-    *                      @OA\Property(property="produk_id", type="integer"),
-    *                      @OA\Property(property="qty", type="integer"),
-    *                      @OA\Property(property="harga", type="integer"),
-    *                      @OA\Property(property="total_harga", type="integer"),
-    *                      @OA\Property(property="nama_produk", type="string"),
-    *                      @OA\Property(property="promo_diskon", type="integer"),
-    *                      @OA\Property(property="toko_id", type="integer"),
-    *                      @OA\Property(property="nama_toko", type="string"),
-    *                  )
-    *              ),
-     *              @OA\Property(property="sub_total", type="integer"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response="default",
-     *          description=""
-     *      )
-     * )
-     */
+   /**
+ * @OA\Post(
+       path="/api/add-order",
+       tags={"Order"},
+       summary="Menambahkan Pesanan",
+       description="Selain parameter promo_diskon, berat_item, longitude, langitude, total_berat_item wajib diisi",
+       operationId="addOrder",
+       @OA\RequestBody(
+           required=true,
+           description="Data formulir",
+           @OA\JsonContent(
+               required={"user_id", "items", "sub_total"},
+                @OA\Property(
+            property="userData",
+            type="object",
+            @OA\Property(property="user_id", type="integer"),
+            @OA\Property(property="email", type="string"),
+            @OA\Property(property="nama", type="string"),
+            @OA\Property(property="no_telp", type="integer"),
+            @OA\Property(
+                property="alamatObj",
+                type="object",
+                @OA\Property(property="provinsi_id", type="integer"),
+                @OA\Property(property="provinsi_name", type="string"),
+                @OA\Property(property="city_id", type="integer"),
+                @OA\Property(property="city_name", type="string"),
+                @OA\Property(property="detail_alamat", type="string"),
+         )
+      ),
+   @OA\Property(
+            property="orderData",
+            type="object",
+            @OA\Property(
+                property="tokoObj",
+                type="object",
+                @OA\Property(property="toko_id", type="integer"),
+                @OA\Property(property="provinsi_id", type="integer"),
+                @OA\Property(property="provinsi_name", type="string"),
+                @OA\Property(property="city_id", type="integer"),
+                @OA\Property(property="city_name", type="string"),
+                @OA\Property(property="detail_alamat", type="string"),
+            ),
+                          @OA\Property(
+                              property="items",
+                              type="array",
+                              @OA\Items(
+                                  @OA\Property(property="produk_id", type="integer"),
+                             @OA\Property(property="qty", type="integer"),
+                             @OA\Property(property="harga_item", type="integer"),
+                             @OA\Property(property="total_harga_item", type="integer"),
+                             @OA\Property(property="nama_item", type="string"),
+                             @OA\Property(property="berat_item", type="integer"),
+                             @OA\Property(property="promo_diskon", type="integer"),
+                             @OA\Property(property="toko_id", type="integer"),
+                             @OA\Property(property="nama_toko", type="string"),
+                         )
+                     ),
+                     @OA\Property(property="longitude", type="string"),
+                     @OA\Property(property="latitude", type="string"),
+                     @OA\Property(property="kode_kurir", type="string"),
+                     @OA\Property(property="service", type="string"),
+                     @OA\Property(property="description_service", type="string"),
+                     @OA\Property(property="etd", type="string"),
+                     @OA\Property(property="total_berat_item", type="integer"),
+                     @OA\Property(property="total_harga_all_item", type="integer"),
+                     @OA\Property(property="cost_shipping", type="integer"),
+                     @OA\Property(property="sub_total", type="integer"),
+                 )
+             ),
+        ),
+      @OA\Response(
+          response="default",
+          description=""
+      )
+ )
+ */
+
     
     public function add_order(Request $request){
         // dd($request->orderData->tokoObj);
@@ -1206,6 +1248,7 @@ class ApiController extends Controller
      *              @OA\Property(property="user_id", type="integer"),
      *              @OA\Property(property="produk_id", type="integer"),
      *              @OA\Property(property="qty", type="integer"),
+     *              @OA\Property(property="toko_id", type="integer"),
      *          )
      *      ),
      *      @OA\Response(
@@ -1215,6 +1258,19 @@ class ApiController extends Controller
      * )
      */
     public function add_keranjang(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required|integer',
+            'produk_id'     => 'required|integer',
+            'qty'     => 'required|integer',
+            'toko_id'     => 'required|integer',
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ], 401);
+
+        }
         Keranjang::where('produk_id', $request->produk_id)->where('user_id', $request->user_id)->delete();
         $data = Keranjang::create([
             'user_id' => $request->user_id,
@@ -1223,7 +1279,7 @@ class ApiController extends Controller
             'toko_id' => $request->toko_id,
         ]);
         return response()->json([
-            'message' => 'SUUCCESS',
+            'success' => true,
             'data' => $data
         ]);
     }
