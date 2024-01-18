@@ -113,7 +113,7 @@ $(document).ready(function () {
                 lot_item_id: lot_item_id,
             },
             success: function (res) {
-                console.log('start-bid',res);
+                // console.log('start-bid',res);
                 toggleTimer(seconds);
                 
             }
@@ -130,7 +130,7 @@ $(document).ready(function () {
                 lot_item_id: lot_item_id,
             },
             success: function (res) {
-                console.log('timer-habis',res);
+                // console.log('timer-habis',res);
                 $('#con-bid').css('display', 'none');
                     $('#loading').css('display', 'block');
                 const message = res.email ? "Pemenang Dari LOT Ini Adalah " + res.email + " dengan harga " + res.harga_bidding + "!" : "LOT tidak memiliki pemenang.";
@@ -152,7 +152,7 @@ $(document).ready(function () {
                                 lot_item_id: lot_item_id,
                             },
                             success: function (res) {
-                                console.log('next-bid',res);
+                                // console.log('next-bid',res);
                                 if (res.lot_item.length > 0) {
                                     window.location.href = '/superadmin/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
                                     document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -218,7 +218,7 @@ $(document).ready(function () {
                 kelipatan_bid: kelipatan_bid,
             },
             success: function (res) {
-                console.log('send-bidding',res);
+                // console.log('send-bidding',res);
                 $('#con-bid').css('display', 'block');
                 $('#loading').css('display', 'none');
                 
@@ -277,7 +277,7 @@ $(document).ready(function () {
                 harga_awal_user: harga_awal_user
             },
             success: function (res) {
-                console.log('send-bid-user',res);
+                // console.log('send-bid-user',res);
 
                 $('#user-send-bidding').css('display', 'block');
                 $('#loading').css('display', 'none');
@@ -290,7 +290,7 @@ $(document).ready(function () {
 let event_lelang_id = $('#event_lelang_id_web_user').val();
 window.Echo.channel('lelang')
      .listen('.bidding-event-'+event_lelang_id, (e) => {
-        console.log(e);
+        // console.log(e);
         var harga = e.harga_bidding; // Angka yang ingin diformat
         var hargaFormatted = harga.toLocaleString('id-ID', {currency: 'IDR' });
 
@@ -340,16 +340,16 @@ window.Echo.channel('lelang')
     });
 window.Echo.channel('lelang')
      .listen('.pemenang-lot-event-'+event_lelang_id, (e) => {
-        console.log(e);
+        console.log('notif menang',e.pemenang_bid);
         var meta = document.getElementsByTagName('meta');
         for (let idx = 0; idx < meta.length; idx++) {
             const el = meta[idx];
             // console.log("meta page",el.getAttribute('data-page'));
             if (el.getAttribute('data-page') == "user") {
-                if (e.bid !== null) {
-                    var message = "Pemenang Dari LOT Ini Adalah " + e.bid.email + " dengan harga " + e.bid.harga_bidding + "!";
-                } else {
+                if (e.pemenang_bid == null) {
                     var message = "LOT tidak memiliki pemenang.";
+                } else {
+                    var message = "Pemenang Dari LOT Ini Adalah " + e.pemenang_bid.email + " dengan harga " + e.pemenang_bid.harga_bidding + "!";
                 }
                 swal({
                     title: "WAKTU HABIS !!!",
@@ -364,7 +364,7 @@ window.Echo.channel('lelang')
     });
 window.Echo.channel('lelang')
      .listen('.next-lot-event-'+event_lelang_id, (e) => {
-        console.log(e);
+        // console.log(e);
         let id_event_crypt = $('#id_event_crypt').val();
 
         if (e.lot_item.length > 0) {
@@ -379,8 +379,8 @@ window.Echo.channel('lelang')
                 closeOnClickOutside: false,
             });
             document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            localStorage.removeItem('timer_bid');
-            clearInterval(countdown); 
+            // localStorage.removeItem('timer_bid');
+            // // clearInterval(countdown); 
             window.location.href = '/';
           
         }

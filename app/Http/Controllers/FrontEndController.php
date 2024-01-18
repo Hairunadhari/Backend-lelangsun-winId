@@ -32,6 +32,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Auth\LoginRequest;
+use Validator;
+
 
 class FrontEndController extends Controller
 {
@@ -103,15 +105,26 @@ class FrontEndController extends Controller
         return view('front-end/register');
     }
     public function add_register(Request $request){
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'nama'     => 'required',
             'email'     => 'required|email|unique:users,email',
             'alamat'     => 'required',
             'no_telp'     => 'required',
             'password'     => 'required|min:5',
             'confirm_password'     => 'required|same:password',
-            
-        ]);
+            ]);
+       
+        if ($validator->fails()) {
+            session()->flash('nama', $request->nama);
+            session()->flash('email', $request->email);
+            session()->flash('alamat', $request->alamat);
+            session()->flash('no_telp', $request->no_telp);
+          
+            // Tampilkan pesan error
+            return redirect()->back();
+          }
+        
+    
         try {
             DB::beginTransaction();
             $ktp = $request->file('foto_ktp');
@@ -180,7 +193,7 @@ class FrontEndController extends Controller
             
         } catch (Throwable $th) {
             DB::rollBack();
-            dd($th);
+            return redirect()->back();
         }
         return redirect('/user-login')->with('message','Registrasi berhasil, silahkan verifikasi email anda');
 

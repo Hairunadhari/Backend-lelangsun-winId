@@ -73,7 +73,7 @@
                 <div class="row">
                     <div class="mb-1 col-6">
                         <label class="form-label">Nama <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="nama" required>
+                        <input type="text" class="form-control" name="nama" required  value="{{ session('nama') }}">
                         @if ($errors->has('nama'))
                         <div class="warn"><small class="text-alert">eror!</small></div>
                         @endif
@@ -81,7 +81,7 @@
                     </div>
                     <div class="mb-1 col-6">
                         <label class="form-label">Email <span style="color: red">*</span></label>
-                        <input type="email" class="form-control" name="email" required>
+                        <input type="email" class="form-control" name="email" required  value="{{ session('email') }}">
                         @if ($errors->has('email'))
                         <div class="warn"><small class="text-alert">Email Sudah Terdaftar!</small></div>
                         @endif
@@ -90,7 +90,7 @@
                 <div class="row">
                     <div class="mb-1 col-6">
                         <label class="form-label">Telepon <span style="color: red">*</span></label>
-                        <input type="number" class="form-control" name="no_telp" required>
+                        <input type="number" class="form-control" name="no_telp" required  value="{{ session('no_telp') }}">
                         @if ($errors->has('no_telp'))
                         <div class="warn"><small class="text-alert">eror!</small></div>
                         @endif
@@ -122,7 +122,7 @@
                 </div>
                 <div class="mb-1">
                     <label class="form-label">Alamat <span style="color: red">*</span></label>
-                    <textarea class="form-control" name="alamat" required></textarea>
+                    <textarea class="form-control" name="alamat" required   value="{{ session('name') }}"></textarea>
                     @if ($errors->has('alamat'))
                     <div class="warn"><small class="text-alert">eror!</small></div>
                     @endif

@@ -2946,11 +2946,17 @@ class MenuSuperAdminController extends Controller
         return redirect()->back()->with('success', 'Data Berhasil diVerifikasi!');
     }
     public function bidding($id){
-        $event_id = Crypt::decrypt($id);
-        $setting = Setting::first();
-        $lot_item = LotItem::with(['bidding' => function($query){
-            $query->orderBy('harga_bidding','desc')->first();
-        }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
+            $event_id = Crypt::decrypt($id);
+            $setting = Setting::first();
+            $lot_item = LotItem::with(['bidding' => function($query){
+                $query->orderBy('harga_bidding','desc')->first();
+            }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
+            // dd($lot_item);
+            // dd($th);
+            if (count($lot_item) == 0) {
+                # code...
+                return redirect()->route('superadmin.event-lelang');
+            }
         
         // dd($lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding);
         return view('lelang.bidding',compact('lot_item','event_id','setting'));
@@ -3071,7 +3077,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
-            dd($th);
+            // dd($th);
             return response()->json($th);
             //throw $th;
         }
