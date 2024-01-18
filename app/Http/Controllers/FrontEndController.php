@@ -112,16 +112,25 @@ class FrontEndController extends Controller
             'no_telp'     => 'required',
             'password'     => 'required|min:5',
             'confirm_password'     => 'required|same:password',
+            ], [
+                'nama'=>'Nama Harus Diisi',
+                'email'=>'Email Sudah Dipakai',
+                'alamat'=>'Alamat harus Diisi',
+                'no_telp'=>'No Telpon harus Diisi',
+                'password'=>'Password min 5 character',
+                'konfirmasi_password'=>'Konfirmasi Password Tidak Cocok',
             ]);
        
         if ($validator->fails()) {
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
             session()->flash('nama', $request->nama);
             session()->flash('email', $request->email);
             session()->flash('alamat', $request->alamat);
             session()->flash('no_telp', $request->no_telp);
           
             // Tampilkan pesan error
-            return redirect()->back();
+            return redirect()->back()->with('error',$alertMessage);
           }
         
     
