@@ -95,6 +95,9 @@
         li {
             font-size: 16px;
         }
+        footer{
+            text-align: center;
+        }
 
     }
 
@@ -170,12 +173,11 @@
             </div>
             <div class="card-footer">
                 <h4>MENU</h4>
-                <ul>
-                    <li>Beranda</li>
-                    <li>Lelang</li>
-                    <li>Events</li>
-                    <li>Kontak</li>
-                </ul>
+               
+                <div>Beranda</div>
+                <div>Lelang</div>
+                <div>Events</div>
+                <div>Kontak</div>
             </div>
             <div class="card-footer">
                 <h4>TENTANG </h4>

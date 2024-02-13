@@ -58,10 +58,25 @@
     img{
         box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     }
-
+    .id-lot {
+        position: absolute;
+        top: -15px; /* Adjust as needed to make it slightly protrude */
+        right: -15px; /* Adjust as needed to make it slightly protrude */
+        padding: 5px;
+        background-color: #DC3545; /* You can adjust the background color as needed */
+        border: 1px solid #ccc; /* You can adjust the border as needed */
+        border-radius: 50%; /* Makes it a circle */
+        width: 60px; /* Adjust as needed */
+        height: 60px; /* Adjust as needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        color: white;
+    }
     @media (max-width: 600px) {
         #satu {
-            background-image: url('detail_event.jpg');
+            /* background-image: url('/asset-lelang/detail_event.jpg'); */
             height: auto;
             background-position: left;
             background-size: cover;
@@ -76,7 +91,7 @@
         }
 
         #dua {
-            background-image: url('asset-lelang/lelang2.jpg');
+            background-image: url('/asset-lelang/lelang2.jpg');
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
@@ -95,7 +110,8 @@
     </div>
     <div class="row">
         <div class="card col-6">
-            <h3>Lot : {{$lot_item[0]->id}}</h3>
+            <div class="id-lot">Lot {{$lot_item[0]->no_lot}}</div>
+            <h3>Lot {{$lot_item[0]->no_lot}}</h3>
             @if ($lot_item[0]->barang_lelang->gambarlelang !== null)
                 
             <img src="{{asset('storage/image/'.$lot_item[0]->barang_lelang->gambarlelang[0]->gambar)}}" class="my-2"
@@ -156,8 +172,9 @@
         <div class="row">
             @foreach ($lot_item as $index => $item)
             @if ($index > 0)
-            <div class="card col-3 m-1 p-1"
-                style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6;">
+            <div class="card mx-4 p-1 my-4"
+                style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6; width: 300px;" >
+                <div class="id-lot">Lot {{$item->no_lot}}</div>
                 @if (count($item->barang_lelang->gambarlelang) > 0)
                  <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}"
                     class="card-img-top" alt="..." style=" width:auto;">

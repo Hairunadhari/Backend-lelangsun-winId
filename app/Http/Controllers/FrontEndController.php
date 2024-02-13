@@ -107,18 +107,18 @@ class FrontEndController extends Controller
     public function add_register(Request $request){
         $validator = Validator::make($request->all(), [
             'nama'     => 'required',
-            'email'     => 'required|email|unique:users,email',
+            'email'     => 'required|email',
             'alamat'     => 'required',
             'no_telp'     => 'required',
             'password'     => 'required|min:5',
             'confirm_password'     => 'required|same:password',
             ], [
                 'nama'=>'Nama Harus Diisi',
-                'email'=>'Email Sudah Dipakai',
+                'email'=>'Email Harus Diisi',
                 'alamat'=>'Alamat harus Diisi',
                 'no_telp'=>'No Telpon harus Diisi',
                 'password'=>'Password min 5 character',
-                'konfirmasi_password'=>'Konfirmasi Password Tidak Cocok',
+                'confirm_password'=>'Konfirmasi Password Tidak Cocok',
             ]);
        
         if ($validator->fails()) {
@@ -133,78 +133,81 @@ class FrontEndController extends Controller
             return redirect()->back()->with('error',$alertMessage);
           }
         
-    
+        
         try {
             DB::beginTransaction();
             $ktp = $request->file('foto_ktp');
             $npwp = $request->file('foto_npwp');
-            
-            if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
-                $ktp->storeAs('public/image', $ktp->hashName());
-                $npwp->storeAs('public/image', $npwp->hashName());
-                $user = User::create([
-                    'name' => $request->nama,
-                    'email' => $request->email,
-                    'no_telp' => $request->no_telp,
-                    'alamat' => $request->alamat,
-                    'nik' => $request->nik,
-                    'npwp' => $request->npwp,
-                    'no_rek' => $request->no_rek,
-                    'foto_ktp' => $ktp->hashName(),
-                    'foto_npwp' => $npwp->hashName(),
-                    'password' => Hash::make($request->password),
-                ]);
-            }else if($request->hasFile('foto_ktp')) {
-                $user = User::create([
-                    'name' => $request->nama,
-                    'email' => $request->email,
-                    'no_telp' => $request->no_telp,
-                    'alamat' => $request->alamat,
-                    'nik' => $request->nik,
-                    'npwp' => $request->npwp,
-                    'no_rek' => $request->no_rek,
-                    'foto_ktp' => $ktp->hashName(),
-                    'password' => Hash::make($request->password),
-                ]);
-            }else if($request->hasFile('foto_npwp')){
-                $user = User::create([
-                    'name' => $request->nama,
-                    'email' => $request->email,
-                    'no_telp' => $request->no_telp,
-                    'alamat' => $request->alamat,
-                    'nik' => $request->nik,
-                    'npwp' => $request->npwp,
-                    'no_rek' => $request->no_rek,
-                    'foto_npwp' => $ktp->hashName(),
-                    'password' => Hash::make($request->password),
-                ]);
-                
-            }else{
-                $user = User::create([
-                    'name' => $request->nama,
-                    'email' => $request->email,
-                    'no_telp' => $request->no_telp,
-                    'alamat' => $request->alamat,
-                    'nik' => $request->nik,
-                    'npwp' => $request->npwp,
-                    'no_rek' => $request->no_rek,
-                    'password' => Hash::make($request->password),
-                ]);
+            $cekuser = User::where('email',$request->email)->where('status','active')->whereNotNull('email_verified_at')->first();
+            if ($cekuser !== null) {
+                if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
+                    $ktp->storeAs('public/image', $ktp->hashName());
+                    $npwp->storeAs('public/image', $npwp->hashName());
+                    $user = User::create([
+                        'name' => $request->nama,
+                        'email' => $request->email,
+                        'no_telp' => $request->no_telp,
+                        'alamat' => $request->alamat,
+                        'nik' => $request->nik,
+                        'npwp' => $request->npwp,
+                        'no_rek' => $request->no_rek,
+                        'foto_ktp' => $ktp->hashName(),
+                        'foto_npwp' => $npwp->hashName(),
+                        'password' => Hash::make($request->password),
+                    ]);
+                }else if($request->hasFile('foto_ktp')) {
+                    $user = User::create([
+                        'name' => $request->nama,
+                        'email' => $request->email,
+                        'no_telp' => $request->no_telp,
+                        'alamat' => $request->alamat,
+                        'nik' => $request->nik,
+                        'npwp' => $request->npwp,
+                        'no_rek' => $request->no_rek,
+                        'foto_ktp' => $ktp->hashName(),
+                        'password' => Hash::make($request->password),
+                    ]);
+                }else if($request->hasFile('foto_npwp')){
+                    $user = User::create([
+                        'name' => $request->nama,
+                        'email' => $request->email,
+                        'no_telp' => $request->no_telp,
+                        'alamat' => $request->alamat,
+                        'nik' => $request->nik,
+                        'npwp' => $request->npwp,
+                        'no_rek' => $request->no_rek,
+                        'foto_npwp' => $ktp->hashName(),
+                        'password' => Hash::make($request->password),
+                    ]);
+                    
+                }else{
+                    $user = User::create([
+                        'name' => $request->nama,
+                        'email' => $request->email,
+                        'no_telp' => $request->no_telp,
+                        'alamat' => $request->alamat,
+                        'nik' => $request->nik,
+                        'npwp' => $request->npwp,
+                        'no_rek' => $request->no_rek,
+                        'password' => Hash::make($request->password),
+                    ]);
+                }
             }
     
            
-            $encrypt_id = Crypt::encrypt($user->id);
-            $url = route('verify-email-user',$encrypt_id);  
-            Mail::to($user->email)->send(new VerifyRegisterUser($user, $url));
+            $encrypt_email = Crypt::encrypt($request->email);
+            $url = route('verify-email-user',$encrypt_email);  
+            Mail::to($request->email)->send(new VerifyRegisterUser($url));
 
             DB::commit();
 
             
         } catch (Throwable $th) {
             DB::rollBack();
-            return redirect()->back();
+            dd($th);
+            return redirect()->back()->with('error','Registrasi Gagal, silahkan ulangin registrasi!');
         }
-        return redirect('/user-login')->with('message','Registrasi berhasil, silahkan verifikasi email anda');
+        return redirect('/user-verifikasi-email/'.$encrypt_email)->with('message','Registrasi berhasil, silahkan verifikasi email anda');
 
     }
 
@@ -522,4 +525,21 @@ class FrontEndController extends Controller
         // dd($data);
         return view('front-end/detail-lot',compact('data'));
     }
+
+    public function verifikasi($encryptemail){
+        $email = Crypt::decrypt($encryptemail);
+        return view('front-end.verifikasi-email',compact('email'));
+        // $url = route('verify-email-user',$encrypt_id);  
+        // Mail::to($user->email)->send(new VerifyRegisterUser($user, $url));
+    }
+    public function resend_link($email){
+        $encrypt = Crypt::encrypt($email);
+        $url = route('verify-email-user',$encrypt);  
+        Mail::to($email)->send(new VerifyRegisterUser($url));
+        return response()->json('success');
+
+
+    }
+    
 }
+

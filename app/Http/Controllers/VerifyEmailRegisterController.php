@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Crypt;
 
 class VerifyEmailRegisterController extends Controller
 {
-    public function verifikasi_email_user($id){
+    public function verifikasi_email_user($emailEncrypt){
         try {
             DB::beginTransaction();
             
-            $id_user = Crypt::decrypt($id);
-            $data = User::find($id_user);
+            $email = Crypt::decrypt($emailEncrypt);
+            $data = User::where('email',$email)->first();
             $data->update([
                 'email_verified_at' => date("Y-m-d H:i:s"),
             ]);

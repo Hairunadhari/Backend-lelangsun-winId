@@ -1,5 +1,31 @@
 @extends('app.layouts')
 @section('content')
+<style>
+     .id-lot {
+        position: absolute;
+        top: -15px; /* Adjust as needed to make it slightly protrude */
+        right: -15px; /* Adjust as needed to make it slightly protrude */
+        padding: 5px;
+        background-color: #DC3545; /* You can adjust the background color as needed */
+        border: 1px solid #ccc; /* You can adjust the border as needed */
+        border-radius: 50%; /* Makes it a circle */
+        width: 50px; /* Adjust as needed */
+        height: 50px; /* Adjust as needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        color: white;
+    }
+     .lot-first {
+        background-color: #DC3545; /* You can adjust the background color as needed */
+        border-radius: 20px; /* Makes it a circle */
+        width: 90px; 
+        height: 30px; 
+        text-align: center;
+        color: white;
+    }
+</style>
 <div class="section-body">
     <div class="row">
         <div class="col-12">
@@ -26,7 +52,10 @@
                     </div>
                     <div class="col-6 col-md-6 col-lg-6">
                         <div class="lot-judul" style="padding-top: 20px; padding-left: 20px;">
-                            <h4>LOT {{$lot_item[0]->id}}</h4>
+                            <div class="lot-first">
+
+                                <h4>LOT {{$lot_item[0]->no_lot}}</h4>
+                            </div>
                             <h4>Rp {{$lot_item[0]->harga_awal}}</h4>
                         </div>
                         <div class="card chat-box" id="mychatbox"
@@ -94,8 +123,9 @@
                         <div class="row">
                             @foreach ($lot_item as $index => $item)
                             @if ($index > 0)
-                            <div class="card col-4 m-1 p-1"
-                                style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6;">
+                            <div class="card mx-3 p-1"
+                                style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6; width: 160px">
+                                <div class="id-lot">Lot {{$item->no_lot}}</div>
                                 @if (count($item->barang_lelang->gambarlelang) > 0)
                                 <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}"
                                     class="card-img-top" alt="..." style="height:100px; width:auto;">

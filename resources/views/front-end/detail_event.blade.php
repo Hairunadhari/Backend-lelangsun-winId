@@ -39,6 +39,22 @@
         /* box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;  */
 
     }
+    .id-lot {
+        position: absolute;
+        top: -15px; /* Adjust as needed to make it slightly protrude */
+        right: -15px; /* Adjust as needed to make it slightly protrude */
+        padding: 5px;
+        background-color: #DC3545; /* You can adjust the background color as needed */
+        border: 1px solid #ccc; /* You can adjust the border as needed */
+        border-radius: 50%; /* Makes it a circle */
+        width: 50px; /* Adjust as needed */
+        height: 50px; /* Adjust as needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        color: white;
+    }
     @media (max-width: 600px) {
         #satu {
             background-image: url('detail_event.jpg');
@@ -61,6 +77,10 @@
             padding: 20px;
             color: white;
             text-align: center
+            
+        }
+        .item-barang{
+            margin-top: 20px !important;
         }
         
     }
@@ -72,7 +92,7 @@
         <div class="lelang">
             <div class="bungkus-lot">
                 <div class="card p-2">
-                    <img src="{{ asset('storage/image/'.$event->gambar) }}"  alt="...">
+                    <img src="{{ asset('storage/image/'.$event->gambar) }}"  alt="..." class="mb-3">
                         <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Event: {{$event->judul}}</h5>
                       <p class="card-text"><i class="fas fa-map-marker-alt"></i> Alamat: {{$event->alamat}}</p>
                       <p class="card-text"><i class="fas fa-map-marked-alt"></i> Link Lokasi: {{$event->link_lokasi}}</p>
@@ -82,9 +102,12 @@
             </div>
             <h1>List Lot</h1>
             <div class="items">
+                @php
+                    $lot = 1;
+                @endphp
                 @foreach ($event->lot_item as $item)
                 <div class="card item-barang m-2">
-                    
+                    <div class="id-lot">Lot {{$item->no_lot}}</div>
                     @if (count($item->barang_lelang->gambarlelang) > 0)
                     <img src="{{asset('storage/image/'.$item->barang_lelang->gambarlelang[0]->gambar)}}"  alt="...">
                         

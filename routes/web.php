@@ -36,6 +36,7 @@ Route::get('/user-lelang', [FrontEndController::class, 'lelang'])->name('front-e
 Route::get('/user-event', [FrontEndController::class, 'event'])->name('front-end-event');
 Route::get('/user-kontak', [FrontEndController::class, 'kontak'])->name('front-end-kontak');
 Route::get('/user-login', [FrontEndController::class, 'login'])->name('front-end-login');
+Route::get('/user-verifikasi-email/{email}', [FrontEndController::class, 'verifikasi'])->name('verifikasi');
 Route::get('/user-register', [FrontEndController::class, 'register'])->name('front-end-register');
 Route::post('/add-register', [FrontEndController::class, 'add_register'])->name('register-user');
 Route::post('/proses-login', [FrontEndController::class, 'proses_login'])->name('proses-login-user');
@@ -44,6 +45,7 @@ Route::get('/get-harganpl/{id}/', [MenuSuperAdminController::class, 'harganpl_by
 Route::get('/user-bidding/{id}/', [FrontEndController::class, 'bidding'])->name('user-bidding');
 Route::post('send-bidding-user',[FrontEndController::class, 'send_bidding']);
 Route::post('log-bidding-user',[FrontEndController::class, 'log_bidding']);
+Route::get('/resend-link/{email}',[FrontEndController::class, 'resend_link']);
 
 Route::middleware('peserta')->group(function () {
     Route::get('/user-notif', [FrontEndController::class, 'notif'])->name('front-end-notif');
@@ -58,7 +60,7 @@ Route::middleware('peserta')->group(function () {
     Route::put('/beri-ulasan/{id}/', [FrontEndController::class, 'beri_ulasan'])->name('beri-ulasan');
 });
 Route::get('/detail-lot/{id}/', [FrontEndController::class, 'detail_lot']);
-Route::get('/verify-email-user/{id}/', [VerifyEmailRegisterController::class, 'verifikasi_email_user'])->name('verify-email-user');
+Route::get('/verify-email-user/{email}/', [VerifyEmailRegisterController::class, 'verifikasi_email_user'])->name('verify-email-user');
 // Route::get('/resend-code/{id}/', [VerifyEmailRegisterController::class, 'resend_code'])->name('resend-code');
 Route::get('/verify-email-register', [VerifyEmailRegisterController::class, 'verifikasi_email_register'])->name('verify-email-register');
 Route::post('/resend-email', [VerifyEmailRegisterController::class, 'resend_email'])->name('resend-email');

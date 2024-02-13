@@ -175,6 +175,10 @@
                 });
             }
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            localStorage.removeItem('statusOtp'); 
+        });
     </script>
     @if (Session::has('error'))
     <script>

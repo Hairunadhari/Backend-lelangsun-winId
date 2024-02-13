@@ -2884,29 +2884,31 @@ class MenuSuperAdminController extends Controller
             DB::beginTransaction();
             if (is_null($request->barang_id)) {
                 return redirect()->back()->with('error', 'Anda belum memilih Barang!');
-        }else {
-            $lot_item = LotItem::where('lot_id', $id)->get();
-            $lot_item->each->update([
-                'status_item' => 'not-active',
-                'status' => 'not-active',
-            ]);
-            $hargaAwal = array_values(array_filter($request->harga_awal));
-            foreach ($hargaAwal as $key => $value) {
-                $hargaAwal[$key] = preg_replace('/[^0-9]/', '', $value);
-            }
-
-            // Loop melalui barang_id dan harga_awal yang diterima dari formulir
-            foreach ($request->barang_id as $index => $barangId) {
-                LotItem::create([
-                    'barang_lelang_id' => $barangId,
-                    'event_lelang_id' => $request->event_id,
-                    'lot_id' => $id,
-                    'tanggal' => $request->waktu_from_event,
-                    'harga_awal' => $hargaAwal[$index],
+            }else {
+                $lot_item = LotItem::where('lot_id', $id)->get();
+                $lot_item->each->update([
+                    'status_item' => 'not-active',
+                    'status' => 'not-active',
                 ]);
+                $hargaAwal = array_values(array_filter($request->harga_awal));
+                foreach ($hargaAwal as $key => $value) {
+                    $hargaAwal[$key] = preg_replace('/[^0-9]/', '', $value);
+                }
+
+                $no_lot = 1;
+                // Loop melalui barang_id dan harga_awal yang diterima dari formulir
+                foreach ($request->barang_id as $index => $barangId) {
+                    LotItem::create([
+                        'barang_lelang_id' => $barangId,
+                        'event_lelang_id' => $request->event_id,
+                        'lot_id' => $id,
+                        'tanggal' => $request->waktu_from_event,
+                        'harga_awal' => $hargaAwal[$index],
+                        'no_lot' => $no_lot++
+                    ]);
+                }
+                // die;
             }
-            // die;
-        }
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();

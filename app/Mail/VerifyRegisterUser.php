@@ -17,12 +17,10 @@ class VerifyRegisterUser extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user; // Menambahkan properti $user
     public $url; // Menambahkan properti $user
 
-    public function __construct(User $user, $url)
+    public function __construct($url)
     {
-        $this->user = $user;
         $this->url = $url;
     }
 
