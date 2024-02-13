@@ -139,7 +139,8 @@ class FrontEndController extends Controller
             $ktp = $request->file('foto_ktp');
             $npwp = $request->file('foto_npwp');
             $cekuser = User::where('email',$request->email)->where('status','active')->whereNotNull('email_verified_at')->first();
-            if ($cekuser !== null) {
+            
+            if ($cekuser == null) {
                 if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
                     $ktp->storeAs('public/image', $ktp->hashName());
                     $npwp->storeAs('public/image', $npwp->hashName());
@@ -192,6 +193,61 @@ class FrontEndController extends Controller
                         'password' => Hash::make($request->password),
                     ]);
                 }
+            }else {
+                
+                if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
+                    $ktp->storeAs('public/image', $ktp->hashName());
+                    $npwp->storeAs('public/image', $npwp->hashName());
+                    $cekuser->update([
+                        'name' => $request->nama,
+                        'email' => $request->email,
+                        'no_telp' => $request->no_telp,
+                        'alamat' => $request->alamat,
+                        'nik' => $request->nik,
+                        'npwp' => $request->npwp,
+                        'no_rek' => $request->no_rek,
+                        'foto_ktp' => $ktp->hashName(),
+                        'foto_npwp' => $npwp->hashName(),
+                        'password' => Hash::make($request->password),
+                    ]);
+                }else if($request->hasFile('foto_ktp')) {
+                    $cekuser->update([
+                        'name' => $request->nama,
+                        'email' => $request->email,
+                        'no_telp' => $request->no_telp,
+                        'alamat' => $request->alamat,
+                        'nik' => $request->nik,
+                        'npwp' => $request->npwp,
+                        'no_rek' => $request->no_rek,
+                        'foto_ktp' => $ktp->hashName(),
+                        'password' => Hash::make($request->password),
+                    ]);
+                }else if($request->hasFile('foto_npwp')){
+                    $cekuser->update([
+                        'name' => $request->nama,
+                        'email' => $request->email,
+                        'no_telp' => $request->no_telp,
+                        'alamat' => $request->alamat,
+                        'nik' => $request->nik,
+                        'npwp' => $request->npwp,
+                        'no_rek' => $request->no_rek,
+                        'foto_npwp' => $ktp->hashName(),
+                        'password' => Hash::make($request->password),
+                    ]);
+                    
+                }else{
+                    $cekuser->update([
+                        'name' => $request->nama,
+                        'email' => $request->email,
+                        'no_telp' => $request->no_telp,
+                        'alamat' => $request->alamat,
+                        'nik' => $request->nik,
+                        'npwp' => $request->npwp,
+                        'no_rek' => $request->no_rek,
+                        'password' => Hash::make($request->password),
+                    ]);
+                }
+                # code...
             }
     
            
