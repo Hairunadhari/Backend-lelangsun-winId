@@ -2897,7 +2897,7 @@ class MenuSuperAdminController extends Controller
             ->get();
             if ($cekBarang->isNotEmpty()) {
                 $namaBarang = $cekBarang->pluck('barang_lelang.barang')->implode(', ');
-                return redirect()->back()->with('error', 'Barang Lelang ' . $namaBarang . ' Sudah Ada Di Event Lain!');
+                return redirect()->back()->with('error', 'Barang Lelang ' . $namaBarang . ', Sudah Ada Di Event Lain!');
             }
                 $lot_item = LotItem::where('lot_id', $id)->get();
                 $lot_item->each->update([
