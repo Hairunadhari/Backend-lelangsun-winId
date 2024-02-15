@@ -2865,26 +2865,40 @@ class MenuSuperAdminController extends Controller
     }
 
     public function  form_edit_lot($id){
-        $lot = Lot::with('event_lelang.kategori_barang')->find($id);
-        $baranglelang = BarangLelang::where('status',1)->where('kategoribarang_id', $lot->event_lelang->kategori_barang_id)->get();
-        $lot_item = LotItem::where('lot_id',$id)->where('status_item','active')->where('status','active')->get();
-        $barangTerpilih = [];
-
-        foreach ($lot_item as $item) {
-            $barangTerpilih[$item->barang_lelang_id] = $item->barang_lelang_id;
-        }
-        foreach ($lot_item as $item) {
-            $barangTerpilih[$item->barang_lelang_id] = $item->harga_awal;
+        try {
+            $lot = Lot::find($id);
+            $baranglelang = BarangLelang::where('status',1)->where('kategoribarang_id', $lot->event_lelang->kategori_barang_id)->get();
+            $lot_item = LotItem::where('lot_id',$id)->where('status_item','active')->where('status','active')->get();
+            $barangTerpilih = [];
+    
+            foreach ($lot_item as $item) {
+                $barangTerpilih[$item->barang_lelang_id] = $item->harga_awal;
+            }
+            // dd($barangTerpilih);
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
         }
         return view('lelang.edit_lot',compact('lot','id','baranglelang','barangTerpilih','lot_item'));
     }
 
     public function update_lot(Request $request,$id){
+        
         try {
             DB::beginTransaction();
+            $cekBarang = LotItem::with('barang_lelang')
+            ->whereIn('barang_lelang_id', $request->barang_id)
+            ->where('status_item', 'active')
+            ->where('status', 'active')
+            ->where('lot_id', '!=',$id)
+            ->get();
+            if ($cekBarang->isNotEmpty()) {
+                $namaBarang = $cekBarang->pluck('barang_lelang.barang')->implode(', ');
+                return redirect()->back()->with('error', 'Barang Lelang ' . $namaBarang . ' Sudah Ada Di Event Lain!');
+            }
             if (is_null($request->barang_id)) {
                 return redirect()->back()->with('error', 'Anda belum memilih Barang!');
-            }else {
+            }
                 $lot_item = LotItem::where('lot_id', $id)->get();
                 $lot_item->each->update([
                     'status_item' => 'not-active',
@@ -2907,8 +2921,7 @@ class MenuSuperAdminController extends Controller
                         'no_lot' => $no_lot++
                     ]);
                 }
-                // die;
-            }
+             
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();

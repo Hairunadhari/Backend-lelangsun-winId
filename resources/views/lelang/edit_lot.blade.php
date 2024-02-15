@@ -9,7 +9,7 @@
 <div class="section-body">
     <div class="card">
         <div class="card-header">
-            <h4>Form Lot</h4>
+            <h4>Form Update Lot</h4>
         </div>
         <div class="card-body">
             <h5>Detail Event</h5>
@@ -20,14 +20,6 @@
                 <li>Alamat Event : {{$lot->event_lelang->alamat}}</li>
                 <li>Waktu/Tanggal Event : {{$lot->event_lelang->waktu}}</li>
             </ul>
-            @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>{{ session('error') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
             <form action="{{route('superadmin.update-lot',$lot->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('put')
