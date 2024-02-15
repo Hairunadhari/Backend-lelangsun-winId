@@ -2886,6 +2886,9 @@ class MenuSuperAdminController extends Controller
         
         try {
             DB::beginTransaction();
+            if (is_null($request->barang_id)) {
+                return redirect()->back()->with('error', 'Anda belum memilih Barang!');
+            }
             $cekBarang = LotItem::with('barang_lelang')
             ->whereIn('barang_lelang_id', $request->barang_id)
             ->where('status_item', 'active')
@@ -2895,9 +2898,6 @@ class MenuSuperAdminController extends Controller
             if ($cekBarang->isNotEmpty()) {
                 $namaBarang = $cekBarang->pluck('barang_lelang.barang')->implode(', ');
                 return redirect()->back()->with('error', 'Barang Lelang ' . $namaBarang . ' Sudah Ada Di Event Lain!');
-            }
-            if (is_null($request->barang_id)) {
-                return redirect()->back()->with('error', 'Anda belum memilih Barang!');
             }
                 $lot_item = LotItem::where('lot_id', $id)->get();
                 $lot_item->each->update([
