@@ -87,3 +87,12 @@ Route::get('/get-provinsi', [ApiController::class, 'get_provinsi']);
 Route::get('/get-city/{id}', [ApiController::class, 'get_city_by_id_provinsi']);
 Route::post('/cost', [ApiController::class, 'tarif_pengiriman']);
 Route::get('/get-kurir', [ApiController::class, 'list_kurir']);
+
+
+
+
+
+
+
+
+Route::post('/tescekongkir', [ApiController::class, 'tescekongkir']);

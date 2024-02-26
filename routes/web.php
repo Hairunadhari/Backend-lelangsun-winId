@@ -31,6 +31,13 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 //     return view('auth.login');
 // });
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
+Route::get('/tes', [FrontEndController::class, 'tes']);
+Route::get('/tescariarea/{value}', [FrontEndController::class, 'tescariarea']);
+Route::get('/teslistkurir', [FrontEndController::class, 'teslistkurir']);
+Route::get('/tescekongkir/{asal}/{tujuan}', [FrontEndController::class, 'tescekongkir']);
+
+
+
 Route::get('/user-lot', [FrontEndController::class, 'lot'])->name('front-end-lot');
 Route::get('/user-lelang', [FrontEndController::class, 'lelang'])->name('front-end-lelang');
 Route::get('/user-event', [FrontEndController::class, 'event'])->name('front-end-event');
@@ -68,7 +75,6 @@ Route::post('/resend-email', [VerifyEmailRegisterController::class, 'resend_emai
 
 
 
-Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard']);
 Route::middleware(['auth','role:Super Admin'])->group(function () {
     Route::prefix('superadmin')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('.edit');
@@ -279,6 +285,7 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
 });
 
 Route::middleware(['auth','allrole'])->group(function (){
+Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard']);
 
     Route::post('/add-kategori-produk', [MenuSuperAdminController::class, 'add_kategori_produk'])->name('add-kategori-produk');
     Route::get('/edit-kategori-produk/{id}/', [MenuSuperAdminController::class, 'edit_kategori_produk'])->name('edit-kategori-produk');
@@ -308,7 +315,6 @@ Route::middleware(['auth','allrole'])->group(function (){
 });
 
 
-Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard']);
 Route::middleware(['auth','role:Admin'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/profil-toko', [MenuSuperAdminController::class, 'profil_toko'])->name('admin.profil-toko');

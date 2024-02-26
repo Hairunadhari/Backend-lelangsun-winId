@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Throwable;
+use Validator;
 use Carbon\Carbon;
 use App\Models\Lot;
 use App\Models\Npl;
@@ -27,12 +28,12 @@ use App\Models\BannerLelangImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Auth\LoginRequest;
-use Validator;
 
 
 class FrontEndController extends Controller
@@ -595,6 +596,50 @@ class FrontEndController extends Controller
         return response()->json('success');
 
 
+    }
+
+    public function tes(){
+        return view('tes');
+    }
+    public function tescariarea($value){
+        $data_request = Http::withHeaders([
+            'Authorization' => 'biteship_test.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGV2V2luSWQiLCJ1c2VySWQiOiI2NWFhMTVhMDc4YTI1NzAwMTJkMTFiOWEiLCJpYXQiOjE3MDU3MjU4NDB9.0rxl8ArGyldLWj3m0puYKg6Crbnclr57d8fLMKN_C3Y'
+        ])->get('https://api.biteship.com/v1/maps/areas?countries=ID&input='.$value.'&type=single');
+    
+        // return response()->json($data_request);
+        return json_decode($data_request);
+    }
+
+    public function teslistkurir(){
+        $data_request = Http::withHeaders([
+            'Authorization' => 'biteship_test.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGV2V2luSWQiLCJ1c2VySWQiOiI2NWFhMTVhMDc4YTI1NzAwMTJkMTFiOWEiLCJpYXQiOjE3MDU3MjU4NDB9.0rxl8ArGyldLWj3m0puYKg6Crbnclr57d8fLMKN_C3Y'
+        ])->get('https://api.biteship.com/v1/couriers');
+
+        return json_decode($data_request);
+    }
+     
+    public function tescekongkir($asal, $tujuan){
+        $data_request = Http::withHeaders([
+            'Authorization' => 'biteship_test.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGV2V2luSWQiLCJ1c2VySWQiOiI2NWFhMTVhMDc4YTI1NzAwMTJkMTFiOWEiLCJpYXQiOjE3MDU3MjU4NDB9.0rxl8ArGyldLWj3m0puYKg6Crbnclr57d8fLMKN_C3Y'
+        ])->post('https://api.biteship.com/v1/rates/couriers', [
+            'origin_area_id' => $asal,
+            'destination_area_id' => $tujuan,
+            'couriers'=>'paxel,jne,sicepat,tiki,lalamove',
+            'items' => [
+                [
+                'name' => 'Sepatu',
+                'description' => 'Sepatu import',
+                'value' => 100000,
+                'length' => 30,
+                'width' => 15,
+                'height' => 20,
+                'weight' => 200,
+                'quantity' => 2,
+            ],
+        ],
+        ]);
+
+        return json_decode($data_request);
     }
     
 }

@@ -4,7 +4,8 @@
         <a href="#">WIN</a>
       </div>
       <div class="sidebar-brand sidebar-brand-sm">
-        <a href="#">W</a>
+        {{-- <a href="#">W</a> --}}
+        <img src="/assets/img/LogoWin-Shop.png" style="width: 40px; height: 40px;" alt="">
       </div>
       <ul class="sidebar-menu">
         @if (Auth::user()->role_id == 1)    

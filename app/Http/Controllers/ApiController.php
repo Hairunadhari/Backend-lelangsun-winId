@@ -2511,4 +2511,39 @@ class ApiController extends Controller
         $data = Kurir::all();
         return response()->json($data);
     }
+
+    public function tescekongkir(Request $request){
+        // dd($request->items);
+        $i =  [
+                'name' => 'Sepatu',
+                'description' => 'Sepatu import',
+                'value' => 100000,
+                'length' => 30,
+                'width' => 15,
+                'height' => 20,
+                'weight' => 200,
+                'quantity' => 2,
+        ];
+        $data_request = Http::withHeaders([
+            'Authorization' => 'biteship_test.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGV2V2luSWQiLCJ1c2VySWQiOiI2NWFhMTVhMDc4YTI1NzAwMTJkMTFiOWEiLCJpYXQiOjE3MDU3MjU4NDB9.0rxl8ArGyldLWj3m0puYKg6Crbnclr57d8fLMKN_C3Y'
+        ])->post('https://api.biteship.com/v1/rates/couriers', [
+            'origin_area_id' => $request->asal,
+            'destination_area_id' => $request->tujuan,
+            'couriers'=>$request->kurir,
+            'items' => [
+                [
+                    'name' => 'Sepatu',
+                    'description' => 'Sepatu import',
+                    'value' => 100000,
+                    'length' => 30,
+                    'width' => 15,
+                    'height' => 20,
+                    'weight' => 200,
+                    'quantity' => 2,
+                ],
+            ],
+        ]);
+
+        return json_decode($data_request);
+    }
 }

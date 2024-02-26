@@ -12,6 +12,7 @@
     <meta name="author" content="John Doe">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Win Lelang</title>
+    <link rel="icon" href="{{ asset('asset-lelang/logo.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="page" data-page="user">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -29,6 +30,9 @@
 
 </head>
 <style>
+    body{
+        margin: 0;
+    }
     .navbar-nav {
         margin-left: 300px;
     }
