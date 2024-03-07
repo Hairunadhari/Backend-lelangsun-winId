@@ -6,9 +6,9 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="w-100">Daftar Toko</h4>
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#tokomodal">
+                    {{-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#tokomodal">
                         <span class="text">+ Tambah Toko</span>
-                    </button>
+                    </button> --}}
                     <a href="{{route('superadmin.tambah-admin')}}" class="btn btn-success" style="margin-left: 10px">+ Tambah Toko & Admin</a>
                 </div>
                 <div class="card-body">

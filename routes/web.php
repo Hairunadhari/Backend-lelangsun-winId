@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\MenuAdminController;
 use App\Http\Controllers\PengirimanController;
+use App\Http\Controllers\ApiBiteshipController;
 use App\Http\Controllers\MenuSuperAdminController;
 use App\Http\Controllers\SendEmailMemberController;
 use App\Http\Controllers\VerifyEmailRegisterController;
@@ -35,6 +36,7 @@ Route::get('/tes', [FrontEndController::class, 'tes']);
 Route::get('/tescariarea/{value}', [FrontEndController::class, 'tescariarea']);
 Route::get('/teslistkurir', [FrontEndController::class, 'teslistkurir']);
 Route::get('/tescekongkir/{asal}/{tujuan}', [FrontEndController::class, 'tescekongkir']);
+Route::post('/tes-order', [FrontEndController::class, 'tesorder']);
 
 
 
@@ -246,7 +248,6 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::post('/add-admin', [MenuSuperAdminController::class, 'add_admin'])->name('superadmin.add-admin');
         Route::get('/edit-admin/{id}/', [MenuSuperAdminController::class, 'edit_admin'])->name('superadmin.edit-admin');
         
-        Route::get('/profil-toko', [MenuSuperAdminController::class, 'profil_toko'])->name('superadmin.profil-toko');
         Route::put('/update-akun-toko/{id}/', [MenuSuperAdminController::class, 'update_akun_toko'])->name('superadmin.update-akun-toko');
         Route::get('get-kategori-by-toko/{id}/', [MenuSuperAdminController::class, 'getKategoriByToko']);
         Route::get('editproduk/get-kategori-by-toko/{id}/', [MenuSuperAdminController::class, 'getKategoriByToko']);
@@ -317,8 +318,8 @@ Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard']);
 
 Route::middleware(['auth','role:Admin'])->group(function () {
     Route::prefix('admin')->group(function () {
-        Route::get('/profil-toko', [MenuSuperAdminController::class, 'profil_toko'])->name('admin.profil-toko');
-        Route::put('/update-akun-toko/{id}/', [MenuSuperAdminController::class, 'update_akun_toko'])->name('admin.update-akun-toko');
+        Route::get('/profil-toko', [MenuAdminController::class, 'profil_toko'])->name('admin.profil-toko');
+        Route::put('/update-akun-toko/{id}', [MenuAdminController::class, 'update_akun_toko'])->name('admin.update-akun-toko');
         
         // route toko
         Route::get('/toko', [MenuSuperAdminController::class, 'list_toko'])->name('toko');
@@ -335,6 +336,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
 
         // route produk
         Route::get('/produk', [MenuSuperAdminController::class, 'list_produk'])->name('admin.produk');
+        Route::get('/formedit-akun-toko/{id}', [MenuAdminController::class, 'formedit_akun_toko'])->name('admin.formedit-akun-toko');
     });
     
 });
@@ -346,6 +348,10 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::get('/kota/{id}',[PengirimanController::class, 'get_kota']);
     Route::get('/origin={city_origin}&destination={city_destination}&weight={weight}&courier={courier}',[PengirimanController::class, 'get_ongkir']);
     Route::get('/get-city/{id}',[MenuSuperAdminController::class, 'get_kota_berdasarkan_id_provinsi']);
+    Route::get('/map/{value}', [MenuAdminController::class, 'search_map']);
+
+
+
 require __DIR__.'/auth.php';
 
 require __DIR__.'/pesertaauth.php';

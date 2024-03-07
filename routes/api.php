@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\RajaOngkirController;
+use App\Http\Controllers\ApiBiteshipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,10 +90,13 @@ Route::post('/cost', [ApiController::class, 'tarif_pengiriman']);
 Route::get('/get-kurir', [ApiController::class, 'list_kurir']);
 
 
+// biteship
+Route::get('/create-kurir', [ApiBiteshipController::class, 'create_kurir']);
+Route::post('/maps', [ApiBiteshipController::class, 'maps']);
+Route::post('/rates', [ApiBiteshipController::class, 'rates']);
 
 
 
 
 
-
-Route::post('/tescekongkir', [ApiController::class, 'tescekongkir']);
+Route::get('/tes', [ApiController::class, 'tescekongkir']);

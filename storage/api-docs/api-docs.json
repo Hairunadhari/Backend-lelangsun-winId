@@ -5,6 +5,95 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/maps": {
+            "post": {
+                "tags": [
+                    "Maps"
+                ],
+                "summary": "Maps",
+                "description": "Masukkan Kecamatan / Kota / Provinsi / Kode Pos",
+                "operationId": "Maps",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "value"
+                                ],
+                                "properties": {
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/rates": {
+            "post": {
+                "tags": [
+                    "Rates"
+                ],
+                "summary": "Cek Tarif Pengiriman",
+                "description": "Masukkan Asal Postal Code, Tujuan Postal Code, Items",
+                "operationId": "Rates",
+                "requestBody": {
+                    "description": "Form",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [],
+                                "properties": {
+                                    "asal_postal_code": {
+                                        "type": "integer"
+                                    },
+                                    "tujuan_postal_code": {
+                                        "type": "integer"
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "value": {
+                                                    "type": "integer"
+                                                },
+                                                "quantity": {
+                                                    "type": "integer"
+                                                },
+                                                "weight": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/produk": {
             "get": {
                 "tags": [
@@ -1528,21 +1617,6 @@
                         }
                     }
                 },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/get-kurir": {
-            "get": {
-                "tags": [
-                    "Kurir"
-                ],
-                "summary": "List Kurir",
-                "description": "menampilkan jenis kurir",
-                "operationId": "kurir",
                 "responses": {
                     "default": {
                         "description": ""

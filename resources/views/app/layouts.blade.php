@@ -98,7 +98,7 @@
    @if (Session::has('success'))
       <script>
           iziToast.success({
-            title: 'Success',
+            title: 'Notifikasi',
             message: "{{Session::get('success')}}",
             position: 'topRight'
           });
@@ -107,7 +107,7 @@
    @if (Session::has('error'))
       <script>
           iziToast.error({
-            title: 'Error',
+            title: 'Ada Kesalahan',
             message: "{{Session::get('error')}}",
             position: 'topRight'
           });

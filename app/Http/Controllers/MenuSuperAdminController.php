@@ -264,7 +264,7 @@ class MenuSuperAdminController extends Controller
 
     public function add_kategori_produk(Request $request){
         if (Auth::user()->role->role == 'Admin') {
-            if (Auth::user()->toko->province_id == null || Auth::user()->toko->city_id == null) {
+            if (Auth::user()->toko->postal_code == null || Auth::user()->toko->detail_alamat == null) {
                 return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
             }
         }
@@ -441,7 +441,7 @@ class MenuSuperAdminController extends Controller
             'video'     => 'required',
         ]);
         if (Auth::user()->role->role == 'Admin') {
-            if (Auth::user()->toko->province_id == null || Auth::user()->toko->city_id == null) {
+            if (Auth::user()->toko->postal_code == null || Auth::user()->toko->detail_alamat == null) {
                 return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
             }
         }
@@ -887,7 +887,7 @@ class MenuSuperAdminController extends Controller
 
     public function add_promosi(Request $request){
         if (Auth::user()->role->role == 'Admin') {
-            if (Auth::user()->toko->province_id == null || Auth::user()->toko->city_id == null) {
+            if (Auth::user()->toko->postal_code == null || Auth::user()->toko->detail_alamat == null) {
                 return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
             }
         }
@@ -2445,22 +2445,7 @@ class MenuSuperAdminController extends Controller
         return redirect()->route('superadmin.toko')->with('success', 'Data Berhasil Ditambahkan');
     }
 
-    public function profil_toko(){
-        $id = Auth::user()->id;
-        $toko = Toko::with('user')->where('user_id',$id)->first();
-        $provinsi = Province::all();
-        $getProvinsibyToko = DB::table('tokos')
-        ->leftJoin('provinces','tokos.province_id','=','provinces.id')
-        ->select('provinces.provinsi')
-        ->where('tokos.user_id',$id)
-        ->first();
-        $getCitybyToko = DB::table('tokos')
-        ->leftJoin('cities','tokos.city_id','=','cities.id')
-        ->select('cities.city_name')
-        ->where('tokos.user_id',$id)
-        ->first();
-        return view('profile/profil_toko',compact('toko','provinsi','getProvinsibyToko','getCitybyToko'));
-    }
+    
     
     public function update_akun_toko(Request $request){
         $this->validate($request, [

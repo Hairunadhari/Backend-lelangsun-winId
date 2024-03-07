@@ -47,7 +47,7 @@
                             <div class="card-body">
                                 @if ($errors->has('email') || $errors->has('password'))
                                 <div class="alert alert-danger alert-dismissible text-center fade show" role="alert">
-                                    <strong>Email Belum Terdaftar!</strong>
+                                    <strong>Silahkan Cek Ulang Email dan Password anda!</strong>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
