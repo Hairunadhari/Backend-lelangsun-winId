@@ -13,6 +13,7 @@ use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ApiBiteshipController;
 use App\Http\Controllers\MenuSuperAdminController;
 use App\Http\Controllers\SendEmailMemberController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\VerifyEmailRegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -37,6 +38,7 @@ Route::get('/tescariarea/{value}', [FrontEndController::class, 'tescariarea']);
 Route::get('/teslistkurir', [FrontEndController::class, 'teslistkurir']);
 Route::get('/tescekongkir/{asal}/{tujuan}', [FrontEndController::class, 'tescekongkir']);
 Route::post('/tes-order', [FrontEndController::class, 'tesorder']);
+Route::post('/submit-register', [RegisteredUserController::class, 'store']);
 
 
 

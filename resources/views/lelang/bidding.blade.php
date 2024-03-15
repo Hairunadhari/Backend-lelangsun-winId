@@ -19,11 +19,12 @@
     }
      .lot-first {
         background-color: #DC3545; /* You can adjust the background color as needed */
-        border-radius: 20px; /* Makes it a circle */
-        width: 90px; 
-        height: 30px; 
+        border-radius: 10px; /* Makes it a circle */
+        width: max-content; 
+        /* height: 30px;  */
         text-align: center;
         color: white;
+        padding: .5rem;
     }
 </style>
 <div class="section-body">
@@ -42,21 +43,21 @@
                                 alt="..." style="width:auto; ">
                             @endif
                             <div class="card-body">
-                                <h1 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h1>
-                                <h5 class="card-text">BRAND : {{$lot_item[0]->barang_lelang->brand}}</h5>
-                                <h5 class="card-text">TAHUN : {{$lot_item[0]->barang_lelang->tahun_produksi}}</h5>
-                                <h5 class="card-text">NO POLISI : {{$lot_item[0]->barang_lelang->no_polisi}}</h5>
-                                <h5 class="card-text">GRADE : {{$lot_item[0]->barang_lelang->grade}}</h5>
+                                <h3 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h3>
+                                <p class="card-text fw-bold">BRAND : {{$lot_item[0]->barang_lelang->brand}}</p>
+                                <p class="card-text fw-bold">TAHUN : {{$lot_item[0]->barang_lelang->tahun_produksi}}</p>
+                                <p class="card-text fw-bold">NO POLISI : {{$lot_item[0]->barang_lelang->no_polisi}}</p>
+                                <p class="card-text fw-bold">GRADE : {{$lot_item[0]->barang_lelang->grade_utama}}</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-6 col-md-6 col-lg-6">
-                        <div class="lot-judul" style="padding-top: 20px; padding-left: 20px;">
-                            <div class="lot-first">
+                        <div class="lot-judul p-2">
+                            <div class="lot-first mb-1">
 
-                                <h4>LOT {{$lot_item[0]->no_lot}}</h4>
+                                <h5 class="mb-0">LOT {{$lot_item[0]->no_lot}}</h5>
                             </div>
-                            <h4>Rp {{$lot_item[0]->harga_awal}}</h4>
+                            <h4>Harga Awal : Rp {{number_format($lot_item[0]->harga_awal,0,',','.')}}</h4>
                         </div>
                         <div class="card chat-box" id="mychatbox"
                             style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6;">

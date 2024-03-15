@@ -178,20 +178,20 @@
                         if (data.email_verified_at == null) {
                             action = `
                                     <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                                    <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
+                                    <span><a class="btn btn-sm btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="_method" value="PUT">
-                                    <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
-                                    <a class="btn btn-success" onclick="return confirm('Apakah anda ingin mengaktifkan verifikasi email data ini?');" href="/superadmin/aktifkan-email-peserta/${data.id}"><i class="fas fa-user-check"></i></a>
+                                    <button class="btn btn-sm btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
+                                    <a class="btn btn-sm btn-success" onclick="return confirm('Apakah anda ingin mengaktifkan verifikasi email data ini?');" href="/superadmin/aktifkan-email-peserta/${data.id}"><i class="fas fa-user-check"></i></a>
                                     </form>
                                 `;
                         } else {
                             action = `
                                     <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus data ini ?');">
-                                    <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
+                                    <span><a class="btn btn-sm btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="_method" value="PUT">
-                                    <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
+                                    <button class="btn btn-sm btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
                                     </form>
                                 `;
                         }

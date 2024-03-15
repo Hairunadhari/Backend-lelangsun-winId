@@ -275,10 +275,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "ada kesalahan"
-                                        },
-                                        "data": {
-                                            "type": "null"
+                                            "example": "Silahkan Lengkapi Kolom Nama Dengan Benar!"
                                         }
                                     },
                                     "type": "object"

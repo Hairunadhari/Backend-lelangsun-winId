@@ -261,8 +261,7 @@ class ApiController extends Controller
      *          description="registrasi gagal",
      *          @OA\JsonContent(
      *              @OA\Property(property="success", type="boolean", example=false),
-     *              @OA\Property(property="message", type="string", example="ada kesalahan"),
-     *              @OA\Property(property="data", type="null"),
+     *              @OA\Property(property="message", type="string", example="Silahkan Lengkapi Kolom Nama Dengan Benar!"),
      *          ),
      *      ),
      * )
@@ -270,19 +269,30 @@ class ApiController extends Controller
 
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|',
+            'name'     => 'required',
             'email'     => 'required|email|unique:users,email',
             'password'     => 'required|min:8',
             'confirm_password'     => 'required|same:password',
+        ],
+        [
+          'name.required' => 'Silahkan Lengkapi Kolom Nama Dengan Benar!',  
+          'email.email' => 'Silahkan Lengkapi Kolom Email Dengan Valid!',  
+          'email.unique:users,email' => 'Email Sudah Terdaftar!',  
+          'password.required' => 'Silahkan Lengkapi Kolom Password Dengan Benar!!',  
+          'password.min' => 'Password Minimal 8 Karakter!',  
+          'confirm_password.required' => 'Silahkan Lengkapi Kolom Konfirmasi Password Dengan Benar!',  
+          'confirm_password.same' => 'Konfirmasi Password Tidak Cocok!',  
         ]);
-
         if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
             return response()->json([
                 'success' => false,
-                'message' => 'Ada Kesalahan',
-                'data' =>$validator->errors()
-            ], 401);
+                'message' => $alertMessage
+            ],401);
         }
+       
         try {
             DB::beginTransaction();
             $input = $request->all();
@@ -361,14 +371,13 @@ class ApiController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Login Sukses',
+                'message' => 'Login Berhasil',
                 'data' => $success,
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Cek email dan password lagi',
-                'data' => null,
+                'message' => 'Cek Email dan Password lagi',
             ], 401);
         }
     }
@@ -1734,47 +1743,6 @@ class ApiController extends Controller
      * )
      */
     public function daftar_lot(){
-        // $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
-        // $now = $konvers_tanggal->format('Y-m-d');
-        // $lot = LotItem::with(['barang_lelang'=>function($query){
-        //     $query->select('id',
-        //     'kategoribarang_id',
-        //     'barang',
-        //     'brand',
-        //     'warna',
-        //     'lokasi_barang',
-        //     'nomer_rangka',
-        //     'nomer_mesin',
-        //     'tipe_mobil',
-        //     'transisi_mobil',
-        //     'bahan_bakar',
-        //     'odometer',
-        //     'grade_utama',
-        //     'grade_mesin',
-        //     'grade_interior',
-        //     'grade_exterior',
-        //     'no_polisi',
-        //     'stnk',
-        //     'tahun_produksi',
-        //     'bpkb',
-        //     'faktur',
-        //     'sph',
-        //     'kir',
-        //     'ktp',
-        //     'kwitansi',
-        //     'keterangan',
-        //     'stnk_berlaku',
-        //     'created_at',
-        //     'updated_at',
-        // );}])->where('tanggal','>=',$now)->where('status','active')->where('status_item','active')->select('id','barang_lelang_id','event_lelang_id','lot_id','tanggal','status_item','status','harga_awal')->get();
-        // $lot->each(function ($item){
-        //     $item->barang_lelang->gambarlelang->each(function($itembarang){
-        //         $itembarang->gambar = env('APP_URL').'/storage/image/'. $itembarang->gambar;
-        //     });
-        // });
-        // return response()->json([
-        //     'lot_item' => $lot
-        // ]);
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d');
         $lot = LotItem::with('barang_lelang.gambarlelang')->where('tanggal','>=',$now)->where('status','active')->where('status_item','active')->get();
@@ -2102,7 +2070,9 @@ class ApiController extends Controller
         try {
             DB::beginTransaction();
             $user = User::find($id);
-            $npl = Npl::where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('user_id',$user->id)->orderBy('created_at','desc')->get();
+            $npl = Npl::with(['event_lelang' => function($query){
+                $query->select('id','judul');
+            }])->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('user_id',$user->id)->orderBy('created_at','desc')->get();
             
             DB::commit();
         } catch (Throwable $th) {
