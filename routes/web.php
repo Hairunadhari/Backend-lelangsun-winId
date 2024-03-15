@@ -288,7 +288,7 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
 });
 
 Route::middleware(['auth','allrole'])->group(function (){
-Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard']);
+Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('dashboard');
 
     Route::post('/add-kategori-produk', [MenuSuperAdminController::class, 'add_kategori_produk'])->name('add-kategori-produk');
     Route::get('/edit-kategori-produk/{id}/', [MenuSuperAdminController::class, 'edit_kategori_produk'])->name('edit-kategori-produk');
