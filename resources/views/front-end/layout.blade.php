@@ -62,6 +62,7 @@
     .confooter {
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
         padding: 50px 50px 0 50px;
     }
 

@@ -54,6 +54,7 @@ Route::post('/proses-login', [FrontEndController::class, 'proses_login'])->name(
 Route::get('/detail-event-user/{id}/', [FrontEndController::class, 'detail_event'])->name('detail-event-user');
 Route::get('/get-harganpl/{id}/', [MenuSuperAdminController::class, 'harganpl_by_event']);
 Route::get('/user-bidding/{id}/', [FrontEndController::class, 'bidding'])->name('user-bidding');
+Route::get('/user-view-monitor/{id}/', [FrontEndController::class, 'view_monitor'])->name('user-view-monitor');
 Route::post('send-bidding-user',[FrontEndController::class, 'send_bidding']);
 Route::post('log-bidding-user',[FrontEndController::class, 'log_bidding']);
 Route::get('/resend-link/{email}',[FrontEndController::class, 'resend_link']);

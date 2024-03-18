@@ -598,6 +598,20 @@ class FrontEndController extends Controller
 
     }
 
+    public function view_monitor($id){
+        $event_id = Crypt::decrypt($id);
+        $lot_item = LotItem::with(['bidding' => function($query){
+            $query->orderBy('harga_bidding','desc')->first();
+        }])->where('event_lelang_id',$event_id)->where('status_item','active')->where('status','active')->get();
+        // dd($lot_item);
+        $id_peserta = Auth::user()->id ?? null;
+        $npl = Npl::where('status_npl','aktif')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('user_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
+        if (empty($lot_item[0])) {
+            return redirect('/');
+        }
+        // dd($npl);
+        return view('front-end/view-monitor',compact('lot_item','npl'));
+    }
 
    
      

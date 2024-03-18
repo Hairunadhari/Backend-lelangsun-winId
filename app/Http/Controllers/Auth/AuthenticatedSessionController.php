@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
                     return redirect('/dashboard');
                 
             }else {
-                return redirect()->back()->with(['pesan' => 'Ada Kesalahan']);            
+                return redirect()->back()->with(['pesan' => 'Cek Email dan Password lagi!']);            
             }
         } else {
             return redirect()->back()->with(['pesan' => 'Email tidak ditemukan']);            

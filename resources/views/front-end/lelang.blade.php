@@ -113,8 +113,12 @@
                   @php
                       $hashid = Crypt::encrypt($item->id)
                   @endphp
+                  <div style="display: flex; gap: 1rem">
                       <a href="{{ route('user-bidding', ['id' => $hashid, 'lot' => $item->lot_item[0]->id ?? null]) }}"
-                        class="btn btn-danger w-100"><span>Masuk</span></a>
+                        class="btn btn-danger w-50 "><span>Masuk</span></a>
+                        <a href="{{ route('user-view-monitor', ['id' => $hashid, 'lot' => $item->lot_item[0]->id ?? null]) }}"
+                            class="btn btn-success w-50"><span>View Monitor</span></a>
+                        </div>
                 </div>
               </div>
               @endforeach
