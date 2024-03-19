@@ -6,7 +6,7 @@ window.Alpine = Alpine;
 
 Alpine.start();
 $(document).ready(function () {
-
+   
     
     let event_lelang_id = $('#event_lelang_id').val();
     let lot_item_id = $('#lot_item_id').val();
@@ -133,7 +133,7 @@ $(document).ready(function () {
                 // console.log('timer-habis',res);
                 $('#con-bid').css('display', 'none');
                     $('#loading').css('display', 'block');
-                const message = res.email ? "Pemenang Dari LOT Ini Adalah " + res.email + " dengan harga " + res.harga_bidding + "!" : "LOT tidak memiliki pemenang.";
+                const message = res.email ? "Pemenang Dari LOT Ini Adalah " + res.email + " Dengan Harga Rp. " + res.harga_bidding.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : "LOT tidak memiliki pemenang.";
                 swal(message, {
                     icon: "success",
                     buttons: {
@@ -349,7 +349,7 @@ window.Echo.channel('lelang')
                 if (e.pemenang_bid == null) {
                     var message = "LOT tidak memiliki pemenang.";
                 } else {
-                    var message = "Pemenang Dari LOT Ini Adalah " + e.pemenang_bid.email + " dengan harga " + e.pemenang_bid.harga_bidding + "!";
+                    var message = "Pemenang Dari LOT Ini Adalah " + e.pemenang_bid.email + " Dengan Harga Rp. " + e.pemenang_bid.harga_bidding.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                 }
                 swal({
                     title: "WAKTU HABIS !!!",

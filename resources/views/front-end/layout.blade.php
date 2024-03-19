@@ -72,7 +72,7 @@
     }
 
     .last-text {
-        padding: 5px;
+        /* padding: 5px; */
     }
 
     @media (max-width: 600px) {
@@ -119,12 +119,12 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     {{-- @if (Auth::user()) --}}
-                @if (Auth::user())
-                        <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
-                        {{-- <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a> --}}
-                        <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
-                        <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
-                        <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
+                    <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
+                    {{-- <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a> --}}
+                    <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
+                    @if (Auth::user())
                         {{-- ambil model notifikasi --}}
                         @inject('notifikasi', 'App\Models\Notifikasi')
                         @php
@@ -153,11 +153,6 @@
                             </ul>
                         </li>
                     @else
-                    <a class="nav-link fw-semibold" aria-current="page" href="{{route('beranda')}}">Beranda</a>
-                    {{-- <a class="nav-link fw-semibold" href="{{route('front-end-lot')}}">Lot</a> --}}
-                    <a class="nav-link fw-semibold" href="{{route('front-end-lelang')}}">Lelang</a>
-                    <a class="nav-link fw-semibold" href="{{route('front-end-event')}}">Events</a>
-                    <a class="nav-link fw-semibold" href="{{route('front-end-kontak')}}">Kontak</a>
                     <a class="nav-link fw-semibold" href="{{route('front-end-login')}}">Login</a>
                     @endif
                 </div>
@@ -204,6 +199,12 @@
     @if (Session::has('error'))
         <script>
             swal("Upsss","{{Session::get('error')}}",'error',{
+            });
+        </script>
+    @endif
+    @if (Session::has('warning'))
+        <script>
+            swal("Upsss","{{Session::get('warning')}}",'warning',{
             });
         </script>
     @endif

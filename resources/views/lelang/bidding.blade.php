@@ -91,13 +91,13 @@
                                             <input type="hidden" name="kelipatan_bid" id="kelipatan_bid"
                                                 value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}"
                                                 class="form-control">
-                                            <div id="con-bid" class="button-center w-100" style="display:none">
-                                                <div class="d-flex justify-content-center mb-2">
+                                                <div class="text-center button-center w-100 mb-2">
                                                     <span class="badge badge-secondary text-center">
                                                         <div id="timer" data-seconds="<?= $setting->waktu_bid ?>">
                                                             00:{{$setting->waktu_bid}}</div>
                                                     </span>
                                                 </div>
+                                            <div id="con-bid" class="button-center w-100" style="display:none">
                                                 <div class="button-bid"
                                                     style="display: flex; justify-content: center; width:100%;">
                                                     <button type="submit" id="send_bidding" class="btn btn-success">
@@ -108,7 +108,7 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div class="card-body text-center" id="loading" style="display: none;">
+                                            <div class="text-center button-center w-100" id="loading" style="display: none;">
                                                 <div class="buttons">
                                                     <a href="#" class="btn disabled btn-dark btn-progress">Progress</a>
                                                 </div>

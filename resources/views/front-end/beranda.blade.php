@@ -131,6 +131,7 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
+            
             height: 52vh;
         }
 
@@ -179,6 +180,18 @@
         #content-4 {
             padding-top: 50px;
         }
+    }
+
+    @media only screen and (min-width: 601px) and (max-width: 992px){
+        
+    #content-3 {
+        width: 100%;
+        height: 149vh;
+        background-image: url('/asset-lelang/web-01.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
     }
 </style>
 <section id="img-slider">

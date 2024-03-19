@@ -115,13 +115,35 @@
     <div class="con-kontak2">
         <div class="card" style="width: 80%;">
             <div class="card-body">
-                <div class="heads">
-                    <a href="{{route('front-end-notif')}}">Profile</a>
-                    <a href="{{route('front-end-npl')}}">NPL</a>
-                    <a class="{{ request()->routeIs('front-end-pelunasan') ? 'badge text-bg-danger' : '' }}" href="{{route('front-end-pelunasan')}}">Pelunasan Barang Lelang</a>
-                    <a href="{{route('front-end-pesan')}}">Notifikasi</a>
-                </div>
-                <div class="scroll">
+              
+                <nav class="navbar navbar-expand-lg bg-primary">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a href="{{route('front-end-notif')}}" class="nav-link">Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                        <a href="{{route('front-end-npl')}}" class="nav-link">NPL</a>
+
+                                </li>
+                                <li class="nav-item">
+                                    <a class="{{ request()->routeIs('front-end-pelunasan') ? 'text-white active' : '' }} nav-link" href="{{route('front-end-pelunasan')}}">Pelunasan Barang Lelang</a>
+
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{route('front-end-pesan')}}" class="nav-link">Pesan</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div class="scroll mt-2">
                     <table class="table table-bordered">
                         <thead style="position: sticky; top: 0; background-color: rgb(224, 13, 13);">
                             <tr>

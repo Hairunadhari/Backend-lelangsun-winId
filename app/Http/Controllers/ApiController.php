@@ -276,8 +276,9 @@ class ApiController extends Controller
         ],
         [
           'name.required' => 'Silahkan Lengkapi Kolom Nama Dengan Benar!',  
+          'email.required' => 'Silahkan Lengkapi Kolom Email Dengan Benar!',  
           'email.email' => 'Silahkan Lengkapi Kolom Email Dengan Valid!',  
-          'email.unique:users,email' => 'Email Sudah Terdaftar!',  
+          'email.unique' => 'Email Sudah Terdaftar!',  
           'password.required' => 'Silahkan Lengkapi Kolom Password Dengan Benar!!',  
           'password.min' => 'Password Minimal 8 Karakter!',  
           'confirm_password.required' => 'Silahkan Lengkapi Kolom Konfirmasi Password Dengan Benar!',  

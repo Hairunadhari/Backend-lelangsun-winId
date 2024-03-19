@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </head>
 <style>
@@ -19,6 +19,7 @@
         height: 100vh;
         background-position: center;
         background-repeat: no-repeat;
+        /* background-size: cover; */
         color: white;
     }
 
@@ -55,12 +56,39 @@
         border-radius: 5px;
     }
 
-    /* .regis-button{
-        margin-bottom: 100px;
-    } */
-    /* .copyrgiht{
-        margin-bottom: 100px;
-    } */
+
+    @media (max-width: 600px) {
+        .row {
+            display: block;
+        }
+
+        .col-6 {
+            width: 100%;
+        }
+
+        body {
+            background-image: url('/asset-lelang/detail_event.jpg');
+            background-size: cover;
+            height: max-content;
+        }
+
+        body::after {
+            height: max-content;
+        }
+    }
+
+    @media (max-width: 992px) {
+
+        body {
+            background-image: url('/asset-lelang/detail_event.jpg');
+            background-size: cover;
+            height: max-content;
+        }
+
+        body::after {
+            height: max-content;
+        }
+    }
 
 </style>
 
@@ -73,27 +101,22 @@
                 <div class="row">
                     <div class="mb-1 col-6">
                         <label class="form-label">Nama <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="nama" required  value="{{ session('nama') }}">
-                        @if ($errors->has('nama'))
-                        <div class="warn"><small class="text-alert">eror!</small></div>
-                        @endif
+                        <input type="text" class="form-control" name="nama" required value="{{ session('nama') }}">
+                       
 
                     </div>
                     <div class="mb-1 col-6">
                         <label class="form-label">Email <span style="color: red">*</span></label>
-                        <input type="email" class="form-control" name="email" required  value="{{ session('email') }}">
-                        @if ($errors->has('email'))
-                        <div class="warn"><small class="text-alert">Email Sudah Terdaftar!</small></div>
-                        @endif
+                        <input type="email" class="form-control" name="email" required value="{{ session('email') }}">
+                      
                     </div>
                 </div>
                 <div class="row">
                     <div class="mb-1 col-6">
                         <label class="form-label">Telepon <span style="color: red">*</span></label>
-                        <input type="number" class="form-control" name="no_telp" required  value="{{ session('no_telp') }}">
-                        @if ($errors->has('no_telp'))
-                        <div class="warn"><small class="text-alert">eror!</small></div>
-                        @endif
+                        <input type="number" class="form-control" name="no_telp" required
+                            value="{{ session('no_telp') }}">
+                       
                     </div>
                     <div class="mb-1 col-6">
                         <label class="form-label">Nik</label>
@@ -117,29 +140,23 @@
                     </div>
                     <div class="col-6">
                         <label for="" class="form-label">Foto NPWP</label>
-                        <input type="file" class="form-control" name="foto_npwp" accept=".jpg,.png,.jpeg" id="gambarnpwp">
+                        <input type="file" class="form-control" name="foto_npwp" accept=".jpg,.png,.jpeg"
+                            id="gambarnpwp">
                     </div>
                 </div>
                 <div class="mb-1">
                     <label class="form-label">Alamat <span style="color: red">*</span></label>
-                    <textarea class="form-control" name="alamat" required   value="{{ session('name') }}"></textarea>
-                    @if ($errors->has('alamat'))
-                    <div class="warn"><small class="text-alert">eror!</small></div>
-                    @endif
+                    <textarea class="form-control" name="alamat" required >{{ session('alamat') }}</textarea>
+                    
                 </div>
                 <div class="mb-1">
                     <label class="form-label">Password <span style="color: red">*</span></label>
                     <input type="password" class="form-control" name="password" required>
-                    @if ($errors->has('password'))
-                    <div class="warn"><small class="text-alert">Password harus memiliki 5 karakter!</small></div>
-                    @endif
+                  
                 </div>
                 <div class="mb-1">
                     <label class="form-label">Confirm Password <span style="color: red">*</span></label>
                     <input type="password" class="form-control" name="confirm_password" required>
-                    @if ($errors->has('confirm_password'))
-                    <div class="warn"><small class="text-alert">Konfirmasi Password Tidak Cocok!</small></div>
-                    @endif
                 </div>
                 <button type="submit" class="btn btn-danger w-100 regis-button mb-2">Registrasi</button>
             </form>
@@ -154,7 +171,7 @@
 
         function validateFilektp() {
             if (this.files && this.files.length > 0) {
-                [].forEach.call(this.files, function(file) {
+                [].forEach.call(this.files, function (file) {
                     if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
                         alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
                         document.querySelector('#gambarktp').value = '';
@@ -167,7 +184,7 @@
 
         function validateFilenpwp() {
             if (this.files && this.files.length > 0) {
-                [].forEach.call(this.files, function(file) {
+                [].forEach.call(this.files, function (file) {
                     if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
                         alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
                         document.querySelector('#gambarnpwp').value = '';
@@ -177,15 +194,16 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            localStorage.removeItem('statusOtp'); 
+            localStorage.removeItem('statusOtp');
         });
+
     </script>
     @if (Session::has('error'))
     <script>
-        swal("Upsss","{{Session::get('error')}}",'error',{
-        });
+        swal("Upsss", "{{Session::get('error')}}", 'error', {});
+
     </script>
-@endif
+    @endif
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
     </script>

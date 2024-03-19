@@ -61,6 +61,14 @@
     .alert-success{
         background-color: #63ed7a;
     }
+    @media (max-width: 600px) {
+       .h5, a{
+        font-size: 13px;
+       }
+       .x2{
+        margin-top: 3px;
+       }
+    }
 </style>
 
 <body style="overflow-x: hidden;">
@@ -83,12 +91,12 @@
             </div>
         </div>
         <div class="no-akun">
-            <h5>Belum Memiliki Akun?</h5>
+            <h5 class="h5 x2">Belum Memiliki Akun?</h5>
             <a href="{{route('front-end-register')}}">Registrasi Disini</a>
         </div>
     </div>
     <div class="last-text">
-        <h5 class="text-center">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
+        <h5 class="text-center h5">2020-2021 SUN BALAI LELANG. DILINDUNGI HAK CIPTA</h5>
     </div>
     @if (Session::has('message'))
         <script>

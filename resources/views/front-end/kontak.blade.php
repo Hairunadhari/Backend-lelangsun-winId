@@ -33,7 +33,7 @@
         margin-left: 40px;
     }
     .a{
-        width: 500px;
+        /* width: 500px; */
     }
     .lokasi{
         display: flex;
@@ -51,7 +51,7 @@
             display: block;
         }
         .a{
-            width: 200px;
+            /* width: 200px; */
         }
         .card-kon2, .card-kon3{
             margin-top: 10px;
@@ -72,19 +72,20 @@
             <div class="parent">
                 <div class="card-kon">
                     <div class="a">
-                        <h1><i class="fas fa-map-marker-alt"></i> </h1>
-                        <h2>OUR ADDRESS</h2>
-                        <h5>{{$data->alamat}}</h5>
+                        <h3><i class="fas fa-map-marker-alt"></i> </h3>
+                        <h5>OUR ADDRESS</h5>
+                        <p>{{$data->alamat}}</p>
                     </div>
                 </div>
                 <div class="card-kon2">
-                    <h1><i class="fas fa-envelope"></i></h1> 
-                    <h2>EMAIL US</h2>
-                    <h5>{{$data->email}}</h5>
+                    <h3><i class="fas fa-envelope"></i></h3> 
+                    <h5>EMAIL US</h5>
+                    <p>{{$data->email}}</p>
                 </div>
                 <div class="card-kon3">
-                    <h1><i class="fas fa-phone-alt"></i></h1>
-                    <h5>{{$data->no_telp}}</h5>
+                    <h3><i class="fas fa-phone-alt"></i></h3>
+                    <h5>Telephone</h5>
+                    <p>{{$data->no_telp}}</p>
                 </div>
             </div>
             <div class="lokasi">

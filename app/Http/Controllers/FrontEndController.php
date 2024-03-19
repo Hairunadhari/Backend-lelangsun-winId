@@ -114,12 +114,14 @@ class FrontEndController extends Controller
             'password'     => 'required|min:5',
             'confirm_password'     => 'required|same:password',
             ], [
-                'nama'=>'Nama Harus Diisi',
-                'email'=>'Email Harus Diisi',
-                'alamat'=>'Alamat harus Diisi',
-                'no_telp'=>'No Telpon harus Diisi',
-                'password'=>'Password min 5 character',
-                'confirm_password'=>'Konfirmasi Password Tidak Cocok',
+                'nama.required'=>'Silahkan Lengkapi Kolom Nama Dengan Benar!',
+                'email.required' => 'Silahkan Lengkapi Kolom Email Dengan Benar!',  
+                'email.email' => 'Silahkan Lengkapi Kolom Email Dengan Valid!',  
+                'alamat.required'=>'Alamat harus Diisi',
+                'no_telp.required'=>'No Telpon harus Diisi',
+                'password.required'=>'Password Harus Diisi',
+                'password.min'=>'Password min 5 character',
+                'confirm_password.same'=>'Konfirmasi Password Tidak Cocok',
             ]);
        
         if ($validator->fails()) {
@@ -141,7 +143,7 @@ class FrontEndController extends Controller
             $npwp = $request->file('foto_npwp');
             $cekuser = User::where('email',$request->email)->where('status','active')->whereNotNull('email_verified_at')->first();
             
-            if ($cekuser == null) {
+            if ($cekuser != null) {
                 if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
                     $ktp->storeAs('public/image', $ktp->hashName());
                     $npwp->storeAs('public/image', $npwp->hashName());
@@ -194,61 +196,6 @@ class FrontEndController extends Controller
                         'password' => Hash::make($request->password),
                     ]);
                 }
-            }else {
-                
-                if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
-                    $ktp->storeAs('public/image', $ktp->hashName());
-                    $npwp->storeAs('public/image', $npwp->hashName());
-                    $cekuser->update([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_ktp' => $ktp->hashName(),
-                        'foto_npwp' => $npwp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
-                }else if($request->hasFile('foto_ktp')) {
-                    $cekuser->update([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_ktp' => $ktp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
-                }else if($request->hasFile('foto_npwp')){
-                    $cekuser->update([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_npwp' => $ktp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
-                    
-                }else{
-                    $cekuser->update([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'password' => Hash::make($request->password),
-                    ]);
-                }
-                # code...
             }
     
            
@@ -380,7 +327,7 @@ class FrontEndController extends Controller
         $id_peserta = Auth::user()->id ?? null;
         $npl = Npl::where('status_npl','aktif')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('user_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
         if (empty($lot_item[0])) {
-            return redirect('/');
+            return redirect('/user-lelang')->with('warning','Barang Lot Di Event Ini Belum Ada');
         }
         // dd($npl);
         return view('front-end/bidding',compact('lot_item','npl'));
@@ -607,7 +554,7 @@ class FrontEndController extends Controller
         $id_peserta = Auth::user()->id ?? null;
         $npl = Npl::where('status_npl','aktif')->where('created_at', '>', Carbon::now()->subDays(30))->where('status','active')->where('user_id', $id_peserta)->where('event_lelang_id',$event_id)->get();
         if (empty($lot_item[0])) {
-            return redirect('/');
+            return redirect('/user-lelang')->with('warning','Barang Lot Di Event Ini Belum Ada');
         }
         // dd($npl);
         return view('front-end/view-monitor',compact('lot_item','npl'));

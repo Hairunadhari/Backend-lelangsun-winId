@@ -63,19 +63,9 @@
         overflow: scroll;
     }
 
-    .heads {
-        display: flex;
-        justify-content: space-between;
-        padding: 0px 10px 10px 10px;
-    }
 
     .button {
         width: 300px;
-    }
-
-    .heads a {
-        text-decoration: none;
-        color: black;
     }
 
     @media (max-width: 600px) {
@@ -100,6 +90,19 @@
             width: 100%;
             padding: 20px;
         }
+        .row{
+            display: block;
+        }
+        .col-6{
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .navbar-nav{
+            text-align: center;
+            margin: 0;
+        }
     }
 
 </style>
@@ -116,12 +119,29 @@
                   </div>
                 @endif
             <div class="card-body">
-                <div class="heads">
-                    <a class="{{ request()->routeIs('front-end-notif') ? 'badge text-bg-danger' : '' }}" href="{{route('front-end-notif')}}">Profile</a>
-                    <a href="{{route('front-end-npl')}}">NPL</a>
-                    <a href="{{route('front-end-pelunasan')}}">Pelunasan Barang Lelang</a>
-                    <a href="{{route('front-end-pesan')}}">Notifikasi</a>
-                </div>
+                <nav class="navbar navbar-expand-lg bg-primary mb-2">
+                    <div class="container-fluid">
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                          <li class="nav-item">
+                            <a class="{{ request()->routeIs('front-end-notif') ? 'active text-white' : '' }} nav-link" href="{{route('front-end-notif')}}">Profile</a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="{{route('front-end-npl')}}" class="nav-link">NPL</a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="{{route('front-end-pelunasan')}}" class="nav-link">Pelunasan Barang Lelang</a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="{{route('front-end-pesan')}}" class="nav-link">Pesan</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </nav>
                 <form action="{{route('edit-profil-user', $data->id)}}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -149,18 +169,16 @@
                         <label for="exampleFormControlTextarea1" class="form-label">Alamat</label>
                         <textarea class="form-control" id="exampleFormControlTextarea1" name="alamat" rows="3">{{$data->alamat}}</textarea>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-6"><img src="{{ asset('storage/image/'.$data->foto_ktp) }}" width="150" height="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;"></div>
-                        <div class="col-6"><img src="{{ asset('storage/image/'.$data->foto_npwp) }}" width="150" height="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;"></div>
-                    </div>
                     <div class="row">
                         <div class="col-6">
                             <label for="" class="form-label">Foto KTP</label>
+                            <div class="mb-2"><img src="{{ asset('storage/image/'.$data->foto_ktp) }}" width="150" height="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;"></div>
                             <input type="file" class="form-control" name="foto_ktp" accept=".jpg,.png,.jpeg" id="gambarktp">
                             <div id="previewktp" class="mt-3"></div>
                         </div>
                         <div class="col-6">
                             <label for="" class="form-label">Foto NPWP</label>
+                            <div class="mb-2"><img src="{{ asset('storage/image/'.$data->foto_npwp) }}" width="150" height="150" style=" box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;"></div>
                             <input type="file" class="form-control" name="foto_npwp" accept=".jpg,.png,.jpeg" id="gambarnpwp">
                             <div id="previewnpwp" class="mt-3"></div>
                         </div>
