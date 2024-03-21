@@ -138,12 +138,26 @@
                 @if ($lot_item[0]->barang_lelang->gambarlelang !== null)
 
                 <img src="{{asset('storage/image/'.$lot_item[0]->barang_lelang->gambarlelang[0]->gambar)}}" class="my-4"
-                    @endif alt="...">
+                @endif alt="...">
+                @if ($lot_item[0]->barang_lelang->kategoribarang_id == 1 || $lot_item[0]->barang_lelang->kategoribarang_id == 2)
+                                
                 <div class="card-body">
-                    <h5 class="card-title">{{ $lot_item[0]->barang_lelang->barang }}</h5>
-                    <p class="card-text">{{$lot_item[0]->barang_lelang->brand }}</p>
-                    <p class="card-text">Rp {{ number_format($lot_item[0]->harga_awal) }}</p>
+                    <h4 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h4>
+                    <p class="card-text fw-bold">BRAND : {{$lot_item[0]->barang_lelang->brand}}</p>
+                    <p class="card-text fw-bold">TAHUN : {{$lot_item[0]->barang_lelang->tahun_produksi}}</p>
+                    <p class="card-text fw-bold">NO POLISI : {{$lot_item[0]->barang_lelang->no_polisi}}</p>
+                    <p class="card-text fw-bold">GRADE : {{$lot_item[0]->barang_lelang->grade_utama}}</p>
+                    
                 </div>
+                @else
+                    
+                <div class="card-body">
+                    <h4 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h4>
+                    <p class="card-text">BRAND : {{$lot_item[0]->barang_lelang->brand}}</p>
+                    <p class="card-text">Deskripsi : {!!$lot_item[0]->barang_lelang->keterangan!!}</p>
+                    <p class="card-text">Rp {{ number_format($lot_item[0]->harga_awal,0,',','.') }}</p>
+                </div>
+                @endif
             </div>
         </div>
         <div class="col-6x">

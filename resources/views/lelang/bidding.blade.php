@@ -42,6 +42,8 @@
                             <img src="{{asset('storage/image/'.$lot_item[0]->barang_lelang->gambarlelang[0]->gambar)}}"
                                 alt="..." style="width:auto; ">
                             @endif
+                            @if ($lot_item[0]->barang_lelang->kategoribarang_id == 1 || $lot_item[0]->barang_lelang->kategoribarang_id == 2)
+                                
                             <div class="card-body">
                                 <h3 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h3>
                                 <p class="card-text fw-bold">BRAND : {{$lot_item[0]->barang_lelang->brand}}</p>
@@ -49,6 +51,14 @@
                                 <p class="card-text fw-bold">NO POLISI : {{$lot_item[0]->barang_lelang->no_polisi}}</p>
                                 <p class="card-text fw-bold">GRADE : {{$lot_item[0]->barang_lelang->grade_utama}}</p>
                             </div>
+                            @else
+                                
+                            <div class="card-body">
+                                <h3 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h3>
+                                <p class="card-text fw-bold">BRAND : {{$lot_item[0]->barang_lelang->brand}}</p>
+                                <p class="card-text fw-bold">Deskripsi : {!!$lot_item[0]->barang_lelang->keterangan!!}</p>
+                            </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-6 col-md-6 col-lg-6">
