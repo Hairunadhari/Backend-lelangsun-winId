@@ -71,8 +71,15 @@
         margin-bottom: 50px;
     }
 
-    .last-text {
-        /* padding: 5px; */
+    .lonceng {
+        position: absolute; 
+        top: 0; 
+        right: -10px; 
+        background-color: red; 
+        color: white; 
+        border-radius: 50%; 
+        padding: 4px 7px; 
+        font-size: 12px;
     }
 
     @media (max-width: 600px) {
@@ -103,7 +110,13 @@
         footer{
             text-align: center;
         }
-
+        .navbar-nav{
+            text-align: center;
+        }
+        .lonceng{
+            top: 0; 
+            right: 100px; 
+        }
     }
 
 </style>
@@ -133,8 +146,8 @@
                         @endphp
                         <a class="nav-link fw-semibold" href="{{route('front-end-notif')}}" style="position: relative;">
                             <i class="fas fa-bell"></i>
-                            <span
-                                style="position: absolute; top: 0; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 4px 7px; font-size: 12px;">{{$total_pesan}}</span>
+                            <span class="lonceng"
+                                style="">{{$total_pesan}}</span>
                         </a>
 
                         <li class="nav-item dropdown">

@@ -243,7 +243,7 @@
         </div>
     </div>
     <div class="button-lelang">
-        <button class="btn btn-danger">Ikuti Lelang</button>
+        <a class="btn btn-danger" href="/user-lelang">Ikuti Lelang</a>
     </div>
 </section>
 

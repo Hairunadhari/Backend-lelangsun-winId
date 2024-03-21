@@ -1561,18 +1561,6 @@
                                             "latitude": {
                                                 "type": "string"
                                             },
-                                            "kode_kurir": {
-                                                "type": "string"
-                                            },
-                                            "service": {
-                                                "type": "string"
-                                            },
-                                            "description_service": {
-                                                "type": "string"
-                                            },
-                                            "etd": {
-                                                "type": "string"
-                                            },
                                             "total_berat_item": {
                                                 "type": "integer"
                                             },
@@ -1594,18 +1582,6 @@
                                                 "type": "integer"
                                             },
                                             "courier_service_code": {
-                                                "type": "string"
-                                            },
-                                            "no_telephone": {
-                                                "type": "integer"
-                                            },
-                                            "email": {
-                                                "type": "integer"
-                                            },
-                                            "detail_alamat_user": {
-                                                "type": "string"
-                                            },
-                                            "postal_code": {
                                                 "type": "string"
                                             }
                                         },
