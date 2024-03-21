@@ -26,7 +26,7 @@
                         <div class="form-group col-md-6 col-12">
                             <label>Kecamatan / Kota / Provinsi / Kode Pos</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="alamat" placeholder="pilih berdasarkan kecamatan, kota, provinsi atau kode pos yang sesuai" aria-label="" id="input-alamat">
+                                <input type="text" class="form-control" name="alamat" placeholder="pilih berdasarkan kecamatan, kota, provinsi atau kode pos " aria-label="" id="input-alamat">
                                 <div class="input-group-append">
                                   <button class="btn btn-primary" type="button" id="cari-alamat">Cari</button>
                                 </div>
@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="form-group col-md-12 col-12">
                             <label>Detail Alamat</label>
-                           <textarea name="detail_alamat" id="" cols="30" rows="10" class="form-control" placeholder="contoh: Jl Melati No 2 RT01/RW03 Jakarta Selatan DKI Jakarta"></textarea>
+                           <textarea name="detail_alamat" id="" cols="30" rows="10" class="form-control" placeholder="contoh: Jl Melati No 2 RT01/RW03 Jakarta Selatan DKI Jakarta">{{$toko->detail_alamat}}</textarea>
                         </div>
                       
                         <div class="form-group col-md-6 col-12">

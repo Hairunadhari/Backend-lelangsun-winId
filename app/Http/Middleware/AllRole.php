@@ -14,11 +14,9 @@ class AllRole
             if(Auth::user()->role->role == 'Super Admin' || Auth::user()->role->role == 'Admin'){
                 return $next($request);
             }else {
-                return redirect()->back();
+                return redirect('/admin');
             }
-        
 
-        return response()->json('anda tidak boleh akses halamn ini');
     }
 
 }

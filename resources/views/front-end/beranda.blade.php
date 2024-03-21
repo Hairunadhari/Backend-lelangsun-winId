@@ -174,7 +174,7 @@
             border: 1px solid white;
             padding: 10px;
             margin-bottom: 20px;
-            width: 100%;
+            width: 100%; 
             
         }
         #content-4 {
