@@ -98,10 +98,10 @@
             color: white;
             text-align: center
         }
-        .rows {
+        .rows, .rowdetail {
             display: block;
         }
-        .cols{
+        .cols, .col-4{
             width: 100%;
         }
     }
@@ -143,7 +143,7 @@
                 </div>
                 <div class="cols">
                     <div class=" p-2 bungkus-deksripsi" style="height: auto">
-                        <div class="row p-2">
+                        <div class="row rowdetail p-2">
                             @if ($data->barang_lelang->bahan_bakar == null)
 
                             <h5 class="card-text">Nama : {{$data->barang_lelang->barang}}</h5>

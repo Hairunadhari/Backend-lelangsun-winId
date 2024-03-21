@@ -1587,6 +1587,29 @@
                                             }
                                         },
                                         "type": "object"
+                                    },
+                                    "courierData": {
+                                        "properties": {
+                                            "company": {
+                                                "type": "integer"
+                                            },
+                                            "courier_service_code": {
+                                                "type": "string"
+                                            },
+                                            "no_telephone": {
+                                                "type": "integer"
+                                            },
+                                            "email": {
+                                                "type": "integer"
+                                            },
+                                            "detail_alamat_user": {
+                                                "type": "string"
+                                            },
+                                            "postal_code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
                                     }
                                 },
                                 "type": "object"
