@@ -114,8 +114,6 @@
                     @endif
                     <div class="card-body">
                         <h5 class="card-title">{{$item->barang_lelang->barang}}</h5>
-                        <h5 class="card-title">{{$item->barang_lelang->brand}}</h5>
-                        <h5 class="card-title">{{$item->barang_lelang->tahun_produksi}}</h5>
                         @php
                         $hashid = Crypt::encrypt($item->id)
                     @endphp

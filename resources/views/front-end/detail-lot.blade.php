@@ -109,7 +109,7 @@
 </style>
 <section id="satu">
     <div class="judul">
-        <h1> DETAIL LOT {{$data->id}}</h1>
+        <h1> DETAIL LOT {{$data->no_lot}}</h1>
     </div>
     <div class="row lelang">
         <div class=" bungkus">
