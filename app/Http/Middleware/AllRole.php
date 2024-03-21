@@ -11,6 +11,9 @@ class AllRole
 {
     public function handle($request, Closure $next)
     {
+        if (Auth::user()->role == null) {
+            return redirect('/admin');
+        }
             if(Auth::user()->role->role == 'Super Admin' || Auth::user()->role->role == 'Admin'){
                 return $next($request);
             }else {
