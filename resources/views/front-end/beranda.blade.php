@@ -127,7 +127,7 @@
         }
 
         #content-3 {
-            background-image: url('/asset-lelang/mobile-02.png');
+            background-image: url('/asset-lelang/Mobile-02.png');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
