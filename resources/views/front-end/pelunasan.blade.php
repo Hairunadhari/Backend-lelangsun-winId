@@ -217,10 +217,9 @@
                                 readonly>
                         </div>
                         <div class="form-group mb-3">
-                            <label>Bukti Transfer <span style="color: red">*</span></label>
-                            <input type="file" class="form-control" name="bukti" required
-                                id="gambar">
-                            <div id="preview" class="mt-3"></div>
+                            <label>Bukti Transfer<span style="color: red">*</span></label>
+                            <input type="file" class="form-control"  name="bukti" required
+                                accept=".jpg, .png, .jpeg">
                         </div>
                         <input type="hidden" name="tipe_pelunasan" value="transfer">
                         <div class="modal-footer">

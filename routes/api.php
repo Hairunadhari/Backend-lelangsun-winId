@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\ApiBiteshipController;
+use App\Http\Controllers\Api\ApiOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +38,8 @@ Route::get('/detailpromosi/{id}/', [ApiController::class, 'detail_promosi']);
 Route::get('/show-xendit', [ApiController::class, 'show_xendit']);
 Route::post('/test-xendit', [ApiController::class, 'tes_xendit']);
 
-Route::post('/add-order', [ApiController::class, 'add_order']);
-Route::post('/callback-xendit', [ApiController::class, 'callback_xendit']);
+Route::post('/add-order', [ApiOrderController::class, 'add_order']);
+Route::post('/callback-xendit', [ApiOrderController::class, 'callback_xendit']);
 Route::get('/status-pesanan/{id}/', [ApiController::class, 'status_pesanan']);
 Route::get('/cari-produk/{name}/', [ApiController::class, 'cari_produk']);
 Route::get('/info-akun/{id}/', [ApiController::class, 'info_akun']);

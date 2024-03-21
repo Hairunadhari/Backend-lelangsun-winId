@@ -421,165 +421,6 @@
                 }
             }
         },
-        "/api/add-order": {
-            "post": {
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Menambahkan Pesanan",
-                "description": "Selain parameter promo_diskon, berat_item, longitude, langitude, total_berat_item wajib diisi",
-                "operationId": "addOrder",
-                "requestBody": {
-                    "description": "Data formulir",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [],
-                                "properties": {
-                                    "userData": {
-                                        "properties": {
-                                            "user_id": {
-                                                "type": "integer"
-                                            },
-                                            "email": {
-                                                "type": "string"
-                                            },
-                                            "nama": {
-                                                "type": "string"
-                                            },
-                                            "no_telp": {
-                                                "type": "integer"
-                                            },
-                                            "alamatObj": {
-                                                "properties": {
-                                                    "provinsi_id": {
-                                                        "type": "integer"
-                                                    },
-                                                    "provinsi_name": {
-                                                        "type": "string"
-                                                    },
-                                                    "city_id": {
-                                                        "type": "integer"
-                                                    },
-                                                    "city_name": {
-                                                        "type": "string"
-                                                    },
-                                                    "detail_alamat": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "type": "object"
-                                    },
-                                    "orderData": {
-                                        "properties": {
-                                            "tokoObj": {
-                                                "properties": {
-                                                    "toko_id": {
-                                                        "type": "integer"
-                                                    },
-                                                    "provinsi_id": {
-                                                        "type": "integer"
-                                                    },
-                                                    "provinsi_name": {
-                                                        "type": "string"
-                                                    },
-                                                    "city_id": {
-                                                        "type": "integer"
-                                                    },
-                                                    "city_name": {
-                                                        "type": "string"
-                                                    },
-                                                    "detail_alamat": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            },
-                                            "items": {
-                                                "type": "array",
-                                                "items": {
-                                                    "properties": {
-                                                        "produk_id": {
-                                                            "type": "integer"
-                                                        },
-                                                        "qty": {
-                                                            "type": "integer"
-                                                        },
-                                                        "harga_item": {
-                                                            "type": "integer"
-                                                        },
-                                                        "total_harga_item": {
-                                                            "type": "integer"
-                                                        },
-                                                        "nama_item": {
-                                                            "type": "string"
-                                                        },
-                                                        "berat_item": {
-                                                            "type": "integer"
-                                                        },
-                                                        "promo_diskon": {
-                                                            "type": "integer"
-                                                        },
-                                                        "toko_id": {
-                                                            "type": "integer"
-                                                        },
-                                                        "nama_toko": {
-                                                            "type": "string"
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            },
-                                            "longitude": {
-                                                "type": "string"
-                                            },
-                                            "latitude": {
-                                                "type": "string"
-                                            },
-                                            "kode_kurir": {
-                                                "type": "string"
-                                            },
-                                            "service": {
-                                                "type": "string"
-                                            },
-                                            "description_service": {
-                                                "type": "string"
-                                            },
-                                            "etd": {
-                                                "type": "string"
-                                            },
-                                            "total_berat_item": {
-                                                "type": "integer"
-                                            },
-                                            "total_harga_all_item": {
-                                                "type": "integer"
-                                            },
-                                            "cost_shipping": {
-                                                "type": "integer"
-                                            },
-                                            "sub_total": {
-                                                "type": "integer"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
         "/api/cari-produk/{name}": {
             "get": {
                 "tags": [
@@ -1607,6 +1448,145 @@
                                     },
                                     "kurir": {
                                         "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/add-order": {
+            "post": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Menambahkan Pesanan",
+                "description": "Selain parameter promo_diskon, berat_item, longitude, langitude, total_berat_item wajib diisi",
+                "operationId": "addOrder",
+                "requestBody": {
+                    "description": "Data formulir",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [],
+                                "properties": {
+                                    "userData": {
+                                        "properties": {
+                                            "user_id": {
+                                                "type": "integer"
+                                            },
+                                            "nama": {
+                                                "type": "string"
+                                            },
+                                            "no_telephone": {
+                                                "type": "integer"
+                                            },
+                                            "email": {
+                                                "type": "integer"
+                                            },
+                                            "detail_alamat_user": {
+                                                "type": "string"
+                                            },
+                                            "postal_code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "orderData": {
+                                        "properties": {
+                                            "tokoObj": {
+                                                "properties": {
+                                                    "nama_pemilik": {
+                                                        "type": "integer"
+                                                    },
+                                                    "no_telephone": {
+                                                        "type": "integer"
+                                                    },
+                                                    "detail_alamat_toko": {
+                                                        "type": "string"
+                                                    },
+                                                    "postal_code": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "items": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "produk_id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "qty": {
+                                                            "type": "integer"
+                                                        },
+                                                        "harga_item": {
+                                                            "type": "integer"
+                                                        },
+                                                        "total_harga_item": {
+                                                            "type": "integer"
+                                                        },
+                                                        "nama_item": {
+                                                            "type": "string"
+                                                        },
+                                                        "berat_item": {
+                                                            "type": "integer"
+                                                        },
+                                                        "promo_diskon": {
+                                                            "type": "integer"
+                                                        },
+                                                        "toko_id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "nama_toko": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "longitude": {
+                                                "type": "string"
+                                            },
+                                            "latitude": {
+                                                "type": "string"
+                                            },
+                                            "kode_kurir": {
+                                                "type": "string"
+                                            },
+                                            "service": {
+                                                "type": "string"
+                                            },
+                                            "description_service": {
+                                                "type": "string"
+                                            },
+                                            "etd": {
+                                                "type": "string"
+                                            },
+                                            "total_berat_item": {
+                                                "type": "integer"
+                                            },
+                                            "total_harga_all_item": {
+                                                "type": "integer"
+                                            },
+                                            "cost_shipping": {
+                                                "type": "integer"
+                                            },
+                                            "sub_total": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
                                     }
                                 },
                                 "type": "object"
