@@ -141,7 +141,7 @@ class FrontEndController extends Controller
             DB::beginTransaction();
             $ktp = $request->file('foto_ktp');
             $npwp = $request->file('foto_npwp');
-            $cekuser = User::where('email',$request->email)->where('status','active')->whereNotNull('email_verified_at')->first();
+            $cekuser = User::where('email',$request->email)->where('status','active')->where('email_verified_at','!==', null)->first();
             
             if ($cekuser != null) {
                 if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
