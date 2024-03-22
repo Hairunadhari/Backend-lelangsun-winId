@@ -101,6 +101,9 @@
                                             <input type="hidden" name="kelipatan_bid" id="kelipatan_bid"
                                                 value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}"
                                                 class="form-control">
+                                            <input type="hidden" readonly id="status_bid_lot_admin"
+                                                value="{{$lot_item[0]->status_bid}}"
+                                                class="form-control">
                                                 <div class="text-center button-center w-100 mb-2">
                                                     <span class="badge badge-secondary text-center">
                                                         <div id="timer" data-seconds="<?= $setting->waktu_bid ?>">

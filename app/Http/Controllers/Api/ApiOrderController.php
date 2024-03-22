@@ -36,9 +36,9 @@ class ApiOrderController extends Controller
                     @OA\Property(property="user_id", type="integer"),
                     @OA\Property(property="nama", type="string"),
                     @OA\Property(property="no_telephone", type="integer"),
-                    @OA\Property(property="email", type="integer"),
+                    @OA\Property(property="email", type="string", format="email"),
                     @OA\Property(property="detail_alamat_user", type="string"),
-                    @OA\Property(property="postal_code", type="string"),
+                    @OA\Property(property="postal_code", type="integer"),
                         
                 ),
                 @OA\Property(
@@ -47,24 +47,25 @@ class ApiOrderController extends Controller
                     @OA\Property(
                         property="tokoObj",
                         type="object",
-                        @OA\Property(property="nama_pemilik", type="integer"),
+                        @OA\Property(property="nama_pemilik", type="string"),
                         @OA\Property(property="no_telephone", type="integer"),
                         @OA\Property(property="detail_alamat_toko", type="string"),
-                        @OA\Property(property="postal_code", type="string"),
+                        @OA\Property(property="postal_code", type="integer"),
+                        @OA\Property(property="toko_id", type="integer"),
+                        @OA\Property(property="nama_toko", type="string"),
                     ),
                     @OA\Property(
                         property="items",
                         type="array",
-                            @OA\Items(
-                                @OA\Property(property="produk_id", type="integer"),
+                        @OA\Items(
+                            @OA\Property(property="produk_id", type="integer"),
                             @OA\Property(property="qty", type="integer"),
                             @OA\Property(property="harga_item", type="integer"),
                             @OA\Property(property="total_harga_item", type="integer"),
                             @OA\Property(property="nama_item", type="string"),
                             @OA\Property(property="berat_item", type="integer"),
                             @OA\Property(property="promo_diskon", type="integer"),
-                            @OA\Property(property="toko_id", type="integer"),
-                            @OA\Property(property="nama_toko", type="string"),
+                          
                         )
                     ),
                      @OA\Property(property="longitude", type="string"),
@@ -77,7 +78,7 @@ class ApiOrderController extends Controller
                  @OA\Property(
                     property="courierData",
                     type="object",
-                    @OA\Property(property="company", type="integer"),
+                    @OA\Property(property="company", type="string"),
                     @OA\Property(property="courier_service_code", type="string"),
                         
                 ),
@@ -95,21 +96,18 @@ class ApiOrderController extends Controller
     // dd($request->userData['email']);
     $validator = Validator::make($request->all() , [
         'userData.user_id' => 'required|integer|min:1',
+        'userData.nama' => 'required',
+        'userData.no_telephone' => 'required|integer',
         'userData.email' => 'required|email',
-        'userData.nama' => 'required|string',
-        'userData.no_telp' => 'required|numeric',
-        'userData.alamatObj.provinsi_id' => 'required|integer|min:1',
-        'userData.alamatObj.provinsi_name' => 'required|string',
-        'userData.alamatObj.city_id' => 'required|integer|min:1',
-        'userData.alamatObj.city_name' => 'required|string',
-        'userData.alamatObj.detail_alamat' => 'required|string',
+        'userData.detail_alamat_user' => 'required',
+        'userData.postal_code' => 'required|integer',
 
+        'orderData.tokoObj.nama_pemilik' => 'required',
+        'orderData.tokoObj.no_telephone' => 'required|integer',
+        'orderData.tokoObj.detail_alamat_toko' => 'required|string',
+        'orderData.tokoObj.postal_code' => 'required|integer',
         'orderData.tokoObj.toko_id' => 'required|integer|min:1',
-        'orderData.tokoObj.provinsi_id' => 'required|integer|min:1',
-        'orderData.tokoObj.provinsi_name' => 'required|string',
-        'orderData.tokoObj.city_id' => 'required|integer|min:1',
-        'orderData.tokoObj.city_name' => 'required|string',
-        'orderData.tokoObj.detail_alamat' => 'required|string',
+        'orderData.tokoObj.nama_toko' => 'required|string',
     
         'orderData.items.*.produk_id' => 'required|integer|min:1',
         'orderData.items.*.qty' => 'required|integer|min:1',
@@ -117,9 +115,7 @@ class ApiOrderController extends Controller
         'orderData.items.*.total_harga_item' => 'required|integer',
         'orderData.items.*.nama_item' => 'required|string',
         'orderData.items.*.berat_item' => 'nullable|integer',
-        'orderData.items.*.promo_diskon' => 'nullable|numeric',
-        'orderData.items.*.toko_id' => 'required|integer|min:1',
-        'orderData.items.*.nama_toko' => 'required|string',
+        'orderData.items.*.promo_diskon' => 'nullable|integer',
     
         'orderData.longitude' => 'nullable|string',
         'orderData.langitude' => 'nullable|string',
@@ -127,11 +123,17 @@ class ApiOrderController extends Controller
         'orderData.total_harga_all_item' => 'required|integer',
         'orderData.cost_shipping' => 'required|integer',
         'orderData.sub_total' => 'required|integer',
+        
+        'courierData.company' => 'required|string',
+        'courierData.courier_service_code' => 'required|string',
     ]);
     if ($validator->fails()) {
+        $messages = $validator->messages();
+        $alertMessage = $messages->first();
+
         return response()->json([
             'success' => false,
-            'message' => $validator->errors(),
+            'message' => $alertMessage,
         ],422);
     }
 

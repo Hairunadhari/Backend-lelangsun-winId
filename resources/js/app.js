@@ -72,30 +72,35 @@ $(document).ready(function () {
         }
     }
 
-    function getCookie(cname) {
-        let name = cname + "=";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for(let i = 0; i <ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
+    // function getCookie(cname) {
+    //     let name = cname + "=";
+    //     let decodedCookie = decodeURIComponent(document.cookie);
+    //     let ca = decodedCookie.split(';');
+    //     for(let i = 0; i <ca.length; i++) {
+    //         let c = ca[i];
+    //         while (c.charAt(0) == ' ') {
+    //             c = c.substring(1);
+    //         }
+    //         if (c.indexOf(name) == 0) {
+    //             return c.substring(name.length, c.length);
+    //         }
+    //     }
+    //     return "";
+    // }
 
-    let button = getCookie("button-bid");
-    if (button != "") {
+    // let button = getCookie("button-bid");
+    // if (button != "") {
+    //     $('#con-bid').css('display', 'block');
+    //     $('#start-bid').css('display', 'none');
+    //     $('#user-send-bidding').css('display', 'block');
+    //     // toggleTimer();
+    // } 
+
+    let status_bid_lot = $('#status_bid_lot_admin').val();
+    if (status_bid_lot == 'sedang berjalan') {
         $('#con-bid').css('display', 'block');
         $('#start-bid').css('display', 'none');
-        $('#user-send-bidding').css('display', 'block');
-        // toggleTimer();
-    } 
-
+    }
         
 
     // kode tampilkan button bidding di user, button stop, bid dan jalankan timer
@@ -155,11 +160,11 @@ $(document).ready(function () {
                                 // console.log('next-bid',res);
                                 if (res.lot_item.length > 0) {
                                     window.location.href = '/superadmin/bidding-event-lelang/' + event_lelang_id_crypt + '?lot=' + res.lot_item[0].id;
-                                    document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                    // document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
                                     localStorage.removeItem('timer_bid');
                                     clearInterval(countdown);
                                 } else {
-                                    document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                    // document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
                                     localStorage.removeItem('timer_bid');
                                     clearInterval(countdown); // Hentikan timer saat mencapai 0
                                     $.ajax({
@@ -304,38 +309,38 @@ window.Echo.channel('lelang')
     });
 window.Echo.channel('lelang')
     .listen('.button-bid-event-'+event_lelang_id, (e) => {
-        function setCookie(cname, cvalue, exdays) {
-            const d = new Date();
-            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-            let expires = "expires=" + d.toUTCString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
+        // function setCookie(cname, cvalue, exdays) {
+        //     const d = new Date();
+        //     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        //     let expires = "expires=" + d.toUTCString();
+        //     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        // }
 
-        function getCookie(cname) {
-            let name = cname + "=";
-            let decodedCookie = decodeURIComponent(document.cookie);
-            let ca = decodedCookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
+        // function getCookie(cname) {
+        //     let name = cname + "=";
+        //     let decodedCookie = decodeURIComponent(document.cookie);
+        //     let ca = decodedCookie.split(';');
+        //     for (let i = 0; i < ca.length; i++) {
+        //         let c = ca[i];
+        //         while (c.charAt(0) == ' ') {
+        //             c = c.substring(1);
+        //         }
+        //         if (c.indexOf(name) == 0) {
+        //             return c.substring(name.length, c.length);
+        //         }
+        //     }
+        //     return "";
+        // }
 
-            let button = getCookie("button-bid");
-            if (button != "") {
-                // alert("Welcome again " + button);
-            } else {
-                button = "true";
-                if (button != "" && button != null) {
-                    setCookie("button-bid", button, 1);
-                }
-            }
+        //     let button = getCookie("button-bid");
+        //     if (button != "") {
+        //         // alert("Welcome again " + button);
+        //     } else {
+        //         button = "true";
+        //         if (button != "" && button != null) {
+        //             setCookie("button-bid", button, 1);
+        //         }
+        //     }
         $('#user-send-bidding').css('display', 'block');
     });
 window.Echo.channel('lelang')
@@ -369,7 +374,7 @@ window.Echo.channel('lelang')
 
         if (e.lot_item.length > 0) {
             window.location.href = '/user-bidding/' + id_event_crypt + '?lot=' + e.lot_item[0].id;
-            document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            // document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         } else {
             swal({
                 title: "Event Selesai !!!",
@@ -378,7 +383,7 @@ window.Echo.channel('lelang')
                 buttons: false,
                 closeOnClickOutside: false,
             });
-            document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            // document.cookie = 'button-bid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             // localStorage.removeItem('timer_bid');
             // // clearInterval(countdown); 
             window.location.href = '/';

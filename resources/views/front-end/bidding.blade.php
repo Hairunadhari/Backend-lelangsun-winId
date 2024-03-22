@@ -83,22 +83,27 @@
         z-index: 1;
         color: white;
     }
-    .rowx{
-        display:  flex;
+
+    .rowx {
+        display: flex;
         gap: 2rem;
     }
-    .col-6x{
+
+    .col-6x {
         width: 50%;
     }
-    .rowzx{
+
+    .rowzx {
         margin-top: 5rem;
-        display:  flex;
+        display: flex;
         gap: 1rem;
     }
-    .antrian-lot{
+
+    .antrian-lot {
         height: max-content;
 
     }
+
     @media (max-width: 600px) {
         #satu {
             /* background-image: url('/asset-lelang/detail_event.jpg'); */
@@ -109,19 +114,23 @@
             width: 100%;
             padding: 20px;
         }
-        .rowx{
-            display:  block;
+
+        .rowx {
+            display: block;
             /* gap: 2rem; */
         }
-        .col-6x{
+
+        .col-6x {
             width: 100%;
             margin-bottom: 1rem;
         }
-        .antrian-lot{
+
+        .antrian-lot {
             width: 100%;
             margin-bottom: 1rem;
         }
-        .rowzx{
+
+        .rowzx {
             display: block;
         }
     }
@@ -134,23 +143,26 @@
     <div class="rowx">
         <div class="col-6x">
             <div class="card">
+                {{-- @dd($lot_item[0]) --}}
+
                 <div class="id-lot">Lot {{$lot_item[0]->no_lot}}</div>
                 @if ($lot_item[0]->barang_lelang->gambarlelang !== null)
 
                 <img src="{{asset('storage/image/'.$lot_item[0]->barang_lelang->gambarlelang[0]->gambar)}}" class="my-4"
-                @endif alt="...">
-                @if ($lot_item[0]->barang_lelang->kategoribarang_id == 1 || $lot_item[0]->barang_lelang->kategoribarang_id == 2)
-                                
+                    @endif alt="...">
+                @if ($lot_item[0]->barang_lelang->kategoribarang_id == 1 ||
+                $lot_item[0]->barang_lelang->kategoribarang_id == 2)
+
                 <div class="card-body">
                     <h4 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h4>
                     <p class="card-text fw-bold">BRAND : {{$lot_item[0]->barang_lelang->brand}}</p>
                     <p class="card-text fw-bold">TAHUN : {{$lot_item[0]->barang_lelang->tahun_produksi}}</p>
                     <p class="card-text fw-bold">NO POLISI : {{$lot_item[0]->barang_lelang->no_polisi}}</p>
                     <p class="card-text fw-bold">GRADE : {{$lot_item[0]->barang_lelang->grade_utama}}</p>
-                    
+
                 </div>
                 @else
-                    
+
                 <div class="card-body">
                     <h4 class="card-title">{{$lot_item[0]->barang_lelang->barang}}</h4>
                     <p class="card-text">BRAND : {{$lot_item[0]->barang_lelang->brand}}</p>
@@ -187,19 +199,25 @@
                         <input type="hidden" readonly name="kelipatan_bid_user" id="kelipatan_bid_user"
                             value="{{$lot_item[0]->event_lelang->kategori_barang->kelipatan_bidding}}"
                             class="form-control">
+                        <input type="hidden" readonly id="status_bid_lot"
+                            value="{{$lot_item[0]->status_bid}}"
+                            class="form-control">
                     </div>
                 </form>
                 @if ($npl->count() > 0) {{--apakah user punya npl event--}}
-                <input type="hidden" readonly name="npl_id" id="npl_id_user" value="{{$npl[0]->id}}"
-                    class="form-control">
-                <button class="btn btn-success w-100" id="user-send-bidding" style="display:none">Bidding</button>
-                <div id="loading" style="background-color: #191d21; box-shadow: 0 2px 6px #728394; display: none;"
-                    class="p-1 text-center">
-                    <div class="spinner-border " role="status">
-                        <span class="visually-hidden">Loading...</span>
+                    {{-- @if ($lot_item[0]->status_bid == 'sedang berjalan') --}}
+                    <input type="hidden" readonly name="npl_id" id="npl_id_user" value="{{$npl[0]->id}}"
+                        class="form-control">
+                    <button class="btn btn-success w-100" id="user-send-bidding" style="display:none">Bidding</button>
+                    <div id="loading" style="background-color: #191d21; box-shadow: 0 2px 6px #728394; display: none;"
+                        class="p-1 text-center">
+                        <div class="spinner-border " role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
-                </div>
+                    {{-- @endif --}}
                 @endif
+
                 @php
                 $event_id_crypt= Crypt::encrypt($lot_item[0]->event_lelang->id);
                 @endphp
@@ -208,13 +226,12 @@
             </div>
         </div>
 
-        
+
     </div>
     <div class="rowzx ">
         @foreach ($lot_item as $index => $item)
         @if ($index > 0)
-        <div class="card  antrian-lot"
-            style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6; ">
+        <div class="card  antrian-lot" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6; ">
             <div class="id-lot">Lot {{$item->no_lot}}</div>
             @if (count($item->barang_lelang->gambarlelang) > 0)
             <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}"
@@ -235,6 +252,10 @@
     $(document).ready(function () {
         let event_lelang_id = $('#event_lelang_id_user').val();
         let lot_item_id = $('#lot_item_id_user').val();
+        let status_bid_lot = $('#status_bid_lot').val();
+        if (status_bid_lot == 'sedang berjalan') {
+            $('#user-send-bidding').css('display', 'block');
+        }
         $.ajax({
             method: 'post',
             url: '/log-bidding-user',
