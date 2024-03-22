@@ -560,6 +560,13 @@ class FrontEndController extends Controller
         return view('front-end/view-monitor',compact('lot_item','npl'));
     }
 
+    public function tes(){
+        $encrypt_email = Crypt::encrypt('hairunadhari@gmail.com');
+        $url = route('verify-email-user',$encrypt_email);  
+        Mail::to('hairunadhari@gmail.com')->send(new VerifyRegisterUser($url));
+        return 'success';
+    }
+
    
      
 }

@@ -182,34 +182,27 @@ class ApiOrderController extends Controller
         $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
         $order = Order::create([
             'user_id' => $request->userData['user_id'],
-            'order_name' => $request->userData['nama'],
-            'no_invoice' => $external_id,
-            'status' => $response->status,
-            'total_harga_all_item' => $request->orderData['total_harga_all_item'],
-            'exp_date_invoice' => $formattedExpiryDate,
-            'link_payment_order' => $response->invoice_url,
-            'province_id' => $request->userData['alamatObj']['provinsi_id'],
-            'province_name' => $request->userData['alamatObj']['provinsi_name'],
-            'city_id' => $request->userData['alamatObj']['city_id'],
-            'city_name' => $request->userData['alamatObj']['provinsi_name'],
-            'detail_alamat' => $request->userData['alamatObj']['detail_alamat'],
-            'notelp' => $request->userData['no_telp'],
-            'email_order' => $request->userData['email'],
-            'total_berat_item' => $request->orderData['total_berat_item'],
-            'sub_total' => $request->orderData['sub_total'],
-            'cost_shipping' => $request->orderData['cost_shipping'],
+            'nama_user' => $request->userData['nama'],
+            'no_telephone_user' => $request->userData['no_telephone'],
+            'email_user' => $request->userData['email'],
+            'detail_alamat_user' => $request->userData['detail_alamat_user'],
+            'postal_code_user' => $request->userData['postal_code_user'],
+            'nama_pemilik_toko' => $request->orderData['tokoObj']['nama_pemilik_toko'],
+            'no_telephone_toko' => $request->orderData['tokoObj']['no_telephone_toko'],
+            'detail_alamat_toko' => $request->orderData['tokoObj']['detail_alamat_toko'],
+            'postal_code_toko' => $request->orderData['tokoObj']['postal_code_toko'],
+            'toko_id' => $request->orderData['tokoObj']['toko_id'],
+            'nama_toko' => $request->orderData['tokoObj']['nama_toko'],
             'longitude' => $request->orderData['longitude'],
             'latitude' => $request->orderData['latitude'],
-            'kode_kurir' => $request->orderData['kode_kurir'],
-            'toko_id' => $request->orderData['tokoObj']['toko_id'],
-            'toko_provinsi_id' => $request->orderData['tokoObj']['provinsi_id'],
-            'toko_provinsi_name' => $request->orderData['tokoObj']['provinsi_name'],
-            'toko_city_id' => $request->orderData['tokoObj']['city_id'],
-            'toko_city_name' => $request->orderData['tokoObj']['city_name'],
-            'toko_detail_alamat' => $request->orderData['tokoObj']['detail_alamat'],
-            'service' => $request->orderData['service'],
-            'description_service' => $request->orderData['description_service'],
-            'etd' => $request->orderData['etd'],
+            'total_berat_item' => $request->orderData['total_berat_item'],
+            'total_harga_all_item' => $request->orderData['total_harga_all_item'],
+            'cost_shipping' => $request->orderData['cost_shipping'],
+            'sub_total' => $request->orderData['sub_total'],
+            'no_invoice' => $external_id,
+            'status' => $response->status,
+            'exp_date_invoice' => $formattedExpiryDate,
+            'link_payment_order' => $response->invoice_url,
         ]);
        
         // fungsi untuk looping orderan
@@ -221,11 +214,11 @@ class ApiOrderController extends Controller
                 'harga' => $i['harga_item'],
                 'total_harga_item' => $i['total_harga_item'],
                 'nama_produk' => $i['nama_item'],
-                'toko_id' => $i['toko_id'],
+                'toko_id' => $request->orderData['tokoObj']['toko_id'],
                 'nama_order' => $request->userData['nama'],
                 'email_order' => $request->userData['email'],
                 'promo_diskon' => $i['promo_diskon'],
-                'nama_toko' => $i['nama_toko'],
+                'nama_toko' => $request->orderData['tokoObj']['nama_toko'],
                 'user_id' => $request->userData['user_id'],
                 'berat_item' => $i['berat_item'],
             ]);
@@ -233,14 +226,11 @@ class ApiOrderController extends Controller
         
       
         $success = true;
-        $message = 'Data Order Berhasil Ditambahkan';
+        $message = 'Orderan Berhasil DiBuat';
 
         $res = [
             'success' => $success,
             'message' => $message,
-            'name' => $request->userData['nama'],
-            'status' => $order->status,
-            'total_pembayaran' => $order->sub_total,
             'payment_link' => $order->link_payment_order,
         ];
 
@@ -270,12 +260,10 @@ class ApiOrderController extends Controller
     } catch (Throwable $th) {
         // dd($th);
         DB::rollBack();
-        $success = false;
-        $message = 'Data Order Gagal Ditambahkan';
+
         $res = [
-            'success' => $success,
-            'message' => $message,
-            'description' => $th->getMessage(),
+            'success' => false,
+            'message' => $th->getMessage(),
         ];
         TLogApi::create([
             'k_t' => 'terima',
