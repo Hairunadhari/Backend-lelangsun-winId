@@ -100,7 +100,7 @@ class FrontEndController extends Controller
         return view('front-end/login');
     }
     public function register(){
-        if (Auth::user() && Auth::user()->role_id != null) {
+        if (Auth::user()) {
             return back();
         }
         return view('front-end/register');
@@ -142,60 +142,61 @@ class FrontEndController extends Controller
             $ktp = $request->file('foto_ktp');
             $npwp = $request->file('foto_npwp');
             $cekuser = User::where('email',$request->email)->where('status','active')->whereNotNull('email_verified_at')->first();
-            
-            if ($cekuser != null) {
-                if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
-                    $ktp->storeAs('public/image', $ktp->hashName());
-                    $npwp->storeAs('public/image', $npwp->hashName());
-                    $user = User::create([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_ktp' => $ktp->hashName(),
-                        'foto_npwp' => $npwp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
-                }else if($request->hasFile('foto_ktp')) {
-                    $user = User::create([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_ktp' => $ktp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
-                }else if($request->hasFile('foto_npwp')){
-                    $user = User::create([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_npwp' => $ktp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
+            // dd($cekuser);
+            if ($cekuser == null) {
+                $cekuserVerifiedNull = User::where('email',$request->email)->where('status','active')->whereNull('email_verified_at')->first();
+                $userData = [
+                    'name' => $request->nama,
+                    'email' => $request->email,
+                    'no_telp' => $request->no_telp,
+                    'alamat' => $request->alamat,
+                    'nik' => $request->nik,
+                    'npwp' => $request->npwp,
+                    'no_rek' => $request->no_rek,
+                    'password' => Hash::make($request->password),
+                ];
+                
+                if ($cekuserVerifiedNull != null) {
+                    if ($request->hasFile('foto_ktp')) {
+                        $ktp = $request->file('foto_ktp');
+                        $userData['foto_ktp'] = $ktp->hashName();
+                        $ktp->storeAs('public/image', $userData['foto_ktp']);
+                    }
                     
-                }else{
-                    $user = User::create([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'password' => Hash::make($request->password),
-                    ]);
+                    if ($request->hasFile('foto_npwp')) {
+                        $npwp = $request->file('foto_npwp');
+                        $userData['foto_npwp'] = $npwp->hashName();
+                        $npwp->storeAs('public/image', $userData['foto_npwp']);
+                    }
+
+                    $cekuserVerifiedNull->update($userData);
+
+                } else {
+                    
+                    if ($request->hasFile('foto_ktp')) {
+                        $ktp = $request->file('foto_ktp');
+                        $userData['foto_ktp'] = $ktp->hashName();
+                        $ktp->storeAs('public/image', $userData['foto_ktp']);
+                    }
+                    
+                    if ($request->hasFile('foto_npwp')) {
+                        $npwp = $request->file('foto_npwp');
+                        $userData['foto_npwp'] = $npwp->hashName();
+                        $npwp->storeAs('public/image', $userData['foto_npwp']);
+                    }
+                    
+                    User::create($userData);
+                    
                 }
+                
+            }else {
+                session()->flash('nama', $request->nama);
+                session()->flash('email', $request->email);
+                session()->flash('alamat', $request->alamat);
+                session()->flash('no_telp', $request->no_telp);
+            
+                // Tampilkan pesan error
+                return redirect()->back()->with('error','Email Sudah DiPakai');
             }
     
            
@@ -208,8 +209,8 @@ class FrontEndController extends Controller
             
         } catch (Throwable $th) {
             DB::rollBack();
-            dd($th);
-            return redirect()->back()->with('error','Registrasi Gagal, silahkan ulangin registrasi!');
+            // dd($th);
+            return redirect()->back()->with('error','Registrasi Gagal, '.$th->getMessage());
         }
         return redirect('/user-verifikasi-email/'.$encrypt_email)->with('message','Registrasi berhasil, silahkan verifikasi email anda');
 
