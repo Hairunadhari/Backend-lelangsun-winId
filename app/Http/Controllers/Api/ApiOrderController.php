@@ -10,6 +10,7 @@ use App\Models\Produk;
 use App\Models\TLogApi;
 use App\Models\Keranjang;
 use App\Models\OrderItem;
+use App\Models\Pengiriman;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,7 @@ class ApiOrderController extends Controller
                     @OA\Property(property="nama", type="string"),
                     @OA\Property(property="no_telephone", type="integer"),
                     @OA\Property(property="email", type="string", format="email"),
-                    @OA\Property(property="detail_alamat_user", type="string"),
+                    @OA\Property(property="detail_alamat", type="string"),
                     @OA\Property(property="postal_code", type="integer"),
                         
                 ),
@@ -49,7 +50,7 @@ class ApiOrderController extends Controller
                         type="object",
                         @OA\Property(property="nama_pemilik", type="string"),
                         @OA\Property(property="no_telephone", type="integer"),
-                        @OA\Property(property="detail_alamat_toko", type="string"),
+                        @OA\Property(property="detail_alamat", type="string"),
                         @OA\Property(property="postal_code", type="integer"),
                         @OA\Property(property="toko_id", type="integer"),
                         @OA\Property(property="nama_toko", type="string"),
@@ -99,12 +100,12 @@ class ApiOrderController extends Controller
         'userData.nama' => 'required',
         'userData.no_telephone' => 'required|integer',
         'userData.email' => 'required|email',
-        'userData.detail_alamat_user' => 'required',
+        'userData.detail_alamat' => 'required',
         'userData.postal_code' => 'required|integer',
 
         'orderData.tokoObj.nama_pemilik' => 'required',
         'orderData.tokoObj.no_telephone' => 'required|integer',
-        'orderData.tokoObj.detail_alamat_toko' => 'required|string',
+        'orderData.tokoObj.detail_alamat' => 'required|string',
         'orderData.tokoObj.postal_code' => 'required|integer',
         'orderData.tokoObj.toko_id' => 'required|integer|min:1',
         'orderData.tokoObj.nama_toko' => 'required|string',
@@ -185,12 +186,12 @@ class ApiOrderController extends Controller
             'nama_user' => $request->userData['nama'],
             'no_telephone_user' => $request->userData['no_telephone'],
             'email_user' => $request->userData['email'],
-            'detail_alamat_user' => $request->userData['detail_alamat_user'],
-            'postal_code_user' => $request->userData['postal_code_user'],
-            'nama_pemilik_toko' => $request->orderData['tokoObj']['nama_pemilik_toko'],
-            'no_telephone_toko' => $request->orderData['tokoObj']['no_telephone_toko'],
-            'detail_alamat_toko' => $request->orderData['tokoObj']['detail_alamat_toko'],
-            'postal_code_toko' => $request->orderData['tokoObj']['postal_code_toko'],
+            'detail_alamat_user' => $request->userData['detail_alamat'],
+            'postal_code_user' => $request->userData['postal_code'],
+            'nama_pemilik_toko' => $request->orderData['tokoObj']['nama_pemilik'],
+            'no_telephone_toko' => $request->orderData['tokoObj']['no_telephone'],
+            'detail_alamat_toko' => $request->orderData['tokoObj']['detail_alamat'],
+            'postal_code_toko' => $request->orderData['tokoObj']['postal_code'],
             'toko_id' => $request->orderData['tokoObj']['toko_id'],
             'nama_toko' => $request->orderData['tokoObj']['nama_toko'],
             'longitude' => $request->orderData['longitude'],
@@ -203,6 +204,8 @@ class ApiOrderController extends Controller
             'status' => $response->status,
             'exp_date_invoice' => $formattedExpiryDate,
             'link_payment_order' => $response->invoice_url,
+            'courier_company' => $request->courierData['company'],
+            'courier_service_code' => $request->courierData['courier_service_code'],
         ]);
        
         // fungsi untuk looping orderan
@@ -296,53 +299,100 @@ public function callback_xendit(Request $request){
         $qty_order = OrderItem::where('order_id', $order->id)->pluck('qty');
         $produks = Produk::whereIn('id', $ambil_produk_id)->get();
         $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $order->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
-        
-        if ($order->status == 'PAID') {
-           
-            $ambil_produkid_berdasarkan_userid->each->delete();
-
-            $bayar = $order->update([
-                'metode_pembayaran' => $request->payment_method,
-                'bank_code' => $request->bank_code,
-            ]);
-    
-            $res = [
-                'message' => 'success',
-                'data' => $bayar
-            ];
-            
-            TLogApi::create([
-                'k_t' => 'terima',
-                'object' => 'xendit',
-                'data' => json_encode($request->all()),
-                'result' => json_encode($res)
-            ]);
-        } elseif ($order->status == 'EXPIRED') {
-            foreach ($produks as $index => $p) {
-               
-                $p->update([
-                    'stok' => $p->stok + $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
+        switch ($order->status) {
+            case 'PAID':
+                $ambil_produkid_berdasarkan_userid->each->delete();
+                
+                $bayar = $order->update([
+                    'metode_pembayaran' => $request->payment_method,
+                    'bank_code' => $request->bank_code,
                 ]);
-            }
-            $res = [
-                'message' => 'success',
-                'payment' => 'EXPIRED'
-            ];
+                
+                
 
-        }else {
-            $res = [
-                'message' => 'success',
-                'payment' => 'ERROR'
-            ];
+                $items = [];
+                $get_items = OrderItem::where('order_id', $order->id)->get();
+
+                foreach ($get_items as $item) {
+                    $items[] = [
+                        'name' => $item->nama_produk,
+                        'value' => $item->harga, // Ini mungkin perlu diganti dengan nilai yang sesuai
+                        'quantity' => $item->qty,
+                        'weight' => $item->berat_item,
+                    ];
+                }
+                
+                $data_request = Http::withHeaders([
+                    'Authorization' => env('API_KEY_BITESHIP')
+                ])->post('https://api.biteship.com/v1/orders', [
+                    'shipper_contact_name' => $order->nama_pemilik_toko,
+                    'shipper_contact_phone' => $order->no_telephone_toko,
+                    // 'shipper_contact_email' => $external_id,
+                    'shipper_organization' => 'WIN SHOP',
+                    'origin_contact_name' => $order->nama_pemilik_toko,
+                    'origin_contact_phone' => $order->no_telephone_toko,
+                    'origin_address' => $order->detail_alamat_toko,
+                    // 'origin_note' => $external_id,
+                    'origin_postal_code' => $order->postal_code_toko,
+                    'destination_contact_name' => $order->nama_user,
+                    'destination_contact_phone' => $order->no_telephone_user,
+                    'destination_contact_email' => $order->email_user,
+                    'destination_address' => $order->detail_alamat_user,
+                    'destination_postal_code' => $order->postal_code_user,
+                    // 'destination_note' => $external_id,
+                    'courier_company' => $order->courier_company,
+                    'courier_type' => $order->courier_service_code,
+                    // 'courier_insurance' => $external_id,
+                    'delivery_type' => 'now',
+                    // 'order_note' => $external_id,
+                    'items' => $items
+                ]);
+                $response = $data_request->object();
+                Pengiriman::create([
+                    'no_resi' => $response->courier->waybill_id,
+                    'user_id' => $order->user_id,
+                ]);
+                $res = [
+                    'success' => true,
+                    'message' => 'callback xendit success'
+                ];
+                TLogApi::create([
+                    'k_t' => 'terima',
+                    'object' => 'xendit',
+                    'data' => json_encode($request->all()),
+                    'result' => json_encode($res)
+                ]);
+
+                break;
+            case 'EXPIRED':
+                foreach ($produks as $index => $p) {
+                    
+                    $p->update([
+                        'stok' => $p->stok + $qty_order[$index], // Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
+                    ]);
+                }
+                $res = [
+                    'message' => 'success',
+                    'payment' => 'EXPIRED'
+                ];
+                break;
+            default:
+                $res = [
+                    'success' => false,
+                    'payment' => 'ERROR'
+                ];
+                # code...
+                break;
         }
+     
     
         DB::commit();
     } catch (Throwable $th) {
         DB::rollBack();
-        dd($th);
+        // dd($th);
         return response()->json([
-            'message'=>'ERROR',
-            'data'=> $th->getMessage(),
+            'success'=>false,
+            'message'=> $th->getMessage(),
         ],400);
         //throw $th;
     }

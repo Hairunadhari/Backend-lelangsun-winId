@@ -62,7 +62,7 @@
                     }
                 },
                 {
-                    data: "order_name",
+                    data: "nama_user",
                 },
                 {
                     data: "status",
