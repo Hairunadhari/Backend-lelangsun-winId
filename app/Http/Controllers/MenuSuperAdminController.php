@@ -2666,68 +2666,31 @@ class MenuSuperAdminController extends Controller
         try {
             DB::beginTransaction();
             $data = User::find($id);
-
-            if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
-                
-                Storage::delete('public/image/'.$data->foto_ktp);
-                $foto_ktp = $request->file('foto_ktp');
-                $foto_ktp->storeAs('public/image', $foto_ktp->hashName());
-
-                Storage::delete('public/image/'.$data->foto_npwp);
-                $foto_npwp = $request->file('foto_npwp');
-                $foto_npwp->storeAs('public/image', $foto_npwp->hashName());
-
-                $data->update([
-                    'name' => $request->name,
-                    'no_telp' => $request->no_telp,
-                    'alamat' => $request->alamat,
-                    'nik' => $request->nik,
-                    'npwp' => $request->npwp,
-                    'foto_ktp'     => $foto_ktp->hashName(),
-                    'foto_npwp'     => $foto_npwp->hashName(),
-                ]);
-
-            }elseif ($request->hasFile('foto_npwp')){
+            $userData = [
+                'name' => $request->name,
+                'no_telp' => $request->no_telp,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'npwp' => $request->npwp,
+                'email' => $request->email,
+            ];
+           
+            if ($request->hasFile('foto_npwp')){
 
                 Storage::delete('public/image/'.$data->foto_npwp);
                 $foto_npwp = $request->file('foto_npwp');
-                $foto_npwp->storeAs('public/image', $foto_npwp->hashName());
-
-                $data->update([
-                    'name' => $request->name,
-                    'no_telp' => $request->no_telp,
-                    'alamat' => $request->alamat,
-                    'nik' => $request->nik,
-                    'npwp' => $request->npwp,
-                    'foto_npwp'     => $foto_npwp->hashName(),
-                ]);
-
-            }elseif ($request->hasFile('foto_ktp')){
-
-                Storage::delete('public/image/'.$data->foto_ktp);
-                $foto_ktp = $request->file('foto_ktp');
-                $foto_ktp->storeAs('public/image', $foto_ktp->hashName());
-
-                $data->update([
-                    'name' => $request->name,
-                    'no_telp' => $request->no_telp,
-                    'alamat' => $request->alamat,
-                    'nik' => $request->nik,
-                    'npwp' => $request->npwp,
-                    'foto_ktp'     => $foto_ktp->hashName(),
-                ]);
-
-            }else {
-                $data->update([
-                    'name' => $request->name,
-                    'namasasa' => $request->namasasa,
-                    'no_telp' => $request->no_telp,
-                    'alamat' => $request->alamat,
-                    'nik' => $request->nik,
-                    'npwp' => $request->npwp,
-                ]);
+                $userData['foto_npwp'] = $foto_npwp->hashName();
+                $foto_npwp->storeAs('public/image', $userData['foto_npwp']);
             }
+            if ($request->hasFile('foto_ktp')){
 
+                Storage::delete('public/image/'.$data->foto_ktp);
+                $foto_ktp = $request->file('foto_ktp');
+                $userData['foto_ktp'] = $foto_ktp->hashName();
+                $foto_ktp->storeAs('public/image', $userData['foto_ktp']);
+
+            }
+            $data->update($userData);
             DB::commit();
 
             

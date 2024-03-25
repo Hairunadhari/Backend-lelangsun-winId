@@ -25,7 +25,8 @@
                 <div class="row">
                     <div class="form-group col-6">
                         <label>Email</label>
-                        <input type="email" class="form-control"  value="{{$data->email}}" readonly>
+                        <input type="email" class="form-control"  value="{{$data->email}}" name="email">
+                        {{-- <input type="email" class="form-control"  value="{{$data->email}}" readonly> --}}
                     </div>
                     <div class="form-group col-6">
                         <label>Telepon</label>
@@ -56,13 +57,13 @@
                 <div class="row">
                     <div class="form-group col-6">
                         <label>Foto KTP</label>
-                        <input type="file" class="form-control" name="foto_ktp" value="{{$data->foto_ktp}}"
+                        <input type="file" class="form-control" name="foto_ktp" accept=".jpg, .png, .jpeg" value="{{$data->foto_ktp}}"
                             id="gambarktp">
                         <div id="previewktp" class="mt-3"></div>
                     </div>
                     <div class="form-group col-6">
                         <label>Foto NPWP</label>
-                        <input type="file" class="form-control" name="foto_npwp" value="{{$data->foto_npwp}}"
+                        <input type="file" class="form-control" name="foto_npwp"  accept=".jpg, .png, .jpeg" value="{{$data->foto_npwp}}"
                             id="gambarnpwp">
                         <div id="previewnpwp" class="mt-3"></div>
                     </div>
