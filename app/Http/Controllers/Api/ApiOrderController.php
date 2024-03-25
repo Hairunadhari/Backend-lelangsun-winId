@@ -81,6 +81,15 @@ class ApiOrderController extends Controller
                     type="object",
                     @OA\Property(property="company", type="string"),
                     @OA\Property(property="courier_service_code", type="string"),
+                    @OA\Property(property="courier_type", type="string"),
+                    @OA\Property(property="available_collection_method", type="string"),
+                    @OA\Property(property="courier_name", type="string"),
+                    @OA\Property(property="courier_service_name", type="string"),
+                    @OA\Property(property="description", type="string"),
+                    @OA\Property(property="duration", type="string"),
+                    @OA\Property(property="service_type", type="string"),
+                    @OA\Property(property="shipping_type", type="string"),
+                    @OA\Property(property="price", type="integer"),
                         
                 ),
              ),
@@ -127,6 +136,15 @@ class ApiOrderController extends Controller
         
         'courierData.company' => 'required|string',
         'courierData.courier_service_code' => 'required|string',
+        'courierData.type' => 'required|string',
+        'courierData.available_collection_method' => 'required',
+        'courierData.courier_name' => 'required|string',
+        'courierData.courier_service_name' => 'required|string',
+        'courierData.description' => 'required|string',
+        'courierData.duration' => 'required|string',
+        'courierData.service_type' => 'required|string',
+        'courierData.shipping_type' => 'required|string',
+        'courierData.price' => 'required|integer',
     ]);
     if ($validator->fails()) {
         $messages = $validator->messages();
@@ -140,7 +158,6 @@ class ApiOrderController extends Controller
 
     try {
         DB::beginTransaction();
-        
         $timestamp = time();
         $strRandom = Str::random(5);
         $external_id = "INV-WIN-{$timestamp}-{$strRandom}";  
@@ -206,6 +223,15 @@ class ApiOrderController extends Controller
             'link_payment_order' => $response->invoice_url,
             'courier_company' => $request->courierData['company'],
             'courier_service_code' => $request->courierData['courier_service_code'],
+            'courier_type' => $request->courierData['type'],
+            'available_collection_method' => json_encode($request->courierData['available_collection_method']),
+            'courier_name' => $request->courierData['courier_name'],
+            'courier_service_name' => $request->courierData['courier_service_name'],
+            'description' => $request->courierData['description'],
+            'duration' => $request->courierData['duration'],
+            'service_type' => $request->courierData['service_type'],
+            'shipping_type' => $request->courierData['shipping_type'],
+            'price' => $request->courierData['price'],
         ]);
        
         // fungsi untuk looping orderan
@@ -341,7 +367,7 @@ public function callback_xendit(Request $request){
                     'destination_postal_code' => $order->postal_code_user,
                     // 'destination_note' => $external_id,
                     'courier_company' => $order->courier_company,
-                    'courier_type' => $order->courier_service_code,
+                    'courier_type' => $order->courier_type,
                     // 'courier_insurance' => $external_id,
                     'delivery_type' => 'now',
                     // 'order_note' => $external_id,
