@@ -45,7 +45,7 @@
                         <label>NIK</label>
                         <input type="text" class="form-control" name="nik" value="{{$data->nik}}">
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group col-6 tes">
                         <label>NPWP</label>
                         <input type="text" class="form-control" name="npwp" value="{{$data->npwp}}">
                     </div>
