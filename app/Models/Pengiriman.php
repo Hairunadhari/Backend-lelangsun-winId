@@ -9,4 +9,5 @@ class Pengiriman extends Model
 {
     use HasFactory;
     protected $guarded = [''];
+    
 }

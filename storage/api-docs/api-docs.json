@@ -1493,7 +1493,7 @@
                                                 "type": "string",
                                                 "format": "email"
                                             },
-                                            "detail_alamat_user": {
+                                            "detail_alamat": {
                                                 "type": "string"
                                             },
                                             "postal_code": {
@@ -1512,7 +1512,7 @@
                                                     "no_telephone": {
                                                         "type": "integer"
                                                     },
-                                                    "detail_alamat_toko": {
+                                                    "detail_alamat": {
                                                         "type": "string"
                                                     },
                                                     "postal_code": {
@@ -1584,6 +1584,33 @@
                                             },
                                             "courier_service_code": {
                                                 "type": "string"
+                                            },
+                                            "courier_type": {
+                                                "type": "string"
+                                            },
+                                            "available_collection_method": {
+                                                "type": "string"
+                                            },
+                                            "courier_name": {
+                                                "type": "string"
+                                            },
+                                            "courier_service_name": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "duration": {
+                                                "type": "string"
+                                            },
+                                            "service_type": {
+                                                "type": "string"
+                                            },
+                                            "shipping_type": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "integer"
                                             }
                                         },
                                         "type": "object"
