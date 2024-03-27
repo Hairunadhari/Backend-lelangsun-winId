@@ -141,50 +141,6 @@ class FrontEndController extends Controller
             DB::beginTransaction();
             $ktp = $request->file('foto_ktp');
             $npwp = $request->file('foto_npwp');
-<<<<<<< HEAD
-            $cekuser = User::where('email',$request->email)->where('status','active')->where('email_verified_at','!=', null)->first();
-            
-            if ($cekuser == null) {
-                if ($request->hasFile('foto_ktp') && $request->hasFile('foto_npwp')) {
-                    $ktp->storeAs('public/image', $ktp->hashName());
-                    $npwp->storeAs('public/image', $npwp->hashName());
-                    $user = User::create([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_ktp' => $ktp->hashName(),
-                        'foto_npwp' => $npwp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
-                }else if($request->hasFile('foto_ktp')) {
-                    $user = User::create([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_ktp' => $ktp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
-                }else if($request->hasFile('foto_npwp')){
-                    $user = User::create([
-                        'name' => $request->nama,
-                        'email' => $request->email,
-                        'no_telp' => $request->no_telp,
-                        'alamat' => $request->alamat,
-                        'nik' => $request->nik,
-                        'npwp' => $request->npwp,
-                        'no_rek' => $request->no_rek,
-                        'foto_npwp' => $ktp->hashName(),
-                        'password' => Hash::make($request->password),
-                    ]);
-=======
             $cekuser = User::where('email',$request->email)->where('status','active')->whereNotNull('email_verified_at')->first();
             // dd($cekuser);
             if ($cekuser == null) {
@@ -230,7 +186,6 @@ class FrontEndController extends Controller
                     }
                     
                     User::create($userData);
->>>>>>> origin/hairundev
                     
                 }
                 

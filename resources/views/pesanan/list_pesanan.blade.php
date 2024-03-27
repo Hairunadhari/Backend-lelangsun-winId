@@ -88,7 +88,6 @@
                     var editUrl = '/edit-pesanan/' + data.id;
                     return `
                         <span><a class="btn btn-dark" href="${detailUrl}"><i class="fas fa-search"></i> Detail</a></span>
-                        <span><a class="btn btn-primary" href="${editUrl}"><i class="fas fa-edit"></i> Edit</a></span>
                     `;
                 },
             },
