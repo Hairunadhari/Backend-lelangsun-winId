@@ -158,6 +158,8 @@ class ApiOrderController extends Controller
 
     try {
         DB::beginTransaction();
+        $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+        $now = $konvers_tanggal->format('H:i');
         $timestamp = time();
         $strRandom = Str::random(5);
         $external_id = "INV-WIN-{$timestamp}-{$strRandom}";  
@@ -223,7 +225,6 @@ class ApiOrderController extends Controller
             'link_payment_order' => $response->invoice_url,
             'courier_company' => $request->courierData['company'],
             'courier_service_code' => $request->courierData['courier_service_code'],
-            'courier_type' => $request->courierData['type'],
             'available_collection_method' => json_encode($request->courierData['available_collection_method']),
             'courier_name' => $request->courierData['courier_name'],
             'courier_service_name' => $request->courierData['courier_service_name'],
@@ -232,6 +233,9 @@ class ApiOrderController extends Controller
             'service_type' => $request->courierData['service_type'],
             'shipping_type' => $request->courierData['shipping_type'],
             'price' => $request->courierData['price'],
+            'type' => $request->courierData['type'],
+            'time_order' => $now,
+
         ]);
        
         // fungsi untuk looping orderan
@@ -347,10 +351,7 @@ public function callback_xendit(Request $request){
                         'weight' => $item->berat_item,
                     ];
                 }
-                
-                $data_request = Http::withHeaders([
-                    'Authorization' => env('API_KEY_BITESHIP')
-                ])->post('https://api.biteship.com/v1/orders', [
+                $instantOrSameday = [
                     'shipper_contact_name' => $order->nama_pemilik_toko,
                     'shipper_contact_phone' => $order->no_telephone_toko,
                     // 'shipper_contact_email' => $external_id,
@@ -372,7 +373,47 @@ public function callback_xendit(Request $request){
                     'delivery_type' => 'now',
                     // 'order_note' => $external_id,
                     'items' => $items
-                ]);
+                ];
+
+                switch ($order->type) {
+                    case 'same_day':
+                        $data_request = Http::withHeaders([
+                            'Authorization' => env('API_KEY_BITESHIP')
+                        ])->post('https://api.biteship.com/v1/orders', $instantOrSameday);
+                        break;
+                    case 'instant':
+                            $data_request = Http::withHeaders([
+                                'Authorization' => env('API_KEY_BITESHIP')
+                            ])->post('https://api.biteship.com/v1/orders', $instantOrSameday);
+                        break;
+                    default:
+                        $data_request = Http::withHeaders([
+                            'Authorization' => env('API_KEY_BITESHIP')
+                        ])->post('https://api.biteship.com/v1/orders', [
+                            'shipper_contact_name' => $order->nama_pemilik_toko,
+                            'shipper_contact_phone' => $order->no_telephone_toko,
+                            // 'shipper_contact_email' => $external_id,
+                            'shipper_organization' => 'WIN SHOP',
+                            'origin_contact_name' => $order->nama_pemilik_toko,
+                            'origin_contact_phone' => $order->no_telephone_toko,
+                            'origin_address' => $order->detail_alamat_toko,
+                            // 'origin_note' => $external_id,
+                            'origin_postal_code' => $order->postal_code_toko,
+                            'destination_contact_name' => $order->nama_user,
+                            'destination_contact_phone' => $order->no_telephone_user,
+                            'destination_contact_email' => $order->email_user,
+                            'destination_address' => $order->detail_alamat_user,
+                            'destination_postal_code' => $order->postal_code_user,
+                            // 'destination_note' => $external_id,
+                            'courier_company' => $order->courier_company,
+                            'courier_type' => $order->courier_type,
+                            // 'courier_insurance' => $external_id,
+                            'delivery_type' => 'now',
+                            // 'order_note' => $external_id,
+                            'items' => $items
+                        ]);
+                        break;
+                }
                 $response = $data_request->object();
                 Pengiriman::create([
                     'no_resi' => $response->courier->waybill_id,

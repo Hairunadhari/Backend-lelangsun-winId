@@ -47,7 +47,7 @@
                     </div>
                     <div class="form-group col-6">
                         <label>NPWP</label>
-                        <input type="text" class="form-control" name="npwp" value="{{$data->npwp}}">
+                        <input type="text" class="form-control tesx" name="npwp" value="{{$data->npwp}}">
                     </div>
                 </div>
                     <div class="row">
