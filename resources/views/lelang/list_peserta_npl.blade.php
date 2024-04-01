@@ -181,7 +181,6 @@
                                     <span><a class="btn btn-sm btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="_method" value="PUT">
-                                    <button class="btn btn-sm btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
                                     <a class="btn btn-sm btn-success" onclick="return confirm('Apakah anda ingin mengaktifkan verifikasi email data ini?');" href="/superadmin/aktifkan-email-peserta/${data.id}"><i class="fas fa-user-check"></i></a>
                                     </form>
                                 `;
@@ -191,7 +190,6 @@
                                     <span><a class="btn btn-sm btn-primary" href="${editUrl}"><i class="fas fa-edit"></i></a></span>
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="_method" value="PUT">
-                                    <button class="btn btn-sm btn-danger" type="submit"><i class="far fa-trash-alt"></i></button>
                                     </form>
                                 `;
                         }
