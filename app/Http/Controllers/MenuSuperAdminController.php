@@ -52,10 +52,13 @@ use App\Models\InvoiceStore;
 use App\Models\PembelianNpl;
 use App\Models\PesertaEvent;
 use Illuminate\Http\Request;
+use App\Models\BannerBeranda;
 use App\Models\BannerSpesial;
 use App\Models\KategoriBarang;
 use App\Models\KategoriProduk;
+use App\Models\BannerPageEvent;
 use App\Models\PembayaranEvent;
+use App\Models\BannerPageLelang;
 use App\Events\SearchPemenangLot;
 use App\Models\BannerLelangImage;
 use Illuminate\Support\Facades\DB;
@@ -2144,7 +2147,10 @@ class MenuSuperAdminController extends Controller
 
     public function list_banner_lelang(){
         $data = BannerLelang::where('status','active')->first();
-        return view('publikasi.banner_lelang',compact('data'));
+        $bannerberanda = BannerBeranda::first();
+        $bannerpagelelang = BannerPageLelang::first();
+        $bannerpageevent = BannerPageEvent::first();
+        return view('publikasi.banner_lelang',compact('data','bannerberanda','bannerpagelelang','bannerpageevent'));
     }
 
     public function add_banner_lelang(Request $request){

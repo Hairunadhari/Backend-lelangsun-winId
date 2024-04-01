@@ -5,7 +5,7 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
 Alpine.start();
-$(document).ready(function () {
+$(document).ready(function () { 
    
     
     let event_lelang_id = $('#event_lelang_id').val();

@@ -16,10 +16,10 @@
                             <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
                                 aria-controls="home" aria-selected="true">Peserta Aktif</a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
                                 aria-controls="profile" aria-selected="false">Peserta Tidak Aktif</a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link" id="verif-tab3" data-toggle="tab" href="#verif3" role="tab"
                                 aria-controls="verif" aria-selected="false">Verifikasi NPL</a>

@@ -141,7 +141,7 @@ class FrontEndController extends Controller
             DB::beginTransaction();
             $ktp = $request->file('foto_ktp');
             $npwp = $request->file('foto_npwp');
-            $cekuser = User::where('email',$request->email)->where('status','active')->whereNotNull('email_verified_at')->first();
+            $cekuser = User::where('email',$request->email)->whereNotNull('email_verified_at')->first();
             // dd($cekuser);
             if ($cekuser == null) {
                 $cekuserVerifiedNull = User::where('email',$request->email)->where('status','active')->whereNull('email_verified_at')->first();
@@ -156,37 +156,21 @@ class FrontEndController extends Controller
                     'password' => Hash::make($request->password),
                 ];
                 
+                if ($request->hasFile('foto_ktp')) {
+                    $ktp = $request->file('foto_ktp');
+                    $userData['foto_ktp'] = $ktp->hashName();
+                    $ktp->storeAs('public/image', $userData['foto_ktp']);
+                }
+                
+                if ($request->hasFile('foto_npwp')) {
+                    $npwp = $request->file('foto_npwp');
+                    $userData['foto_npwp'] = $npwp->hashName();
+                    $npwp->storeAs('public/image', $userData['foto_npwp']);
+                }
                 if ($cekuserVerifiedNull != null) {
-                    if ($request->hasFile('foto_ktp')) {
-                        $ktp = $request->file('foto_ktp');
-                        $userData['foto_ktp'] = $ktp->hashName();
-                        $ktp->storeAs('public/image', $userData['foto_ktp']);
-                    }
-                    
-                    if ($request->hasFile('foto_npwp')) {
-                        $npwp = $request->file('foto_npwp');
-                        $userData['foto_npwp'] = $npwp->hashName();
-                        $npwp->storeAs('public/image', $userData['foto_npwp']);
-                    }
-
                     $cekuserVerifiedNull->update($userData);
-
                 } else {
-                    
-                    if ($request->hasFile('foto_ktp')) {
-                        $ktp = $request->file('foto_ktp');
-                        $userData['foto_ktp'] = $ktp->hashName();
-                        $ktp->storeAs('public/image', $userData['foto_ktp']);
-                    }
-                    
-                    if ($request->hasFile('foto_npwp')) {
-                        $npwp = $request->file('foto_npwp');
-                        $userData['foto_npwp'] = $npwp->hashName();
-                        $npwp->storeAs('public/image', $userData['foto_npwp']);
-                    }
-                    
                     User::create($userData);
-                    
                 }
                 
             }else {
