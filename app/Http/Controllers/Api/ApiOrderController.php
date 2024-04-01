@@ -381,11 +381,13 @@ public function callback_xendit(Request $request){
                             'Authorization' => env('API_KEY_BITESHIP')
                         ])->post('https://api.biteship.com/v1/orders', $instantOrSameday);
                         break;
+
                     case 'instant':
                             $data_request = Http::withHeaders([
                                 'Authorization' => env('API_KEY_BITESHIP')
                             ])->post('https://api.biteship.com/v1/orders', $instantOrSameday);
                         break;
+                        
                     default:
                         $data_request = Http::withHeaders([
                             'Authorization' => env('API_KEY_BITESHIP')
