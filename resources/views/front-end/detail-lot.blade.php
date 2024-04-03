@@ -77,6 +77,7 @@
     display: block;
     word-wrap: break-word; /* or overflow-wrap: break-word; */
     margin-left: 5px;
+    color: black;
 }
 
     @media (max-width: 600px) {
