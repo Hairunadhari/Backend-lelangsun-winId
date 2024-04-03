@@ -72,6 +72,13 @@
         .cols{
             width: 50%
         }
+        .keterangan {
+    background-color: white;
+    display: block;
+    word-wrap: break-word; /* or overflow-wrap: break-word; */
+    margin-left: 5px;
+}
+
     @media (max-width: 600px) {
         #satu {
             background-image: url('/asset-lelang/detail_event.jpg');
@@ -143,14 +150,14 @@
                 </div>
                 <div class="cols">
                     <div class=" p-2 bungkus-deksripsi" style="height: auto">
-                        <div class="row rowdetail p-2">
+                        <div class="row rowdetail p-2" >
                             @if ($data->barang_lelang->bahan_bakar == null)
 
                             <h5 class="card-text">Nama : {{$data->barang_lelang->barang}}</h5>
                             <h5 class="card-text">Brand : {{$data->barang_lelang->brand}}</h5>
                             <h5 class="card-text">Warna : {{$data->barang_lelang->warna}}</h5>
                             <h5 class="card-text">lokasi Barang : {{$data->barang_lelang->lokasi_barang}}</h5>
-                            <h5 class="card-text">Keterangan : {!!$data->barang_lelang->keterangan!!}</h5>
+                            <div class="keterangan"><h5 style="color: black; box-shadow: none;">Keterangan :</h5> {!!$data->barang_lelang->keterangan!!}</div>
                             @else
 
                             <div class="col-4">
@@ -219,7 +226,7 @@
                                 <h5 class="card-text">Kwitansi : <span class="badge bg-danger">Tidak Ada</span></h5>
                                 @endif
 
-                                <h5 class="card-text">Keterangan : {!!$data->barang_lelang->keterangan!!}</h5>
+                                <div  class="keterangan"><h5 style="color: black; box-shadow: none;">Keterangan :</h5> {!!$data->barang_lelang->keterangan!!}</div>
                             </div>
                             @endif
                         </div>

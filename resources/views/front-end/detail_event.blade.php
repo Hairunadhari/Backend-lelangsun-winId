@@ -41,14 +41,21 @@
     }
     .id-lot {
         position: absolute;
-        top: -15px; /* Adjust as needed to make it slightly protrude */
-        right: -15px; /* Adjust as needed to make it slightly protrude */
+        top: -15px;
+        /* Adjust as needed to make it slightly protrude */
+        right: -15px;
+        /* Adjust as needed to make it slightly protrude */
         padding: 5px;
-        background-color: #DC3545; /* You can adjust the background color as needed */
-        border: 1px solid #ccc; /* You can adjust the border as needed */
-        border-radius: 50%; /* Makes it a circle */
-        width: 50px; /* Adjust as needed */
-        height: 50px; /* Adjust as needed */
+        background-color: #DC3545;
+        /* You can adjust the background color as needed */
+        border: 1px solid #ccc;
+        /* You can adjust the border as needed */
+        border-radius: 50%;
+        /* Makes it a circle */
+        width: 60px;
+        /* Adjust as needed */
+        height: 60px;
+        /* Adjust as needed */
         display: flex;
         align-items: center;
         justify-content: center;
