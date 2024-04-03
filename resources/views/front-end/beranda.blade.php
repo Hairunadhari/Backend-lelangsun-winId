@@ -142,6 +142,7 @@
         #content-3 .button-lelang {
             display: flex;
             justify-content: center;
+            margin-top: 1rem;
             padding: 80px 50px 0 0;
         }
 
