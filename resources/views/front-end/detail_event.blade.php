@@ -102,7 +102,7 @@
                     <img src="{{ asset('storage/image/'.$event->gambar) }}"  alt="..." class="mb-3">
                         <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Event: {{$event->judul}}</h5>
                       <p class="card-text"><i class="fas fa-map-marker-alt"></i> Alamat: {{$event->alamat}}</p>
-                      <p class="card-text"><i class="fas fa-map-marked-alt"></i> Link Lokasi: <a href="{{$event->link_lokasi}}">{{$event->link_lokasi}}</a></p>
+                      <p class="card-text"><i class="fas fa-map-marked-alt"></i> Link Lokasi: <a target="_blank" href="{{$event->link_lokasi}}">{{$event->link_lokasi}}</a></p>
                       <p class="card-text"><i class="fas fa-clock"></i> Waktu Event: {{$event->waktu}} WIB</p>
                       <p><i class="fas fa-exclamation"></i> Keterangan :</p><textarea readonly class="card-text form-control">{{strip_tags($event->deskripsi)}}</textarea>
                   </div>
