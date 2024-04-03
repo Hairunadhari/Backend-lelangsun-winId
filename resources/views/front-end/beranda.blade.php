@@ -243,9 +243,9 @@
                     class="fw-bold">150</span> jutaan</span>
         </div>
     </div>
-    <div class="button-lelang">
+    {{-- <div class="button-lelang">
         <a class="btn btn-danger" href="/user-lelang">Ikuti Lelang</a>
-    </div>
+    </div> --}}
 </section>
 
 <section id="content-4">
