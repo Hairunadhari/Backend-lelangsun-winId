@@ -94,9 +94,9 @@
     }
 
     .rowzx {
+        /* gap: 10px; */
         margin-top: 5rem;
-        display: flex;
-        gap: 1rem;
+
     }
 
     .antrian-lot {
@@ -132,6 +132,9 @@
 
         .rowzx {
             display: block;
+        }
+        .zxx{
+            width: 100%;
         }
     }
 
@@ -228,14 +231,16 @@
 
 
     </div>
-    <div class="rowzx ">
+    <div class="rowzx row">
         @foreach ($lot_item as $index => $item)
         @if ($index > 0)
-        <div class="card  antrian-lot" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6; ">
-            <div class="id-lot">Lot {{$item->no_lot}}</div>
-            @if (count($item->barang_lelang->gambarlelang) > 0)
-            <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}"
-                class="card-img-top" alt="..." style=" width:auto; height: 400px;">
+        <div class="col-4 mb-3 zxx">
+
+            <div class="card  antrian-lot" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; border:1px solid #dee2e6; ">
+                <div class="id-lot">Lot {{$item->no_lot}}</div>
+                @if (count($item->barang_lelang->gambarlelang) > 0)
+                <img src="{{ asset('storage/image/' . $item->barang_lelang->gambarlelang[0]->gambar) }}"
+                class="card-img-top" alt="..." style="height: 400px;">
             @endif
             <div class="card-body">
                 <h5 class="card-title">{{ $item->barang_lelang->barang }}</h5>
@@ -243,9 +248,9 @@
                 <p class="card-text">Rp {{ number_format($item->harga_awal) }}</p>
             </div>
         </div>
+        </div>
         @endif
         @endforeach
-
     </div>
 </section>
 <script>

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\MenuAdminController;
+use App\Http\Controllers\PengirimanControler;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ApiBiteshipController;
 use App\Http\Controllers\MenuSuperAdminController;
@@ -105,7 +106,6 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         // route promo produk
 
         Route::get('/pembayaran', [MenuSuperAdminController::class, 'list_pembayaran'])->name('superadmin.pembayaran');
-        Route::get('/pengiriman', [MenuSuperAdminController::class, 'list_pengiriman'])->name('superadmin.pengiriman');
 
         // route peserta NPL
         Route::get('/peserta-npl', [MenuSuperAdminController::class, 'list_peserta_npl'])->name('superadmin.peserta-npl');
@@ -314,6 +314,7 @@ Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('
     Route::get('/edit-pesanan/{id}', [MenuSuperAdminController::class, 'edit_pesanan']);
     Route::put('/update-pesanan/{id}', [MenuSuperAdminController::class, 'update_pesanan'])->name('update-pesanan');
     Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('promosi');
+    Route::get('/pengiriman', [PengirimanControler::class, 'list_pengiriman'])->name('pengiriman');
 
 
 });

@@ -81,7 +81,6 @@ class ApiOrderController extends Controller
                     type="object",
                     @OA\Property(property="company", type="string"),
                     @OA\Property(property="courier_service_code", type="string"),
-                    @OA\Property(property="courier_type", type="string"),
                     @OA\Property(property="available_collection_method", type="string"),
                     @OA\Property(property="courier_name", type="string"),
                     @OA\Property(property="courier_service_name", type="string"),
@@ -235,6 +234,8 @@ class ApiOrderController extends Controller
             'price' => $request->courierData['price'],
             'type' => $request->courierData['type'],
             'time_order' => $now,
+            'available_for_instant_waybill_id' => $request->courierData['available_for_instant_waybill_id'],
+            'available_for_insurance' => $request->courierData['available_for_insurance'],
 
         ]);
        
@@ -368,8 +369,8 @@ public function callback_xendit(Request $request){
                     'destination_postal_code' => $order->postal_code_user,
                     // 'destination_note' => $external_id,
                     'courier_company' => $order->courier_company,
-                    'courier_type' => $order->courier_type,
-                    // 'courier_insurance' => $external_id,
+                    'courier_type' => $order->type,
+                    'courier_insurance' => $order->total_harga_all_item,
                     'delivery_type' => 'now',
                     // 'order_note' => $external_id,
                     'items' => $items
@@ -408,8 +409,8 @@ public function callback_xendit(Request $request){
                             'destination_postal_code' => $order->postal_code_user,
                             // 'destination_note' => $external_id,
                             'courier_company' => $order->courier_company,
-                            'courier_type' => $order->courier_type,
-                            // 'courier_insurance' => $external_id,
+                            'courier_type' => $order->type,
+                            'courier_insurance' => $order->total_harga_all_item,
                             'delivery_type' => 'now',
                             // 'order_note' => $external_id,
                             'items' => $items
@@ -417,6 +418,7 @@ public function callback_xendit(Request $request){
                         break;
                 }
                 $response = $data_request->object();
+                // dd($response);
                 Pengiriman::create([
                     'no_resi' => $response->courier->waybill_id,
                     'user_id' => $order->user_id,
