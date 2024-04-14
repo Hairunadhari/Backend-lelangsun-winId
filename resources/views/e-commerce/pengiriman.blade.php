@@ -5,7 +5,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="">Daftar Pesanan</h4>
+                    <h4 class="">Daftar Pengiriman</h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped w-100" id="tablepesanan">

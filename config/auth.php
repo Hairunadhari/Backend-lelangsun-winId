@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -44,6 +44,10 @@ return [
         'peserta' => [ // Nama guard khusus untuk Peserta
             'driver' => 'session',
             'provider' => 'pesertas', // Nama provider khusus untuk Peserta
+        ],
+        'api' => [ // Nama guard khusus untuk Peserta
+            'driver' => 'jwt',
+            'provider' => 'users', // Nama provider khusus untuk Peserta
         ],
     ],
 

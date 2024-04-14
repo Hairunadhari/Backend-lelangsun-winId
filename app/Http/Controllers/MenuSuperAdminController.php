@@ -386,10 +386,10 @@ class MenuSuperAdminController extends Controller
 
             // get data role superadmin
             if (Auth::user()->role->role == 'Super Admin') {
-                $data = Order::all();
+                $data = Order::where('status',$status)->get();
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
-                $data = Order::where('toko_id',Auth::user()->toko->id)->get();    
+                $data = Order::where('toko_id',Auth::user()->toko->id)->where('status',$status)->get();    
             }
             
             return DataTables::of($data)->make(true);

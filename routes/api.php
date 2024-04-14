@@ -97,6 +97,7 @@ Route::post('/maps', [ApiBiteshipController::class, 'maps']);
 Route::post('/rates', [ApiBiteshipController::class, 'rates']);
 
 
+Route::get('/user', [ApiController::class,'getUserDetails'])->middleware('auth:sanctum');
 
 
 
