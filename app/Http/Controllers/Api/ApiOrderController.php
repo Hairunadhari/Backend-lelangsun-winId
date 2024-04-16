@@ -236,6 +236,12 @@ class ApiOrderController extends Controller
             'time_order' => $now,
             'available_for_instant_waybill_id' => $request->courierData['available_for_instant_waybill_id'],
             'available_for_insurance' => $request->courierData['available_for_insurance'],
+            'kota_user' => $request->userData['kota'],
+            'kecamatan_user' => $request->userData['kecamatan'],
+            'provinsi_user' => $request->userData['provinsi'],
+            'kota_toko' => $request->orderData['tokoObj']['kota'],
+            'kecamatan_toko' => $request->orderData['tokoObj']['kecamatan'],
+            'provinsi_toko' => $request->orderData['tokoObj']['provinsi'],
 
         ]);
        

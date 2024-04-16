@@ -17,9 +17,9 @@ return new class extends Migration
             $table->foreign('order_id')->references('id')->on('orders');
             $table->bigInteger('tracking_id')->nullable();
             $table->bigInteger('waybill_id')->nullable();
-            $table->string('couier_name')->nullable();
-            $table->string('couier_phone')->nullable();
-            $table->string('couier_link')->nullable();
+            $table->string('courier_name')->nullable();
+            $table->string('courier_phone')->nullable();
+            $table->string('courier_link')->nullable();
             $table->bigInteger('insurance_amount')->nullable();
             $table->string('price')->nullable();
             $table->string('status')->nullable();

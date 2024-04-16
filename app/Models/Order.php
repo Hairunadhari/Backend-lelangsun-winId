@@ -31,5 +31,9 @@ class Order extends Model
     {
         return $this->hasOne(Pengiriman::class);
     }
+    public function toko()
+    {
+        return $this->belongsTo(Toko::class);
+    }
     
 }

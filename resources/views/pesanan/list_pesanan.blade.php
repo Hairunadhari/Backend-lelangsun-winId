@@ -45,7 +45,7 @@
                         if (data == null) {
                             a = `<span>-</span>`
                         }else{
-                            a= `<span>`+data+`</span>`
+                            a= `<span>`+data+`</span>`b
                         }
                         return a;
                     }
