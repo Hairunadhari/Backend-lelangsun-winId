@@ -10,7 +10,10 @@ class PengirimanControler extends Controller
 {
     public function list_pengiriman(){
         if (request()->ajax()) {
-            $data = Pengiriman::all();
+            $data = Pengiriman::with('order.orderitem')->get();
+            foreach ($data as $key) {
+                $key->tanggal_dibuat = $key->created_at->format('d M Y');
+            }
             return DataTables::of($data)->make(true);
             # code...
         }

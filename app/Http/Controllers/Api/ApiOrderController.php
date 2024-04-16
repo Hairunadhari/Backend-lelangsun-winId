@@ -420,8 +420,19 @@ public function callback_xendit(Request $request){
                 $response = $data_request->object();
                 // dd($response);
                 Pengiriman::create([
-                    'no_resi' => $response->courier->waybill_id,
+                    'waybill_id' => $response->courier->waybill_id,
                     'user_id' => $order->user_id,
+                    'order_id' => $order->id,
+                    'toko_id' => $order->toko_id,
+                    'biteship_order_id' => $response->id,
+                    'tracking_id' => $response->courier->tracking_id,
+                    'courier_name' => $response->courier->name,
+                    'courier_phone' => $response->courier->phone,
+                    'courier_link' => $response->courier->link,
+                    'insurance_amount' => $response->courier ->insurance->amount,
+                    'insurance_fee' => $response->courier ->insurance->fee,
+                    'price' => $response->price,
+                    'status' => $response->status,
                 ]);
                 $res = [
                     'success' => true,
@@ -434,6 +445,7 @@ public function callback_xendit(Request $request){
                     'result' => json_encode($res)
                 ]);
 
+
                 break;
             case 'EXPIRED':
                 foreach ($produks as $index => $p) {
@@ -443,15 +455,27 @@ public function callback_xendit(Request $request){
                     ]);
                 }
                 $res = [
-                    'message' => 'success',
+                    'success' => true,
                     'payment' => 'EXPIRED'
                 ];
+                TLogApi::create([
+                    'k_t' => 'terima',
+                    'object' => 'xendit',
+                    'data' => json_encode($request->all()),
+                    'result' => json_encode($res)
+                ]);
                 break;
             default:
                 $res = [
                     'success' => false,
-                    'payment' => 'ERROR'
+                    'payment' => 'ERROR',
                 ];
+                TLogApi::create([
+                    'k_t' => 'terima',
+                    'object' => 'xendit',
+                    'data' => json_encode($request->all()),
+                    'result' => json_encode($res)
+                ]);
                 # code...
                 break;
         }
@@ -461,6 +485,12 @@ public function callback_xendit(Request $request){
     } catch (Throwable $th) {
         DB::rollBack();
         // dd($th);
+        TLogApi::create([
+            'k_t' => 'terima',
+            'object' => 'biteship',
+            'data' => json_encode($th),
+            'result' => json_encode($th->getMessage())
+        ]);
         return response()->json([
             'success'=>false,
             'message'=> $th->getMessage(),
