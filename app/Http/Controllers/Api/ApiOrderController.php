@@ -425,6 +425,8 @@ public function callback_xendit(Request $request){
                 }
                 $response = $data_request->object();
                 // dd($response);
+                $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+                $now = $konvers_tanggal->format('Y-m-d H:i');
                 Pengiriman::create([
                     'waybill_id' => $response->courier->waybill_id,
                     'user_id' => $order->user_id,
@@ -439,6 +441,8 @@ public function callback_xendit(Request $request){
                     'insurance_fee' => $response->courier ->insurance->fee,
                     'price' => $response->price,
                     'status' => $response->status,
+                    'tanggal_dikirim' => $now,
+                    
                 ]);
                 $res = [
                     'success' => true,

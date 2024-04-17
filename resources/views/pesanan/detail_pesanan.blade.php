@@ -14,20 +14,19 @@
                         <div class="col-md-6">
                             <address>
                                 <strong>Info Pemesan:</strong><br>
-                                Nama : {{$order->order_name}}<br>
-                                No Telp : +62 {{$order->notelp}}<br>
-                                Alamat : {{$order->detail_alamat}}<br>
+                                Nama : {{$order->nama_user}}<br>
+                                No Telp : {{$order->no_telephone_user}}<br>
+                                Alamat : {{$order->detail_alamat_user}}<br>
                             </address>
                         </div>
                         <div class="col-md-6 text-md-right">
+                            @if ($order->status == 'PAID')
                             <address>
-                                <strong>Info Pengiriman:</strong><br>
-                                Kode Kurir : {{$order->kode_kurir}}<br>
-                                Layanan Pengiriman : {{$order->service}}<br>
-                                Deskripsi Layanan : {{$order->description_service}}<br>
-                                Etd Pengiriman : {{$order->etd}}<br>
-                                Harga Pengiriman : Rp {{$order->cost_shipping}}<br>
+                                <strong>Metode Pembayaran:</strong><br>
+                                {{$order->bank_code}}<br>
+                                {{$order->email_user}}
                             </address>
+                            @endif
                         </div>
                     </div>
                     <div class="row">
@@ -42,15 +41,6 @@
                                 <strong>Exp Date:</strong><br>
                                 {{ date('d M Y', strtotime($order->exp_date_invoice)) }}<br>
                             </address>
-                        </div>
-                        <div class="col-md-6 ">
-                            @if ($order->status == 'PAID')
-                            <address>
-                                <strong>Metode Pembayaran:</strong><br>
-                                {{$order->bank_code}}<br>
-                                {{$order->email_user}}
-                            </address>
-                            @endif
                         </div>
                     </div>
                 </div>

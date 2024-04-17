@@ -379,19 +379,19 @@ class MenuSuperAdminController extends Controller
     }
    
     public function list_pesanan(){
-       
         $idAdmin = Auth::user()->id;
         if (request()->ajax()) {
             $status = request('status');
 
+            $query = Order::with('orderitem');
             // get data role superadmin
-            if (Auth::user()->role->role == 'Super Admin') {
-                $data = Order::all();
-            // get data role admin
-            } elseif (Auth::user()->role->role == 'Admin') {
-                $data = Order::where('toko_id',Auth::user()->toko->id)->get();    
+            if ($status != null) {
+                $query->where('status',$status);
             }
-            
+            if (Auth::user()->role->role == 'Admin') {
+                $query->where('toko_id',Auth::user()->toko->id)->get();    
+            }
+            $data = $query->get();
             return DataTables::of($data)->make(true);
         }
 
