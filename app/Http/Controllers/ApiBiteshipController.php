@@ -105,14 +105,12 @@ class ApiBiteshipController extends Controller
         
         try {
             DB::beginTransaction();
-            $d = Kurir::where('status', 1)->get();
-            $kurir_imploded = $d->implode('kurir', ',');
             $data_request = Http::withHeaders([
                     'Authorization' => env('API_KEY_BITESHIP')
                     ])->post('https://api.biteship.com/v1/rates/couriers', [
                     'origin_postal_code' => $request->asal_postal_code,
                     'destination_postal_code' => $request->tujuan_postal_code,
-                    'couriers'=>$kurir_imploded,
+                    'couriers'=> "lalamove,jne,tiki,jnt,sicepat",
                     'items' => $request->items
             ]);
             DB::commit();

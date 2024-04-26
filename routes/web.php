@@ -30,9 +30,9 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 
-// Route::get('/admin', function () {
-//     return view('auth.login');
-// });
+Route::get('/a', function () {
+    return view('e-commerce.label-pengiriman');
+});
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
 Route::get('/tes', [FrontEndController::class, 'tes']);
 Route::get('/tescariarea/{value}', [FrontEndController::class, 'tescariarea']);
@@ -315,7 +315,8 @@ Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('
     Route::put('/update-pesanan/{id}', [MenuSuperAdminController::class, 'update_pesanan'])->name('update-pesanan');
     Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('promosi');
     Route::get('/pengiriman', [PengirimanControler::class, 'list_pengiriman'])->name('pengiriman');
-
+    Route::post('/download-pdf', [PengirimanControler::class, 'download_pdf']);
+    
 
 });
 

@@ -30,13 +30,5 @@ class StartBid implements ShouldBroadcast
     {
         return 'button-bid-event-'.$this->event_lelang_id;
     }
-    // public function broadcastOn()
-    // {
-    //     return new Channel('lelang');
-    // }
-
-    // public function broadcastAs()
-    // {
-    //     return 'respon-button';
-    // }
+     
 }
