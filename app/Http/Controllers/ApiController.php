@@ -56,6 +56,11 @@ use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * @OA\Get(
      *      path="/api/produk",
