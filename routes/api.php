@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\ApiBiteshipController;
 use App\Http\Controllers\Api\ApiOrderController;
+use App\Http\Controllers\Api\WebhookBiteShipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,15 +91,12 @@ Route::get('/get-city/{id}', [ApiController::class, 'get_city_by_id_provinsi']);
 Route::post('/cost', [ApiController::class, 'tarif_pengiriman']);
 Route::get('/get-kurir', [ApiController::class, 'list_kurir']);
 
-
 // biteship
 Route::get('/create-kurir', [ApiBiteshipController::class, 'create_kurir']);
 Route::post('/maps', [ApiBiteshipController::class, 'maps']);
 Route::post('/rates', [ApiBiteshipController::class, 'rates']);
 
-
-Route::get('/user', [ApiController::class,'getUserDetails'])->middleware('auth:sanctum');
-
-
-
-Route::get('/tes', [ApiController::class, 'tescekongkir']);
+// webhook biteship
+Route::post('/webhook-order-status', [WebhookBiteShipController::class, 'order_status']);
+Route::post('/webhook-order-price', [WebhookBiteShipController::class, 'order_price']);
+Route::post('/webhook-order-waybill', [WebhookBiteShipController::class, 'order_waybill']);

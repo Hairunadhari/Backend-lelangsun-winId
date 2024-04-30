@@ -29,4 +29,8 @@ class Toko extends Model
     {
         return $this->hasMany(Keranjang::class);
     }
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
