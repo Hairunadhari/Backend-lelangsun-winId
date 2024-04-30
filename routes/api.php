@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\ApiBiteshipController;
 use App\Http\Controllers\Api\ApiOrderController;
+use App\Http\Controllers\Api\ApiProdukController;
 use App\Http\Controllers\Api\WebhookBiteShipController;
 
 /*
@@ -23,9 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/produk', [ApiController::class, 'daftar_produk']);
-Route::get('/detailproduk/{id}/', [ApiController::class, 'detail_produk']);
-Route::get('/topproduk', [ApiController::class, 'daftar_top_produk']);
+Route::get('/produk', [ApiProdukController::class, 'daftar_produk']);
+Route::get('/detailproduk/{id}/', [ApiProdukController::class, 'detail_produk']);
+Route::get('/topproduk', [ApiProdukController::class, 'daftar_top_produk']);
 
 Route::get('/kategori', [ApiController::class, 'daftar_kategori']);
 Route::get('/detailkategori/{id}/', [ApiController::class, 'daftar_produk_berdasarkan_kategori']);
