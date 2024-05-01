@@ -33,8 +33,41 @@
                     }
                 },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -88,329 +121,91 @@
                     }
                 },
                 "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/produk": {
-            "get": {
-                "tags": [
-                    "Produk"
-                ],
-                "summary": "List Produk",
-                "description": "menampilkan semua produk",
-                "operationId": "produk",
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/topproduk": {
-            "get": {
-                "tags": [
-                    "Produk"
-                ],
-                "summary": "List Top Produk",
-                "description": "menampilkan top 5 produk ",
-                "operationId": "ListTopProduk",
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/detailproduk/{id}": {
-            "get": {
-                "tags": [
-                    "Produk"
-                ],
-                "summary": "Menampilkan detail produk berdasarkan ID",
-                "description": "Menampilkan detail produk berdasarkan ID yg diberikan",
-                "operationId": "DetailProduk",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID produk yang akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/detailkategori/{id}": {
-            "get": {
-                "tags": [
-                    "Kategori Produk"
-                ],
-                "summary": "Detail Kategori",
-                "description": "Menampilkan semua produk berdasarkan kategori yg dipillih",
-                "operationId": "DetailKategori",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID kategori yang akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/kategori": {
-            "get": {
-                "tags": [
-                    "Kategori Produk"
-                ],
-                "summary": "Kategori Produk",
-                "description": "menampilkan semua kategori produk ",
-                "operationId": "KategoriProduk",
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/register": {
-            "post": {
-                "summary": "Register a new user",
-                "operationId": "d4576a0b2a26dd9236adf2282235bf01",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "User's name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "User's email",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "description": "User's password",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "User registered successfully"
                     },
                     "422": {
-                        "description": "Validation errors"
-                    }
-                }
-            }
-        },
-        "/api/login": {
-            "post": {
-                "summary": "Authenticate user and generate JWT token",
-                "operationId": "c64fdb270498e81061530febf0dec4be",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "User's email",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
                     },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "description": "User's password",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "boolean",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Login successful"
-                    },
-                    "401": {
-                        "description": "Invalid credentials"
-                    }
                 }
             }
         },
-        "/api/user": {
-            "get": {
-                "tags": [
-                    "userx"
-                ],
-                "summary": "Get logged-in user details",
-                "operationId": "0de1979cae333ac087cebd20da3c6188",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/promosi": {
-            "get": {
-                "tags": [
-                    "Promosi"
-                ],
-                "summary": "List Promo Produk",
-                "description": "menampilkan semua jenis promo produk yg sedang berlangsung",
-                "operationId": "promosi",
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/detailpromosi/{id}": {
-            "get": {
-                "tags": [
-                    "Promosi"
-                ],
-                "summary": "menampilkan detail promo produk berdasarkan ID",
-                "description": "menampilkan semua produk yg sedang diskon berdasarkan ID Promosi yg diberikan",
-                "operationId": "DetailPromosi",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID promosi yang akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/cari-produk/{name}": {
-            "get": {
-                "tags": [
-                    "Search Produk"
-                ],
-                "summary": "cari produk",
-                "description": "menampilkan produk berdasarkan nama produk yg di masukkan",
-                "operationId": "SearchProduk",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "description": "masukkan nama produk",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/info-akun/{id}": {
-            "get": {
-                "tags": [
-                    "Akun"
-                ],
-                "summary": "Informasi Akun",
-                "description": "menampilkan informasi akun berdasarkan id user yg di masukkan",
-                "operationId": "InfoAkun",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "masukkan id user",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/update-akun/{id}": {
+        "/api/cost": {
             "post": {
                 "tags": [
-                    "Akun"
+                    "Tarif Pengiriman"
                 ],
-                "summary": "Akun",
-                "description": "masukkan name, telp, alamat, foto",
-                "operationId": "Akun",
+                "summary": "tarif pengiriman",
+                "description": "masukkan id_kota_asal, id_kota_tujuan, total_berat_produk, kurir",
+                "operationId": "tarif pengiriman",
                 "requestBody": {
                     "description": "",
                     "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "no_telp": {
+                                    "id_kota_asal": {
                                         "type": "integer"
                                     },
-                                    "alamat": {
+                                    "id_kota_tujuan": {
+                                        "type": "integer"
+                                    },
+                                    "total_berat_produk": {
+                                        "type": "integer"
+                                    },
+                                    "kurir": {
                                         "type": "string"
-                                    },
-                                    "foto": {
-                                        "type": "file",
-                                        "format": "binary"
-                                    },
-                                    "_method": {
-                                        "type": "string",
-                                        "example": "PUT"
                                     }
                                 },
                                 "type": "object"
@@ -470,518 +265,6 @@
                 }
             }
         },
-        "/api/list-pesanan/{id}": {
-            "get": {
-                "tags": [
-                    "Pesanan"
-                ],
-                "summary": "id user",
-                "description": "Menampilkan list pesanan berdasarkan user yg login",
-                "operationId": "ListPesanan",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "data user yg akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/detail-pesanan/{id}": {
-            "get": {
-                "tags": [
-                    "Pesanan"
-                ],
-                "summary": "order id",
-                "description": "Menampilkan detail pesanan berdasrkan order id",
-                "operationId": "DetailPesanan",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "order id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/add-wishlist": {
-            "post": {
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "Wishlist",
-                "description": "masukkan user id, produk id",
-                "operationId": "Wishlist",
-                "requestBody": {
-                    "description": "",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "user_id",
-                                    "produk_id"
-                                ],
-                                "properties": {
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "produk_id": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/list-wishlist/{id}": {
-            "get": {
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "user id",
-                "description": "menampilkan semua data wishlist berdasrkan user id",
-                "operationId": "ListWishlist",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "user id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/add-review": {
-            "post": {
-                "tags": [
-                    "Review"
-                ],
-                "summary": "Review",
-                "description": "masukkan user id, produk id, review, rating, rating maksimal 5",
-                "operationId": "Review",
-                "requestBody": {
-                    "description": "",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "user_id",
-                                    "produk_id"
-                                ],
-                                "properties": {
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "produk_id": {
-                                        "type": "integer"
-                                    },
-                                    "review": {
-                                        "type": "string"
-                                    },
-                                    "rating": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/delete-wishlist/{id}": {
-            "delete": {
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "wishlist id",
-                "description": "menghapus wishlist berdasarkan id wishlist",
-                "operationId": "DeleteWishlist",
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/add-keranjang": {
-            "post": {
-                "tags": [
-                    "Keranjang"
-                ],
-                "summary": "Keranjang",
-                "description": "masukkan user id, produk id, qty",
-                "operationId": "Keranjang",
-                "requestBody": {
-                    "description": "",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "user_id",
-                                    "produk_id"
-                                ],
-                                "properties": {
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "produk_id": {
-                                        "type": "integer"
-                                    },
-                                    "qty": {
-                                        "type": "integer"
-                                    },
-                                    "toko_id": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/list-keranjang/{id}": {
-            "get": {
-                "tags": [
-                    "Keranjang"
-                ],
-                "summary": "user id",
-                "description": "menampilkan semua data keranjang berdasarkan user id",
-                "operationId": "ListKeranjang",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "user id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/delete-keranjang/{id}": {
-            "delete": {
-                "tags": [
-                    "Keranjang"
-                ],
-                "summary": "Keranjang id",
-                "description": "menghapus keranjang berdasarkan id keranjang",
-                "operationId": "DeleteKeranjang",
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/detail-toko/{id}": {
-            "get": {
-                "tags": [
-                    "Toko"
-                ],
-                "summary": "Menampilkan detail Toko berdasarkan ID",
-                "description": "Menampilkan detail Toko berdasarkan ID yg diberikan",
-                "operationId": "DetailToko",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID Toko yang akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": "return array model Toko"
-                    }
-                }
-            }
-        },
-        "/api/list-event": {
-            "get": {
-                "tags": [
-                    "Event"
-                ],
-                "description": "menampilkan semua event",
-                "operationId": "ListEvent",
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/detail-event/{id}": {
-            "get": {
-                "tags": [
-                    "Event"
-                ],
-                "summary": "Menampilkan detail event berdasarkan ID",
-                "description": "Menampilkan detail event berdasarkan ID yg diberikan",
-                "operationId": "DetailEvent",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID event yang akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/bukti-pembayaran-event": {
-            "post": {
-                "tags": [
-                    "Event"
-                ],
-                "summary": "Event",
-                "description": "masukkan user id, event id, bukti bayar, id peserta",
-                "operationId": "event",
-                "requestBody": {
-                    "description": "",
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "event_id": {
-                                        "type": "integer"
-                                    },
-                                    "peserta_id": {
-                                        "type": "integer"
-                                    },
-                                    "bukti_bayar": {
-                                        "type": "file",
-                                        "format": "binary"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/detail-kategori-toko": {
-            "post": {
-                "tags": [
-                    "Toko"
-                ],
-                "summary": "Kategori",
-                "description": "Menampilkan semua produk berdasarkan kategori toko yg dipillih",
-                "operationId": "Kategori",
-                "requestBody": {
-                    "description": "",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "kategori_id",
-                                    "toko_id"
-                                ],
-                                "properties": {
-                                    "kategori_id": {
-                                        "type": "integer"
-                                    },
-                                    "toko_id": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "return array model produk"
-                    }
-                }
-            }
-        },
-        "/api/form-peserta-event": {
-            "post": {
-                "tags": [
-                    "Event"
-                ],
-                "summary": "Event",
-                "description": "masukkan nama,email,notelp,jumlahtiket,eventid",
-                "operationId": "Event",
-                "requestBody": {
-                    "description": "",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "nama",
-                                    "email",
-                                    "no_telp",
-                                    "jumlah_tiket",
-                                    "event_id"
-                                ],
-                                "properties": {
-                                    "nama": {
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "no_telp": {
-                                        "type": "integer"
-                                    },
-                                    "jumlah_tiket": {
-                                        "type": "integer"
-                                    },
-                                    "event_id": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/lelang/kategori/lelang": {
-            "get": {
-                "tags": [
-                    "Kategori Lelang"
-                ],
-                "summary": "Kategori Lelang",
-                "description": "menampilkan semua kategori Lelang ",
-                "operationId": "KategoriLelanlg",
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/lelang/kategori/detail/{id}/": {
-            "get": {
-                "tags": [
-                    "Kategori Lelang"
-                ],
-                "summary": "Detail Kategori",
-                "description": "Menampilkan semua barang berdasarkan kategori yg dipillih",
-                "operationId": "DetailKategoriLelang",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID kategori yang akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/lelang/lot/list": {
-            "get": {
-                "tags": [
-                    "Lot"
-                ],
-                "summary": "Lot",
-                "description": "menampilkan semua Lot ",
-                "operationId": "Lot",
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
         "/api/lelang/detail-barang-lelang/{id}": {
             "get": {
                 "tags": [
@@ -1016,126 +299,6 @@
                 "summary": "List barang",
                 "description": "menampilkan semua barang",
                 "operationId": "barang",
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/lelang/event": {
-            "get": {
-                "tags": [
-                    "Event Lelang"
-                ],
-                "summary": "List Event",
-                "description": "menampilkan semua event",
-                "operationId": "eventlelang",
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/lelang/event/detail/{id}/": {
-            "get": {
-                "tags": [
-                    "Event Lelang"
-                ],
-                "summary": "Menampilkan detail event lelang berdasarkan ID",
-                "description": "Menampilkan detail event lelang berdasarkan ID yg diberikan",
-                "operationId": "Detail-Event-Lelang",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID event yang akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/lelang/npl/add-npl": {
-            "post": {
-                "tags": [
-                    "Npl"
-                ],
-                "summary": "npl",
-                "description": "",
-                "operationId": "npl",
-                "requestBody": {
-                    "description": "",
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "event_lelang_id": {
-                                        "type": "string"
-                                    },
-                                    "harga_npl": {
-                                        "type": "integer"
-                                    },
-                                    "jumlah_tiket": {
-                                        "type": "integer"
-                                    },
-                                    "nominal_transfer": {
-                                        "type": "integer"
-                                    },
-                                    "no_rekening": {
-                                        "type": "integer"
-                                    },
-                                    "nama_pemilik_rekening": {
-                                        "type": "integer"
-                                    },
-                                    "bukti": {
-                                        "type": "file",
-                                        "format": "binary"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/api/lelang/list-npl-user/{id}/": {
-            "get": {
-                "tags": [
-                    "Npl"
-                ],
-                "summary": "Menampilkan List Npl berdasrkan id user",
-                "description": "",
-                "operationId": "List Npl user",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "id user",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
                 "responses": {
                     "default": {
                         "description": ""
@@ -1227,19 +390,33 @@
                 }
             }
         },
-        "/api/lelang/list-pelunasan-barang/{id}": {
+        "/api/list-event": {
             "get": {
                 "tags": [
-                    "Pelunasan Barang"
+                    "Event"
                 ],
-                "summary": "List Pelunasan Barang",
-                "description": "Menampilkan list pelunasan barang berdasarkan user ID yg diberikan",
-                "operationId": "List Pelunasan Barang",
+                "description": "menampilkan semua event",
+                "operationId": "ListEvent",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/detail-event/{id}": {
+            "get": {
+                "tags": [
+                    "Event"
+                ],
+                "summary": "Menampilkan detail event berdasarkan ID",
+                "description": "Menampilkan detail event berdasarkan ID yg diberikan",
+                "operationId": "DetailEvent",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "",
+                        "description": "ID event yang akan ditampilkan",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1248,19 +425,19 @@
                 ],
                 "responses": {
                     "default": {
-                        "description": ""
+                        "description": "return array model produk"
                     }
                 }
             }
         },
-        "/api/lelang/pembayaran-pelunasan-barang": {
+        "/api/bukti-pembayaran-event": {
             "post": {
                 "tags": [
-                    "Pelunasan Barang"
+                    "Event"
                 ],
-                "summary": "Pembayaran Pelunasan barang",
-                "description": "masukkan npl id, bukti pembayaran",
-                "operationId": "pembayaran pelunasan barang",
+                "summary": "Event",
+                "description": "masukkan user id, event id, bukti bayar, id peserta",
+                "operationId": "event",
                 "requestBody": {
                     "description": "",
                     "required": true,
@@ -1268,10 +445,16 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
-                                    "npl_id": {
+                                    "user_id": {
                                         "type": "integer"
                                     },
-                                    "bukti_pembayaran": {
+                                    "event_id": {
+                                        "type": "integer"
+                                    },
+                                    "peserta_id": {
+                                        "type": "integer"
+                                    },
+                                    "bukti_bayar": {
                                         "type": "file",
                                         "format": "binary"
                                     }
@@ -1288,14 +471,50 @@
                 }
             }
         },
-        "/api/get-provinsi": {
-            "get": {
+        "/api/form-peserta-event": {
+            "post": {
                 "tags": [
-                    "Wilayah"
+                    "Event"
                 ],
-                "summary": "List Provinsi",
-                "description": "menampilkan semua provinsi indonesia",
-                "operationId": "provinsi",
+                "summary": "Event",
+                "description": "masukkan nama,email,notelp,jumlahtiket,eventid",
+                "operationId": "Event",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama",
+                                    "email",
+                                    "no_telp",
+                                    "jumlah_tiket",
+                                    "event_id"
+                                ],
+                                "properties": {
+                                    "nama": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "no_telp": {
+                                        "type": "integer"
+                                    },
+                                    "jumlah_tiket": {
+                                        "type": "integer"
+                                    },
+                                    "event_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "default": {
                         "description": ""
@@ -1303,19 +522,34 @@
                 }
             }
         },
-        "/api/get-city/{id}": {
+        "/api/lelang/event": {
             "get": {
                 "tags": [
-                    "Wilayah"
+                    "Event Lelang"
                 ],
-                "summary": "List City by id provinsi",
-                "description": "Menampilkan list city/kabupaten berdasarkan id provinsi",
-                "operationId": "city",
+                "summary": "List Event",
+                "description": "menampilkan semua event",
+                "operationId": "eventlelang",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/event/detail/{id}/": {
+            "get": {
+                "tags": [
+                    "Event Lelang"
+                ],
+                "summary": "Menampilkan detail event lelang berdasarkan ID",
+                "description": "Menampilkan detail event lelang berdasarkan ID yg diberikan",
+                "operationId": "Detail-Event-Lelang",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "",
+                        "description": "ID event yang akan ditampilkan",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1329,32 +563,114 @@
                 }
             }
         },
-        "/api/cost": {
+        "/api/lelang/kategori/lelang": {
+            "get": {
+                "tags": [
+                    "Kategori Lelang"
+                ],
+                "summary": "Kategori Lelang",
+                "description": "menampilkan semua kategori Lelang ",
+                "operationId": "KategoriLelanlg",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/kategori/detail/{id}/": {
+            "get": {
+                "tags": [
+                    "Kategori Lelang"
+                ],
+                "summary": "Detail Kategori",
+                "description": "Menampilkan semua barang berdasarkan kategori yg dipillih",
+                "operationId": "DetailKategoriLelang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID kategori yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/detailkategori/{id}": {
+            "get": {
+                "tags": [
+                    "Kategori Produk"
+                ],
+                "summary": "Detail Kategori",
+                "description": "Menampilkan semua produk berdasarkan kategori yg dipillih",
+                "operationId": "DetailKategori",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID kategori yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/kategori": {
+            "get": {
+                "tags": [
+                    "Kategori Produk"
+                ],
+                "summary": "Kategori Produk",
+                "description": "menampilkan semua kategori produk ",
+                "operationId": "KategoriProduk",
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/add-keranjang": {
             "post": {
                 "tags": [
-                    "Tarif Pengiriman"
+                    "Keranjang"
                 ],
-                "summary": "tarif pengiriman",
-                "description": "masukkan id_kota_asal, id_kota_tujuan, total_berat_produk, kurir",
-                "operationId": "tarif pengiriman",
+                "summary": "Keranjang",
+                "description": "masukkan user id, produk id, qty",
+                "operationId": "Keranjang",
                 "requestBody": {
                     "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "produk_id"
+                                ],
                                 "properties": {
-                                    "id_kota_asal": {
+                                    "produk_id": {
                                         "type": "integer"
                                     },
-                                    "id_kota_tujuan": {
+                                    "qty": {
                                         "type": "integer"
                                     },
-                                    "total_berat_produk": {
+                                    "toko_id": {
                                         "type": "integer"
-                                    },
-                                    "kurir": {
-                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -1362,6 +678,138 @@
                         }
                     }
                 },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/list-keranjang": {
+            "get": {
+                "tags": [
+                    "Keranjang"
+                ],
+                "summary": "user id",
+                "description": "menampilkan semua data keranjang berdasarkan user id",
+                "operationId": "ListKeranjang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "user id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/delete-keranjang/{id}": {
+            "delete": {
+                "tags": [
+                    "Keranjang"
+                ],
+                "summary": "Keranjang id",
+                "description": "menghapus keranjang berdasarkan id keranjang",
+                "operationId": "DeleteKeranjang",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/lot/list": {
+            "get": {
+                "tags": [
+                    "Lot"
+                ],
+                "summary": "Lot",
+                "description": "menampilkan semua Lot ",
+                "operationId": "Lot",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/npl/add-npl": {
+            "post": {
+                "tags": [
+                    "Npl"
+                ],
+                "summary": "npl",
+                "description": "",
+                "operationId": "npl",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "event_lelang_id": {
+                                        "type": "string"
+                                    },
+                                    "harga_npl": {
+                                        "type": "integer"
+                                    },
+                                    "jumlah_tiket": {
+                                        "type": "integer"
+                                    },
+                                    "nominal_transfer": {
+                                        "type": "integer"
+                                    },
+                                    "no_rekening": {
+                                        "type": "integer"
+                                    },
+                                    "nama_pemilik_rekening": {
+                                        "type": "integer"
+                                    },
+                                    "bukti": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/list-npl-user/{id}/": {
+            "get": {
+                "tags": [
+                    "Npl"
+                ],
+                "summary": "Menampilkan List Npl berdasrkan id user",
+                "description": "",
+                "operationId": "List Npl user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "default": {
                         "description": ""
@@ -1525,6 +973,657 @@
                         }
                     }
                 },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/list-pelunasan-barang": {
+            "get": {
+                "tags": [
+                    "Pelunasan Barang"
+                ],
+                "summary": "List Pelunasan Barang",
+                "description": "Menampilkan list pelunasan barang berdasarkan user ID yg diberikan",
+                "operationId": "List Pelunasan Barang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/lelang/pembayaran-pelunasan-barang": {
+            "post": {
+                "tags": [
+                    "Pelunasan Barang"
+                ],
+                "summary": "Pembayaran Pelunasan barang",
+                "description": "masukkan npl id, bukti pembayaran",
+                "operationId": "pembayaran pelunasan barang",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "npl_id": {
+                                        "type": "integer"
+                                    },
+                                    "bukti_pembayaran": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/list-pesanan": {
+            "get": {
+                "tags": [
+                    "Pesanan"
+                ],
+                "summary": "id user",
+                "description": "Menampilkan list pesanan berdasarkan user yg login",
+                "operationId": "ListPesanan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "data user yg akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/detail-pesanan/{id}": {
+            "get": {
+                "tags": [
+                    "Pesanan"
+                ],
+                "summary": "order id",
+                "description": "Menampilkan detail pesanan berdasrkan order id",
+                "operationId": "DetailPesanan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "order id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/produk": {
+            "get": {
+                "tags": [
+                    "Produk"
+                ],
+                "summary": "List Produk",
+                "description": "Menampilkan semua produk",
+                "operationId": "produk",
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/topproduk": {
+            "get": {
+                "tags": [
+                    "Produk"
+                ],
+                "summary": "List Top Produk",
+                "description": "menampilkan top 5 produk ",
+                "operationId": "ListTopProduk",
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/detailproduk/{id}": {
+            "get": {
+                "tags": [
+                    "Produk"
+                ],
+                "summary": "Menampilkan detail produk berdasarkan ID",
+                "description": "Menampilkan detail produk berdasarkan ID yg diberikan",
+                "operationId": "DetailProduk",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID produk yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/cari-produk/{name}": {
+            "get": {
+                "tags": [
+                    "Search Produk"
+                ],
+                "summary": "cari produk",
+                "description": "menampilkan produk berdasarkan nama produk yg di masukkan",
+                "operationId": "SearchProduk",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "masukkan nama produk",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/promosi": {
+            "get": {
+                "tags": [
+                    "Promosi"
+                ],
+                "summary": "List Promo Produk",
+                "description": "menampilkan semua jenis promo produk yg sedang berlangsung",
+                "operationId": "promosi",
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/detailpromosi/{id}": {
+            "get": {
+                "tags": [
+                    "Promosi"
+                ],
+                "summary": "menampilkan detail promo produk berdasarkan ID",
+                "description": "menampilkan semua produk yg sedang diskon berdasarkan ID Promosi yg diberikan",
+                "operationId": "DetailPromosi",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID promosi yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/add-review": {
+            "post": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Review",
+                "description": "masukkan user id, produk id, review, rating, rating maksimal 5",
+                "operationId": "Review",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "produk_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "produk_id": {
+                                        "type": "integer"
+                                    },
+                                    "review": {
+                                        "type": "string"
+                                    },
+                                    "rating": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/detail-toko/{id}": {
+            "get": {
+                "tags": [
+                    "Toko"
+                ],
+                "summary": "Menampilkan detail Toko berdasarkan ID",
+                "description": "Menampilkan detail Toko berdasarkan ID yg diberikan",
+                "operationId": "DetailToko",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Toko yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return array model Toko"
+                    }
+                }
+            }
+        },
+        "/api/detail-kategori-toko": {
+            "post": {
+                "tags": [
+                    "Toko"
+                ],
+                "summary": "Kategori",
+                "description": "Menampilkan semua produk berdasarkan kategori toko yg dipillih",
+                "operationId": "Kategori",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "kategori_id",
+                                    "toko_id"
+                                ],
+                                "properties": {
+                                    "kategori_id": {
+                                        "type": "integer"
+                                    },
+                                    "toko_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "return array model produk"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "operationId": "ca30ca5d3670be5ed19d771fecc17c43",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "User's name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "User's password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Authenticate user and generate JWT token",
+                "operationId": "d3a704750262d411fe8dc7314bb9b911",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "User's password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login Berhasil"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/profil": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Profil User",
+                "description": "menampilkan profil user",
+                "operationId": "profil",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/update-profil": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Akun",
+                "description": "masukkan name, telp, alamat, foto",
+                "operationId": "Akun",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "no_telp": {
+                                        "type": "integer"
+                                    },
+                                    "alamat": {
+                                        "type": "string"
+                                    },
+                                    "foto": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/add-wishlist": {
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Wishlist",
+                "description": "produk id",
+                "operationId": "Wishlist",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "produk_id"
+                                ],
+                                "properties": {
+                                    "produk_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/list-wishlist": {
+            "get": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "user id",
+                "description": "menampilkan semua data wishlist berdasrkan user id",
+                "operationId": "ListWishlist",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "user id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/delete-wishlist/{id}": {
+            "delete": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "wishlist id",
+                "description": "menghapus wishlist berdasarkan id wishlist",
+                "operationId": "DeleteWishlist",
                 "responses": {
                     "default": {
                         "description": ""

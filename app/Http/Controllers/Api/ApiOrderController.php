@@ -104,7 +104,6 @@ class ApiOrderController extends Controller
  public function add_order(Request $request){
     // dd($request->userData['email']);
     $validator = Validator::make($request->all() , [
-        'userData.user_id' => 'required|integer|min:1',
         'userData.nama' => 'required',
         'userData.no_telephone' => 'required|integer',
         'userData.email' => 'required|email',
@@ -146,12 +145,12 @@ class ApiOrderController extends Controller
         'courierData.price' => 'required|integer',
     ]);
     if ($validator->fails()) {
-        $messages = $validator->messages();
-        $alertMessage = $messages->first();
+        // $messages = $validator->messages();
+        // $alertMessage = $messages->first();
 
         return response()->json([
             'success' => false,
-            'message' => $alertMessage,
+            'message' => $validator->errors(),
         ],422);
     }
 

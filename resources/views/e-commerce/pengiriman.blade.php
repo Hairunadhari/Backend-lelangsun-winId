@@ -19,158 +19,34 @@
                     <h4 class="">Daftar Pengiriman</h4>
                 </div>
                 <div class="card-body">
-                    <ul class="nav nav-pills mb-3 " id="myTab3" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
-                                aria-controls="home" aria-selected="true">Semua <span
-                                    class="badge countdata">{{$semua}}</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="penjemputan-tab3" data-toggle="tab" href="#penjemputan3" role="tab"
-                                aria-controls="penjemputan" aria-selected="false">Penjemputan <span
-                                    class="badge countdata">{{$pickingUp}}</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="pengantaran-tab3" data-toggle="tab" href="#pengantaran3" role="tab"
-                                aria-controls="pengantaran" aria-selected="false">Penjemputan</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="pengantaran-tab3" data-toggle="tab" href="#pengantaran3" role="tab"
-                                aria-controls="pengantaran" aria-selected="false">Pengantaran <span
-                                class="badge countdata">{{$droppingOff}}</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="pengembalian-tab3" data-toggle="tab" href="#pengembalian3"
-                                role="tab" aria-controls="pengembalian" aria-selected="false">Pengembalian <span
-                                class="badge countdata">{{$returned}}</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="ditahan-tab3" data-toggle="tab" href="#ditahan3" role="tab"
-                                aria-controls="ditahan" aria-selected="false">Ditahan <span
-                                class="badge countdata">{{$onHold}}</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="selesai-tab3" data-toggle="tab" href="#selesai3" role="tab"
-                                aria-controls="selesai" aria-selected="false">Selesai <span
-                                class="badge countdata">{{$selesai}}</span></a>
-                        </li>
+                    <div class="w-25 mb-3">
+                        <form action="/download-pdf" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <label for="">Filter Label Pengiriman</label>
+                            <div style="display: flex; gap: 10px">
 
-                    </ul>
-                    <div class="tab-content" id="myTabContent2">
-                        <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
-                            <table class="table table-striped w-100" id="tablepesanan">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Order Id</th>
-                                        <th>Nomor Resi</th>
-                                        <th>Tgl Dibuat</th>
-                                        <th>Nama Penerima</th>
-                                        <th>Total Item</th>
-                                        <th>Total Ongkir</th>
-                                        <th>Status</th>
-                                        <th>Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="penjemputan3" role="tabpanel" aria-labelledby="penjemputan-tab3">
-                            <table class="table table-striped w-100" id="penjemputan">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Order Id</th>
-                                        <th>Nomor Resi</th>
-                                        <th>Tgl Dibuat</th>
-                                        <th>Nama Penerima</th>
-                                        <th>Total Item</th>
-                                        <th>Total Ongkir</th>
-                                        <th>Status</th>
-                                        <th>Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="pengantaran3" role="tabpanel"
-                            aria-labelledby="pengantaran-tab3">
-                            <table class="table table-striped w-100" id="pengantaran">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Order Id</th>
-                                        <th>Nomor Resi</th>
-                                        <th>Tgl Dibuat</th>
-                                        <th>Nama Penerima</th>
-                                        <th>Total Item</th>
-                                        <th>Total Ongkir</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="pengembalian3" role="tabpanel"
-                            aria-labelledby="pengembalian-tab3">
-                            <table class="table table-striped w-100" id="pengembalian">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Order Id</th>
-                                        <th>Nomor Resi</th>
-                                        <th>Tgl Dibuat</th>
-                                        <th>Nama Penerima</th>
-                                        <th>Total Item</th>
-                                        <th>Total Ongkir</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="ditahan3" role="tabpanel" aria-labelledby="ditahan-tab3">
-                            <table class="table table-striped w-100" id="ditahan">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Order Id</th>
-                                        <th>Nomor Resi</th>
-                                        <th>Tgl Dibuat</th>
-                                        <th>Nama Penerima</th>
-                                        <th>Total Item</th>
-                                        <th>Total Ongkir</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="selesai3" role="tabpanel" aria-labelledby="selesai-tab3">
-                            <table class="table table-striped w-100" id="selesai">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Order Id</th>
-                                        <th>Nomor Resi</th>
-                                        <th>Tgl Dibuat</th>
-                                        <th>Nama Penerima</th>
-                                        <th>Total Item</th>
-                                        <th>Total Ongkir</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-
+                                <input type="date" name="date" class="form-control" id="date">
+                                <button type="submit" class="btn btn-sm btn-danger">Download Label</button>
+                            </div>
+                        </form>
                     </div>
+                    <table class="table table-striped w-100" id="tablepesanan">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Order Id</th>
+                                <th>Nomor Resi</th>
+                                <th>Tgl Dibuat</th>
+                                <th>Nama Penerima</th>
+                                <th>Total Item</th>
+                                <th>Total Ongkir</th>
+                                <th>Status</th>
+                                <th>Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -178,117 +54,14 @@
 </div>
 <script>
     $(document).ready(function () {
-        $('#tablepesanan').DataTable({
-            processing: true,
-            ordering: false,
-            serverSide: true,
-            ajax: '{{ url()->current() }}',
-            columns: [{
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    },
-                },
-                {
-                    data: "biteship_order_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "waybill_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "tanggal_dibuat",
-
-                },
-                {
-                    data: "order.nama_user",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: 'order',
-                    render: function (data, row, type, meta) {
-                        if (data == null) {
-                            a = '<span>-</span>'
-                        } else {
-
-                            a = '<span>' + data.orderitem.length + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: "price",
-                    render: function (data, type, row, meta) {
-                        if (data == null) {
-                            return '<span>-</span>';
-                        } else {
-                            if (type === 'display') {
-                                // Mengubah data menjadi format mata uang dengan simbol IDR
-                                return "Rp " + parseInt(data).toLocaleString('id-ID', {
-                                    minimumFractionDigits: 0
-                                });
-                            } else {
-                                // Untuk tipe data lain, kembalikan data aslinya
-                                return data;
-                            }
-                        }
-                    }
-                },
-                {
-                    data: "status",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: null,
-                    render: function (data) {
-
-                        return `  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
-                        <span class="text"><i class="far fa-edit"></i> Detail</span>
-                    </button>`;
-                    }
-                }
-
-            ],
-        });
-
-        $('#penjemputan').DataTable({
+        var table = $('#tablepesanan').DataTable({
             processing: true,
             ordering: false,
             serverSide: true,
             ajax: {
                 url: '{{ url()->current() }}',
                 data: function (data) {
-                    data.status = 'pickingUp';
+                    data.date = $('#date').val()
                 }
             },
             columns: [{
@@ -306,7 +79,6 @@
                         }
                         return a;
                     }
-
                 },
                 {
                     data: "waybill_id",
@@ -320,504 +92,113 @@
                     }
 
                 },
-                {
-                    data: "tanggal_dibuat",
-
-                },
-                {
-                    data: "order.nama_user",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: 'order',
-                    render: function (data, row, type, meta) {
-                        if (data == null) {
-                            a = '<span>-</span>'
-                        } else {
-
-                            a = '<span>' + data.orderitem.length + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: "price",
-                    render: function (data, type, row, meta) {
-                        if (data == null) {
-                            return '<span>-</span>';
-                        } else {
-                            if (type === 'display') {
-                                // Mengubah data menjadi format mata uang dengan simbol IDR
-                                return "Rp " + parseInt(data).toLocaleString('id-ID', {
-                                    minimumFractionDigits: 0
-                                });
+                    {
+                        data: "tanggal_dibuat",
+                        render: function (data) {
+                            if (data == null) {
+                                a = '<span>-</span>';
                             } else {
-                                // Untuk tipe data lain, kembalikan data aslinya
-                                return data;
+                                a = '<span>' + data + '</span>';
                             }
+                            return a;
                         }
-                    }
-                },
-                {
-                    data: "status",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: null,
-                    render: function (data) {
 
-                        return `  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
-                        <span class="text"><i class="far fa-edit"></i> Detail</span>
-                    </button>`;
-                    }
-                }
-
-            ],
-        });
-
-        $('#pengantaran').DataTable({
-            processing: true,
-            ordering: false,
-            serverSide: true,
-            ajax: {
-                url: '{{ url()->current() }}',
-                data: function (data) {
-                    data.status = 'droppingOff';
-                }
-            },
-            columns: [{
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
                     },
-                },
-                {
-                    data: "biteship_order_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "waybill_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "tanggal_dibuat",
-
-                },
-                {
-                    data: "order.nama_user",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: 'order',
-                    render: function (data, row, type, meta) {
-                        if (data == null) {
-                            a = '<span>-</span>'
-                        } else {
-
-                            a = '<span>' + data.orderitem.length + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: "price",
-                    render: function (data, type, row, meta) {
-                        if (data == null) {
-                            return '<span>-</span>';
-                        } else {
-                            if (type === 'display') {
-                                // Mengubah data menjadi format mata uang dengan simbol IDR
-                                return "Rp " + parseInt(data).toLocaleString('id-ID', {
-                                    minimumFractionDigits: 0
-                                });
+                    {
+                        data: "nama_order",
+                        render: function (data) {
+                            if (data == null) {
+                                a = '<span>-</span>';
                             } else {
-                                // Untuk tipe data lain, kembalikan data aslinya
-                                return data;
+                                a = '<span>' + data + '</span>';
                             }
+                            return a;
                         }
-                    }
-                },
-                {
-                    data: "status",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: null,
-                    render: function (data) {
-
-                        return `  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
-                        <span class="text"><i class="far fa-edit"></i> Detail</span>
-                    </button>`;
-                    }
-                }
-
-            ],
-        });
-        $('#pengembalian').DataTable({
-            processing: true,
-            ordering: false,
-            serverSide: true,
-            ajax: {
-                url: '{{ url()->current() }}',
-                data: function (data) {
-                    data.status = 'returned';
-                }
-            },
-            columns: [{
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
                     },
-                },
-                {
-                    data: "biteship_order_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "waybill_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "tanggal_dibuat",
-
-                },
-                {
-                    data: "order.nama_user",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: 'order',
-                    render: function (data, row, type, meta) {
-                        if (data == null) {
-                            a = '<span>-</span>'
-                        } else {
-
-                            a = '<span>' + data.orderitem.length + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: "price",
-                    render: function (data, type, row, meta) {
-                        if (data == null) {
-                            return '<span>-</span>';
-                        } else {
-                            if (type === 'display') {
-                                // Mengubah data menjadi format mata uang dengan simbol IDR
-                                return "Rp " + parseInt(data).toLocaleString('id-ID', {
-                                    minimumFractionDigits: 0
-                                });
-                            } else {
-                                // Untuk tipe data lain, kembalikan data aslinya
-                                return data;
-                            }
-                        }
-                    }
-                },
-                {
-                    data: "status",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: null,
-                    render: function (data) {
-
-                        return `  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
-                        <span class="text"><i class="far fa-edit"></i> Detail</span>
-                    </button>`;
-                    }
-                }
-
-            ],
-        });
-        $('#ditahan').DataTable({
-            processing: true,
-            ordering: false,
-            serverSide: true,
-            ajax: {
-                url: '{{ url()->current() }}',
-                data: function (data) {
-                    data.status = 'onHold';
-                }
-            },
-            columns: [{
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
+                    {
+                        data: 'qty',
+                        
                     },
-                },
-                {
-                    data: "biteship_order_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "waybill_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "tanggal_dibuat",
-
-                },
-                {
-                    data: "order.nama_user",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: 'order',
-                    render: function (data, row, type, meta) {
-                        if (data == null) {
-                            a = '<span>-</span>'
-                        } else {
-
-                            a = '<span>' + data.orderitem.length + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: "price",
-                    render: function (data, type, row, meta) {
-                        if (data == null) {
-                            return '<span>-</span>';
-                        } else {
-                            if (type === 'display') {
-                                // Mengubah data menjadi format mata uang dengan simbol IDR
-                                return "Rp " + parseInt(data).toLocaleString('id-ID', {
-                                    minimumFractionDigits: 0
-                                });
+                    {
+                        data: "price",
+                        render: function (data, type, row, meta) {
+                            if (data == null) {
+                                return '<span>-</span>';
                             } else {
-                                // Untuk tipe data lain, kembalikan data aslinya
-                                return data;
+                                if (type === 'display') {
+                                    // Mengubah data menjadi format mata uang dengan simbol IDR
+                                    return "Rp " + parseInt(data).toLocaleString('id-ID', {
+                                        minimumFractionDigits: 0
+                                    });
+                                } else {
+                                    // Untuk tipe data lain, kembalikan data aslinya
+                                    return data;
+                                }
                             }
                         }
-                    }
-                },
-                {
-                    data: "status",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: null,
-                    render: function (data) {
-
-                        return `  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
-                        <span class="text"><i class="far fa-edit"></i> Detail</span>
-                    </button>`;
-                    }
-                }
-
-            ],
-        });
-        $('#selesai').DataTable({
-            processing: true,
-            ordering: false,
-            serverSide: true,
-            ajax: {
-                url: '{{ url()->current() }}',
-                data: function (data) {
-                    data.status = 'selesai';
-                }
-            },
-            columns: [{
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
                     },
-                },
-                {
-                    data: "biteship_order_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
+                    {
+                        data: "status",
+                        render: function (data) {
+                            if (data == 'confirmed') {
+                                info = 'Pesanan telah dikonfirmasi. Menemukan pengemudi terdekat untuk dijemput.';
+                            } else if(data == 'allocated') {
+                                info='Kurir telah dialokasikan. Menunggu untuk mengambil.';
+                            }else if (data == 'pickingUp') {
+                                info='Kurir sedang dalam perjalanan untuk mengambil barang.';
+                            }else if (data == 'picked') {
+                                info='Barang telah diambil dan siap dikirim.';
+                            }else if (data == 'droppingOff') {
+                                info='Item sedang dalam perjalanan ke pelanggan.';
+                            }else if (data == 'returnInTransit') {
+                                info='Pesanan sedang dalam perjalanan kembali ke asal.';
+                            }else if (data == 'onHold') {
+                                info='Pengiriman Anda sedang ditahan saat ini. Kami akan mengirimkan barang Anda setelah diselesaikan.';
+                            }else if (data == 'delivered') {
+                                info='Barang telah dikirim.';
+                            }else if (data == 'rejected') {
+                                info='Pengiriman Anda ditolak. Silakan hubungi Biteship untuk informasi lebih lanjut.'
+                            }else if (data == 'courierNotFound') {
+                                info='Pengiriman Anda dibatalkan karena tidak ada kurir yang tersedia saat ini.'
+                            }else if (data == 'returned') {
+                                info='Pesanan berhasil dikembalikan.'
+                            }else if (data == 'cancelled') {
+                                info='Pesanan dibatalkan.'
+                            }else if(data == 'disposed'){
 
-                },
-                {
-                    data: "waybill_id",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-
-                },
-                {
-                    data: "tanggal_dibuat",
-
-                },
-                {
-                    data: "order.nama_user",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: 'order',
-                    render: function (data, row, type, meta) {
-                        if (data == null) {
-                            a = '<span>-</span>'
-                        } else {
-
-                            a = '<span>' + data.orderitem.length + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: "price",
-                    render: function (data, type, row, meta) {
-                        if (data == null) {
-                            return '<span>-</span>';
-                        } else {
-                            if (type === 'display') {
-                                // Mengubah data menjadi format mata uang dengan simbol IDR
-                                return "Rp " + parseInt(data).toLocaleString('id-ID', {
-                                    minimumFractionDigits: 0
-                                });
-                            } else {
-                                // Untuk tipe data lain, kembalikan data aslinya
-                                return data;
+                                info='Pesanan berhasil dibuang.'
+                            }else{
+                                info='Tidak Diketahui.'
                             }
-                        }
-                    }
-                },
-                {
-                    data: "status",
-                    render: function (data) {
-                        if (data == null) {
-                            a = '<span>-</span>';
-                        } else {
-                            a = '<span>' + data + '</span>';
-                        }
-                        return a;
-                    }
-                },
-                {
-                    data: null,
-                    render: function (data) {
 
-                        return `  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
-                        <span class="text"><i class="far fa-edit"></i> Detail</span>
-                    </button>`;
+                            if (data == null) {
+                                a = '<span>-</span>';
+                            } else {
+                                a = `<button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="${info}">${data}</button>`;
+                            }
+                            return a;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data) {
+
+                            return `  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
+                            <span class="text"><i class="far fa-edit"></i> Detail</span>
+                        </button>`;
+                        }
                     }
-                }
 
             ],
         });
-        
+
+        $('#date').on('change', function () {
+            var date = this.value;
+            console.log('date', date);
+            table.draw();
+
+        });
+
     });
 
 </script>
@@ -845,7 +226,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                {{-- <div class="invoice"> --}}
                 <div class="invoice-print">
                     <div class="row">
                         <div class="col-lg-12">
@@ -857,13 +237,24 @@
                                             style="display: flex; justify-content: space-evenly; text-align: center;">
                                             <div>
                                                 <p>Order Id</p>
-                                                <p><b>{{$item->biteship_order_id}}</b></p>
+                                                @if ($item->order->pengiriman != null)
+                                                    
+                                                <p><b>{{$item->order->pengiriman->biteship_order_id}}</b></p>
+                                                @else
+                                                <p><b>-</b></p>
+                                                    
+                                                @endif
 
                                             </div>
                                             <div>
 
                                                 <p>Resi Pengiriman</p>
-                                                <p><b>{{$item->waybill_id}}</p></b>
+                                                @if ($item->order->pengiriman != null)
+                                                <p><b>{{$item->order->pengiriman->waybill_id}}</p></b>
+                                                @else
+                                                <p><b>-</b></p>
+                                                    
+                                                @endif
                                             </div>
                                             <div>
                                                 <p>Kurir</p>
@@ -880,12 +271,22 @@
                                             <div>
 
                                                 <p>Nama Driver</p>
-                                                <p><b>{{$item->courier_name}}</p></b>
+                                                @if ($item->order->pengiriman != null)
+                                                <p><b>{{$item->order->pengiriman->courier_name}}</p></b>
+                                                @else
+                                                <p><b>-</b></p>
+                                                    
+                                                @endif
                                             </div>
                                             <div>
 
                                                 <p>Nomor Driver</p>
-                                                <p><b>{{$item->courier_phone}}</p></b>
+                                                @if ($item->order->pengiriman != null)
+                                                <p><b>{{$item->order->pengiriman->courier_phone}}</p></b>
+                                                @else
+                                                <p><b>-</b></p>
+                                                    
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -964,20 +365,20 @@
                                                 <p>Nama Penerima</p>
                                                 @if ($item->order == null)
                                                 <p></p>
-        
+
                                                 @else
                                                 <p><b>{{$item->order->nama_user}}</b></p>
-        
+
                                                 @endif
                                             </div>
                                             <div>
-    
+
                                                 <p>No Handphone</p>
                                                 @if ($item->order == null)
                                                 <p></p>
-                                                
+
                                                 @else
-                                                
+
                                                 <p><b>{{$item->order->no_telephone_user}}</b></p>
                                                 @endif
                                             </div>
@@ -1039,7 +440,11 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <p style="margin:0">Tanggal Dikirim</p>
-                                    <p>{{$item->tanggal_dikirim}}</p>
+                                    @if ($item->order->pengiriman != null)
+                                    <p><b>{{$item->order->pengiriman->tanggal_dikirim}}</p></b>
+                                    @else
+                                    <p><b>-</b></p>
+                                    @endif
                                 </div>
                                 <div class="col-md-6 text-md-right">
                                     <p style="margin: 0">Harga Pengiriman</p>
@@ -1064,16 +469,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if ($item->order != null)
-
-                                        @foreach ($item->order->orderitem as $barang)
                                         <tr>
-                                            <td class="text-center">{{$barang->nama_produk}}</td>
-                                            <td class="text-center">{{$barang->qty}}</td>
-                                            <td class="text-center">{{$barang->berat_item}}</td>
+                                            <td class="text-center">{{$item->nama_produk}}</td>
+                                            <td class="text-center">{{$item->qty}}</td>
+                                            <td class="text-center">{{$item->berat_item}}</td>
                                         </tr>
-                                        @endforeach
-                                        @endif
                                     </tbody>
                                 </table>
                             </div>
