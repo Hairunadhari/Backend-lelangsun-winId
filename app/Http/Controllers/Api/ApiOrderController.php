@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class ApiOrderController extends Controller
@@ -23,6 +24,7 @@ class ApiOrderController extends Controller
  * @OA\Post(
        path="/api/add-order",
        tags={"Order"},
+       security={{ "bearerAuth":{} }},
        summary="Menambahkan Pesanan",
        description="Selain parameter promo_diskon, berat_item, longitude, langitude, total_berat_item wajib diisi",
        operationId="addOrder",
@@ -31,17 +33,6 @@ class ApiOrderController extends Controller
            description="Data formulir",
            @OA\JsonContent(
                required={},
-                @OA\Property(
-                    property="userData",
-                    type="object",
-                    @OA\Property(property="user_id", type="integer"),
-                    @OA\Property(property="nama", type="string"),
-                    @OA\Property(property="no_telephone", type="integer"),
-                    @OA\Property(property="email", type="string", format="email"),
-                    @OA\Property(property="detail_alamat", type="string"),
-                    @OA\Property(property="postal_code", type="integer"),
-                        
-                ),
                 @OA\Property(
                     property="orderData",
                     type="object",
@@ -94,9 +85,31 @@ class ApiOrderController extends Controller
              ),
         ),
       @OA\Response(
-          response="default",
-          description=""
-      )
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+ *          description="Bad Request",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      )
  )
  */
 
@@ -104,11 +117,6 @@ class ApiOrderController extends Controller
  public function add_order(Request $request){
     // dd($request->userData['email']);
     $validator = Validator::make($request->all() , [
-        'userData.nama' => 'required',
-        'userData.no_telephone' => 'required|integer',
-        'userData.email' => 'required|email',
-        'userData.detail_alamat' => 'required',
-        'userData.postal_code' => 'required|integer',
 
         'orderData.tokoObj.nama_pemilik' => 'required',
         'orderData.tokoObj.no_telephone' => 'required|integer',
@@ -191,7 +199,7 @@ class ApiOrderController extends Controller
         ])->post('https://api.xendit.co/v2/invoices', [
             'external_id' => $external_id,
             'amount' => $request->orderData['sub_total'],
-            'payer_email' => $request->userData['email']
+            'payer_email' => Auth::user()->email
         ]);
         // dd($data_request);
         $response = $data_request->object();
@@ -199,12 +207,12 @@ class ApiOrderController extends Controller
         $expiryDate = Carbon::parse($response->expiry_date, 'UTC')->setTimezone('Asia/Jakarta');
         $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
         $order = Order::create([
-            'user_id' => $request->userData['user_id'],
-            'nama_user' => $request->userData['nama'],
-            'no_telephone_user' => $request->userData['no_telephone'],
-            'email_user' => $request->userData['email'],
-            'detail_alamat_user' => $request->userData['detail_alamat'],
-            'postal_code_user' => $request->userData['postal_code'],
+            'user_id' => Auth::user()->id,
+            'nama_user' => Auth::user()->name,
+            'no_telephone_user' => Auth::user()->no_telp,
+            'email_user' => Auth::user()->email,
+            'detail_alamat_user' => Auth::user()->detail_alamat,
+            'postal_code_user' => Auth::user()->postal_code,
             'nama_pemilik_toko' => $request->orderData['tokoObj']['nama_pemilik'],
             'no_telephone_toko' => $request->orderData['tokoObj']['no_telephone'],
             'detail_alamat_toko' => $request->orderData['tokoObj']['detail_alamat'],
@@ -235,9 +243,9 @@ class ApiOrderController extends Controller
             'time_order' => $now,
             'available_for_instant_waybill_id' => $request->courierData['available_for_instant_waybill_id'],
             'available_for_insurance' => $request->courierData['available_for_insurance'],
-            'kota_user' => $request->userData['kota'],
-            'kecamatan_user' => $request->userData['kecamatan'],
-            'provinsi_user' => $request->userData['provinsi'],
+            'kota_user' => Auth::user()->kota,
+            'kecamatan_user' => Auth::user()->kecamatan,
+            'provinsi_user' => Auth::user()->provinsi,
             'kota_toko' => $request->orderData['tokoObj']['kota'],
             'kecamatan_toko' => $request->orderData['tokoObj']['kecamatan'],
             'provinsi_toko' => $request->orderData['tokoObj']['provinsi'],
@@ -254,11 +262,11 @@ class ApiOrderController extends Controller
                 'total_harga_item' => $i['total_harga_item'],
                 'nama_produk' => $i['nama_item'],
                 'toko_id' => $request->orderData['tokoObj']['toko_id'],
-                'nama_order' => $request->userData['nama'],
-                'email_order' => $request->userData['email'],
+                'nama_order' => Auth::user()->name,
+                'email_order' => Auth::user()->email,
                 'promo_diskon' => $i['promo_diskon'],
                 'nama_toko' => $request->orderData['tokoObj']['nama_toko'],
-                'user_id' => $request->userData['user_id'],
+                'user_id' => Auth::user()->id,
                 'berat_item' => $i['berat_item'],
             ]);
         }
@@ -317,7 +325,10 @@ class ApiOrderController extends Controller
         return response()->json([$res], 400);
     }
     
-    return response()->json($res);
+    return response()->json([
+        'success'=>true,
+        'message'=>$res,
+    ]);
 }
 
 public function callback_xendit(Request $request){

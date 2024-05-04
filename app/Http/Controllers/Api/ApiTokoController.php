@@ -14,6 +14,7 @@ class ApiTokoController extends Controller
      * @OA\Get(
      *      path="/api/detail-toko/{id}",
      *      tags={"Toko"},
+     * security={{ "bearerAuth":{} }},
      *      summary="Menampilkan detail Toko berdasarkan ID",
      *      description="Menampilkan detail Toko berdasarkan ID yg diberikan",
      *      operationId="DetailToko",
@@ -27,8 +28,21 @@ class ApiTokoController extends Controller
     *          )
     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model Toko"
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -44,9 +58,10 @@ class ApiTokoController extends Controller
         });
         return response()->json([
             'success' => true,
+            'data'=>[
             'toko' => $toko,
             'kategori' => $kategori,
-            'produk' => $produk,
+            'produk' => $produk,]
         ]);
     }
 
@@ -54,6 +69,7 @@ class ApiTokoController extends Controller
      * @OA\Post(
      *      path="/api/detail-kategori-toko",
      *      tags={"Toko"},
+     * security={{ "bearerAuth":{} }},
      *      summary="Kategori",
      *      description="Menampilkan semua produk berdasarkan kategori toko yg dipillih",
      *      operationId="Kategori",
@@ -67,8 +83,21 @@ class ApiTokoController extends Controller
      *          )
      *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -81,7 +110,7 @@ class ApiTokoController extends Controller
         });
         return response()->json([
             'success' => true,
-            'kategoriproduk' => $kategoriproduk
+            'data' => $kategoriproduk
         ]);
     }
 }

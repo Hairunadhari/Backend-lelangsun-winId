@@ -15,7 +15,7 @@ class ApiProdukController extends Controller
  * @OA\Get(
  *      path="/api/produk",
  *      tags={"Produk"},
- *      security={{ "bearerAuth":{} }},
+ *      security={{ "bearer_token":{} }},
  *      summary="List Produk",
  *      description="Menampilkan semua produk",
  *      operationId="produk",
@@ -64,7 +64,8 @@ class ApiProdukController extends Controller
             $item->toko->logo = $url . $item->toko->logo;
         });
         return response()->json([
-            'produk' => $produk,
+            'success'=>true,
+            'data' => $produk
         ]);
     }
 
@@ -72,12 +73,26 @@ class ApiProdukController extends Controller
      * @OA\Get(
      *      path="/api/topproduk",
      *      tags={"Produk"},
+     *  security={{ "bearer_token":{} }},
      *      summary="List Top Produk",
      *      description="menampilkan top 5 produk ",
      *      operationId="ListTopProduk",
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -87,7 +102,8 @@ class ApiProdukController extends Controller
             $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
         });
         return response()->json([
-            'topproduk' => $topproduk
+            'success'=>true,
+            'data' => $topproduk
         ]);
     }
 
@@ -95,6 +111,7 @@ class ApiProdukController extends Controller
      * @OA\Get(
      *      path="/api/detailproduk/{id}",
      *      tags={"Produk"},
+    * security={{ "bearer_token":{} }},
      *      summary="Menampilkan detail produk berdasarkan ID",
      *      description="Menampilkan detail produk berdasarkan ID yg diberikan",
      *      operationId="DetailProduk",
@@ -107,9 +124,21 @@ class ApiProdukController extends Controller
     *              type="integer"
     *          )
     *      ),
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -130,10 +159,12 @@ class ApiProdukController extends Controller
         $totalreview = Review::where('produk_id', $id)->where('status','active')->count();
 
         return response()->json([
+            'success'=>true,
+            'data'=>[
             'produk' => $produk,
             'gambarproduk' => $gambarproduk,
             'total_review' => $totalreview,
-            'reviews' => $review,
+            'reviews' => $review,]
         ]);
     }
 
@@ -141,7 +172,8 @@ class ApiProdukController extends Controller
      /**
      * @OA\Get(
      *      path="/api/cari-produk/{name}",
-     *      tags={"Search Produk"},
+     *      tags={"Produk"},
+     * security={{ "bearer_token":{} }},
      *      summary="cari produk",
      *      description="menampilkan produk berdasarkan nama produk yg di masukkan",
      *      operationId="SearchProduk",
@@ -154,9 +186,22 @@ class ApiProdukController extends Controller
     *              type="string"
     *          )
     *      ),
+     *        @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -166,6 +211,7 @@ class ApiProdukController extends Controller
             $data->thumbnail = env('APP_URL').'/storage/image/' . $data->thumbnail;
         });
         return response()->json([
+            'success'=>true,
             'data' => $produk
         ]);
     }   

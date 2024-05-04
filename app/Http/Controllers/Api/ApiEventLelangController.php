@@ -13,12 +13,25 @@ class ApiEventLelangController extends Controller
      * @OA\Get(
      *      path="/api/lelang/event",
      *      tags={"Event Lelang"},
+     *  security={{ "bearer_token":{} }},
      *      summary="List Event",
      *      description="menampilkan semua event",
      *      operationId="eventlelang",
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+                 @OA\JsonContent(
+                            type="object",
+                            @OA\Property(property="success", type="boolean", example="true"),
+                        )
+                ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -42,6 +55,7 @@ class ApiEventLelangController extends Controller
      * @OA\Get(
      *      path="/api/lelang/event/detail/{id}/",
      *      tags={"Event Lelang"},
+     * security={{ "bearer_token":{} }},
      *      summary="Menampilkan detail event lelang berdasarkan ID",
      *      description="Menampilkan detail event lelang berdasarkan ID yg diberikan",
      *      operationId="Detail-Event-Lelang",
@@ -55,8 +69,20 @@ class ApiEventLelangController extends Controller
     *          )
     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */

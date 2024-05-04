@@ -57,29 +57,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
 {    
-      /**
-     * @OA\Post(
-     *      path="/api/cost",
-     *      tags={"Tarif Pengiriman"},
-     *      summary="tarif pengiriman",
-     *      description="masukkan id_kota_asal, id_kota_tujuan, total_berat_produk, kurir",
-     *      operationId="tarif pengiriman",
-     *      @OA\RequestBody(
-     *          required=true,
-     *          description="",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="id_kota_asal", type="integer"),
-     *              @OA\Property(property="id_kota_tujuan", type="integer"),
-     *              @OA\Property(property="total_berat_produk", type="integer"),
-     *              @OA\Property(property="kurir", type="string"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response="default",
-     *          description=""
-     *      )
-     * )
-     */
+     
     public function tarif_pengiriman(Request $request){
         $validator = Validator::make($request->all(), [
             'id_kota_asal'     => 'required|integer|min:0',

@@ -14,6 +14,7 @@ class ApiKategoriProdukController extends Controller
      * @OA\Get(
      *      path="/api/detailkategori/{id}",
      *      tags={"Kategori Produk"},
+     * security={{ "bearer_token":{} }},
      *      summary="Detail Kategori",
      *      description="Menampilkan semua produk berdasarkan kategori yg dipillih",
      *      operationId="DetailKategori",
@@ -26,9 +27,21 @@ class ApiKategoriProdukController extends Controller
     *              type="integer"
     *          )
     *      ),
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -40,6 +53,7 @@ class ApiKategoriProdukController extends Controller
             $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
         });
         return response()->json([
+            'success'=>true,
             'kategoriproduk' => $kategoriproduk,
             'produk' => $produk
         ]);
@@ -49,12 +63,26 @@ class ApiKategoriProdukController extends Controller
      * @OA\Get(
      *      path="/api/kategori",
      *      tags={"Kategori Produk"},
+     * security={{ "bearer_token":{} }},
      *      summary="Kategori Produk",
      *      description="menampilkan semua kategori produk ",
      *      operationId="KategoriProduk",
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -62,7 +90,8 @@ class ApiKategoriProdukController extends Controller
         $kategoriproduk = KategoriProduk::where('status','active')->get();
        
         return response()->json([
-            'kategoriproduk' => $kategoriproduk
+            'success'=>true,
+            'data' => $kategoriproduk
             
         ]);
     }

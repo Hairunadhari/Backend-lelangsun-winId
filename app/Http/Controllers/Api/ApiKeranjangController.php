@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use Validator;
 use App\Models\Keranjang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ApiKeranjangController extends Controller
 {
@@ -14,6 +16,7 @@ class ApiKeranjangController extends Controller
      * @OA\Post(
      *      path="/api/add-keranjang",
      *      tags={"Keranjang"},
+     * security={{ "bearer_token":{} }},
      *      summary="Keranjang",
      *      description="masukkan user id, produk id, qty",
      *      operationId="Keranjang",
@@ -21,16 +24,46 @@ class ApiKeranjangController extends Controller
      *          required=true,
      *          description="",
      *          @OA\JsonContent(
-     *              required={"produk_id"},
+     *              required={},
      *              @OA\Property(property="produk_id", type="integer"),
      *              @OA\Property(property="qty", type="integer"),
      *              @OA\Property(property="toko_id", type="integer"),
      *          )
      *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
-     *      )
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+ *          description="Internal Server Error",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     *    @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
      * )
      */
     public function add_keranjang(Request $request){
@@ -39,14 +72,33 @@ class ApiKeranjangController extends Controller
             'qty'     => 'required|integer',
             'toko_id'     => 'required|integer',
         ]);
-        
-        Keranjang::where('produk_id', $request->produk_id)->where('user_id', $request->user_id)->delete();
-        $data = Keranjang::create([
-            'user_id' => $request->user_id,
-            'produk_id' => $request->produk_id,
-            'qty' => $request->qty,
-            'toko_id' => $request->toko_id,
-        ]);
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return response()->json([
+                'success' => false,
+                'message' => $alertMessage
+            ],422);
+        }
+         try {
+            DB::beginTransaction();
+            Keranjang::where('produk_id', $request->produk_id)->where('user_id', $request->user_id)->delete();
+            $data = Keranjang::create([
+                'user_id' => $request->user_id,
+                'produk_id' => $request->produk_id,
+                'qty' => $request->qty,
+                'toko_id' => $request->toko_id,
+            ]);
+            DB::commit();
+        } catch (\Throwable $th) {
+             DB::rollBack();
+            //throw $th;
+            return response()->json([
+                'success'=>false,
+                'message'=>$th->getMessage(),
+            ],500);
+         }
         return response()->json([
             'success' => true,
             'data' => $data
@@ -57,31 +109,35 @@ class ApiKeranjangController extends Controller
      * @OA\Get(
      *      path="/api/list-keranjang",
      *      tags={"Keranjang"},
+     * security={{ "bearer_token":{} }},
      *      summary="user id",
-     *      description="menampilkan semua data keranjang berdasarkan user id",
+     *      description="menampilkan semua data keranjang user",
      *      operationId="ListKeranjang",
-     *       @OA\Parameter(
-    *          name="id",
-    *          in="path",
-    *          required=true,
-    *          description="user id",
-    *          @OA\Schema(
-    *              type="integer"
-    *          )
-    *      ),
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
-    public function list_keranjang($id){
+    public function list_keranjang(){
         $data = Keranjang::with([
             'toko',
             'produk' => function($query) {
                 $query->orderBy('created_at','desc');
             },
-        ])->where('user_id', $id)->latest()->get();
+        ])->where('user_id', Auth::user()->id)->latest()->get();
         // pluck toko
         $data->each(function ($item) {
             $item->produk->thumbnail = env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
@@ -101,20 +157,53 @@ class ApiKeranjangController extends Controller
      * @OA\Delete(
      *      path="/delete-keranjang/{id}",
      *      tags={"Keranjang"},
+     * security={{ "bearer_token":{} }},
      *      summary="Keranjang id",
      *      description="menghapus keranjang berdasarkan id keranjang",
      *      operationId="DeleteKeranjang",
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+ *          description="Internal Server Error",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
     public function delete_keranjang($id){
-        $data = Keranjang::find($id)->delete();
-        return response()->json([
-            'success' => true,
-            'data' => $data,
+        try {
+            DB::beginTransaction();
+            $data = Keranjang::find($id)->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            //throw $th;
+            return response()->json(
+                ['success'=>false,
+                'message'=>$th->getMessage()
+            ],500);
+        }
+            return response()->json([
+                'success' => true,
+            'message' => 'Data berhasil dihapus',
         ]);
     }
 }

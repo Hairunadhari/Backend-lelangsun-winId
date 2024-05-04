@@ -15,6 +15,7 @@ class ApiPelunasanLelangController extends Controller
      * @OA\Get(
      *      path="/api/lelang/list-pelunasan-barang",
      *      tags={"Pelunasan Barang"},
+     * security={{ "bearerAuth":{} }},
      *      summary="List Pelunasan Barang",
      *      description="Menampilkan list pelunasan barang berdasarkan user ID yg diberikan",
      *      operationId="List Pelunasan Barang",
@@ -28,8 +29,21 @@ class ApiPelunasanLelangController extends Controller
     *          )
     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -46,7 +60,7 @@ class ApiPelunasanLelangController extends Controller
         }
         return response()->json([
             'success' => true,
-            'data_npl' => $data
+            'data' => $data
         ]);
     }
 
@@ -54,6 +68,7 @@ class ApiPelunasanLelangController extends Controller
      * @OA\Post(
      *      path="/api/lelang/pembayaran-pelunasan-barang",
      *      tags={"Pelunasan Barang"},
+     * security={{ "bearerAuth":{} }},
      *      summary="Pembayaran Pelunasan barang",
      *      description="masukkan npl id, bukti pembayaran",
      *      operationId="pembayaran pelunasan barang",
@@ -69,8 +84,30 @@ class ApiPelunasanLelangController extends Controller
      *          )
      *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+ *          description="Bad Request",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="..."),
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -83,7 +120,7 @@ class ApiPelunasanLelangController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors(),
-            ], 400);
+            ], 422);
 
         }
         try {
@@ -104,11 +141,10 @@ class ApiPelunasanLelangController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=> $th->getMessage(),
-            ]);
+            ],400);
         }
             return response()->json([
                 'success'=>true,
-                'message'=>'Data Anda Sedang Diverifikasi Oleh Admin',
                 'data'=>[
                     'tipe_pelunasan'=>$data->tipe_pelunasan,
                     'bukti'=>$data->bukti,

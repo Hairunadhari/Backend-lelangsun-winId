@@ -15,12 +15,26 @@ class ApiPromoProdukController extends Controller
      * @OA\Get(
      *      path="/api/promosi",
      *      tags={"Promosi"},
+     * security={{ "bearerAuth":{} }},
      *      summary="List Promo Produk",
      *      description="menampilkan semua jenis promo produk yg sedang berlangsung",
      *      operationId="promosi",
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -31,7 +45,8 @@ class ApiPromoProdukController extends Controller
             $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
         });
         return response()->json([
-            'promosi' => $promosi,
+            'success'=>true,
+            'data' => $promosi,
         ]);
     }
 
@@ -39,6 +54,7 @@ class ApiPromoProdukController extends Controller
      * @OA\Get(
      *      path="/api/detailpromosi/{id}",
      *      tags={"Promosi"},
+     * security={{ "bearerAuth":{} }},
      *      summary="menampilkan detail promo produk berdasarkan ID",
      *      description="menampilkan semua produk yg sedang diskon berdasarkan ID Promosi yg diberikan",
      *      operationId="DetailPromosi",
@@ -52,8 +68,21 @@ class ApiPromoProdukController extends Controller
     *          )
     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -67,8 +96,10 @@ class ApiPromoProdukController extends Controller
             $item->produk->thumbnail =  env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
         });
         return response()->json([
+            'success'=>true,
+            'data'=>[
             'datapromosi' => $datapromosi,
-            'detailproduk' => $detailproduk,
+            'detailproduk' => $detailproduk],
         ]);
     }
 }

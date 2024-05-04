@@ -18,6 +18,7 @@ class ApiNplController extends Controller
      * @OA\Post(
      *      path="/api/lelang/npl/add-npl",
      *      tags={"Npl"},
+     * security={{ "bearerAuth":{} }},
      *      summary="npl",
      *      description="",
      *      operationId="npl",
@@ -38,8 +39,30 @@ class ApiNplController extends Controller
      *          )
      *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+ *          description="Bad Request",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -99,8 +122,9 @@ class ApiNplController extends Controller
 
      /**
      * @OA\Get(
-     *      path="/api/lelang/list-npl-user/{id}/",
+     *      path="/api/lelang/list-npl-user",
      *      tags={"Npl"},
+     * security={{ "bearerAuth":{} }},
      *      summary="Menampilkan List Npl berdasrkan id user",
      *      description="",
      *      operationId="List Npl user",
@@ -113,9 +137,31 @@ class ApiNplController extends Controller
     *              type="integer"
     *          )
     *      ),
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=400,
+ *          description="Bad Request",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -134,7 +180,7 @@ class ApiNplController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => $th,
-            ]);
+            ],400);
         }
         return response()->json([
             'success' => true,

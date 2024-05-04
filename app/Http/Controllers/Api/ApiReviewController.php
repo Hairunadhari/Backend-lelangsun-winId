@@ -16,6 +16,7 @@ class ApiReviewController extends Controller
      * @OA\Post(
      *      path="/api/add-review",
      *      tags={"Review"},
+     * security={{ "bearerAuth":{} }},
      *      summary="Review",
      *      description="masukkan user id, produk id, review, rating, rating maksimal 5",
      *      operationId="Review",
@@ -30,9 +31,31 @@ class ApiReviewController extends Controller
      *              @OA\Property(property="rating", type="integer"),
      *          )
      *      ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=400,
+ *          description="Bad Request",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */

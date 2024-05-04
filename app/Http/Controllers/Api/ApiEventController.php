@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use Validator;
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\TLogApi;
 use App\Models\GambarEvent;
+use App\Models\PesertaEvent;
 use Illuminate\Http\Request;
 use App\Models\PembayaranEvent;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ApiEventController extends Controller
 {
@@ -16,11 +20,24 @@ class ApiEventController extends Controller
      * @OA\Get(
      *      path="/api/list-event",
      *      tags={"Event"},
+     *   security={{ "bearer_token":{} }},
      *      description="menampilkan semua event",
      *      operationId="ListEvent",
+     *        @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -51,6 +68,7 @@ class ApiEventController extends Controller
      * @OA\Get(
      *      path="/api/detail-event/{id}",
      *      tags={"Event"},
+     *   security={{ "bearer_token":{} }},
      *      summary="Menampilkan detail event berdasarkan ID",
      *      description="Menampilkan detail event berdasarkan ID yg diberikan",
      *      operationId="DetailEvent",
@@ -63,9 +81,21 @@ class ApiEventController extends Controller
     *              type="integer"
     *          )
     *      ),
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description="return array model produk"
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -80,7 +110,8 @@ class ApiEventController extends Controller
         });
 
         return response()->json([
-            'event' => $event,
+            'success'=>true,
+            'data' => $event,
             'detail_gambar_event' => $detail_gambar_event
         ]);
     }
@@ -89,8 +120,9 @@ class ApiEventController extends Controller
  * @OA\Post(
  *      path="/api/bukti-pembayaran-event",
  *      tags={"Event"},
+ * security={{ "bearer_token":{} }},
  *      summary="Event",
- *      description="masukkan user id, event id, bukti bayar, id peserta",
+ *      description="masukkan event id, bukti bayar, id peserta",
  *      operationId="event",
  *      @OA\RequestBody(
  *          required=true,
@@ -98,7 +130,6 @@ class ApiEventController extends Controller
  *          @OA\MediaType(
  *              mediaType="multipart/form-data",
  *              @OA\Schema(
- *                  @OA\Property(property="user_id", type="integer"),
  *                  @OA\Property(property="event_id", type="integer"),
  *                  @OA\Property(property="peserta_id", type="integer"),
  *                  @OA\Property(property="bukti_bayar", type="file", format="binary"),
@@ -106,79 +137,124 @@ class ApiEventController extends Controller
  *          )
  *      ),
  *      @OA\Response(
- *          response="default",
- *          description=""
- *      )
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+ *          description="Internal Server Error",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     *    @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
  * )
  */
 
     public function bukti_pembayaran_event(Request $request){
         $validator = Validator::make($request->all(), [
-            'user_id'     => 'required',
             'event_id'     => 'required',
             'bukti_bayar'     => 'required|image|mimes:jpeg,jpg,png',
             'peserta_id'     => 'required',
         ]);
-       
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return response()->json([
+                'success' => false,
+                'message' => $alertMessage
+            ],422);
+        }
 
         try {
+        DB::beginTransaction();
             $bukti_bayar = $request->file('bukti_bayar');
             $bukti_bayar->storeAs('public/image', $bukti_bayar->hashName());
             $event = PembayaranEvent::create([
-                'user_id' => $request->user_id,
+                'user_id' => Auth::user()->id,
                 'event_id' => $request->event_id,
                 'bukti_bayar' => $request->bukti_bayar->hashName(),
                 'peserta_event_id' => $request->peserta_id,
             ]);
-            $success = true;
-            $message = 'data berhasil disimpan';
-            $res = [
-                'success' => $success,
-                'message' => $message,
-                'data' => $event,
-            ];
+          
+        DB::commit();
 
-            TLogApi::create([
-                'k_t' => 'terima',
-                'object' => 'mobile',
-                'data' => json_encode([
-                    'event' => $event,
-                ]),
-                'result' => json_encode($res),
-            ]);
-
-        } catch (Excpetion $e) {
-            $abc = PembayaranEvent::create([
-                'user_id' => $request->user_id ?? null,
-                'event_id' => $request->event_id ?? null,
-                'bukti_bayar' => $request->bukti_bayar->hashName() ?? null,
-                'peserta_event_id' => $request->peserta_id ?? null,
-            ]);
-            $success = false;
-            $message = 'error';
-            $res = [
-                'success' => $success,
-                'message' => $message,
-                'data' => $abc,
-            ];
-
-            TLogApi::create([
-                'k_t' => 'terima',
-                'object' => 'mobile',
-                'data' => json_encode([
-                    'event' => $event,
-                ]),
-                'result' => json_encode($res),
-            ]);
+        } catch (\Throwable $th) {
+        DB::rollBack();
+            return response()->json([
+                'success'=>false,
+                'message'=>$th->getMessage()
+            ],500);
         }
        
-        return response()->json($res);
+        return response()->json([
+            'success'=>true,
+            'message'=> 'Data berhasil disimpan'
+        ]);
 
     }
 
-     
-    public function detail_pembayaran_event($id){
-        $event = PembayaranEvent::where('user_id', $id)->get();
+      /**
+     * @OA\Get(
+     *      path="/api/detail-pembayaran-event/{id}",
+     *      tags={"Event"},
+    * security={{ "bearer_token":{} }},
+     *      summary="Menampilkan detail produk berdasarkan ID",
+     *      description="Menampilkan detail produk berdasarkan ID yg diberikan",
+     *      operationId="DetailPembayaranEvent",
+     *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="menampilkan semua detail pembayaran event user",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      )
+     * )
+     */
+    public function detail_pembayaran_event(){
+        $event = PembayaranEvent::where('user_id', Auth::user()->id)->get();
         return response()->json([
             'success' => true,
             'data' => $event 
@@ -189,6 +265,7 @@ class ApiEventController extends Controller
      * @OA\Post(
      *      path="/api/form-peserta-event",
      *      tags={"Event"},
+     * security={{ "bearer_token":{} }},
      *      summary="Event",
      *      description="masukkan nama,email,notelp,jumlahtiket,eventid",
      *      operationId="Event",
@@ -205,9 +282,40 @@ class ApiEventController extends Controller
      *          )
      *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
-     *      )
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+ *          description="Internal Server Error",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     *    @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
      * )
      */
     public function form_peserta_event(Request $request){
@@ -218,14 +326,33 @@ class ApiEventController extends Controller
             'jumlah_tiket'     => 'required',
             'event_id'     => 'required',
         ]);
-
-        $data = PesertaEvent::create([
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'no_telp' => $request->no_telp,
-            'jumlah_tiket' => $request->jumlah_tiket,
-            'event_id' => $request->event_id,
-        ]);
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return response()->json([
+                'success' => false,
+                'message' => $alertMessage
+            ],422);
+        }
+        try {
+            DB::beginTransaction();
+            $data = PesertaEvent::create([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'no_telp' => $request->no_telp,
+                'jumlah_tiket' => $request->jumlah_tiket,
+                'event_id' => $request->event_id,
+            ]);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            //throw $th;
+            return response()->json([
+                'success'=>false,
+                'message'=>$th->getMessage(),
+            ],500);
+        }
 
         return response()->json([
             'success' => true,

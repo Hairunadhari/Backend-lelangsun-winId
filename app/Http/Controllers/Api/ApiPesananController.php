@@ -11,6 +11,7 @@ class ApiPesananController extends Controller
      * @OA\Get(
      *      path="/api/list-pesanan",
      *      tags={"Pesanan"},
+     * security={{ "bearerAuth":{} }},
      *      summary="id user",
      *      description="Menampilkan list pesanan berdasarkan user yg login",
      *      operationId="ListPesanan",
@@ -24,8 +25,21 @@ class ApiPesananController extends Controller
     *          )
     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -44,6 +58,7 @@ class ApiPesananController extends Controller
         });
     
         return response()->json([
+            'success'=>true,
             'order' => $data
         ]);
     }
@@ -53,6 +68,7 @@ class ApiPesananController extends Controller
      * @OA\Get(
      *      path="/api/detail-pesanan/{id}",
      *      tags={"Pesanan"},
+     * security={{ "bearerAuth":{} }},
      *      summary="order id",
      *      description="Menampilkan detail pesanan berdasrkan order id",
      *      operationId="DetailPesanan",
@@ -65,9 +81,22 @@ class ApiPesananController extends Controller
     *              type="integer"
     *          )
     *      ),
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -77,6 +106,8 @@ class ApiPesananController extends Controller
         $itemproduk = OrderItem::with('produk')->where('order_id', $id)->first();
         $itemproduk->produk->thumbnail = env('APP_URL').'/storage/image/' . $itemproduk->produk->thumbnail;
         return response()->json([
+            'success'=>true,
+            'data'=>[
             'id_order' => $tagihan->order_id,
             'email_user' => $tagihan->user->email,
             'user_name' => $tagihan->user->name,
@@ -93,7 +124,7 @@ class ApiPesananController extends Controller
             'item_pesanan' => $itemproduk->produk,
             'qty' => $itemproduk->qty,
             'total_pembayaran' => $tagihan->total_pembayaran,
-            'link_payment' => $tagihan->payment_link,
+            'link_payment' => $tagihan->payment_link]
         ]);
     }
 }

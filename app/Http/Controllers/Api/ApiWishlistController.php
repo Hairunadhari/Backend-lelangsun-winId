@@ -13,6 +13,7 @@ class ApiWishlistController extends Controller
      * @OA\Post(
      *      path="/api/add-wishlist",
      *      tags={"Wishlist"},
+     * security={{ "bearerAuth":{} }},
      *      summary="Wishlist",
      *      description="produk id",
      *      operationId="Wishlist",
@@ -25,8 +26,30 @@ class ApiWishlistController extends Controller
      *          )
      *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+ *          description="Bad Request",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -35,13 +58,24 @@ class ApiWishlistController extends Controller
         $this->validate($request, [
             'produk_id'     => 'required',
         ]);
-        $userId = Auth::user()->id;
-        Wishlist::where('produk_id', $request->produk_id)->where('user_id', $userId)->delete();
-
-        $data = Wishlist::create([
-            'user_id' => $userId,
-            'produk_id' => $request->produk_id,
-        ]);
+        try {
+            DB::beginTransaction();
+            $userId = Auth::user()->id;
+            Wishlist::where('produk_id', $request->produk_id)->where('user_id', $userId)->delete();
+            
+            $data = Wishlist::create([
+                'user_id' => $userId,
+                'produk_id' => $request->produk_id,
+            ]);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'success'=>true,
+                'message'=>$th->getMessage(),
+            ],400);
+            //throw $th;
+        }
 
         return response()->json([
             'success' => true,
@@ -53,6 +87,7 @@ class ApiWishlistController extends Controller
      * @OA\Get(
      *      path="/api/list-wishlist",
      *      tags={"Wishlist"},
+     * security={{ "bearerAuth":{} }},
      *      summary="user id",
      *      description="menampilkan semua data wishlist berdasrkan user id",
      *      operationId="ListWishlist",
@@ -66,8 +101,21 @@ class ApiWishlistController extends Controller
     *          )
     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -81,6 +129,7 @@ class ApiWishlistController extends Controller
             $item->produk->thumbnail =  env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
         });
         return response()->json([
+            'success'=>true,
             'data' => $data
         ]);
     }
@@ -89,17 +138,51 @@ class ApiWishlistController extends Controller
      * @OA\Delete(
      *      path="/delete-wishlist/{id}",
      *      tags={"Wishlist"},
+     * security={{ "bearerAuth":{} }},
      *      summary="wishlist id",
      *      description="menghapus wishlist berdasarkan id wishlist",
      *      operationId="DeleteWishlist",
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                     @OA\Property(property="data", type="string", example="..."),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=400,
+ *          description="Bad Request",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
     public function delete_wishlist($id){
-        $data = Wishlist::find($id)->delete();
+        try {
+            DB::beginTransaction();
+            $data = Wishlist::find($id)->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            //throw $th;
+            return response()->json([
+                'success'=>false,
+                'message'=>$th->getMessage()
+            ],400);
+        }
         return response()->json([
             'success' => true,
             'data' => $data,

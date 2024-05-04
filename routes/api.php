@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\ApiBiddingController;
 use App\Http\Controllers\Api\ApiPesananController;
 use App\Http\Controllers\Api\ApiWishlistController;
 use App\Http\Controllers\Api\ApiKeranjangController;
+use App\Http\Controllers\Api\ApiBaranLelangController;
 use App\Http\Controllers\Api\ApiEventLelangController;
 use App\Http\Controllers\Api\ApiPromoProdukController;
 use App\Http\Controllers\Api\WebhookBiteShipController;
@@ -54,9 +55,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/profil', [ApiUserController::class, 'profil']);
     Route::put('/update-profil', [ApiUserController::class, 'update_profil']);
 
-    Route::get('/list-banner-utama', [ApiBannerController::class, 'daftar_banner_utama']);
-    Route::get('/list-banner-diskon', [ApiBannerController::class, 'daftar_banner_diskon']);
-    Route::get('/list-banner-spesial', [ApiBannerController::class, 'daftar_banner_spesial']);
+    Route::get('/list-banner', [ApiBannerController::class, 'list_banner']);
 
     Route::get('/list-pesanan', [ApiPesananController::class, 'list_pesanan']);
     Route::get('/detail-pesanan/{id}/', [ApiPesananController::class, 'detail_pesanan']);
@@ -84,8 +83,8 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/lelang/kategori/detail/{id}/', [ApiKategoriLelangController::class, 'daftar_lelang_berdasarkan_kategori']);
     Route::get('/lelang/lot/list', [ApiLotController::class, 'daftar_lot']);
     
-    Route::get('/lelang/detail-barang-lelang/{id}/', [ApiController::class, 'detail_barang_lelang']);
-    Route::get('/lelang/barang', [ApiController::class, 'daftar_barang_lelang']);
+    Route::get('/lelang/detail-barang-lelang/{id}/', [ApiBaranLelangController::class, 'detail_barang_lelang']);
+    Route::get('/lelang/barang', [ApiBaranLelangController::class, 'daftar_barang_lelang']);
 
     Route::get('/lelang/event', [ApiEventLelangController::class, 'list_event_lelang']);
     Route::get('/lelang/event/detail/{id}/', [ApiEventLelangController::class, 'detail_event_lelang']);

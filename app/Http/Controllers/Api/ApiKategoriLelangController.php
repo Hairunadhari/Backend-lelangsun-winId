@@ -12,12 +12,25 @@ class ApiKategoriLelangController extends Controller
      * @OA\Get(
      *      path="/api/lelang/kategori/lelang",
      *      tags={"Kategori Lelang"},
+     * security={{ "bearer_token":{} }},
      *      summary="Kategori Lelang",
      *      description="menampilkan semua kategori Lelang ",
      *      operationId="KategoriLelanlg",
+     *     @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
@@ -26,7 +39,7 @@ class ApiKategoriLelangController extends Controller
        
         return response()->json([
             'success'=>true,
-            'kategori_lelang' => $kategorilelang
+            'data' => $kategorilelang
             
         ]);
     }
@@ -35,6 +48,7 @@ class ApiKategoriLelangController extends Controller
      * @OA\Get(
      *      path="/api/lelang/kategori/detail/{id}/",
      *      tags={"Kategori Lelang"},
+     * security={{ "bearer_token":{} }},
      *      summary="Detail Kategori",
      *      description="Menampilkan semua barang berdasarkan kategori yg dipillih",
      *      operationId="DetailKategoriLelang",
@@ -47,9 +61,21 @@ class ApiKategoriLelangController extends Controller
     *              type="integer"
     *          )
     *      ),
+     *       @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
      *      @OA\Response(
-     *          response="default",
-     *          description=""
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
      *      )
      * )
      */
