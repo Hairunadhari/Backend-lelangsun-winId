@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\BarangLelang;
 use Illuminate\Http\Request;
 use App\Models\KategoriBarang;
 use App\Http\Controllers\Controller;
@@ -80,15 +81,13 @@ class ApiKategoriLelangController extends Controller
      * )
      */
     public function daftar_lelang_berdasarkan_kategori($id){
-        $kategoribarang = KategoriBarang::with(['baranglelang' => function($query){
-            $query->where('status',1);  
-        }])->find($id);
+        $kategoribarang = BarangLelang::where('kategoribarang_id',$id)->get();
         
-        $kategoribarang->baranglelang->each(function ($item) {
-            $item->gambarlelang->each(function ($gambar) {
-                $gambar->gambar = env('APP_URL').'/storage/image/' . $gambar->gambar;
+            $kategoribarang->each(function ($item) {
+                $item->gambarlelang->each(function ($gambar) {
+                    $gambar->gambar = env('APP_URL').'/storage/image/' . $gambar->gambar;
+                });
             });
-        });
     
         return response()->json([
             'success'=>true,

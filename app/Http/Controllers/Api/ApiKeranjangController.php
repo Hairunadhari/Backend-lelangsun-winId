@@ -68,9 +68,9 @@ class ApiKeranjangController extends Controller
      */
     public function add_keranjang(Request $request){
         $validator = Validator::make($request->all(), [
-            'produk_id'     => 'required|integer',
-            'qty'     => 'required|integer',
-            'toko_id'     => 'required|integer',
+            'produk_id'     => 'required|integer|min:1',
+            'qty'     => 'required|integer|min:1',
+            'toko_id'     => 'required|integer|min:1',
         ]);
         if($validator->fails()){
             $messages = $validator->messages();
@@ -83,9 +83,9 @@ class ApiKeranjangController extends Controller
         }
          try {
             DB::beginTransaction();
-            Keranjang::where('produk_id', $request->produk_id)->where('user_id', $request->user_id)->delete();
+            Keranjang::where('produk_id', $request->produk_id)->where('user_id', Auth::user()->id)->delete();
             $data = Keranjang::create([
-                'user_id' => $request->user_id,
+                'user_id' => Auth::user()->id,
                 'produk_id' => $request->produk_id,
                 'qty' => $request->qty,
                 'toko_id' => $request->toko_id,
@@ -110,7 +110,7 @@ class ApiKeranjangController extends Controller
      *      path="/api/list-keranjang",
      *      tags={"Keranjang"},
      * security={{ "bearer_token":{} }},
-     *      summary="user id",
+     *      summary="",
      *      description="menampilkan semua data keranjang user",
      *      operationId="ListKeranjang",
      *       @OA\Response(

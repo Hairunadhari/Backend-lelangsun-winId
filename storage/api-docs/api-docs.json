@@ -1196,10 +1196,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -1348,7 +1344,7 @@
                 "tags": [
                     "Keranjang"
                 ],
-                "summary": "user id",
+                "summary": "",
                 "description": "menampilkan semua data keranjang user",
                 "operationId": "ListKeranjang",
                 "responses": {

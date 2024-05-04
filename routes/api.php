@@ -66,7 +66,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/list-wishlist', [ApiWishlistController::class, 'list_wishlist']);
     Route::delete('/delete-wishlist/{id}/', [ApiWishlistController::class, 'delete_wishlist']);
     
-    Route::get('/list-keranjang/{id}/', [ApiKeranjangController::class, 'list_keranjang']);
+    Route::get('/list-keranjang', [ApiKeranjangController::class, 'list_keranjang']);
     Route::post('/add-keranjang', [ApiKeranjangController::class, 'add_keranjang']);
     Route::delete('/delete-keranjang/{id}/', [ApiKeranjangController::class, 'delete_keranjang']);
     

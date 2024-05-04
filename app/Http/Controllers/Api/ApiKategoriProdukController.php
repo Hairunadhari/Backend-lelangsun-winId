@@ -73,7 +73,6 @@ class ApiKategoriProdukController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="message", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
