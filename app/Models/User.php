@@ -32,6 +32,11 @@ class User extends Authenticatable implements JWTSubject
         'npwp',
         'foto_npwp',
         'no_rek',
+        'detail_alamat',
+        'kota',
+        'provinsi',
+        'kecamatan',
+        'postal_code',
     ];
 
     /**

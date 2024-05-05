@@ -23,7 +23,7 @@ class ApiBiteshipController extends Controller
      *          description="",
      *          @OA\JsonContent(
      *              required={"value"},
-     *              @OA\Property(property="value", type="string"),
+     *              @OA\Property(property="value", type="string", example="jakarta"),
      *          )
      *      ),
       *      @OA\Response(

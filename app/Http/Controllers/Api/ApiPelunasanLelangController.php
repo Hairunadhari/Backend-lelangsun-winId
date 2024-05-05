@@ -7,6 +7,7 @@ use App\Models\Pemenang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ApiPelunasanLelangController extends Controller
 {
@@ -15,26 +16,16 @@ class ApiPelunasanLelangController extends Controller
      * @OA\Get(
      *      path="/api/lelang/list-pelunasan-barang",
      *      tags={"Pelunasan Barang"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="List Pelunasan Barang",
-     *      description="Menampilkan list pelunasan barang berdasarkan user ID yg diberikan",
+     *      description="Menampilkan list pelunasan barang user",
      *      operationId="List Pelunasan Barang",
-     *       @OA\Parameter(
-    *          name="id",
-    *          in="path",
-    *          required=true,
-    *          description="",
-    *          @OA\Schema(
-    *              type="integer"
-    *          )
-    *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Success",
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
@@ -68,7 +59,7 @@ class ApiPelunasanLelangController extends Controller
      * @OA\Post(
      *      path="/api/lelang/pembayaran-pelunasan-barang",
      *      tags={"Pelunasan Barang"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="Pembayaran Pelunasan barang",
      *      description="masukkan npl id, bukti pembayaran",
      *      operationId="pembayaran pelunasan barang",
@@ -89,7 +80,6 @@ class ApiPelunasanLelangController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
@@ -101,14 +91,23 @@ class ApiPelunasanLelangController extends Controller
  *          )
      *      ),
      *      @OA\Response(
-     *          response=400,
- *          description="Bad Request",
+     *          response=500,
+ *          description="Internal Server Error",
  *          @OA\JsonContent(
  *              type="object",
- *              @OA\Property(property="success", type="boolean", example="..."),
- *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
  *          )
-     *      )
+     *      ),
+     * @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
      * )
      */
     public function pembayaran_pelunasan_lelang(Request $request){
@@ -141,7 +140,7 @@ class ApiPelunasanLelangController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=> $th->getMessage(),
-            ],400);
+            ],500);
         }
             return response()->json([
                 'success'=>true,

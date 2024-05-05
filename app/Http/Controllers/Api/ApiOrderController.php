@@ -24,15 +24,25 @@ class ApiOrderController extends Controller
  * @OA\Post(
        path="/api/add-order",
        tags={"Order"},
-       security={{ "bearerAuth":{} }},
-       summary="Menambahkan Pesanan",
+       security={{ "bearer_token":{} }},
+       summary="Order",
        description="Selain parameter promo_diskon, berat_item, longitude, langitude, total_berat_item wajib diisi",
        operationId="addOrder",
        @OA\RequestBody(
            required=true,
-           description="Data formulir",
+           description="order",
            @OA\JsonContent(
                required={},
+                @OA\Property(
+                    property="userData",
+                    type="object",
+                        @OA\Property(property="no_telephone", type="integer"),
+                        @OA\Property(property="detail_alamat", type="string"),
+                        @OA\Property(property="postal_code", type="integer"),
+                        @OA\Property(property="kota", type="string"),
+                        @OA\Property(property="provinsi", type="string"),
+                        @OA\Property(property="kecamatan", type="string"),
+                ),
                 @OA\Property(
                     property="orderData",
                     type="object",
@@ -45,6 +55,9 @@ class ApiOrderController extends Controller
                         @OA\Property(property="postal_code", type="integer"),
                         @OA\Property(property="toko_id", type="integer"),
                         @OA\Property(property="nama_toko", type="string"),
+                        @OA\Property(property="kota", type="string"),
+                        @OA\Property(property="provinsi", type="string"),
+                        @OA\Property(property="kecamatan", type="string"),
                     ),
                     @OA\Property(
                         property="items",
@@ -70,16 +83,20 @@ class ApiOrderController extends Controller
                  @OA\Property(
                     property="courierData",
                     type="object",
+                    @OA\Property(property="available_collection_method", type="array", @OA\Items(type="string")),
+                    @OA\Property(property="available_for_instant_waybill_id", type="string"),
+                    @OA\Property(property="available_for_insurance", type="string"),
                     @OA\Property(property="company", type="string"),
-                    @OA\Property(property="courier_service_code", type="string"),
-                    @OA\Property(property="available_collection_method", type="string"),
                     @OA\Property(property="courier_name", type="string"),
+                    @OA\Property(property="courier_code", type="string"),
                     @OA\Property(property="courier_service_name", type="string"),
+                    @OA\Property(property="courier_service_code", type="string"),
                     @OA\Property(property="description", type="string"),
                     @OA\Property(property="duration", type="string"),
                     @OA\Property(property="service_type", type="string"),
                     @OA\Property(property="shipping_type", type="string"),
                     @OA\Property(property="price", type="integer"),
+                    @OA\Property(property="type", type="string"),
                         
                 ),
              ),
@@ -90,12 +107,11 @@ class ApiOrderController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="message", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
-     *          response=400,
- *          description="Bad Request",
+     *          response=500,
+ *          description="Internal Server Error",
  *          @OA\JsonContent(
  *              type="object",
  *              @OA\Property(property="success", type="boolean", example="false"),
@@ -109,7 +125,16 @@ class ApiOrderController extends Controller
  *              type="object",
  *              @OA\Property(property="message", type="string", example="Unauthenticated"),
  *          )
-     *      )
+     *      ),
+     * @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
  )
  */
 
@@ -118,7 +143,14 @@ class ApiOrderController extends Controller
     // dd($request->userData['email']);
     $validator = Validator::make($request->all() , [
 
-        'orderData.tokoObj.nama_pemilik' => 'required',
+        'userData.no_telephone' => 'required|integer|min:1',
+        'userData.detail_alamat' => 'required|string',
+        'userData.postal_code' => 'required|integer|min:1',
+        'userData.kota' => 'required|string',
+        'userData.provinsi' => 'required|string',
+        'userData.kecamatan' => 'required|string',
+
+        'orderData.tokoObj.nama_pemilik' => 'required|string',
         'orderData.tokoObj.no_telephone' => 'required|integer',
         'orderData.tokoObj.detail_alamat' => 'required|string',
         'orderData.tokoObj.postal_code' => 'required|integer',
@@ -153,12 +185,12 @@ class ApiOrderController extends Controller
         'courierData.price' => 'required|integer',
     ]);
     if ($validator->fails()) {
-        // $messages = $validator->messages();
-        // $alertMessage = $messages->first();
+        $messages = $validator->messages();
+        $alertMessage = $messages->first();
 
         return response()->json([
             'success' => false,
-            'message' => $validator->errors(),
+            'message' => $alertMessage,
         ],422);
     }
 
@@ -209,10 +241,10 @@ class ApiOrderController extends Controller
         $order = Order::create([
             'user_id' => Auth::user()->id,
             'nama_user' => Auth::user()->name,
-            'no_telephone_user' => Auth::user()->no_telp,
             'email_user' => Auth::user()->email,
-            'detail_alamat_user' => Auth::user()->detail_alamat,
-            'postal_code_user' => Auth::user()->postal_code,
+            'no_telephone_user' => $request->userData['no_telephone'],
+            'detail_alamat_user' => $request->userData['detail_alamat'],
+            'postal_code_user' => $request->userData['postal_code'],
             'nama_pemilik_toko' => $request->orderData['tokoObj']['nama_pemilik'],
             'no_telephone_toko' => $request->orderData['tokoObj']['no_telephone'],
             'detail_alamat_toko' => $request->orderData['tokoObj']['detail_alamat'],
@@ -243,9 +275,9 @@ class ApiOrderController extends Controller
             'time_order' => $now,
             'available_for_instant_waybill_id' => $request->courierData['available_for_instant_waybill_id'],
             'available_for_insurance' => $request->courierData['available_for_insurance'],
-            'kota_user' => Auth::user()->kota,
-            'kecamatan_user' => Auth::user()->kecamatan,
-            'provinsi_user' => Auth::user()->provinsi,
+            'kota_user' => $request->userData['kota'],
+            'kecamatan_user' => $request->userData['kecamatan'],
+            'provinsi_user' => $request->userData['provinsi'],
             'kota_toko' => $request->orderData['tokoObj']['kota'],
             'kecamatan_toko' => $request->orderData['tokoObj']['kecamatan'],
             'provinsi_toko' => $request->orderData['tokoObj']['provinsi'],
@@ -304,7 +336,7 @@ class ApiOrderController extends Controller
         ]);
 
         DB::commit();
-    } catch (Throwable $th) {
+    } catch (\Throwable $th) {
         // dd($th);
         DB::rollBack();
 
@@ -322,7 +354,7 @@ class ApiOrderController extends Controller
             'result' => json_encode($res),
         ]);
     
-        return response()->json([$res], 400);
+        return response()->json([$res], 500);
     }
     
     return response()->json([

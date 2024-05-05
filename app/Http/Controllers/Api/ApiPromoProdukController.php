@@ -15,7 +15,7 @@ class ApiPromoProdukController extends Controller
      * @OA\Get(
      *      path="/api/promosi",
      *      tags={"Promosi"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="List Promo Produk",
      *      description="menampilkan semua jenis promo produk yg sedang berlangsung",
      *      operationId="promosi",
@@ -25,7 +25,6 @@ class ApiPromoProdukController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
@@ -54,7 +53,7 @@ class ApiPromoProdukController extends Controller
      * @OA\Get(
      *      path="/api/detailpromosi/{id}",
      *      tags={"Promosi"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="menampilkan detail promo produk berdasarkan ID",
      *      description="menampilkan semua produk yg sedang diskon berdasarkan ID Promosi yg diberikan",
      *      operationId="DetailPromosi",
@@ -73,7 +72,6 @@ class ApiPromoProdukController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(

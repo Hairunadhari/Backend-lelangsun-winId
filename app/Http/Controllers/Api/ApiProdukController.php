@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Produk;
+use App\Models\Review;
 use App\Models\GambarProduk;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -83,7 +84,6 @@ class ApiProdukController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
@@ -192,7 +192,6 @@ class ApiProdukController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(

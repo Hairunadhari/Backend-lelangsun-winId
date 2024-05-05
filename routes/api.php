@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\ApiPromoProdukController;
 use App\Http\Controllers\Api\WebhookBiteShipController;
 use App\Http\Controllers\Api\ApiKategoriLelangController;
 use App\Http\Controllers\Api\ApiKategoriProdukController;
+use App\Http\Controllers\Api\ApiPelunasanLelangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +54,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/detailpromosi/{id}/', [ApiPromoProdukController::class, 'detail_promosi']);
 
     Route::get('/profil', [ApiUserController::class, 'profil']);
-    Route::put('/update-profil', [ApiUserController::class, 'update_profil']);
+    Route::post('/update-profil', [ApiUserController::class, 'update_profil']);
 
     Route::get('/list-banner', [ApiBannerController::class, 'list_banner']);
 
@@ -68,7 +69,7 @@ Route::middleware('auth:api')->group(function(){
     
     Route::get('/list-keranjang', [ApiKeranjangController::class, 'list_keranjang']);
     Route::post('/add-keranjang', [ApiKeranjangController::class, 'add_keranjang']);
-    Route::delete('/delete-keranjang/{id}/', [ApiKeranjangController::class, 'delete_keranjang']);
+    Route::delete('/delete-keranjang/{id}', [ApiKeranjangController::class, 'delete_keranjang']);
     
     Route::get('/detail-toko/{id}/', [ApiTokoController::class, 'detail_toko']);
     Route::post('/detail-kategori-toko', [ApiTokoController::class, 'daftar_produk_berdasarkan_kategori_toko']);
@@ -102,6 +103,8 @@ Route::middleware('auth:api')->group(function(){
 });
 Route::post('/register', [ApiUserController::class, 'register']);
 Route::post('/login', [ApiUserController::class, 'login']);
+Route::post('/logout', [ApiUserController::class, 'logout']);
+Route::post('/forgot-password', [ApiUserController::class, 'forgot_password']);
 
 Route::post('/callback-xendit', [ApiOrderController::class, 'callback_xendit']);
 

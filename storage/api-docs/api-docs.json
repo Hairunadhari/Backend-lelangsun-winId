@@ -24,7 +24,8 @@
                                 ],
                                 "properties": {
                                     "value": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "jakarta"
                                     }
                                 },
                                 "type": "object"
@@ -1388,7 +1389,7 @@
                 ]
             }
         },
-        "/delete-keranjang/{id}": {
+        "/api/delete-keranjang/{id}": {
             "delete": {
                 "tags": [
                     "Keranjang"
@@ -1396,6 +1397,17 @@
                 "summary": "Keranjang id",
                 "description": "menghapus keranjang berdasarkan id keranjang",
                 "operationId": "DeleteKeranjang",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID keranjang yang akan dihapus",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -1475,10 +1487,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -1505,7 +1513,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -1526,7 +1534,7 @@
                             "schema": {
                                 "properties": {
                                     "event_lelang_id": {
-                                        "type": "string"
+                                        "type": "integer"
                                     },
                                     "harga_npl": {
                                         "type": "integer"
@@ -1541,7 +1549,7 @@
                                         "type": "integer"
                                     },
                                     "nama_pemilik_rekening": {
-                                        "type": "integer"
+                                        "type": "string"
                                     },
                                     "bukti": {
                                         "type": "file",
@@ -1563,10 +1571,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -1574,8 +1578,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1609,11 +1613,31 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -1623,20 +1647,9 @@
                 "tags": [
                     "Npl"
                 ],
-                "summary": "Menampilkan List Npl berdasrkan id user",
+                "summary": "Menampilkan List Npl User",
                 "description": "",
                 "operationId": "List Npl user",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "id user",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -1647,10 +1660,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -1658,8 +1667,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1697,7 +1706,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -1707,17 +1716,40 @@
                 "tags": [
                     "Order"
                 ],
-                "summary": "Menambahkan Pesanan",
+                "summary": "Order",
                 "description": "Selain parameter promo_diskon, berat_item, longitude, langitude, total_berat_item wajib diisi",
                 "operationId": "addOrder",
                 "requestBody": {
-                    "description": "Data formulir",
+                    "description": "order",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [],
                                 "properties": {
+                                    "userData": {
+                                        "properties": {
+                                            "no_telephone": {
+                                                "type": "integer"
+                                            },
+                                            "detail_alamat": {
+                                                "type": "string"
+                                            },
+                                            "postal_code": {
+                                                "type": "integer"
+                                            },
+                                            "kota": {
+                                                "type": "string"
+                                            },
+                                            "provinsi": {
+                                                "type": "string"
+                                            },
+                                            "kecamatan": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
                                     "orderData": {
                                         "properties": {
                                             "tokoObj": {
@@ -1738,6 +1770,15 @@
                                                         "type": "integer"
                                                     },
                                                     "nama_toko": {
+                                                        "type": "string"
+                                                    },
+                                                    "kota": {
+                                                        "type": "string"
+                                                    },
+                                                    "provinsi": {
+                                                        "type": "string"
+                                                    },
+                                                    "kecamatan": {
                                                         "type": "string"
                                                     }
                                                 },
@@ -1795,19 +1836,31 @@
                                     },
                                     "courierData": {
                                         "properties": {
-                                            "company": {
-                                                "type": "string"
-                                            },
-                                            "courier_service_code": {
-                                                "type": "string"
-                                            },
                                             "available_collection_method": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "available_for_instant_waybill_id": {
+                                                "type": "string"
+                                            },
+                                            "available_for_insurance": {
+                                                "type": "string"
+                                            },
+                                            "company": {
                                                 "type": "string"
                                             },
                                             "courier_name": {
                                                 "type": "string"
                                             },
+                                            "courier_code": {
+                                                "type": "string"
+                                            },
                                             "courier_service_name": {
+                                                "type": "string"
+                                            },
+                                            "courier_service_code": {
                                                 "type": "string"
                                             },
                                             "description": {
@@ -1824,6 +1877,9 @@
                                             },
                                             "price": {
                                                 "type": "integer"
+                                            },
+                                            "type": {
+                                                "type": "string"
                                             }
                                         },
                                         "type": "object"
@@ -1844,10 +1900,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -1855,8 +1907,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1890,11 +1942,31 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -1905,19 +1977,8 @@
                     "Pelunasan Barang"
                 ],
                 "summary": "List Pelunasan Barang",
-                "description": "Menampilkan list pelunasan barang berdasarkan user ID yg diberikan",
+                "description": "Menampilkan list pelunasan barang user",
                 "operationId": "List Pelunasan Barang",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -1928,10 +1989,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -1958,7 +2015,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2001,10 +2058,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2028,19 +2081,39 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "success": {
                                             "type": "boolean",
-                                            "example": "..."
+                                            "example": "false"
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated"
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2051,7 +2124,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2059,22 +2132,11 @@
         "/api/list-pesanan": {
             "get": {
                 "tags": [
-                    "Pesanan"
+                    "Order"
                 ],
-                "summary": "id user",
-                "description": "Menampilkan list pesanan berdasarkan user yg login",
+                "summary": "list",
+                "description": "Menampilkan list pesanan user",
                 "operationId": "ListPesanan",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "data user yg akan ditampilkan",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -2085,10 +2147,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2115,7 +2173,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2123,7 +2181,7 @@
         "/api/detail-pesanan/{id}": {
             "get": {
                 "tags": [
-                    "Pesanan"
+                    "Order"
                 ],
                 "summary": "order id",
                 "description": "Menampilkan detail pesanan berdasrkan order id",
@@ -2149,10 +2207,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2179,7 +2233,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2251,10 +2305,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2375,10 +2425,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2428,10 +2474,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2458,7 +2500,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2492,10 +2534,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2522,7 +2560,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2533,7 +2571,7 @@
                     "Review"
                 ],
                 "summary": "Review",
-                "description": "masukkan user id, produk id, review, rating, rating maksimal 5",
+                "description": "masukkan produk id, review, rating, rating maksimal 5",
                 "operationId": "Review",
                 "requestBody": {
                     "description": "",
@@ -2541,14 +2579,8 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "user_id",
-                                    "produk_id"
-                                ],
+                                "required": [],
                                 "properties": {
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
                                     "produk_id": {
                                         "type": "integer"
                                     },
@@ -2574,10 +2606,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2585,8 +2613,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2620,11 +2648,31 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2658,10 +2706,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2688,7 +2732,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2734,10 +2778,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -2764,7 +2804,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -2787,6 +2827,15 @@
                         }
                     },
                     {
+                        "name": "no_telephone",
+                        "in": "query",
+                        "description": "User's no telp",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "email",
                         "in": "query",
                         "description": "User's email",
@@ -2799,6 +2848,15 @@
                         "name": "password",
                         "in": "query",
                         "description": "User's password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "confirm_password",
+                        "in": "query",
+                        "description": "User's confirm password",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2919,7 +2977,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         },
         "/api/update-profil": {
@@ -2928,7 +2991,7 @@
                     "Auth"
                 ],
                 "summary": "Akun",
-                "description": "masukkan name, telp, alamat, foto",
+                "description": "masukkan name, telp, alamat, foto, detail_alamat. DAPATKAN kota_kecamatan_provinsi_postal_code dari API MAPS",
                 "operationId": "Akun",
                 "requestBody": {
                     "description": "",
@@ -2943,16 +3006,17 @@
                                     "no_telp": {
                                         "type": "integer"
                                     },
-                                    "alamat": {
-                                        "type": "string"
+                                    "kota_kecamatan_provinsi_postal_code": {
+                                        "type": "string",
+                                        "example": "Gambir, Jakarta Pusat, DKI Jakarta. 10110"
+                                    },
+                                    "detail_alamat": {
+                                        "type": "string",
+                                        "example": "perumahan jakarta, blok 5 no.88"
                                     },
                                     "foto": {
                                         "type": "file",
                                         "format": "binary"
-                                    },
-                                    "_method": {
-                                        "type": "string",
-                                        "example": "PUT"
                                     }
                                 },
                                 "type": "object"
@@ -2961,10 +3025,254 @@
                     }
                 },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "logout",
+                "description": "logout user",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolea",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "forgot-password",
+                "description": "masukkan email dan password baru",
+                "operationId": "forgot-password",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "new_password": {
+                                        "type": "string"
+                                    },
+                                    "confirm_password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         },
         "/api/add-wishlist": {
@@ -3004,10 +3312,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -3015,8 +3319,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3027,7 +3331,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated"
+                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -3054,7 +3358,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }
@@ -3067,11 +3371,60 @@
                 "summary": "user id",
                 "description": "menampilkan semua data wishlist berdasrkan user id",
                 "operationId": "ListWishlist",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/delete-wishlist/{id}": {
+            "delete": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "wishlist id",
+                "description": "menghapus wishlist berdasarkan id wishlist",
+                "operationId": "DeleteWishlist",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "user id",
+                        "description": "id wishlist",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -3088,10 +3441,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -3099,61 +3448,8 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/delete-wishlist/{id}": {
-            "delete": {
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "wishlist id",
-                "description": "menghapus wishlist berdasarkan id wishlist",
-                "operationId": "DeleteWishlist",
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": "true"
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": "..."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3164,7 +3460,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated"
+                                            "example": "..."
                                         }
                                     },
                                     "type": "object"
@@ -3191,7 +3487,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearer_token": []
                     }
                 ]
             }

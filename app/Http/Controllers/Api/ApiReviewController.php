@@ -16,16 +16,15 @@ class ApiReviewController extends Controller
      * @OA\Post(
      *      path="/api/add-review",
      *      tags={"Review"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="Review",
-     *      description="masukkan user id, produk id, review, rating, rating maksimal 5",
+     *      description="masukkan produk id, review, rating, rating maksimal 5",
      *      operationId="Review",
      *      @OA\RequestBody(
      *          required=true,
      *          description="",
      *          @OA\JsonContent(
-     *              required={"user_id","produk_id"},
-     *              @OA\Property(property="user_id", type="integer"),
+     *              required={},
      *              @OA\Property(property="produk_id", type="integer"),
      *              @OA\Property(property="review", type="string"),
      *              @OA\Property(property="rating", type="integer"),
@@ -37,12 +36,11 @@ class ApiReviewController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
-     *          response=400,
- *          description="Bad Request",
+     *          response=500,
+ *          description="Internal Server Error",
  *          @OA\JsonContent(
  *              type="object",
  *              @OA\Property(property="success", type="boolean", example="false"),
@@ -56,7 +54,16 @@ class ApiReviewController extends Controller
  *              type="object",
  *              @OA\Property(property="message", type="string", example="Unauthenticated"),
  *          )
-     *      )
+     *      ),
+     *  @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
      * )
      */
     public function add_review(Request $request){
@@ -65,7 +72,15 @@ class ApiReviewController extends Controller
             'review'     => 'required',
             'rating'     => 'required|numeric|between:1,5',
         ]);
-
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return response()->json([
+                'success' => false,
+                'message' => $alertMessage
+            ],422);
+        }
         try {
             DB::beginTransaction();
             $userId = Auth::user()->id;
@@ -92,7 +107,7 @@ class ApiReviewController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>$th->getMessage()
-            ],400);
+            ],500);
         }
         
         return response()->json([

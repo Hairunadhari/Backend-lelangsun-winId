@@ -18,7 +18,7 @@ class ApiNplController extends Controller
      * @OA\Post(
      *      path="/api/lelang/npl/add-npl",
      *      tags={"Npl"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="npl",
      *      description="",
      *      operationId="npl",
@@ -28,12 +28,12 @@ class ApiNplController extends Controller
      *          @OA\MediaType(
      *              mediaType="multipart/form-data",
      *              @OA\Schema(
-     *                  @OA\Property(property="event_lelang_id", type="string"),
+     *                  @OA\Property(property="event_lelang_id", type="integer"),
      *                  @OA\Property(property="harga_npl", type="integer"),
      *                  @OA\Property(property="jumlah_tiket", type="integer"),
      *                  @OA\Property(property="nominal_transfer", type="integer"),
      *                  @OA\Property(property="no_rekening", type="integer"),
-     *                  @OA\Property(property="nama_pemilik_rekening", type="integer"),
+     *                  @OA\Property(property="nama_pemilik_rekening", type="string"),
      *                  @OA\Property(property="bukti", type="file", format="binary"),
      *              )
      *          )
@@ -44,12 +44,11 @@ class ApiNplController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="message", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
-     *          response=400,
- *          description="Bad Request",
+     *          response=500,
+ *          description="Internal Server Error",
  *          @OA\JsonContent(
  *              type="object",
  *              @OA\Property(property="success", type="boolean", example="false"),
@@ -63,7 +62,16 @@ class ApiNplController extends Controller
  *              type="object",
  *              @OA\Property(property="message", type="string", example="Unauthenticated"),
  *          )
-     *      )
+     *      ),
+     *  @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
      * )
      */
 
@@ -77,7 +85,15 @@ class ApiNplController extends Controller
             'jumlah_tiket'     => 'required',
             'bukti'     => 'required|mimes:jpeg,jpg,png',
         ]);
-
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return response()->json([
+                'success' => false,
+                'message' => $alertMessage
+            ],422);
+        }
 
         try {
             DB::beginTransaction();
@@ -85,7 +101,7 @@ class ApiNplController extends Controller
             $bukti->storeAs('public/image', $bukti->hashName());
             $pembelian_npl = PembelianNpl::create([
                 'event_lelang_id' => $request->event_lelang_id,
-                'user_id' => $request->user_id,
+                'user_id' => Auth::user()->id,
                 'type_pembelian' => 'online',
                 'type_transaksi' => 'transfer',
                 'no_rek' => $request->no_rekening,
@@ -110,7 +126,7 @@ class ApiNplController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => $th,
-            ],400);
+            ],500);
         }
         return response()->json([
             'success' => true,
@@ -124,31 +140,21 @@ class ApiNplController extends Controller
      * @OA\Get(
      *      path="/api/lelang/list-npl-user",
      *      tags={"Npl"},
-     * security={{ "bearerAuth":{} }},
-     *      summary="Menampilkan List Npl berdasrkan id user",
+     * security={{ "bearer_token":{} }},
+     *      summary="Menampilkan List Npl User",
      *      description="",
      *      operationId="List Npl user",
-     *       @OA\Parameter(
-    *          name="id",
-    *          in="path",
-    *          required=true,
-    *          description="id user",
-    *          @OA\Schema(
-    *              type="integer"
-    *          )
-    *      ),
      *       @OA\Response(
      *          response=200,
      *          description="Success",
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="message", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
-     *          response=400,
- *          description="Bad Request",
+     *          response=500,
+ *          description="Internal Server Error",
  *          @OA\JsonContent(
  *              type="object",
  *              @OA\Property(property="success", type="boolean", example="false"),
@@ -180,7 +186,7 @@ class ApiNplController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => $th,
-            ],400);
+            ],500);
         }
         return response()->json([
             'success' => true,

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ApiWishlistController extends Controller
 {
@@ -13,7 +15,7 @@ class ApiWishlistController extends Controller
      * @OA\Post(
      *      path="/api/add-wishlist",
      *      tags={"Wishlist"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="Wishlist",
      *      description="produk id",
      *      operationId="Wishlist",
@@ -31,16 +33,15 @@ class ApiWishlistController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
-     *          response=400,
- *          description="Bad Request",
+     *          response=500,
+ *          description="Internal Server Error",
  *          @OA\JsonContent(
  *              type="object",
  *              @OA\Property(property="success", type="boolean", example="false"),
- *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *              @OA\Property(property="message", type="string", example="..."),
  *          )
      *      ),
      *      @OA\Response(
@@ -55,9 +56,18 @@ class ApiWishlistController extends Controller
      */
 
      public function add_wishlist(Request $request){
-        $this->validate($request, [
-            'produk_id'     => 'required',
+        $validator = Validator::make($request->all(), [
+            'produk_id'     => 'required|integer|min:1',
         ]);
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return response()->json([
+                'success' => false,
+                'message' => $alertMessage
+            ],422);
+        }
         try {
             DB::beginTransaction();
             $userId = Auth::user()->id;
@@ -73,7 +83,7 @@ class ApiWishlistController extends Controller
             return response()->json([
                 'success'=>true,
                 'message'=>$th->getMessage(),
-            ],400);
+            ],500);
             //throw $th;
         }
 
@@ -87,26 +97,16 @@ class ApiWishlistController extends Controller
      * @OA\Get(
      *      path="/api/list-wishlist",
      *      tags={"Wishlist"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="user id",
      *      description="menampilkan semua data wishlist berdasrkan user id",
      *      operationId="ListWishlist",
-     *       @OA\Parameter(
-    *          name="id",
-    *          in="path",
-    *          required=true,
-    *          description="user id",
-    *          @OA\Schema(
-    *              type="integer"
-    *          )
-    *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Success",
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
@@ -136,28 +136,36 @@ class ApiWishlistController extends Controller
 
     /**
      * @OA\Delete(
-     *      path="/delete-wishlist/{id}",
+     *      path="/api/delete-wishlist/{id}",
      *      tags={"Wishlist"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="wishlist id",
      *      description="menghapus wishlist berdasarkan id wishlist",
      *      operationId="DeleteWishlist",
+     *      *       @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="id wishlist",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
      *       @OA\Response(
      *          response=200,
      *          description="Success",
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
-     *          response=400,
- *          description="Bad Request",
+     *          response=500,
+ *          description="Internal Server Error",
  *          @OA\JsonContent(
  *              type="object",
  *              @OA\Property(property="success", type="boolean", example="false"),
- *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *              @OA\Property(property="message", type="string", example="..."),
  *          )
      *      ),
      *      @OA\Response(
@@ -181,11 +189,11 @@ class ApiWishlistController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>$th->getMessage()
-            ],400);
+            ],500);
         }
         return response()->json([
             'success' => true,
-            'data' => $data,
+            'message' => 'data berhasil dihapus',
         ]);
     }
 }

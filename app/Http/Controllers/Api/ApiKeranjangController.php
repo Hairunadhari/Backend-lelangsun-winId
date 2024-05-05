@@ -155,12 +155,21 @@ class ApiKeranjangController extends Controller
 
      /**
      * @OA\Delete(
-     *      path="/delete-keranjang/{id}",
+     *      path="/api/delete-keranjang/{id}",
      *      tags={"Keranjang"},
      * security={{ "bearer_token":{} }},
      *      summary="Keranjang id",
      *      description="menghapus keranjang berdasarkan id keranjang",
      *      operationId="DeleteKeranjang",
+     *      @OA\Parameter(
+    *          name="id",
+    *          in="path",
+    *          required=true,
+    *          description="ID keranjang yang akan dihapus",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Success",
@@ -191,7 +200,7 @@ class ApiKeranjangController extends Controller
     public function delete_keranjang($id){
         try {
             DB::beginTransaction();
-            $data = Keranjang::find($id)->delete();
+                $data = Keranjang::find($id)->delete();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

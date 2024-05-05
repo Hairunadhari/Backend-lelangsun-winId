@@ -14,7 +14,7 @@ class ApiTokoController extends Controller
      * @OA\Get(
      *      path="/api/detail-toko/{id}",
      *      tags={"Toko"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="Menampilkan detail Toko berdasarkan ID",
      *      description="Menampilkan detail Toko berdasarkan ID yg diberikan",
      *      operationId="DetailToko",
@@ -33,7 +33,6 @@ class ApiTokoController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
@@ -69,7 +68,7 @@ class ApiTokoController extends Controller
      * @OA\Post(
      *      path="/api/detail-kategori-toko",
      *      tags={"Toko"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="Kategori",
      *      description="Menampilkan semua produk berdasarkan kategori toko yg dipillih",
      *      operationId="Kategori",
@@ -88,7 +87,6 @@ class ApiTokoController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="data", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(

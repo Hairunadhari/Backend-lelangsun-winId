@@ -13,7 +13,7 @@ class ApiLotController extends Controller
      * @OA\Get(
      *      path="/api/lelang/lot/list",
      *      tags={"Lot"},
-     * security={{ "bearerAuth":{} }},
+     * security={{ "bearer_token":{} }},
      *      summary="Lot",
      *      description="menampilkan semua Lot ",
      *      operationId="Lot",
@@ -23,7 +23,6 @@ class ApiLotController extends Controller
      *   @OA\JsonContent(
                      type="object",
                      @OA\Property(property="success", type="boolean", example="true"),
-                     @OA\Property(property="message", type="string", example="..."),
                  )
      *      ),
      *      @OA\Response(
