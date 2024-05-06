@@ -3,13 +3,14 @@
 use App\Events\Message;
 use App\Models\LotItem;
 use App\Events\StartBid;
+use Milon\Barcode\DNS1D;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\MenuAdminController;
-use App\Http\Controllers\PengirimanControler;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ApiBiteshipController;
 use App\Http\Controllers\MenuSuperAdminController;
@@ -30,9 +31,10 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 
-// Route::get('/admin', function () {
-//     return view('auth.login');
-// });
+Route::get('/a', function () {
+    $barcode = DNS1D::getBarcodeHTML('woyasasasas', 'C39',3,80);
+    return view('e-commerce.label-pengiriman',compact('barcode'));
+});
 Route::get('/', [FrontEndController::class, 'beranda'])->name('beranda');
 Route::get('/tes', [FrontEndController::class, 'tes']);
 Route::get('/tescariarea/{value}', [FrontEndController::class, 'tescariarea']);
@@ -314,8 +316,9 @@ Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('
     Route::get('/edit-pesanan/{id}', [MenuSuperAdminController::class, 'edit_pesanan']);
     Route::put('/update-pesanan/{id}', [MenuSuperAdminController::class, 'update_pesanan'])->name('update-pesanan');
     Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('promosi');
-    Route::get('/pengiriman', [PengirimanControler::class, 'list_pengiriman'])->name('pengiriman');
-
+    Route::get('/pengiriman', [PengirimanController::class, 'list_pengiriman'])->name('pengiriman');
+    Route::post('/download-pdf', [PengirimanController::class, 'download_pdf']);
+    
 
 });
 
@@ -353,6 +356,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::get('/origin={city_origin}&destination={city_destination}&weight={weight}&courier={courier}',[PengirimanController::class, 'get_ongkir']);
     Route::get('/get-city/{id}',[MenuSuperAdminController::class, 'get_kota_berdasarkan_id_provinsi']);
     Route::get('/map/{value}', [MenuAdminController::class, 'search_map']);
+    Route::get('/barcode', [PengirimanController::class, 'barcode']);
 
 
 

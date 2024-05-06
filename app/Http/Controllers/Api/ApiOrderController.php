@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class ApiOrderController extends Controller
@@ -23,24 +24,24 @@ class ApiOrderController extends Controller
  * @OA\Post(
        path="/api/add-order",
        tags={"Order"},
-       summary="Menambahkan Pesanan",
+       security={{ "bearer_token":{} }},
+       summary="Order",
        description="Selain parameter promo_diskon, berat_item, longitude, langitude, total_berat_item wajib diisi",
        operationId="addOrder",
        @OA\RequestBody(
            required=true,
-           description="Data formulir",
+           description="order",
            @OA\JsonContent(
                required={},
                 @OA\Property(
                     property="userData",
                     type="object",
-                    @OA\Property(property="user_id", type="integer"),
-                    @OA\Property(property="nama", type="string"),
-                    @OA\Property(property="no_telephone", type="integer"),
-                    @OA\Property(property="email", type="string", format="email"),
-                    @OA\Property(property="detail_alamat", type="string"),
-                    @OA\Property(property="postal_code", type="integer"),
-                        
+                        @OA\Property(property="no_telephone", type="integer"),
+                        @OA\Property(property="detail_alamat", type="string"),
+                        @OA\Property(property="postal_code", type="integer"),
+                        @OA\Property(property="kota", type="string"),
+                        @OA\Property(property="provinsi", type="string"),
+                        @OA\Property(property="kecamatan", type="string"),
                 ),
                 @OA\Property(
                     property="orderData",
@@ -54,6 +55,9 @@ class ApiOrderController extends Controller
                         @OA\Property(property="postal_code", type="integer"),
                         @OA\Property(property="toko_id", type="integer"),
                         @OA\Property(property="nama_toko", type="string"),
+                        @OA\Property(property="kota", type="string"),
+                        @OA\Property(property="provinsi", type="string"),
+                        @OA\Property(property="kecamatan", type="string"),
                     ),
                     @OA\Property(
                         property="items",
@@ -79,24 +83,58 @@ class ApiOrderController extends Controller
                  @OA\Property(
                     property="courierData",
                     type="object",
+                    @OA\Property(property="available_collection_method", type="array", @OA\Items(type="string")),
+                    @OA\Property(property="available_for_instant_waybill_id", type="string"),
+                    @OA\Property(property="available_for_insurance", type="string"),
                     @OA\Property(property="company", type="string"),
-                    @OA\Property(property="courier_service_code", type="string"),
-                    @OA\Property(property="available_collection_method", type="string"),
                     @OA\Property(property="courier_name", type="string"),
+                    @OA\Property(property="courier_code", type="string"),
                     @OA\Property(property="courier_service_name", type="string"),
+                    @OA\Property(property="courier_service_code", type="string"),
                     @OA\Property(property="description", type="string"),
                     @OA\Property(property="duration", type="string"),
                     @OA\Property(property="service_type", type="string"),
                     @OA\Property(property="shipping_type", type="string"),
                     @OA\Property(property="price", type="integer"),
+                    @OA\Property(property="type", type="string"),
                         
                 ),
              ),
         ),
       @OA\Response(
-          response="default",
-          description=""
-      )
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+ *          description="Internal Server Error",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     * @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
  )
  */
 
@@ -104,14 +142,15 @@ class ApiOrderController extends Controller
  public function add_order(Request $request){
     // dd($request->userData['email']);
     $validator = Validator::make($request->all() , [
-        'userData.user_id' => 'required|integer|min:1',
-        'userData.nama' => 'required',
-        'userData.no_telephone' => 'required|integer',
-        'userData.email' => 'required|email',
-        'userData.detail_alamat' => 'required',
-        'userData.postal_code' => 'required|integer',
 
-        'orderData.tokoObj.nama_pemilik' => 'required',
+        'userData.no_telephone' => 'required|integer|min:1',
+        'userData.detail_alamat' => 'required|string',
+        'userData.postal_code' => 'required|integer|min:1',
+        'userData.kota' => 'required|string',
+        'userData.provinsi' => 'required|string',
+        'userData.kecamatan' => 'required|string',
+
+        'orderData.tokoObj.nama_pemilik' => 'required|string',
         'orderData.tokoObj.no_telephone' => 'required|integer',
         'orderData.tokoObj.detail_alamat' => 'required|string',
         'orderData.tokoObj.postal_code' => 'required|integer',
@@ -192,7 +231,7 @@ class ApiOrderController extends Controller
         ])->post('https://api.xendit.co/v2/invoices', [
             'external_id' => $external_id,
             'amount' => $request->orderData['sub_total'],
-            'payer_email' => $request->userData['email']
+            'payer_email' => Auth::user()->email
         ]);
         // dd($data_request);
         $response = $data_request->object();
@@ -200,10 +239,10 @@ class ApiOrderController extends Controller
         $expiryDate = Carbon::parse($response->expiry_date, 'UTC')->setTimezone('Asia/Jakarta');
         $formattedExpiryDate = $expiryDate->format('Y-m-d H:i:s'); 
         $order = Order::create([
-            'user_id' => $request->userData['user_id'],
-            'nama_user' => $request->userData['nama'],
+            'user_id' => Auth::user()->id,
+            'nama_user' => Auth::user()->name,
+            'email_user' => Auth::user()->email,
             'no_telephone_user' => $request->userData['no_telephone'],
-            'email_user' => $request->userData['email'],
             'detail_alamat_user' => $request->userData['detail_alamat'],
             'postal_code_user' => $request->userData['postal_code'],
             'nama_pemilik_toko' => $request->orderData['tokoObj']['nama_pemilik'],
@@ -236,6 +275,12 @@ class ApiOrderController extends Controller
             'time_order' => $now,
             'available_for_instant_waybill_id' => $request->courierData['available_for_instant_waybill_id'],
             'available_for_insurance' => $request->courierData['available_for_insurance'],
+            'kota_user' => $request->userData['kota'],
+            'kecamatan_user' => $request->userData['kecamatan'],
+            'provinsi_user' => $request->userData['provinsi'],
+            'kota_toko' => $request->orderData['tokoObj']['kota'],
+            'kecamatan_toko' => $request->orderData['tokoObj']['kecamatan'],
+            'provinsi_toko' => $request->orderData['tokoObj']['provinsi'],
 
         ]);
        
@@ -249,11 +294,11 @@ class ApiOrderController extends Controller
                 'total_harga_item' => $i['total_harga_item'],
                 'nama_produk' => $i['nama_item'],
                 'toko_id' => $request->orderData['tokoObj']['toko_id'],
-                'nama_order' => $request->userData['nama'],
-                'email_order' => $request->userData['email'],
+                'nama_order' => Auth::user()->name,
+                'email_order' => Auth::user()->email,
                 'promo_diskon' => $i['promo_diskon'],
                 'nama_toko' => $request->orderData['tokoObj']['nama_toko'],
-                'user_id' => $request->userData['user_id'],
+                'user_id' => Auth::user()->id,
                 'berat_item' => $i['berat_item'],
             ]);
         }
@@ -291,7 +336,7 @@ class ApiOrderController extends Controller
         ]);
 
         DB::commit();
-    } catch (Throwable $th) {
+    } catch (\Throwable $th) {
         // dd($th);
         DB::rollBack();
 
@@ -309,10 +354,13 @@ class ApiOrderController extends Controller
             'result' => json_encode($res),
         ]);
     
-        return response()->json([$res], 400);
+        return response()->json([$res], 500);
     }
     
-    return response()->json($res);
+    return response()->json([
+        'success'=>true,
+        'message'=>$res,
+    ]);
 }
 
 public function callback_xendit(Request $request){
@@ -419,9 +467,24 @@ public function callback_xendit(Request $request){
                 }
                 $response = $data_request->object();
                 // dd($response);
+                $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
+                $now = $konvers_tanggal->format('Y-m-d H:i');
                 Pengiriman::create([
-                    'no_resi' => $response->courier->waybill_id,
+                    'waybill_id' => $response->courier->waybill_id,
                     'user_id' => $order->user_id,
+                    'order_id' => $order->id,
+                    'toko_id' => $order->toko_id,
+                    'biteship_order_id' => $response->id,
+                    'tracking_id' => $response->courier->tracking_id,
+                    'courier_name' => $response->courier->name,
+                    'courier_phone' => $response->courier->phone,
+                    'courier_link' => $response->courier->link,
+                    'insurance_amount' => $response->courier ->insurance->amount,
+                    'insurance_fee' => $response->courier ->insurance->fee,
+                    'price' => $response->price,
+                    'status' => $response->status,
+                    'tanggal_dikirim' => $now,
+                    
                 ]);
                 $res = [
                     'success' => true,
@@ -434,6 +497,7 @@ public function callback_xendit(Request $request){
                     'result' => json_encode($res)
                 ]);
 
+
                 break;
             case 'EXPIRED':
                 foreach ($produks as $index => $p) {
@@ -443,15 +507,27 @@ public function callback_xendit(Request $request){
                     ]);
                 }
                 $res = [
-                    'message' => 'success',
+                    'success' => true,
                     'payment' => 'EXPIRED'
                 ];
+                TLogApi::create([
+                    'k_t' => 'terima',
+                    'object' => 'xendit',
+                    'data' => json_encode($request->all()),
+                    'result' => json_encode($res)
+                ]);
                 break;
             default:
                 $res = [
                     'success' => false,
-                    'payment' => 'ERROR'
+                    'payment' => 'ERROR',
                 ];
+                TLogApi::create([
+                    'k_t' => 'terima',
+                    'object' => 'xendit',
+                    'data' => json_encode($request->all()),
+                    'result' => json_encode($res)
+                ]);
                 # code...
                 break;
         }
@@ -461,6 +537,12 @@ public function callback_xendit(Request $request){
     } catch (Throwable $th) {
         DB::rollBack();
         // dd($th);
+        TLogApi::create([
+            'k_t' => 'terima',
+            'object' => 'biteship',
+            'data' => json_encode($th),
+            'result' => json_encode($th->getMessage())
+        ]);
         return response()->json([
             'success'=>false,
             'message'=> $th->getMessage(),

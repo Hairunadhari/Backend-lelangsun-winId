@@ -14,7 +14,7 @@ class ApiBiteshipController extends Controller
      /**
      * @OA\Post(
      *      path="/api/maps",
-     *      tags={"Maps"},
+     *      tags={"Pengiriman"},
      *      summary="Maps",
      *      description="Masukkan Kecamatan / Kota / Provinsi / Kode Pos",
      *      operationId="Maps",
@@ -23,16 +23,50 @@ class ApiBiteshipController extends Controller
      *          description="",
      *          @OA\JsonContent(
      *              required={"value"},
-     *              @OA\Property(property="value", type="string"),
+     *              @OA\Property(property="value", type="string", example="jakarta"),
      *          )
      *      ),
-     *      @OA\Response(
-     *          response="default",
-     *          description=""
-     *      )
+      *      @OA\Response(
+    *          response=500,
+    *          description="Internal Server Error",
+    *          @OA\JsonContent(
+    *              type="object",
+    *              @OA\Property(property="success", type="boolean", example="false"),
+    *              @OA\Property(property="message", type="string", example="..."),
+    *          )
+    *      ),
+    *      @OA\Response(
+    *          response=200,
+    *          description="Success",
+    *          @OA\JsonContent(
+    *              type="object",
+    *              @OA\Property(property="success", type="boolean", example="true"),
+    *          )
+    *      ),
+    @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
      * )
      */
     public function maps(Request $request){
+        $validator = Validator::make($request->all(), [
+            'value'     => 'required',
+            ]);
+       
+        if ($validator->fails()) {
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+            return response()->json([
+                'success'=> false,
+                'message'=>$alertMessage
+            ],422);
+          }
         try {
         $data_request = Http::withHeaders([
             'Authorization' => env('API_KEY_BITESHIP')
@@ -42,7 +76,7 @@ class ApiBiteshipController extends Controller
             return response()->json([
                 'success' =>false,
                 'message' =>$th->getMessage(),
-            ],401);
+            ],500);
         }
         // return response()->json($data_request);
         return json_decode($data_request);
@@ -51,9 +85,9 @@ class ApiBiteshipController extends Controller
     /**
          * @OA\Post(
             path="/api/rates",
-            tags={"Rates"},
+            tags={"Pengiriman"},
             summary="Cek Tarif Pengiriman",
-            description="Masukkan Asal Postal Code, Tujuan Postal Code, Items",
+            description="Masukkan Asal Postal Code, Tujuan Postal Code, items order",
             operationId="Rates",
             @OA\RequestBody(
                 required=true,
@@ -76,10 +110,32 @@ class ApiBiteshipController extends Controller
                             
                     ),
                 ),
-            @OA\Response(
-                response="default",
-                description=""
-            )
+             @OA\Response(
+                 response=200,
+                 description="Success",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+             ),
+             @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
+             @OA\Response(
+                 response=500,
+                 description="Internal Server Error",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="boolean", example="..."),
+                 )
+             )
         )
     */
     public function rates(Request $request){
@@ -105,14 +161,12 @@ class ApiBiteshipController extends Controller
         
         try {
             DB::beginTransaction();
-            $d = Kurir::where('status', 1)->get();
-            $kurir_imploded = $d->implode('kurir', ',');
             $data_request = Http::withHeaders([
                     'Authorization' => env('API_KEY_BITESHIP')
                     ])->post('https://api.biteship.com/v1/rates/couriers', [
                     'origin_postal_code' => $request->asal_postal_code,
                     'destination_postal_code' => $request->tujuan_postal_code,
-                    'couriers'=>$kurir_imploded,
+                    'couriers'=> "lalamove,jne,tiki,jnt,sicepat",
                     'items' => $request->items
             ]);
             DB::commit();
@@ -121,7 +175,7 @@ class ApiBiteshipController extends Controller
             return response()->json([
                 'success' => false,
                 'message' =>$th->getMessage(),
-            ],401);
+            ],500);
                 //throw $th;
         }
 
