@@ -100,6 +100,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/lelang/pembayaran-pelunasan-barang', [ApiPelunasanLelangController::class, 'pembayaran_pelunasan_lelang']);
 
     Route::post('/add-order', [ApiOrderController::class, 'add_order']);
+    Route::post('/refresh', [ApiUserController::class, 'refresh']);
 });
 Route::post('/register', [ApiUserController::class, 'register']);
 Route::post('/login', [ApiUserController::class, 'login']);

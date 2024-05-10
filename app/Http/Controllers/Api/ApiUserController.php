@@ -434,4 +434,45 @@ class ApiUserController extends Controller
             'message'=> 'Password successfully changed.'
         ]);
      }
+
+
+      /**
+     * @OA\Post(
+     *      path="/api/refresh",
+     *      tags={"Auth"},
+     * security={{ "bearer_token":{} }},
+     *      summary="refresh",
+     *      description="refresh token",
+     *      operationId="refresh",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
+     *    *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     * )
+     */
+
+     public function refresh()
+     {
+       
+         return response()->json([
+             'success' => true,
+             'user' => Auth::user(),
+             'authorisation' => [
+                 'token' => Auth::refresh(),
+                 'type' => 'bearer',
+             ]
+         ]);
+     }
 }

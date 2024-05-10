@@ -11,7 +11,6 @@ class Role
 {
     public function handle($request, Closure $next, $role)
     {
-        // dd($role);
             if (Auth::user()->role == null) {
                 return redirect('/');
             }elseif(Auth::user()->role->role == $role){
