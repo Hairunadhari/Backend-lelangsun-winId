@@ -35,7 +35,7 @@
                             <div class="card-body">
                                 <div class="profile-widget-header mt-1 text-center">
                                     <img alt="image" src="{{ asset('storage/image/'.$toko->logo) }}" 
-                                        style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; width: 350px">
+                                        style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; width: 320px">
                                 </div>
                             </div>
                     </div>

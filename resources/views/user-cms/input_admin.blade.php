@@ -16,7 +16,7 @@
                                 <input type="text" class="form-control" name="toko" value="{{ old('toko') }}"
                                     autofocus required>
                                     @if ($errors->has('toko'))
-                                <small class="text-danger">Max 280 karakter!</small>
+                                <small class="text-danger">Nama Toko Minimal 3 karakter!</small>
                                 @endif
                             </div>
                             <div class="form-group">

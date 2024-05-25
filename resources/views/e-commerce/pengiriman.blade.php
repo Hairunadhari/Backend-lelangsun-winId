@@ -9,6 +9,9 @@
     .countdata {
         background-color: rgba(255, 255, 255, 0.25);
     }
+    .btn-progress{
+        background-size: 22px !important;
+    }
 
 </style>
 <div class="section-body">
@@ -20,15 +23,14 @@
                 </div>
                 <div class="card-body">
                     <div class="w-25 mb-3">
-                        <form action="/download-pdf" method="POST" enctype="multipart/form-data">
                             @csrf
                             <label for="">Filter Label Pengiriman</label>
                             <div style="display: flex; gap: 10px">
 
                                 <input type="date" name="date" class="form-control" id="date">
-                                <button type="submit" class="btn btn-sm btn-danger">Download Label</button>
+                                <button id="dLabel"  class="btn btn-sm btn-danger"><i class="fas fa-print"></i> Download Label</button>
+                                    <button class="btn btn-secondary" id="loading" style="display: none">Sedang Mendownload...</button>
                             </div>
-                        </form>
                     </div>
                     <table class="table table-striped w-100" id="tablepesanan">
                         <thead>
@@ -174,8 +176,9 @@
                             if (data == null) {
                                 a = '<span>-</span>';
                             } else {
-                                a = `<button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="${info}">${data}</button>`;
+                                a = `<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="${info}">${data}</button>`;
                             }
+                            
                             return a;
                         }
                     },
@@ -183,9 +186,9 @@
                         data: null,
                         render: function (data) {
 
-                            return `  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
-                            <span class="text"><i class="far fa-edit"></i> Detail</span>
-                        </button>`;
+                            return `  <button type="button" data-toggle="tooltip" data-placement="top" title="detail pesanan" class="btn mb-1 btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
+                            <span class="text"><i class="fas fa-info"></i></span>
+                        </button> <span><a href="/tracking" class="btn  btn-dark" data-toggle="tooltip" data-placement="top" title="lacak status pengiriman"><i class="fas fa-shipping-fast"></i></a></span>`;
                         }
                     }
 
@@ -199,11 +202,34 @@
 
         });
 
+        $(document).on('click', '#dLabel', function (e) {
+        $(this).hide();
+        $('#loading').show();
+        let date = $('#date').val();
+        $.ajax({
+            method: 'post',
+            url: '/download-pdf',
+            data: {
+                date: date,
+            },
+            success: function (res) {
+                $('#dLabel').show();
+                $('#loading').hide();
+                window.open(res,'_blank');
+                
+            },
+            error: function (res) {
+                alert('Ada Kesalahan ',res);
+            }
+        });
+    });
+
     });
 
 </script>
 
 @endsection
+
 @section('modal')
 <style>
     .idpengiriman p,

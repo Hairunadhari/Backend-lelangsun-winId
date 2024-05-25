@@ -54,7 +54,7 @@
     </div>
 
     <section style="text-align: center;border-bottom: 1px solid black; padding: 1rem">
-        <div style="border: 1px solid black; ">
+        <div style="margin-left: 30px;">
             {!! $key->barcode !!}
         </div>
         <div>

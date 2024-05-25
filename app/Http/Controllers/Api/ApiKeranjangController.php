@@ -215,4 +215,96 @@ class ApiKeranjangController extends Controller
             'message' => 'Data berhasil dihapus',
         ]);
     }
+
+
+      /**
+     * @OA\Post(
+     *      path="/api/update-keranjang",
+     *      tags={"Keranjang"},
+     * security={{ "bearer_token":{} }},
+     *      summary="Update Keranjang",
+     *      description="masukkan user id, produk id, qty",
+     *      operationId="Update Keranjang",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="",
+     *          @OA\JsonContent(
+     *              required={},
+     *              @OA\Property(property="produk_id", type="integer"),
+     *              @OA\Property(property="qty", type="integer"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *   @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="true"),
+                 )
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+ *          description="Internal Server Error",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="success", type="boolean", example="false"),
+ *              @OA\Property(property="message", type="string", example="..."),
+ *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+ *          description="Unauthorized",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          )
+     *      ),
+     *    @OA\Response(
+                 response=422,
+                 description="Validation Errors",
+                 @OA\JsonContent(
+                     type="object",
+                     @OA\Property(property="success", type="boolean", example="false"),
+                     @OA\Property(property="message", type="string", example="..."),
+                 )
+            ),
+     * )
+     */
+    public function update_keranjang(Request $request){
+        $validator = Validator::make($request->all(), [
+            'produk_id'     => 'required|integer|min:1',
+            'qty'     => 'required|integer',
+        ]);
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return response()->json([
+                'success' => false,
+                'message' => $alertMessage
+            ],422);
+        }
+
+        try {
+            DB::beginTransaction();
+            $userId = Auth::user()->id;
+            $keranjang = Keranjang::where('user_id',$userId)->where('produk_id',$request->produk_id)->first();
+            $keranjang->update([
+                'qty'=>$request->qty
+            ]);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            //throw $th;
+            return response()->json(
+                ['success'=>false,
+                'message'=>$th->getMessage()
+            ],500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diUpdate.',
+        ]);
+    }
 }

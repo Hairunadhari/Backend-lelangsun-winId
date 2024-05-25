@@ -2415,15 +2415,20 @@ class MenuSuperAdminController extends Controller
     }
 
     public function add_admin(Request $request){
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'toko'     => 'required|min:3',
             'logo'     => 'required|image|mimes:jpeg,jpg,png',
             'name' => 'max:280',
             'email' => ['string', 'email', 'max:255', 'unique:'.User::class],
             'password' => 'min:8',
             'password_confirmation' => 'same:password',
-            
         ]);
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return back()->with('success',$alertMessage);
+        }
         try {
             DB::beginTransaction();
             $logo = $request->file('logo');
