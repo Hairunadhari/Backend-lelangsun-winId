@@ -70,6 +70,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/list-keranjang', [ApiKeranjangController::class, 'list_keranjang']);
     Route::post('/add-keranjang', [ApiKeranjangController::class, 'add_keranjang']);
     Route::delete('/delete-keranjang/{id}', [ApiKeranjangController::class, 'delete_keranjang']);
+    Route::post('/update-keranjang', [ApiKeranjangController::class, 'update_keranjang']);
     
     Route::get('/detail-toko/{id}/', [ApiTokoController::class, 'detail_toko']);
     Route::post('/detail-kategori-toko', [ApiTokoController::class, 'daftar_produk_berdasarkan_kategori_toko']);

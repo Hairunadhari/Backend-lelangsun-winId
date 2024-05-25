@@ -317,9 +317,9 @@ Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('
     Route::put('/update-pesanan/{id}', [MenuSuperAdminController::class, 'update_pesanan'])->name('update-pesanan');
     Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('promosi');
     Route::get('/pengiriman', [PengirimanController::class, 'list_pengiriman'])->name('pengiriman');
-    Route::post('/download-pdf', [PengirimanController::class, 'download_pdf']);
+    Route::get('/tracking', [PengirimanController::class, 'tracking'])->name('tracking');
     
-
+    
 });
 
 
@@ -348,6 +348,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     
 });
 
+Route::post('/download-pdf', [PengirimanController::class, 'download_pdf']);
     Route::post('log-bidding',[MenuSuperAdminController::class, 'log_bidding']);
     Route::get('/download-apk', [MenuSuperAdminController::class, 'download_apk'])->name('download-apk');
     Route::get('/checkout',[PengirimanController::class, 'checkout']);
@@ -357,6 +358,8 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::get('/get-city/{id}',[MenuSuperAdminController::class, 'get_kota_berdasarkan_id_provinsi']);
     Route::get('/map/{value}', [MenuAdminController::class, 'search_map']);
     Route::get('/barcode', [PengirimanController::class, 'barcode']);
+    Route::get('/pdfz', [PengirimanController::class, 'pdfz']);
+
 
 
 

@@ -22,11 +22,10 @@
                         </div>
                     </div>
                     <div class="row">
-                       
                         <div class="form-group col-md-6 col-12">
                             <label>Kecamatan / Kota / Provinsi / Kode Pos</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="alamat" placeholder="pilih berdasarkan kecamatan, kota, provinsi atau kode pos " aria-label="" id="input-alamat">
+                                <input type="text" class="form-control"  placeholder="pilih berdasarkan kecamatan, kota, provinsi atau kode pos " aria-label="" id="input-alamat">
                                 <div class="input-group-append">
                                   <button class="btn btn-primary" type="button" id="cari-alamat">Cari</button>
                                 </div>
@@ -41,6 +40,11 @@
                             @error('email')
                                 <small class="text-danger">Email Sudah Terdaftar</small>
                             @enderror  
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6 col-12">
+                            <input type="text" name="alamat" class="form-control" readonly id="val-alamat">
                         </div>
                     </div>
                     <div class="row">
@@ -114,6 +118,7 @@
             // console.log(value);
             $('#dropdown-alamat').hide();
             $('#input-alamat').val(value);
+            $('#val-alamat').val(value);
             
         })
 </script>

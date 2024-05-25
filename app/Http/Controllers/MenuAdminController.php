@@ -57,7 +57,6 @@ class MenuAdminController extends Controller
         $data_request = Http::withHeaders([
             'Authorization' => 'biteship_test.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGV2V2luSWQiLCJ1c2VySWQiOiI2NWFhMTVhMDc4YTI1NzAwMTJkMTFiOWEiLCJpYXQiOjE3MDU3MjU4NDB9.0rxl8ArGyldLWj3m0puYKg6Crbnclr57d8fLMKN_C3Y'
         ])->get('https://api.biteship.com/v1/maps/areas?countries=ID&input='.$value.'&type=single');
-    
         // return response()->json($data_request);
         return json_decode($data_request);
     }
