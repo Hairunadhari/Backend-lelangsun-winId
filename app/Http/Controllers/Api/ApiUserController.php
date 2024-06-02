@@ -191,7 +191,6 @@ class ApiUserController extends Controller
      *              mediaType="multipart/form-data",
      *              @OA\Schema(
      *                   @OA\Property(property="name", type="string"),
-     *                   @OA\Property(property="no_telp", type="integer"),
      *                   @OA\Property(property="kota_kecamatan_provinsi_postal_code", type="string", example="Gambir, Jakarta Pusat, DKI Jakarta. 10110"),
      *                   @OA\Property(property="detail_alamat", type="string", example="perumahan jakarta, blok 5 no.88"),
      *                  @OA\Property(property="foto", type="file", format="binary"),
@@ -236,7 +235,7 @@ class ApiUserController extends Controller
      */
     public function update_profil(Request $request){
         $validator = Validator::make($request->all(), [
-            'foto' => 'image|mimes:jpeg,jpg,png',
+            'foto' => 'nullable|image|mimes:jpeg,jpg,png',
             'kota_kecamatan_provinsi_postal_code' => 'required|string',
             'detail_alamat' => 'required|string',
         ]);
@@ -260,7 +259,6 @@ class ApiUserController extends Controller
             $arrayAlamat[] = $lokasiArray[1];
             $userData = [
                 'name' => $request->name,
-                'no_telp' => $request->no_telp,
                 'kecamatan' => $arrayAlamat[0],
                 'kota' => $arrayAlamat[1],
                 'provinsi' => $arrayAlamat[2],
