@@ -72,11 +72,12 @@ class ApiUserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'no_telephone' => 'required|integer|min:1|unique:users',
+            'no_telephone' => 'required|integer|min:1|unique:users,no_telp',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8',
-            'confirm_password'     => 'required|same:password',
+            'confirm_password' => 'required|same:password',
         ]);
+        
         if($validator->fails()){
             $messages = $validator->messages();
             $alertMessage = $messages->first();
