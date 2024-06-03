@@ -156,7 +156,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('superadmin.toko')->with(['error' => 'Data Gagal DiUpdate!']);
+            return redirect()->route('superadmin.toko')->with(['error' => $th->getMessage()]);
         }
 
         //redirect to index
@@ -166,7 +166,7 @@ class MenuSuperAdminController extends Controller
     public function delete_toko($id)
     {
         try {
-            DB::beginTrasaction();
+            DB::beginTransaction();
             $data = Toko::with('user')->find($id);
             $kategori = KategoriProduk::where('toko_id',$id)->get();
             $produk = Produk::where('toko_id',$id)->get();
@@ -195,7 +195,7 @@ class MenuSuperAdminController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.toko')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.toko')->with(['error' => $th->getMessage()]);
         }
 
         return redirect()->route('superadmin.toko')->with(['success' => 'Data Berhasil Dihapus!']);
@@ -203,7 +203,7 @@ class MenuSuperAdminController extends Controller
     public function active_toko($id)
     {
         try {
-            DB::beginTrasaction();
+            DB::beginTransaction();
             $data = Toko::with('user')->find($id);
             $kategori = KategoriProduk::where('toko_id',$id)->get();
             $produk = Produk::where('toko_id',$id)->get();
@@ -220,9 +220,9 @@ class MenuSuperAdminController extends Controller
             DB::rollBack();
             //throw $th;
             if (Auth::user()->role->role == 'Super Admin') {
-                return redirect()->route('superadmin.toko')->with(['error' => 'Data Gagal DiAktifkan Kembali!']);
+                return redirect()->route('superadmin.toko')->with(['error' => $th->getMessage()]);
             } else {
-                return redirect()->route('toko')->with(['error' => 'Data Gagal DiAktifkan Kembali!']);
+                return redirect()->route('toko')->with(['error' => $th->getMessage()]);
             }
         }
 
@@ -282,7 +282,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollback();
             //throw $th;
-            return redirect()->back()->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->back()->with('error', $th->getMessage());
         }
         
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan');
@@ -315,7 +315,7 @@ class MenuSuperAdminController extends Controller
     public function delete_kategori_produk($id)
     {
         try {
-            DB::beginTrasaction();
+            DB::beginTransaction();
             $data = KategoriProduk::findOrFail($id);
             $produk = Produk::where('kategoriproduk_id',$id)->get();
             $array_id_produk = Produk::where('kategoriproduk_id',$id)->pluck('id');
@@ -339,9 +339,9 @@ class MenuSuperAdminController extends Controller
             DB::rollBack();
             //throw $th;
             if (Auth::user()->role->role == 'Super Admin') {
-                return redirect()->route('superadmin.kategori-produk')->with(['error' => 'Data gagal diUpdate!']);
+                return redirect()->route('superadmin.kategori-produk')->with(['error' => $th->getMessage()]);
             } else {
-                return redirect()->route('admin.kategori-produk')->with(['error' => 'Data gagal diUpdate!']);
+                return redirect()->route('admin.kategori-produk')->with(['error' => $th->getMessage()]);
             }
         }
 
@@ -355,7 +355,7 @@ class MenuSuperAdminController extends Controller
     public function active_kategori_produk($id)
     {
         try {
-            DB::beginTrasaction();
+            DB::beginTransaction();
             $data = KategoriProduk::findOrFail($id);
             $data->update([
                 'status' => 'active'
@@ -365,9 +365,9 @@ class MenuSuperAdminController extends Controller
             DB::rollBack();
             //throw $th;
             if (Auth::user()->role->role == 'Super Admin') {
-                return redirect()->route('superadmin.kategori-produk')->with(['error' => 'Data Berhasil Diubah!']);
+                return redirect()->route('superadmin.kategori-produk')->with(['error' => $th->getMessage()]);
             } else {
-                return redirect()->route('admin.kategori-produk')->with(['error' => 'Data Berhasil Diubah!']);
+                return redirect()->route('admin.kategori-produk')->with(['error' => $th->getMessage()]);
             }
         }
         
@@ -488,9 +488,9 @@ class MenuSuperAdminController extends Controller
                 // dd($th);
                 //throw $th;
                 if (Auth::user()->role->role == 'Super Admin') {
-                    return redirect()->route('superadmin.produk')->with(['error' => 'Data Gagal Ditambah!']);
+                    return redirect()->route('superadmin.produk')->with(['error' => $th->getMessage()]);
                 } else {
-                    return redirect()->route('admin.produk')->with(['error' => 'Data Gagal Ditambah!']);
+                    return redirect()->route('admin.produk')->with(['error' => $th->getMessage()]);
                 }
             }
 
@@ -627,9 +627,9 @@ class MenuSuperAdminController extends Controller
             DB::rollBack();
             // dd($th);
             if (Auth::user()->role->role == 'Super Admin') {
-                return redirect()->route('superadmin.produk')->with(['error' => 'Data Gagal diUpdate!']);
+                return redirect()->route('superadmin.produk')->with(['error' => $th->getMessage()]);
             } else {
-                return redirect()->route('admin.produk')->with(['error' => 'Data Gagal diUpdate!']);
+                return redirect()->route('admin.produk')->with(['error' => $th->getMessage()]);
             }
             //throw $th;
         }
@@ -660,9 +660,9 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             if (Auth::user()->role->role == 'Super Admin') {
-                return redirect()->route('superadmin.produk')->with(['error' => 'Data Gagal Dihapus!']);
+                return redirect()->route('superadmin.produk')->with(['error' => $th->getMessage()]);
             } else {
-                return redirect()->route('admin.produk')->with(['error' => 'Data Gagal Dihapus!']);
+                return redirect()->route('admin.produk')->with(['error' => $th->getMessage()]);
             }
         }
         if (Auth::user()->role->role == 'Super Admin') {
@@ -685,9 +685,9 @@ class MenuSuperAdminController extends Controller
             DB::rollBack();
             //throw $th;
             if (Auth::user()->role->role == 'Super Admin') {
-                return redirect()->route('superadmin.produk')->with(['error' => 'Data Gagal Diaktifkasn kembali!']);
+                return redirect()->route('superadmin.produk')->with(['error' => $th->getMessage()]);
             } else {
-                return redirect()->route('admin.produk')->with(['error' => 'Data Gagal Diaktifkasn kembali!']);
+                return redirect()->route('admin.produk')->with(['error' => $th->getMessage()]);
             }
         }
         if (Auth::user()->role->role == 'Super Admin') {
@@ -809,7 +809,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('superadmin.event-lelang')->with(['error' => 'Data Gagal diUpdate!']);
+            return redirect()->route('superadmin.event-lelang')->with(['error' => $th->getMessage()]);
         }
 
         //redirect to index
@@ -836,7 +836,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.event-lelang')->with(['error' => 'Data gagal Dihapus!']);
+            return redirect()->route('superadmin.event-lelang')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -856,7 +856,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.event-lelang')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.event-lelang')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.event-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -939,7 +939,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('promosi')->with('error', 'Data gagal ditambahkan');
+            return redirect()->route('promosi')->with('error', $th->getMessage());
         }
         return redirect()->route('promosi')->with('success', 'Data Berhasil ditambahkan');
     }
@@ -999,7 +999,7 @@ class MenuSuperAdminController extends Controller
             $diskon = trim($hapuspersendiskon);
 
             if (is_null($produkId)) {
-                return redirect()->back()->with('error', 'Anda belum memilih produk!');
+                return redirect()->back()->with('error', $th->getMessage());
             }else{
 
                 
@@ -1065,7 +1065,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
-            return redirect()->route('promosi')->with(['error' => 'Data gagal Diubah!']);
+            return redirect()->route('promosi')->with(['error' => $th->getMessage()]);
             //throw $th;
         }
 
@@ -1086,7 +1086,7 @@ class MenuSuperAdminController extends Controller
             DB::rollBack();
             //throw $th;
             dd($th);
-            return redirect()->route('promosi')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('promosi')->with(['error' => $th->getMessage()]);
         }
 
         return redirect()->route('promosi')->with(['success' => 'Data Berhasil Dihapus!']);
@@ -1146,7 +1146,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.kategori-lelang')->with(['error' => 'Data Gagal Diubah!']);
+            return redirect()->route('superadmin.kategori-lelang')->with(['error' => $th->getMessage()]);
         }
 
         return redirect()->route('superadmin.kategori-lelang')->with(['success' => 'Data Berhasil Diubah!']);
@@ -1164,7 +1164,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.kategori-lelang')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.kategori-lelang')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.kategori-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -1181,7 +1181,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.kategori-lelang')->with(['error' => 'Data Gagal Aktifkan Kembali!']);
+            return redirect()->route('superadmin.kategori-lelang')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.kategori-lelang')->with(['success' => 'Data Berhasil Aktifkan Kembali!']);
     }
@@ -1189,7 +1189,7 @@ class MenuSuperAdminController extends Controller
 
     public function add_barang_lelang(Request $request){
         if ($request->kategoribarang_id == null) {
-            return redirect()->route('superadmin.barang-lelang')->with('error', 'Kategori barang harus diisi!');
+            return redirect()->route('superadmin.barang-lelang')->with('error', $th->getMessage());
             
         }
         try {
@@ -1282,7 +1282,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             dd($th);
-            return redirect()->route('superadmin.barang-lelang')->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->route('superadmin.barang-lelang')->with('error', $th->getMessage());
         }
         
 
@@ -1465,7 +1465,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.barang-lelang')->with(['error' => 'Data Gagal Diubah!']);
+            return redirect()->route('superadmin.barang-lelang')->with(['error' => $th->getMessage()]);
         }
         
         return redirect()->route('superadmin.barang-lelang')->with(['success' => 'Data Berhasil Diubah!']);
@@ -1489,7 +1489,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.barang-lelang')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.barang-lelang')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.barang-lelang')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -1506,7 +1506,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.barang-lelang')->with(['error' => 'Data Gagal DiAktfikan kembali!']);
+            return redirect()->route('superadmin.barang-lelang')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.barang-lelang')->with(['success' => 'Data Berhasil DiAktfikan kembali!']);
     }
@@ -1535,7 +1535,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-utama')->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->route('superadmin.banner-utama')->with('error', $th->getMessage());
         }
 
         return redirect()->route('superadmin.banner-utama')->with('success', 'Data Berhasil Ditambahkan');
@@ -1575,7 +1575,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-utama')->with(['error' => 'Data Gagal Diubah!']);
+            return redirect()->route('superadmin.banner-utama')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.banner-utama')->with(['success' => 'Data Berhasil Diubah!']);
     }
@@ -1591,7 +1591,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-utama')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.banner-utama')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.banner-utama')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -1653,7 +1653,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-diskon')->with(['error' => 'Data Gagal Diubah!']);
+            return redirect()->route('superadmin.banner-diskon')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.banner-diskon')->with(['success' => 'Data Berhasil Diubah!']);
     }
@@ -1669,7 +1669,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-diskon')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.banner-diskon')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.banner-diskon')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -1731,7 +1731,7 @@ class MenuSuperAdminController extends Controller
     } catch (Throwable $th) {
         DB::rollBack();
         //throw $th;
-        return redirect()->route('superadmin.banner-spesial')->with(['error' => 'Data Gagal Diubah!']);
+        return redirect()->route('superadmin.banner-spesial')->with(['error' => $th->getMessage()]);
     }
         return redirect()->route('superadmin.banner-spesial')->with(['success' => 'Data Berhasil Diubah!']);
     }
@@ -1747,7 +1747,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-spesial')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.banner-spesial')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.banner-spesial')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -1796,7 +1796,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->back()->with(['error' => 'Data Gagal Diubah!']);
+            return redirect()->back()->with(['error' => $th->getMessage()]);
         }
 
         //redirect to index
@@ -1881,7 +1881,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('list-review')->with(['error' => 'Data Gagal Diaktifkan!']);
+            return redirect()->route('list-review')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('list-review')->with(['success' => 'Data Berhasil Diaktifkan!']);
     }
@@ -1895,7 +1895,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
-            return redirect()->route('list-review')->with(['error' => 'Data Gagal Dinonaktifkan!']);
+            return redirect()->route('list-review')->with(['error' => $th->getMessage()]);
             //throw $th;
         }
         return redirect()->route('list-review')->with(['success' => 'Data Berhasil Dinonaktifkan!']);
@@ -1981,7 +1981,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.event')->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->route('superadmin.event')->with('error', $th->getMessage());
         }
     return redirect()->route('superadmin.event')->with('success', 'Data Berhasil Ditambahkan');
 
@@ -2108,7 +2108,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.event')->with(['error' => 'Data Gagal Diubah!']);
+            return redirect()->route('superadmin.event')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.event')->with(['success' => 'Data Berhasil Diubah!']);
     }
@@ -2124,7 +2124,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.event')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.event')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.event')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -2140,7 +2140,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.event')->with(['error' => 'Data Gagal Diaktifkan!']);
+            return redirect()->route('superadmin.event')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.event')->with(['success' => 'Data Berhasil Diaktifkan!']);
     }
@@ -2166,7 +2166,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-lelang')->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->route('superadmin.banner-lelang')->with('error', $th->getMessage());
         }
 
         return redirect()->route('superadmin.banner-lelang')->with('success', 'Data Berhasil Ditambahkan');
@@ -2197,7 +2197,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-lelang')->with(['error' => 'Data Gagal Diubah!']);
+            return redirect()->route('superadmin.banner-lelang')->with(['error' => $th->getMessage()]);
         }
 
         return redirect()->route('superadmin.banner-lelang')->with(['success' => 'Data Berhasil Diubah!']);
@@ -2216,7 +2216,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.banner-lelang')->with(['error' => 'Data Gagal Diaktifkan!']);
+            return redirect()->route('superadmin.banner-lelang')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.banner-lelang')->with(['success' => 'Data Berhasil Diaktifkan!']);
     }
@@ -2260,7 +2260,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.user-cms')->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->route('superadmin.user-cms')->with('error', $th->getMessage());
         }
 
         return redirect()->route('superadmin.user-cms')->with('success', 'Data Berhasil Ditambahkan');
@@ -2292,7 +2292,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.user-cms')->with(['error' => 'Data Gagal Diubah!']);
+            return redirect()->route('superadmin.user-cms')->with(['error' => $th->getMessage()]);
         }
 
         return redirect()->route('superadmin.user-cms')->with(['success' => 'Data Berhasil Diubah!']);
@@ -2310,7 +2310,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.user-cms')->with(['error' => 'Data Gagal Dihapus!']);
+            return redirect()->route('superadmin.user-cms')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.user-cms')->with(['success' => 'Data Berhasil Dihapus!']);
     }
@@ -2326,7 +2326,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.user-cms')->with(['error' => 'Data Gagal DiAktifkan!']);
+            return redirect()->route('superadmin.user-cms')->with(['error' => $th->getMessage()]);
         }
         return redirect()->route('superadmin.user-cms')->with(['success' => 'Data Berhasil DiAktifkan!']);
     }
@@ -2354,7 +2354,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->back()->with(['error' => 'Data Gagal di Update!']);
+            return redirect()->back()->with(['error' => $th->getMessage()]);
         }
 
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
@@ -2377,7 +2377,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->back()->with(['error' => 'Data Gagal di Update!']);
+            return redirect()->back()->with(['error' => $th->getMessage()]);
         }
 
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
@@ -2394,7 +2394,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->back()->with(['error' => 'Data Gagal di Update!']);
+            return redirect()->back()->with(['error' => $th->getMessage()]);
         }
 
         return redirect()->back()->with(['success' => 'Data Berhasil di Update!']);
@@ -2451,7 +2451,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.toko')->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->route('superadmin.toko')->with('error', $th->getMessage());
         }
             
         return redirect()->route('superadmin.toko')->with('success', 'Data Berhasil Ditambahkan');
@@ -2506,7 +2506,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->back()->with('error', 'Data Gagal DiEdit!');
+            return redirect()->back()->with('error', $th->getMessage());
         }
     
         return redirect()->back()->with('success', 'Data Berhasil DiEdit!');
@@ -2543,7 +2543,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->back()->with('error', 'Data Gagal Dihapus!');
+            return redirect()->back()->with('error', $th->getMessage());
         }
         return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
     }
@@ -2558,7 +2558,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->back()->with('error', 'Data Gagal Dihapus!');
+            return redirect()->back()->with('error', $th->getMessage());
         }
         return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
     }
@@ -2659,7 +2659,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Data Gagal Ditambahkan');
+            return redirect()->back()->with('error', $th->getMessage());
         }
 
         return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Ditambahkan');
@@ -2709,7 +2709,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             // dd($th);
-            return redirect()->route('superadmin.peserta-npl')->with('error', 'Data Gagal Diubah!');
+            return redirect()->route('superadmin.peserta-npl')->with('error', $th->getMessage());
         }
         
         return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Diubah!');
@@ -2726,7 +2726,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollBack();
-            return redirect()->route('superadmin.peserta-npl')->with('error', 'Data Gagal Dihapus!');
+            return redirect()->route('superadmin.peserta-npl')->with('error', $th->getMessage());
         }
         return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Dihapus!');
     }
@@ -2742,7 +2742,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.peserta-npl')->with('error', 'Data Gagal Diaktfikan!');
+            return redirect()->route('superadmin.peserta-npl')->with('error', $th->getMessage());
         }
         return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Diaktfikan!');
     }
@@ -2801,7 +2801,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             // dd($th);
-            return redirect()->back()->with('error', 'Pembelian NPL Gagal, silahkan isi ulang form pembelian npl kembali!');
+            return redirect()->back()->with('error', $th->getMessage());
         }
 
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
@@ -2886,7 +2886,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.lot')->with('error', 'Data Gagal diEdit!');
+            return redirect()->route('superadmin.lot')->with('error', $th->getMessage());
         }
 
         return redirect()->route('superadmin.lot')->with('success', 'Data Berhasil diEdit!');
@@ -2914,7 +2914,7 @@ class MenuSuperAdminController extends Controller
             
         } catch (Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Data Gagal diVerifikasi!');
+            return redirect()->back()->with('error', $th->getMessage());
         }
         
         
@@ -3126,7 +3126,7 @@ class MenuSuperAdminController extends Controller
     } catch (Throwable $th) {
         DB::rollBack();
         //throw $th;
-        return redirect()->route('superadmin.peserta-npl')->with('error', 'Data Gagal di Refund !');
+        return redirect()->route('superadmin.peserta-npl')->with('error', $th->getMessage());
     }
         return redirect()->route('superadmin.peserta-npl')->with('success', 'Data berhasil di Refund !');
     }
@@ -3169,7 +3169,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.pemenang')->with('error', 'Data Gagal di Verifikasi !');
+            return redirect()->route('superadmin.pemenang')->with('error', $th->getMessage());
         }
 
         return redirect()->route('superadmin.pemenang')->with('success', 'Data berhasil di Verifikasi !');
@@ -3206,7 +3206,7 @@ class MenuSuperAdminController extends Controller
     } catch (Throwable $th) {
         DB::rollBack();
         //throw $th;
-        return redirect()->back()->with('error', 'Data Gagal di Update !');
+        return redirect()->back()->with('error', $th->getMessage());
     }
         return redirect()->back()->with('success', 'Data berhasil di Update !');
     }
@@ -3228,7 +3228,7 @@ class MenuSuperAdminController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
             //throw $th;
-            return redirect()->route('superadmin.ulasan')->with('error', 'Data Gagal di hapus !');
+            return redirect()->route('superadmin.ulasan')->with('error', $th->getMessage());
         }
 
         return redirect()->route('superadmin.ulasan')->with('success', 'Data berhasil di hapus !');
