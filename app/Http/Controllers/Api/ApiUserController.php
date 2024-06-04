@@ -90,7 +90,7 @@ class ApiUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'no_telp' => $request->no_telephone,
+            // 'no_telp' => $request->no_telephone,
             'password' => Hash::make($request->password),
         ]);
 
@@ -129,20 +129,12 @@ class ApiUserController extends Controller
 
         if ($token = JWTAuth::attempt($credentials)) {
             $user = JWTAuth::user(); // Mendapatkan data pengguna dari token
-        
-            // Konversi objek user ke array
-            $userArray = $user->toArray();
-        
-            // Ubah tipe data no_telp menjadi string
-            $userArray['no_telp'] = (string) $userArray['no_telp'];
-        
             return response()->json([
                 'success' => true,
-                'user' => $userArray, // Menyertakan data pengguna yang telah diubah dalam respons
+                'user' => $user, // Menyertakan data pengguna dalam respons
                 'token' => $token,
             ]);
         }
-        
     
         return response()->json([
             'success'=>false,
