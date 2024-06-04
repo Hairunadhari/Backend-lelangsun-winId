@@ -241,6 +241,7 @@ class ApiOrderController extends Controller
         $order = Order::create([
             'user_id' => Auth::user()->id,
             'nama_user' => Auth::user()->name,
+            'order_name' => Auth::user()->name,
             'email_user' => Auth::user()->email,
             'no_telephone_user' => $request->userData['no_telephone'],
             'detail_alamat_user' => $request->userData['detail_alamat'],
