@@ -129,12 +129,20 @@ class ApiUserController extends Controller
 
         if ($token = JWTAuth::attempt($credentials)) {
             $user = JWTAuth::user(); // Mendapatkan data pengguna dari token
+        
+            // Konversi objek user ke array
+            $userArray = $user->toArray();
+        
+            // Ubah tipe data no_telp menjadi string
+            $userArray['no_telp'] = (string) $userArray['no_telp'];
+        
             return response()->json([
                 'success' => true,
-                'user' => $user, // Menyertakan data pengguna dalam respons
+                'user' => $userArray, // Menyertakan data pengguna yang telah diubah dalam respons
                 'token' => $token,
             ]);
         }
+        
     
         return response()->json([
             'success'=>false,
