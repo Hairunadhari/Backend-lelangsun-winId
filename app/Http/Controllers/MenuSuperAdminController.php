@@ -499,9 +499,16 @@ class MenuSuperAdminController extends Controller
 
     public function update_produk(Request $request, $id)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'kategoriproduk_id'     => 'required',
+            'gambar'     => 'required',
         ]);
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+
+            return back()->with(['error' => $alertMessage]);
+        }
         try {
             DB::beginTransaction();
             $produk = Produk::find($id);
@@ -510,29 +517,20 @@ class MenuSuperAdminController extends Controller
         $harga = preg_replace('/\D/', '', $request->harga); 
         $hargaProduk = trim($harga);
 
-        // code jika ada upload gambar dan tumbnail
-        if ($request->hasFile('gambar') && $request->hasFile('thumbnail')) {
-            
-            Storage::delete('public/image/'.$produk->thumbnail);
-            $thumbnail = $request->file('thumbnail');
-            $thumbnail->storeAs('public/image', $thumbnail->hashName());
-
-            $produk->update([
-                'toko_id' => $request->toko_id,
-                'kategoriproduk_id' => $request->kategoriproduk_id,
-                'nama' => $request->nama,
-                'keterangan' => $request->keterangan,
-                'stok' => $request->stok,
-                'harga' => $hargaProduk,
-                'video'     => $request->video,
-                'tipe_barang'     => $request->tipe_barang,
-                'berat'     => $request->berat,
-                'thumbnail'     => $thumbnail->hashName(),
-            ]);
-
+        $updateProduk = [
+            'kategoriproduk_id' => $request->kategoriproduk_id,
+            'nama' => $request->nama,
+            'keterangan' => $request->keterangan,
+            'stok' => $request->stok,
+            'harga' => $hargaProduk,
+            'berat'     => $request->berat,
+        ];
+        // code jika ada upload gambar
+        if ($request->hasFile('gambar')) {
             
             $gambars = $request->file('gambar');
             foreach ($gambars as $file) {
+
                 $filename = $file->hashName();
                 $file->storeAs('public/image', $filename);
         
@@ -542,74 +540,14 @@ class MenuSuperAdminController extends Controller
                 $gambarProduk->save();
             }
             
-            // code tanpa tumbnail
-        }elseif ($request->hasFile('gambar')){
-            
-            $produk->update([
-                'toko_id' => $request->toko_id,
-                'kategoriproduk_id' => $request->kategoriproduk_id,
-                'nama' => $request->nama,
-                'keterangan' => $request->keterangan,
-                'stok' => $request->stok,
-                'harga' => $hargaProduk,
-                'video'     => $request->video,
-                'tipe_barang'     => $request->tipe_barang,
-                'berat'     => $request->berat,
-            ]);
-
-            $gambars = $request->file('gambar');
-            foreach ($gambars as $file) {
-                $filename = $file->hashName();
-                $file->storeAs('public/image', $filename);
-        
-                $gambarProduk = new GambarProduk();
-                $gambarProduk->produk_id = $produk->id;
-                $gambarProduk->gambar = $filename;
-                $gambarProduk->save();
-            }
-            
-            // code tanpa gambar
-        }elseif ($request->hasFile('thumbnail')){
-            Storage::delete('public/image/'.$produk->thumbnail);
-            $thumbnail = $request->file('thumbnail');
-            $thumbnail->storeAs('public/image', $thumbnail->hashName());
-            
-            $produk->update([
-                'toko_id' => $request->toko_id,
-                'kategoriproduk_id' => $request->kategoriproduk_id,
-                'nama' => $request->nama,
-                'keterangan' => $request->keterangan,
-                'stok' => $request->stok,
-                'harga' => $hargaProduk,
-                'video'     => $request->video,
-                'tipe_barang'     => $request->tipe_barang,
-                'berat'     => $request->berat,
-                'thumbnail'     => $thumbnail->hashName(),
-            ]);
-
-        }else {
-            $produk->update([
-                'toko_id' => $request->toko_id,
-                'kategoriproduk_id' => $request->kategoriproduk_id,
-                'nama' => $request->nama,
-                'keterangan' => $request->keterangan,
-                'stok' => $request->stok,
-                'harga' => $hargaProduk,
-                'video'     => $request->video,
-                'tipe_barang'     => $request->tipe_barang,
-                'berat'     => $request->berat,
-            ]);
         }
+        $produk->update($updateProduk);
         DB::commit();
 
         } catch (Throwable $th) {
             DB::rollBack();
             // dd($th);
-            if (Auth::user()->role->role == 'Super Admin') {
-                return redirect()->route('superadmin.produk')->with(['error' => $th->getMessage()]);
-            } else {
-                return redirect()->route('admin.produk')->with(['error' => $th->getMessage()]);
-            }
+                return redirect()->back()->with(['error' => $th->getMessage()]);
             //throw $th;
         }
 
