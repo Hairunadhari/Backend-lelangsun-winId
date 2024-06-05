@@ -41,6 +41,20 @@ class ApiUserController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
+     *         name="alamat",
+     *         in="query",
+     *         description="User's alamat",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="detail alamat",
+     *         in="query",
+     *         description="User's detail alamat",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
      *         name="password",
      *         in="query",
      *         description="User's password",
@@ -72,6 +86,8 @@ class ApiUserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'detail_alamat' => 'required|string',
             'no_telephone' => 'required|string|unique:users,no_telp',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8',
@@ -87,11 +103,21 @@ class ApiUserController extends Controller
                 'message' => $alertMessage
             ],422);
         }
+        $arrayAlamat = explode(', ',$request->alamat);
+        $lokasiArray = explode('. ',end($arrayAlamat));
+
+        $arrayAlamat[count($arrayAlamat)-1] = $lokasiArray[0];
+        $arrayAlamat[] = $lokasiArray[1];
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'no_telp' => $request->no_telephone,
             'password' => Hash::make($request->password),
+            'kecamatan' => $arrayAlamat[0],
+            'kota' => $arrayAlamat[1],
+            'provinsi' => $arrayAlamat[2],
+            'postal_code' => $arrayAlamat[3],
+            'detail_alamat' => $request->detail_alamat,
         ]);
 
         return response()->json([

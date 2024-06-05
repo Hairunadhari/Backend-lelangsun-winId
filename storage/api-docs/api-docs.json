@@ -2954,6 +2954,24 @@
                         }
                     },
                     {
+                        "name": "alamat",
+                        "in": "query",
+                        "description": "User's alamat",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "detail alamat",
+                        "in": "query",
+                        "description": "User's detail alamat",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "password",
                         "in": "query",
                         "description": "User's password",

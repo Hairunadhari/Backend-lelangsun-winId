@@ -44,6 +44,7 @@ class ApiProdukController extends Controller
         $now = Carbon::now();
 
         $produk = Produk::with([
+            'gambarproduk',
             'toko' => function ($querytoko) use ($now){
                 $querytoko->select('id','toko','logo','status')->where('status','active');
             }, 
@@ -55,7 +56,7 @@ class ApiProdukController extends Controller
         ->get();
         
         $produk->each(function ($item) {
-            $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
+            $item->thumbnail = env('APP_URL').'/storage/image/' . $item->gambarproduk[0]->gambar;
         });
         $produk->each(function ($item) {
             $logo = $item->toko->logo;
