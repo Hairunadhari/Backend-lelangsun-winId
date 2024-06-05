@@ -426,7 +426,7 @@ class MenuSuperAdminController extends Controller
     
 
     public function add_produk(Request $request){ 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'toko_id'     => 'required',
             'kategoriproduk_id'     => 'required',
             'nama'     => 'required',
@@ -434,7 +434,14 @@ class MenuSuperAdminController extends Controller
             'stok'     => 'required',
             'harga'     => 'required',
             'berat'     => 'required',
+            'gambar'     => 'required',
         ]);
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+
+            return back()->with(['error' => $alertMessage]);
+        }
         try {
             DB::beginTransaction();
             $harga = preg_replace('/\D/', '', $request->harga); 
