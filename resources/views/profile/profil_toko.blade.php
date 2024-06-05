@@ -20,13 +20,6 @@
                     <div class="w-100">
 
                         <h4>Profil Toko</h4>
-                        <span>Status :</span>
-                        @if ($toko->postal_code == null || $toko->detail_alamat == null)
-                        <span class="badge badge-danger">profil toko belum lengkap</span>
-                        @else
-                        <span class="badge badge-success">profil toko sudah lengkap</span>
-                        
-                        @endif
                     </div>
                         <a href="{{route('admin.formedit-akun-toko', $encryptId)}}" class="btn btn-primary">Edit Profil</a>
                 </div>
@@ -49,6 +42,10 @@
                                 <div class="form-group">
                                     <label>Nama Pemilik</label>
                                     <input type="text" class="form-control <?php echo ($toko->user->name !== null) ? 'border-green' : 'border-red'; ?>" value="{{ $toko->user->name }}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Telephone</label>
+                                    <input type="text" class="form-control <?php echo ($toko->no_telp !== null) ? 'border-green' : 'border-red'; ?>" value="{{ $toko->no_telp }}" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label>Kecamatan / Kota / Provinsi / Kode Pos</label>

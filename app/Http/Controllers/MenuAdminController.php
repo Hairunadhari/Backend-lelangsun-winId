@@ -68,33 +68,40 @@ class MenuAdminController extends Controller
             'password' => 'nullable|min:10',
             'password_confirmation' => 'nullable|same:password',
             'logo' => 'image|mimes:jpeg,png,jpg|max:2048', // Tambahkan validasi untuk logo
-            'alamat' => 'required',
-            'detail_alamat' => 'required',
         ],
         [
             'password'=>'password minimal 10 karakter',
             'password_confirmation'=>'konfirmasi password tidak cocok',
             'logo'=>'ukuran file logo maksimal 2mb',
-            'alamat'=>'silahkan isi kolom alamat',
-            'detail_alamat'=>'silahkan isi kolom detail alamat',
         ]
         );
         if($validator->fails()){
             $messages = $validator->messages();
             $alertMessage = $messages->first();
           
-            return back()->with('error',$alertMessage);
+            return back()->with(['error'=>$alertMessage]);
         }
         try {
             DB::beginTransaction();
             $id = Auth::user()->id;
             $toko = Toko::where('user_id',$id)->first();
             $user = User::where('id',$id)->first();
-            $arrayAlamat = explode(', ',$request->alamat);
-            $lokasiArray = explode('. ',end($arrayAlamat));
-    
-            $arrayAlamat[count($arrayAlamat)-1] = $lokasiArray[0];
-            $arrayAlamat[] = $lokasiArray[1];
+            $dataToko = [
+                'toko' => $request->toko,
+                'no_telp' => $request->no_telp,
+                'detail_alamat' => $request->detail_alamat,
+            ];
+            if ($request->alamat != null) {
+                $arrayAlamat = explode(', ',$request->alamat);
+                $lokasiArray = explode('. ',end($arrayAlamat));
+        
+                $arrayAlamat[count($arrayAlamat)-1] = $lokasiArray[0];
+                $arrayAlamat[] = $lokasiArray[1];
+                $dataToko['kecamatan'] = $arrayAlamat[0];
+                $dataToko['kota'] = $arrayAlamat[1];
+                $dataToko['kecamatan'] = $arrayAlamat[2];
+                $dataToko['postal_code'] = $arrayAlamat[3];
+            }
 
             // Cek apakah password baru dimasukkan
             if ($request->password != null) {
@@ -105,28 +112,11 @@ class MenuAdminController extends Controller
         
             if ($request->hasFile('logo')) {
                 $logo = $request->file('logo');
-                $logo->storeAs('public/image', $logo->hashName());
-                $toko->update([
-                    'toko' => $request->toko,
-                    'logo' => $logo->hashName(),
-                    'kecamatan' => $arrayAlamat[0],
-                    'kota' => $arrayAlamat[1],
-                    'provinsi' => $arrayAlamat[2],
-                    'postal_code' => $arrayAlamat[3],
-                    'detail_alamat' => $request->detail_alamat,
-                   
-                ]);
-            } else {
-                $toko->update([
-                    'toko' => $request->toko,
-                    'kecamatan' => $arrayAlamat[0],
-                    'kota' => $arrayAlamat[1],
-                    'provinsi' => $arrayAlamat[2],
-                    'postal_code' => $arrayAlamat[3],
-                    'detail_alamat' => $request->detail_alamat,
-                ]);
+                $dataToko['logo'] = $logo->hashName();
+                $logo->storeAs('public/image', $dataToko['logo']);
             }
         
+            $toko->update($dataToko); 
             $user->update([
                 'name' => $request->name,
                

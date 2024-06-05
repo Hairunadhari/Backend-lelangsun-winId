@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-md-6 col-12">
+                        <div class="form-group col-md-12 col-12">
                             <label>Kecamatan / Kota / Provinsi / Kode Pos</label>
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control"  placeholder="pilih berdasarkan kecamatan, kota, provinsi atau kode pos " aria-label="" id="input-alamat">
@@ -34,6 +34,11 @@
                                
                             </select>
                         </div>
+                        <div class="form-group col-md-12 col-12">
+                            <input type="text" name="alamat" class="form-control" readonly id="val-alamat">
+                    </div>
+                        </div>
+                    <div class="row">
                         <div class="form-group col-md-6 col-12">
                             <label>Email</label>
                             <input type="email" class="form-control" readonly value="{{$toko->user->email}}" >
@@ -41,10 +46,10 @@
                                 <small class="text-danger">Email Sudah Terdaftar</small>
                             @enderror  
                         </div>
-                    </div>
-                    <div class="row">
+
                         <div class="form-group col-md-6 col-12">
-                            <input type="text" name="alamat" class="form-control" readonly id="val-alamat">
+                            <label for="">No Telephone</label>
+                            <input type="text" name="no_telp" class="form-control" value="{{$toko->no_telp}}">
                         </div>
                     </div>
                     <div class="row">

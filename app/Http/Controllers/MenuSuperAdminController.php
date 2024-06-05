@@ -401,25 +401,16 @@ class MenuSuperAdminController extends Controller
     public function list_produk(){
         $idAdmin = Auth::user()->id;
         $idToko = Toko::where('user_id',$idAdmin)->first();
-
         if (request()->ajax()) {
             $status = request('status');
-
+            
             // get data role superadmin
             if (Auth::user()->role->role == 'Super Admin') {
-                if ($status == 'active') {
-                    $data = Produk::select('id','nama','thumbnail','harga','stok','tipe_barang')->where('status', 'active')->orderBy('created_at','desc')->get();
-                } elseif ($status == 'not-active') {
-                    $data = Produk::select('id','nama','thumbnail','harga','stok','tipe_barang')->where('status', 'not-active')->orderBy('created_at','desc')->get();
-                }
+                $data = Produk::select('id','nama','harga','stok','berat')->with('gambarproduk')->where('status', 'active')->orderBy('created_at','desc')->get();
 
             // get data role admin
             } elseif (Auth::user()->role->role == 'Admin') {
-                if ($status == 'active') {
-                    $data = Produk::select('id','nama','thumbnail','harga','stok','tipe_barang')->where('toko_id',$idToko->id)->where('status', 'active')->orderBy('created_at','desc')->get();
-                } elseif ($status == 'not-active') {
-                    $data = Produk::select('id','nama','thumbnail','harga','stok','tipe_barang')->where('toko_id',$idToko->id)->where('status', 'not-active')->orderBy('created_at','desc')->get();
-                }
+                    $data = Produk::select('id','nama','harga','stok','berat')->with('gambarproduk')->where('toko_id',$idToko->id)->where('status', 'active')->orderBy('created_at','desc')->get();
             }
             
             return DataTables::of($data)->make(true);
@@ -442,22 +433,13 @@ class MenuSuperAdminController extends Controller
             'keterangan'     => 'required',
             'stok'     => 'required',
             'harga'     => 'required',
-            'video'     => 'required',
+            'berat'     => 'required',
         ]);
-        if (Auth::user()->role->role == 'Admin') {
-            if (Auth::user()->toko->postal_code == null || Auth::user()->toko->detail_alamat == null) {
-                return redirect()->back()->with('warning', 'Profil Toko anda belum lengkap silahkan lengkapi terlebih dahulu!');
-            }
-        }
         try {
             DB::beginTransaction();
             $harga = preg_replace('/\D/', '', $request->harga); 
             $hargaProduk = trim($harga);
-
             $gambar = $request->file('gambar');
-            $thumbnail = $request->file('thumbnail');
-            $thumbnail->storeAs('public/image', $thumbnail->hashName());
-            
             $produk = Produk::create([
                 'toko_id'     => $request->toko_id,
                 'kategoriproduk_id'     => $request->kategoriproduk_id,
@@ -465,10 +447,7 @@ class MenuSuperAdminController extends Controller
                 'keterangan'     => $request->keterangan,
                 'stok'     => $request->stok,
                 'harga'     => $hargaProduk,
-                'tipe_barang'     => $request->tipe_barang,
                 'berat'     => $request->berat,
-                'video'     => $request->video,
-                'thumbnail'     => $thumbnail->hashName(),
                 'status'     => 'active',
             ]);
 
@@ -2418,7 +2397,10 @@ class MenuSuperAdminController extends Controller
         $validator = Validator::make($request->all(), [
             'toko'     => 'required|min:3',
             'logo'     => 'required|image|mimes:jpeg,jpg,png',
-            'name' => 'max:280',
+            'name' => 'required|max:280',
+            'alamat' => 'required',
+            'detail_alamat' => 'required',
+            'no_telp' => 'required',
             'email' => ['string', 'email', 'max:255', 'unique:'.User::class],
             'password' => 'min:8',
             'password_confirmation' => 'same:password',
@@ -2426,19 +2408,29 @@ class MenuSuperAdminController extends Controller
         if($validator->fails()){
             $messages = $validator->messages();
             $alertMessage = $messages->first();
-          
-            return back()->with('success',$alertMessage);
+            session()->flash('toko', $request->toko);
+            session()->flash('name', $request->name);
+            session()->flash('email', $request->email);
+            session()->flash('no_telp', $request->no_telp);
+
+            return back()->with(['error' => $alertMessage]);
         }
         try {
             DB::beginTransaction();
             $logo = $request->file('logo');
             $logo->storeAs('public/image', $logo->hashName());
-            
+            $arrayAlamat = explode(', ',$request->alamat);
+            $lokasiArray = explode('. ',end($arrayAlamat));
+    
+            $arrayAlamat[count($arrayAlamat)-1] = $lokasiArray[0];
+            $arrayAlamat[] = $lokasiArray[1];
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'role_id' => $request->role_id,
-                'password' => Hash::make($request->password)
+                'password' => Hash::make($request->password),
+               
             ]);
             
             Toko::create([
@@ -2446,6 +2438,13 @@ class MenuSuperAdminController extends Controller
                 'logo'     => $logo->hashName(),
                 'status'     => 'active',
                 'user_id'     => $user->id,
+                'kecamatan' => $arrayAlamat[0],
+                'kota' => $arrayAlamat[1],
+                'provinsi' => $arrayAlamat[2],
+                'postal_code' => $arrayAlamat[3],
+                'detail_alamat' => $request->detail_alamat,
+                'no_telp' => $request->no_telp,
+
             ]);
             DB::commit();
         } catch (Throwable $th) {

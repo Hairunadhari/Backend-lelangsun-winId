@@ -9,7 +9,7 @@
                     <a href="{{route('form-input-produk')}}" class="btn btn-success">+ Tambah</a>
                 </div>
                 <div class="card-body">
-                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                    {{-- <ul class="nav nav-pills" id="myTab3" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
                                 aria-controls="home" aria-selected="true">Produk Aktif</a>
@@ -18,7 +18,7 @@
                             <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
                                 aria-controls="profile" aria-selected="false">Produk Tidak Aktif</a>
                         </li>
-                    </ul>
+                    </ul> --}}
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
                             <table class="table table-striped w-100" id="t-produk-active">
@@ -27,7 +27,7 @@
                                         <th scope="col">No</th>
                                         <th scope="col">Nama Produk</th>
                                         <th scope="col">Cover Produk</th>
-                                        <th scope="col">Tipe Barang</th>
+                                        <th scope="col">Berat (gram)</th>
                                         <th scope="col">Harga</th>
                                         <th scope="col">Stok</th>
                                         <th scope="col">Opsi</th>
@@ -82,14 +82,14 @@
                         data: "nama",
                     },
                     {
-                        data: "thumbnail",
+                        data: 'gambarproduk',
                         render: function (data) {
-                            return '<img src="/storage/image/' + data +
+                            return '<img src="/storage/image/' + data[0].gambar +
                                 '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6;">';
                         },
                     },
                     {
-                        data: "tipe_barang",
+                        data: "berat",
                     },
 
                     {
@@ -160,7 +160,7 @@
                         },
                     },
                     {
-                        data: "tipe_barang",
+                        data: "berat",
                     },
                     {
                         data: "harga",

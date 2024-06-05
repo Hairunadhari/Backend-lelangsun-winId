@@ -5,13 +5,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="w-100">Daftar Kategori</h4>
+                    <h4 class="w-100">Daftar Kategori Produk</h4>
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#kategoriprodukmodal">
                         <span class="text">+ Tambah</span>
                     </button>
                 </div>
                 <div class="card-body">
-                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                    {{-- <ul class="nav nav-pills" id="myTab3" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
                                 aria-controls="home" aria-selected="true">Aktif</a>
@@ -20,7 +20,7 @@
                             <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
                                 aria-controls="profile" aria-selected="false">Tidak Aktif</a>
                         </li>
-                    </ul>
+                    </ul> --}}
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
                             <table class="table table-striped w-100" id="kategori">

@@ -12,7 +12,7 @@
                     <a href="{{route('superadmin.tambah-admin')}}" class="btn btn-success" style="margin-left: 10px">+ Tambah Toko & Admin</a>
                 </div>
                 <div class="card-body">
-                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                    {{-- <ul class="nav nav-pills" id="myTab3" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
                                 aria-controls="home" aria-selected="true">Aktif</a>
@@ -21,7 +21,7 @@
                             <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
                                 aria-controls="profile" aria-selected="false">Tidak Aktif</a>
                         </li>
-                    </ul>
+                    </ul> --}}
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
                             <table class="table table-striped w-100" id="toko">
@@ -92,19 +92,12 @@
                         var deleteUrl = '/superadmin/deletetoko/' + data.id;
                         var editUrl = '/superadmin/edittoko/' + data.id;
                         return `
-                    <div class="dropdown d-inline">
-                        <i class="fas fa-ellipsis-v cursor-pointer" style="cursor:pointer" id="dropdownMenuButton2"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                         <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan menghapus Toko ini? jika ya maka semua kategori dan produk yg ada di toko ini akan terhapus');">
-                            <div class="dropdown-menu" x-placement="bottom-start"
-                                style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item has-icon" href="${editUrl}"><i class="far fa-edit"></i>Edit</a>
+                                <span><a class="btn btn-primary" href="${editUrl}"><i class="far fa-edit"></i>Edit</a></span>
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
-                                <button class="btn btn-danger" style="margin-left: 20px;" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
-                            </div>
+                                <button class="btn btn-danger"  type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
                         </form>
-                    </div>
                     `;
                     },
                 },
@@ -156,41 +149,4 @@
     });
 
 </script>
-@endsection
-
-@section('modal')
-<!-- Modal -->
-<div class="modal fade" id="tokomodal" tabindex="-1" role="dialog" aria-labelledby="tokoLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tokoLabel">Form Input Toko</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{route('superadmin.addtoko')}}" method="post" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Toko <span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="toko" required id="exampleInputEmail1">
-                    </div>
-                    <div class="form-group">
-                        <label class="">Logo <span style="color: red">*</span></label>
-                        <div class="col-sm-12 col-md-7">
-                            <div id="image-preview" class="image-preview">
-                                <label for="image-upload" id="image-label">Choose File</label>
-                                <input type="file" name="logo" accept=".jpg, .png, .jpeg" id="image-upload" required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endsection

@@ -47,13 +47,6 @@
                         </select>
                     </div>
                 @endif
-                <div class="form-group">
-                    <label>Tipe Barang <span style="color: red">*</span></label>
-                    <select class="form-control select2" name="tipe_barang" id="tipebarang">
-                        <option value="barang">Barang</option>
-                        <option value="jasa">Jasa</option>
-                    </select>
-                </div>
                     <div class="form-group">
                         <label>Nama Produk <span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="nama" required>
@@ -71,24 +64,12 @@
                         <input type="number" class="form-control" name="stok" required onkeyup="formatStok(this)">
                     </div>
                     <div class="form-group" id="inputberat">
-                        <label>Berat (gram)<small> note:harap masukkan berat produk jika tipe produknya barang</small></label>
-                        <input type="number" class="form-control" name="berat"  onkeyup="formatStok(this)">
+                        <label>Berat (gram) <span style="color: red">*</span></label>
+                        <input type="number" class="form-control" name="berat" required  onkeyup="formatStok(this)">
                     </div>
+
                     <div class="form-group">
-                        <label>Link Video <small>(isi - (strip) jika tidak punya link video)</small><span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="video" required placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label class="">Cover Produk <span style="color: red">*</span></label>
-                        <div class="col-sm-12 col-md-7">
-                            <div id="image-preview" class="image-preview">
-                                <label for="image-upload" id="image-label">Choose File</label>
-                                <input type="file" accept=".jpg, .png, .jpeg" name="thumbnail" id="image-upload" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Gambar Detail Produk <small>(bisa pilih lebih dari satu gambar) </small><span
+                        <label>Gambar Produk <small>(bisa pilih lebih dari satu gambar) </small><span
                                 style="color: red">*</span></label>
                                 <div class="input-images"></div>
                     </div>
@@ -151,14 +132,6 @@
         input.value = num;
     }
 
-    // Mengakses elemen input file
-    var fileInput = document.querySelector('input[name="gambar[]"]');
-
-    // Menampilkan nilai file yang dipilih
-    fileInput.addEventListener('change', function () {
-        console.log(fileInput.files); // Menampilkan objek FileList
-        console.log(fileInput.files[0]); // Menampilkan objek File pertama dalam daftar
-    });
 
 </script>
 
