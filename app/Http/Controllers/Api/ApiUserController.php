@@ -72,7 +72,7 @@ class ApiUserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'no_telephone' => 'required|integer|min:1|unique:users,no_telp',
+            'no_telephone' => 'required|string|unique:users,no_telp',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8',
             'confirm_password' => 'required|same:password',
@@ -90,7 +90,7 @@ class ApiUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            // 'no_telp' => $request->no_telephone,
+            'no_telp' => $request->no_telephone,
             'password' => Hash::make($request->password),
         ]);
 

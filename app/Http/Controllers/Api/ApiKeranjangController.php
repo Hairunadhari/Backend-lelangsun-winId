@@ -137,10 +137,17 @@ class ApiKeranjangController extends Controller
             'produk' => function($query) {
                 $query->orderBy('created_at','desc');
             },
+            'produk.produkpromo'
         ])->where('user_id', Auth::user()->id)->latest()->get();
         // pluck toko
         $data->each(function ($item) {
             $item->produk->thumbnail = env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
+        });
+         // Menyesuaikan harga berdasarkan total_diskon dari produkpromo
+        $data->each(function ($item) {
+            if ($item->produk->produkpromo) {
+                $item->produk->harga = $item->produk->produkpromo->total_diskon;
+            }
         });
 
         $groupByToko = collect($data)->groupBy('toko.toko')->toArray();

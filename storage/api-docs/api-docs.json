@@ -1839,7 +1839,7 @@
                                     "userData": {
                                         "properties": {
                                             "no_telephone": {
-                                                "type": "integer"
+                                                "type": "string"
                                             },
                                             "detail_alamat": {
                                                 "type": "string"
@@ -1867,7 +1867,7 @@
                                                         "type": "string"
                                                     },
                                                     "no_telephone": {
-                                                        "type": "integer"
+                                                        "type": "string"
                                                     },
                                                     "detail_alamat": {
                                                         "type": "string"

@@ -36,7 +36,7 @@ class ApiOrderController extends Controller
                 @OA\Property(
                     property="userData",
                     type="object",
-                        @OA\Property(property="no_telephone", type="integer"),
+                        @OA\Property(property="no_telephone", type="string"),
                         @OA\Property(property="detail_alamat", type="string"),
                         @OA\Property(property="postal_code", type="integer"),
                         @OA\Property(property="kota", type="string"),
@@ -50,7 +50,7 @@ class ApiOrderController extends Controller
                         property="tokoObj",
                         type="object",
                         @OA\Property(property="nama_pemilik", type="string"),
-                        @OA\Property(property="no_telephone", type="integer"),
+                        @OA\Property(property="no_telephone", type="string"),
                         @OA\Property(property="detail_alamat", type="string"),
                         @OA\Property(property="postal_code", type="integer"),
                         @OA\Property(property="toko_id", type="integer"),
@@ -143,7 +143,7 @@ class ApiOrderController extends Controller
     // dd($request->userData['email']);
     $validator = Validator::make($request->all() , [
 
-        'userData.no_telephone' => 'required|integer|min:1',
+        'userData.no_telephone' => 'required|string|min:1',
         'userData.detail_alamat' => 'required|string',
         'userData.postal_code' => 'required|integer|min:1',
         'userData.kota' => 'required|string',
@@ -151,7 +151,7 @@ class ApiOrderController extends Controller
         'userData.kecamatan' => 'required|string',
 
         'orderData.tokoObj.nama_pemilik' => 'required|string',
-        'orderData.tokoObj.no_telephone' => 'required|integer',
+        'orderData.tokoObj.no_telephone' => 'required|string',
         'orderData.tokoObj.detail_alamat' => 'required|string',
         'orderData.tokoObj.postal_code' => 'required|integer',
         'orderData.tokoObj.toko_id' => 'required|integer|min:1',
@@ -162,12 +162,12 @@ class ApiOrderController extends Controller
         'orderData.items.*.harga_item' => 'required|integer',
         'orderData.items.*.total_harga_item' => 'required|integer',
         'orderData.items.*.nama_item' => 'required|string',
-        'orderData.items.*.berat_item' => 'nullable|integer',
+        'orderData.items.*.berat_item' => 'required|integer',
         'orderData.items.*.promo_diskon' => 'nullable|integer',
     
         'orderData.longitude' => 'nullable|string',
         'orderData.langitude' => 'nullable|string',
-        'orderData.total_berat_item' => 'nullable|integer',
+        'orderData.total_berat_item' => 'required|integer',
         'orderData.total_harga_all_item' => 'required|integer',
         'orderData.cost_shipping' => 'required|integer',
         'orderData.sub_total' => 'required|integer',
@@ -224,8 +224,10 @@ class ApiOrderController extends Controller
                 'stok'=>$value->stok - $qtys[$key],// Menggunakan indeks untuk mengambil nilai qty_order yang sesuai
             ]);
         }
-        $secret_key = 'Basic '.config('xendit.key_auth');
 
+
+        // hit api xendit
+        $secret_key = 'Basic '.config('xendit.key_auth');
         $data_request = Http::withHeaders([
             'Authorization' => $secret_key
         ])->post('https://api.xendit.co/v2/invoices', [
@@ -303,7 +305,10 @@ class ApiOrderController extends Controller
                 'berat_item' => $i['berat_item'],
             ]);
         }
-        
+        // delete list keranjang user
+        $ambil_produk_id = OrderItem::where('order_id', $order->id)->pluck('produk_id');
+        $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', Auth::user()->id)->whereIn('produk_id', $ambil_produk_id)->get();
+        $ambil_produkid_berdasarkan_userid->each->delete();
       
         $success = true;
         $message = 'Orderan Berhasil DiBuat';
@@ -378,17 +383,13 @@ public function callback_xendit(Request $request){
         // ambil qty orderan 
         $qty_order = OrderItem::where('order_id', $order->id)->pluck('qty');
         $produks = Produk::whereIn('id', $ambil_produk_id)->get();
-        $ambil_produkid_berdasarkan_userid = Keranjang::where('user_id', $order->user_id)->whereIn('produk_id', $ambil_produk_id)->get();
         switch ($order->status) {
             case 'PAID':
-                $ambil_produkid_berdasarkan_userid->each->delete();
-                
+
                 $bayar = $order->update([
                     'metode_pembayaran' => $request->payment_method,
                     'bank_code' => $request->bank_code,
-                ]);
-                
-                
+                ]);                
 
                 $items = [];
                 $get_items = OrderItem::where('order_id', $order->id)->get();
