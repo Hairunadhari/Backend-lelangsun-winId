@@ -185,10 +185,9 @@
                     {
                         data: null,
                         render: function (data) {
-
                             return `  <button type="button" data-toggle="tooltip" data-placement="top" title="detail pesanan" class="btn mb-1 btn-warning" data-toggle="modal" data-target="#exampleModal${data.id}">
                             <span class="text"><i class="fas fa-info"></i></span>
-                        </button> <span><a href="/tracking" class="btn  btn-dark" data-toggle="tooltip" data-placement="top" title="lacak status pengiriman"><i class="fas fa-shipping-fast"></i></a></span>`;
+                        </button> <span><a href="/tracking/${data.biteship_order_id}" class="btn  btn-dark" data-toggle="tooltip" data-placement="top" title="lacak status pengiriman"><i class="fas fa-shipping-fast"></i></a></span>`;
                         }
                     }
 
@@ -219,7 +218,13 @@
                 
             },
             error: function (res) {
-                alert('Ada Kesalahan ',res);
+                $('#dLabel').show();
+                $('#loading').hide();
+                iziToast.error({
+                    title: 'Ada Kesalahan',
+                    message: res.responseJSON.error,
+                    position: 'topRight'
+                });
             }
         });
     });

@@ -317,7 +317,7 @@ Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('
     Route::put('/update-pesanan/{id}', [MenuSuperAdminController::class, 'update_pesanan'])->name('update-pesanan');
     Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('promosi');
     Route::get('/pengiriman', [PengirimanController::class, 'list_pengiriman'])->name('pengiriman');
-    Route::get('/tracking', [PengirimanController::class, 'tracking'])->name('tracking');
+    Route::get('/tracking/{id}', [PengirimanController::class, 'tracking'])->name('tracking');
     
     
 });

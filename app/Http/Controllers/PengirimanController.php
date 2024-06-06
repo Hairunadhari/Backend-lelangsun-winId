@@ -39,6 +39,9 @@ class PengirimanController extends Controller
         return view('e-commerce.pengiriman',compact('dataModal'));
     }
     public function download_pdf(Request $request){
+        if ($request->date == null) {
+            return response()->json(['error'=>'Silahkan isi tanggal label pengiriman!'],400);
+        }
         try {
             $query = DB::table('order_items')
                 ->select('order_items.id','order_items.qty','order_items.nama_order','pengirimen.biteship_order_id','pengirimen.waybill_id',
@@ -47,9 +50,7 @@ class PengirimanController extends Controller
                 ->leftJoin('pengirimen','pengirimen.order_id','=','orders.id');
                 
                 
-            if ($request->date != null) {
                 $query->whereDate('pengirimen.created_at', $request->date);
-            }
             
             $data = $query->get();
             $html = '';
@@ -110,7 +111,77 @@ class PengirimanController extends Controller
         return $pdf->download($filename);
     }
 
-    public function tracking(){
-        return view('e-commerce.tracking');
+    public function tracking($biteship_order_id){
+                // $data_request = Http::withHeaders([
+        //     'Authorization' => env('API_KEY_BITESHIP')
+        // ])->get('https://api.biteship.com/v1/trackings/'.$biteship_order_id);
+
+        // return json_decode($data_request);
+        $json = '{
+            "success": true,
+            "message": "Successfully get tracking info",
+            "object": "tracking",
+            "id": "6051861741a37414e6637fab",
+            "waybill_id": "0123082100003094",
+            "courier": {
+                "company": "grab",
+                "driver_name": "John Doe",
+                "driver_phone": "0888888888",
+                "driver_photo_url": "https://picsum.photos/200",
+                "driver_plate_number": "B 1234 ABC"
+            },
+            "origin": {
+                "contact_name": "John Doe",
+                "address": "Jl. Medan Merdeka Barat, Gambir, Jakarta Pusat"
+            },
+            "destination": {
+                "contact_name": "Doe John",
+                "address": "Jl. Medan Merdeka Timur, Gambir, Jakarta Pusat"
+            },
+            "history": [
+                {
+                    "note": "Order has been confirmed. Locating nearest driver to pick up.",
+                    "service_type": "instant",
+                    "updated_at": "2021-03-16T18:17:00+07:00",
+                    "status": "confirmed"
+                },
+                {
+                    "note": "Courier has been allocated. Waiting to pick up.",
+                    "service_type": "instant",
+                    "updated_at": "2021-03-16T21:15:00+07:00",
+                    "status": "allocated"
+                },
+                {
+                    "note": "Courier is on the way to pick up item.",
+                    "service_type": "instant",
+                    "updated_at": "2021-03-16T23:12:00+07:00",
+                    "status": "picking_up"
+                },
+                {
+                    "note": "Item has been picked and ready to be shipped.",
+                    "service_type": "instant",
+                    "updated_at": "2021-03-16T23:43:00+07:00",
+                    "status": "picked"
+                },
+                {
+                    "note": "Item has been picked and ready to be shipped.",
+                    "service_type": "instant",
+                    "updated_at": "2021-03-17T09:29:00+07:00",
+                    "status": "dropping_off"
+                },
+                {
+                    "note": "Item is on the way to customer.",
+                    "service_type": "instant",
+                    "updated_at": "2021-03-17T11:15:00+07:00",
+                    "status": "delivered"
+                }
+            ],
+            "link": "https://example.com/01803918209312093",
+            "order_id": "6251863341sa3714e6637fab",
+            "status": "delivered"
+        }';
+        
+        $data = json_decode($json, true);
+        return view('e-commerce.tracking',compact('data'));
     }
 }

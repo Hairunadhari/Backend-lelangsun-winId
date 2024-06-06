@@ -201,6 +201,66 @@
                 }
             }
         },
+        "/api/tracking/{id}": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Menampilkan status pengiriman",
+                "description": "Menampilkan status pengiriman",
+                "operationId": "Tracking",
+                "parameters": [
+                    {
+                        "name": "biteship_order_id",
+                        "in": "path",
+                        "description": "ID order yang akan ditampilkan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/api/list-banner": {
             "get": {
                 "tags": [

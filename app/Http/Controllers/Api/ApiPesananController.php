@@ -40,7 +40,11 @@ class ApiPesananController extends Controller
      */
     public function list_pesanan(){
         $userid = Auth::user()->id;
-        $data = Order::with('orderitem.produk', 'tagihan')->where('user_id', $userid)->get();
+        $data = Order::with([
+            'orderitem.produk',
+            'pengiriman' => function($query){
+            $query->select('order_id','biteship_order_id');
+        }])->where('user_id', $userid)->get();
     
         $data->each(function ($item) {
             $item->orderitem->each(function ($orderItem) {
