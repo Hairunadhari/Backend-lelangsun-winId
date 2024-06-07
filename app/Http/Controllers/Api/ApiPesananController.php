@@ -101,7 +101,8 @@ class ApiPesananController extends Controller
      */
     public function detail_pesanan($id){
         $itemproduk = OrderItem::where('order_id', $id)->first();
-        $itemproduk->produk->thumbnail = env('APP_URL').'/storage/image/' . $itemproduk->produk->thumbnail;
+        $itemproduk->produk->thumbnail = env('APP_URL').'/storage/image/' . (count($itemproduk->produk->gambarproduk) == 0 ? '-' : $itemproduk->produk->gambarproduk[0]->gambar);
+        
         return response()->json([
             'success'=>true,
             'data'=>$itemproduk
