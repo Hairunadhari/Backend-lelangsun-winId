@@ -508,7 +508,6 @@ class MenuSuperAdminController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'kategoriproduk_id'     => 'required',
-            'gambar'     => 'required',
         ]);
         if($validator->fails()){
             $messages = $validator->messages();
@@ -883,12 +882,15 @@ class MenuSuperAdminController extends Controller
         if (Auth::user()->role->role == 'Super Admin') {
             
             $data = Promosi::find($id);
-            $query = Produk::where('status','active');
+            $query = Produk::with('gambarproduk')->where('status','active');
             if ($data->toko_id != null) {
                 $query->where('toko_id',$data->toko_id);
             }
             $produk = $query->orderBy('nama', 'asc')->get();
-
+            // dd($produk);
+            $produk->each(function ($item) {
+                $item->thumbnail = (count($item->gambarproduk) == 0 ? '-' : $item->gambarproduk[0]->gambar);
+            });
             $produkPromo = ProdukPromo::where('promosi_id', $id)->get();
             $produkTerpilih = [];
             
@@ -1854,29 +1856,29 @@ class MenuSuperAdminController extends Controller
     public function list_event(){
         
         if (request()->ajax()) {
-            $status = request('status_data');
-
-            if ($status == 'active') {
-                $data = Event::where('status_data', 1)->orderBy('created_at','desc')->get();
-            } elseif ($status == 'not-active') {
-                $data = Event::where('status_data', 0)->orderBy('created_at','desc')->get();
-            }
+            $data = Event::with('detail_gambar_event')->where('status_data', 1)->get();
             return DataTables::of($data)->make();
         }
         return view('event/list_event');
     }
 
     public function add_event(Request $request){
+        $validator = Validator::make($request->all(), [
+            'poster' => 'required',
+        ]);
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+
+            return back()->with(['error' => $alertMessage]);
+        }
         try {
             DB::beginTransaction();
-            $gambar = $request->file('gambar');
-            $gambar->storeAs('public/image', $gambar->hashName());
 
         $harga = $request->tiket == 'Berbayar' ? preg_replace('/\D/', '', $request->harga) : null;
         $multigambar = $request->file('poster');
 
         $event = Event::create([
-            'gambar' => $gambar->hashName(),
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'link' => $request->link,
@@ -1924,34 +1926,28 @@ class MenuSuperAdminController extends Controller
 
     public function update_event(Request $request, $id)
     {
+        
         try {
             DB::beginTransaction();
             $data = Event::findOrFail($id);
             $gambarEvent = GambarEvent::where('event_id',$id)->get();
-        $harga = $request->tiket == 'Berbayar' ? preg_replace('/\D/', '', $request->harga) : null;
-        $hargaProduk = trim($harga);
+            $harga = $request->tiket == 'Berbayar' ? preg_replace('/\D/', '', $request->harga) : null;
+            $hargaProduk = trim($harga);
             // kode uploadgambar dan poster
-            if ($request->hasFile('gambar') && $request->hasFile('poster')) {
-
-                $gambar = $request->file('gambar');
-                $gambar->storeAs('public/image', $gambar->hashName());
-                
-                Storage::delete('public/image/'.$data->gambar);
-    
-                $data->update([
-                    'gambar'     => $gambar->hashName(),
-                    'judul'     => $request->judul,
-                    'deskripsi'     => $request->deskripsi,
-                    'link'     => $request->link,
-                    'penyelenggara'     => $request->penyelenggara,
-                    'alamat_lokasi'     => $request->alamat_lokasi,
-                    'jenis'     => $request->jenis,
-                    'tiket'     => $request->tiket,
-                    'tgl_mulai'     => $request->tgl_mulai,
-                    'tgl_selesai'     => $request->tgl_selesai,
-                    'link_lokasi'     => $request->link_lokasi,
-                    'harga'     => $harga,
-                ]);
+            $data->update([
+                'judul'     => $request->judul,
+                'deskripsi'     => $request->deskripsi,
+                'link'     => $request->link,
+                'penyelenggara'     => $request->penyelenggara,
+                'alamat_lokasi'     => $request->alamat_lokasi,
+                'jenis'     => $request->jenis,
+                'tiket'     => $request->tiket,
+                'tgl_mulai'     => $request->tgl_mulai,
+                'tgl_selesai'     => $request->tgl_selesai,
+                'link_lokasi'     => $request->link_lokasi,
+                'harga'     => $harga,
+            ]);
+            if ($request->hasFile('poster')) {
                 foreach ($gambarEvent as $g) {
                     Storage::delete('public/image/'.$g->gambar);
                     $g->delete();  
@@ -1965,68 +1961,6 @@ class MenuSuperAdminController extends Controller
                         'gambar' => $g->hashName(),
                     ]);
                 }
-            // kode file gambar
-            } elseif ($request->hasFile('gambar')) {
-                $gambar = $request->file('gambar');
-                $gambar->storeAs('public/image', $gambar->hashName());
-    
-                Storage::delete('public/image/'.$data->gambar);
-                $data->update([
-                    'gambar'     => $gambar->hashName(),
-                    'judul'     => $request->judul,
-                    'deskripsi'     => $request->deskripsi,
-                    'link'     => $request->link,
-                    'penyelenggara'     => $request->penyelenggara,
-                    'alamat_lokasi'     => $request->alamat_lokasi,
-                    'jenis'     => $request->jenis,
-                    'tiket'     => $request->tiket,
-                    'tgl_mulai'     => $request->tgl_mulai,
-                    'tgl_selesai'     => $request->tgl_selesai,
-                    'link_lokasi'     => $request->link_lokasi,
-                    'harga'     => $harga,
-                ]);
-            // kode upload poster
-            } elseif ($request->hasFile('poster')) {
-                $data->update([
-                    'judul'     => $request->judul,
-                    'deskripsi'     => $request->deskripsi,
-                    'link'     => $request->link,
-                    'penyelenggara'     => $request->penyelenggara,
-                    'alamat_lokasi'     => $request->alamat_lokasi,
-                    'jenis'     => $request->jenis,
-                    'tiket'     => $request->tiket,
-                    'tgl_mulai'     => $request->tgl_mulai,
-                    'tgl_selesai'     => $request->tgl_selesai,
-                    'link_lokasi'     => $request->link_lokasi,
-                    'harga'     => $harga,
-                ]);
-                foreach ($gambarEvent as $g) {
-                    Storage::delete('public/image/'.$g->gambar);
-                    $g->delete();  
-                }
-                $multigambar = $request->file('poster');
-                foreach ($multigambar as $g) {
-                    $g->storeAs('public/image', $g->hashName());
-        
-                    GambarEvent::create([
-                        'event_id' => $data->id,
-                        'gambar' => $g->hashName(),
-                    ]);
-                }
-            } else {
-                $data->update([
-                    'judul'     => $request->judul,
-                    'deskripsi'     => $request->deskripsi,
-                    'link'     => $request->link,
-                    'penyelenggara'     => $request->penyelenggara,
-                    'alamat_lokasi'     => $request->alamat_lokasi,
-                    'jenis'     => $request->jenis,
-                    'tiket'     => $request->tiket,
-                    'tgl_mulai'     => $request->tgl_mulai,
-                    'tgl_selesai'     => $request->tgl_selesai,
-                    'link_lokasi'     => $request->link_lokasi,
-                    'harga'     => $harga,
-                ]);
             }
             DB::commit();
         } catch (Throwable $th) {
@@ -3183,21 +3117,21 @@ class MenuSuperAdminController extends Controller
         $data = GambarLelang::find($id);
         Storage::delete('public/image/'.$data->gambar);
         $data->delete();
-        return response()->json('success');
+        return response()->json(['success'=>'Gambar Berhasil Dihapus.']);
     }
     public function delete_banner_lelang($id)
     {
         $data = BannerLelangImage::find($id);
         Storage::delete('public/image/'.$data->gambar);
         $data->delete();
-            return response()->json('success');
+            return response()->json(['success'=>'Gambar Berhasil Dihapus.']);
     }
     public function delete_gambar_produk($id)
     {
         $data = GambarProduk::find($id);
         Storage::delete('public/image/'.$data->gambar);
         $data->delete();
-            return response()->json('success');
+            return response()->json(['success'=>'Gambar Berhasil Dihapus.']);
     }
     public function aktifkan_email_peserta($id){
         User::find($id)->update(['email_verified_at' => date("Y-m-d H:i:s")]);
@@ -3218,5 +3152,12 @@ class MenuSuperAdminController extends Controller
             'no_resi'=> $request->no_resi
         ]);
         return redirect('/pesanan')->with('success','Data pesanan berhasil di update');
+    }
+    public function delete_gambar_event($id)
+    {
+        $data = GambarEvent::find($id);
+        Storage::delete('public/image/'.$data->gambar);
+        $data->delete();
+        return response()->json(['success'=>'Poster Berhasil Dihapus.']);
     }
 }   

@@ -221,6 +221,8 @@ Route::middleware(['auth','role:Super Admin'])->group(function () {
         Route::put('/update-event/{id}/', [MenuSuperAdminController::class, 'update_event'])->name('superadmin.update-event');
         Route::put('/delete-event/{id}/', [MenuSuperAdminController::class, 'delete_event'])->name('superadmin.delete-event');
         Route::put('/active-event/{id}/', [MenuSuperAdminController::class, 'active_event'])->name('superadmin.active-event');
+        Route::delete('/delete-gambar-event/{id}/', [MenuSuperAdminController::class, 'delete_gambar_event']);
+
 
         // banner lelang
         Route::get('/banner-lelang', [MenuSuperAdminController::class, 'list_banner_lelang'])->name('superadmin.banner-lelang');

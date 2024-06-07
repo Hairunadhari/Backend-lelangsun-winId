@@ -1,10 +1,21 @@
 @extends('app.layouts')
 @section('content')
 <style>
-    .reviews img {
-        margin-bottom: 20px;
-        margin-left: 20px;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+     .btn-delete {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        background-color: rgba(0, 0, 0, .5);
+        /* Ganti warna sesuai kebutuhan */
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
     }
 </style>
     <div class="card">
@@ -18,32 +29,32 @@
                 <div class="row">
                     <div class="form-group col-6">
                         <label>Penyelenggara</label>
-                        <input type="text" class="form-control" name="penyelenggara" value="{{$data->penyelenggara}}" >
+                        <input type="text" class="form-control" name="penyelenggara" value="{{$data->penyelenggara}}" required>
                     </div>
                     <div class="form-group col-6">
                         <label>Judul</label>
-                        <input type="text" class="form-control" name="judul" value="{{$data->judul}}">
+                        <input type="text" class="form-control" name="judul" value="{{$data->judul}}" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Deskripsi</label>
                     <textarea class="summernote-simple" placeholder="keterangan..."
-                        name="deskripsi">{{$data->deskripsi}}</textarea>
+                        name="deskripsi" required>{{$data->deskripsi}}</textarea>
                 </div>
                 <div class="form-group">
                     <label>Alamat Lokasi</label>
-                    <textarea class="form-control" name="alamat_lokasi">{{$data->alamat_lokasi}}</textarea>
+                    <textarea class="form-control" name="alamat_lokasi" required>{{$data->alamat_lokasi}}</textarea>
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
                         <label>Jenis</label>
-                        <select class="form-control selectric" name="jenis" >
+                        <select class="form-control selectric" name="jenis" required>
                             <option value="Offline" <?= ($data->jenis == 'Offline' ? 'selected' : '')?>>Offline</option>
                         </select>
                     </div>
                     <div class="form-group col-6">
                         <label>Tiket</label>
-                        <select id="tiket" class="form-control selectric" name="tiket" onchange="toggleDiv(this.value)">
+                        <select id="tiket" class="form-control selectric" required name="tiket" onchange="toggleDiv(this.value)">
                             <option value="Berbayar" <?= ($data->tiket == 'Berbayar' ? 'selected' : '')?>>Berbayar</option>
                             <option value="Gratis" <?= ($data->tiket == 'Gratis' ? 'selected' : '')?>>Gratis</option>
                         </select>
@@ -52,7 +63,7 @@
                 <div id="editinpharga" style="display: none;">
                     <div class="form-group">
                         <label>Harga</label>
-                        <input type="text" class="form-control" name="harga" onkeyup="formatNumber(this)" value="{{$data->harga}}">
+                        <input type="text" required class="form-control" name="harga" onkeyup="formatNumber(this)" value="{{$data->harga}}">
                     </div>
                 </div>
                 <div class="row">
@@ -75,24 +86,22 @@
                         <input type="text" class="form-control" name="link_lokasi" value="{{$data->link_lokasi}}">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Image <small>(png, jpg, jpeg)</small></label>
-                    <input type="file" class="form-control" name="gambar"  id="gambar">
-                <div id="preview" class="mt-3"></div>
-                </div>
                  <div class="form-group" >
-                        <label for="">Poster detail event sebelumnya:</label>
+                        <label for="">Poster Service Sebelumnya:</label>
                         <br>
                         @foreach ($data->detail_gambar_event as $item)
-                        <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}"
-                            style="width:100px;box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                        <div class="image-container">
+                            <img class="ms-auto" src="{{ asset('storage/image/'.$item->gambar) }}"
+                                style="width:250px; height:150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; margin-left: 10px; margin-bottom:10px;">
+                            <button class="btn-delete" id="deletegambar" data-image-id="{{ $item->id }}">X</button>
+                        </div>
                         @endforeach
                     </div>
-                <div class="form-group">
-                        <label>Poster Detail Event <small>(bisa pilih lebih dari satu gambar | format gambar: png, jpg, jpeg | disarankan: width 900px, height 470px) </small></label>
-                        <input type="file" class="form-control" name="poster[]" id="gambars"  multiple>
+                    <div class="form-group">
+                        <label>Poster Service <small>(disarankan: width 900px, height 470px) </small><span
+                                style="color: red">*</span></label>
+                        <div class="input-images"></div>
                     </div>
-                    <div id="previews" class="reviews"></div>
             </div>
             <div class="card-footer text-right">
                 <button class="btn btn-primary mr-1" type="submit">Submit</button>
@@ -100,7 +109,34 @@
         </form>
     </div>
 <script>
-    
+      $('.input-images').imageUploader({
+        imagesInputName: 'poster',
+        maxSize: 2 * 1024 * 1024,
+
+    });
+    $(document).on('click', '#deletegambar', function (e) {
+        e.preventDefault();
+        let id = $(this).data('image-id');
+        let elementToRemove = $(this).closest('.image-container');
+        console.log(id);
+        $.ajax({
+            method: 'post',
+            url: '/superadmin/delete-gambar-event/' + id,
+            data: {
+                _method: 'delete',
+            },
+            success: function (res) {
+                console.log(res);
+                elementToRemove.remove();
+                iziToast.success({
+                    title: 'Notifikasi',
+                    message: res.success,
+                    position: 'topRight'
+                });
+            }
+        });
+    });
+
     window.onload = function () {
         const selectElement = document.getElementById("tiket");
         const editinpharga = document.getElementById("editinpharga");
@@ -112,44 +148,16 @@
         }
     };
     
-    function previewImages() {
-        var preview = document.querySelector('#preview');
-
-        // Hapus semua elemen child di dalam elemen #preview
-        while (preview.firstChild) {
-            preview.removeChild(preview.firstChild);
-        }
-
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreview);
-        }
-
-        function readAndPreview(file) {
-            if (!/\.(jpe?g|png)$/i.test(file.name)) {
-                alert(file.name + " format tidak sesuai");
-                document.querySelector('#gambar').value = '';
-                return;
-            }
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                preview.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-    document.querySelector('#gambar').addEventListener("change", previewImages);
-    
-
     function toggleDiv(value) {
         const editinpharga = document.getElementById("editinpharga");
+        const atr = editinpharga.querySelectorAll("input[required]");
         if (value == "Berbayar") {
             editinpharga.style.display = "block";
         } else {
             editinpharga.style.display = "none";
+            atr.forEach(input => {
+                input.removeAttribute("required");
+            });
         }
     };
 
@@ -168,37 +176,5 @@
         input.value = formattedNum;
     }
 
-    function previewsImages() {
-        var previews = document.querySelector('#previews');
-
-        // Hapus semua elemen child di dalam elemen #previews
-        while (previews.firstChild) {
-            previews.removeChild(previews.firstChild);
-        }
-
-        if (this.files) {
-            [].forEach.call(this.files, readAndPreviews);
-        }
-
-        function readAndPreviews(file) {
-            if (!/\.(jpe?g|png|jpg)$/i.test(file.name)) {
-                alert("Hanya file gambar dengan ekstensi .jpeg, .jpg, .png, yang diperbolehkan.");
-                document.querySelector('#gambars').value = '';
-                return;
-            }
-
-            var reader = new FileReader();
-            reader.addEventListener("load", function () {
-                var image = new Image();
-                image.width = 200;
-                image.title = file.name;
-                image.src = this.result;
-                previews.appendChild(image);
-            }, false);
-            reader.readAsDataURL(file);
-        }
-    }
-
-    document.querySelector('#gambars').addEventListener("change", previewsImages);
 </script>
 @endsection

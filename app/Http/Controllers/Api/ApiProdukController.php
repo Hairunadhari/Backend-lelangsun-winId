@@ -98,9 +98,9 @@ class ApiProdukController extends Controller
      * )
      */
     public function daftar_top_produk(){
-        $topproduk = Produk::take(5)->get();
+        $topproduk = Produk::with('gambarproduk')->take(5)->get();
         $topproduk->each(function ($item) {
-            $item->thumbnail = env('APP_URL').'/storage/image/' . $item->thumbnail;
+            $item->thumbnail = env('APP_URL').'/storage/image/' . (count($item->gambarproduk) == 0 ? '-' : $item->gambarproduk[0]->gambar);
         });
         return response()->json([
             'success'=>true,
@@ -144,14 +144,9 @@ class ApiProdukController extends Controller
      * )
      */
     public function detail_produk($id){
-        $produk = Produk::with('toko','kategoriproduk')->find($id);
-            $produk->thumbnail = env('APP_URL').'/storage/image/' . $produk->thumbnail;
+        $produk = Produk::with('gambarproduk','toko','kategoriproduk')->find($id);
+        $produk->thumbnail = env('APP_URL').'/storage/image/' . (count($produk->gambarproduk) == 0 ? '-' : $produk->gambarproduk[0]->gambar);
             $produk->toko->logo = env('APP_URL').'/storage/image/' . $produk->toko->logo;
-
-        $gambarproduk = GambarProduk::where('produk_id', $id)->get();
-        $gambarproduk->each(function ($item) {
-            $item->gambar = env('APP_URL').'/storage/image/' . $item->gambar;
-        });
 
         $review = Review::with('user')->where('produk_id', $id)->where('status','active')->get();
         $review->each(function ($item){
@@ -163,7 +158,6 @@ class ApiProdukController extends Controller
             'success'=>true,
             'data'=>[
             'produk' => $produk,
-            'gambarproduk' => $gambarproduk,
             'total_review' => $totalreview,
             'reviews' => $review,]
         ]);

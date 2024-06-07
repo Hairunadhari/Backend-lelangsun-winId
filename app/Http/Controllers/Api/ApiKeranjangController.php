@@ -137,11 +137,12 @@ class ApiKeranjangController extends Controller
             'produk' => function($query) {
                 $query->orderBy('created_at','desc');
             },
-            'produk.produkpromo'
+            'produk.produkpromo',
+            'produk.gambarproduk'
         ])->where('user_id', Auth::user()->id)->latest()->get();
         // pluck toko
         $data->each(function ($item) {
-            $item->produk->thumbnail = env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
+            $item->produk->thumbnail = env('APP_URL').'/storage/image/' . $item->produk->gambarproduk[0]->gambar;
         });
          // Menyesuaikan harga berdasarkan total_diskon dari produkpromo
         $data->each(function ($item) {
@@ -207,7 +208,8 @@ class ApiKeranjangController extends Controller
     public function delete_keranjang($id){
         try {
             DB::beginTransaction();
-                $data = Keranjang::find($id)->delete();
+                $data = Keranjang::find($id);   
+                $data->delete();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

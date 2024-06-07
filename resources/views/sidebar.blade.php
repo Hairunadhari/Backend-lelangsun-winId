@@ -28,7 +28,7 @@
         
         <!-- {{-- <li><a class="nav-link {{ request()->routeIs('superadmin.list-review') ? 'active' : '' }}" href="{{route('superadmin.list-review')}}"><i class="fas fa-comment-alt"></i><span>Review</span></a></li> --}} -->
         <li class="menu-header">Events</li>
-        <li class="{{ request()->routeIs('superadmin.event') ? 'active' : '' }}"><a href="{{route('superadmin.event')}}"><i class="fas fa-calendar-alt"></i><span>Win Event</span></a></li>
+        <li class="{{ request()->routeIs('superadmin.event') ? 'active' : '' }}"><a href="{{route('superadmin.event')}}"><i class="fas fa-calendar-alt"></i><span>Services</span></a></li>
         <li class="{{ request()->routeIs('superadmin.event-lelang') ? 'active' : '' }}"><a href="{{route('superadmin.event-lelang')}}"><i class="fas fa-calendar-alt"></i><span>Win Lelang</span></a></li>
         <li class="menu-header">Win Lelang</li>
         <li class="{{ request()->routeIs('superadmin.banner-lelang') ? 'active' : '' }}"><a href="{{route('superadmin.banner-lelang')}}"><i class="fas fa-images"></i><span>Banner Web Lelang</span></a></li>

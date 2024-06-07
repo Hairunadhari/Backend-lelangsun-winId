@@ -306,6 +306,11 @@
             success: function (res) {
                 console.log(res);
                 elementToRemove.remove();
+                iziToast.success({
+                    title: 'Notifikasi',
+                    message: res.success,
+                    position: 'topRight'
+                });
             }
         });
     });

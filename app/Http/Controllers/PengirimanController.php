@@ -72,7 +72,8 @@ class PengirimanController extends Controller
             $pdf->save(public_path('labelpengiriman/' . $filename));
             
         } catch (\Throwable $th) {
-            return back()->with(['error' => 'Gagal Mendownload Label Pengiriman, '.$th->getMessage()]);
+            return response()->json(['error'=>'Gagal Mendownload Label Pengiriman, '.$th->getMessage()],400);
+
         }
         
         // Kembalikan file PDF yang dihasilkan untuk diunduh

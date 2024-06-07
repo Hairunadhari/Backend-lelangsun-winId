@@ -89,9 +89,10 @@ class ApiPromoProdukController extends Controller
         $datapromosi->gambar =  env('APP_URL').'/storage/image/' . $datapromosi->gambar;
         $datapromosi->diskon =  $datapromosi->diskon . '%';
 
-        $detailproduk = ProdukPromo::with('produk')->where('promosi_id',$id)->get();
+        $detailproduk = ProdukPromo::with('produk.gambarproduk')->where('promosi_id',$id)->get();
         $detailproduk->each(function ($item){
-            $item->produk->thumbnail =  env('APP_URL').'/storage/image/' . $item->produk->thumbnail;
+            $item->produk->thumbnail =  env('APP_URL').'/storage/image/' . (count($item->produk->gambarproduk) == 0 ? '-' : $item->produk->gambarproduk[0]->gambar);
+            
         });
         return response()->json([
             'success'=>true,

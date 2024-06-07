@@ -34,7 +34,7 @@
                         <input type="text" class="form-control" name="deskripsi" value="{{old('deskripsi', $data->deskripsi)}}">
                     </div>
                     <div class="form-group">
-                        <label>Diskon</label>
+                        <label>Diskon (%)</label>
                         <input type="text" class="form-control" name="diskon" value="{{old('diskon', $data->diskon)}}" onkeyup="formatPromo(this)">
                     </div>
                     <div class="form-group">
