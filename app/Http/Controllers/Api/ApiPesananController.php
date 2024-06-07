@@ -48,7 +48,8 @@ class ApiPesananController extends Controller
     
         $data->each(function ($item) {
             $item->orderitem->each(function ($orderItem) {
-                $thumbnail = $orderItem->produk->thumbnail;
+                $thumbnail = (count($orderItem->produk->gambarproduk) == 0 ? '-' : $orderItem->produk->gambarproduk[0]->gambar);
+                
                 $url = env('APP_URL').'/storage/image/';
                 
                 $orderItem->produk->thumbnail = str_replace($url, '', $thumbnail);
