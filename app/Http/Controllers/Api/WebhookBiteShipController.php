@@ -24,7 +24,7 @@ class WebhookBiteShipController extends Controller
             // ]);
             // DB::commit();
         } catch (\Throwable $th) {
-            DB::rollback();
+            DB::rollBack();
             //throw $th;
             return response()->json([
                 'success' => false,
