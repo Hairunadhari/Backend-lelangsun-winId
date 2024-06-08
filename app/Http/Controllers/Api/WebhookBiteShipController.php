@@ -13,16 +13,16 @@ class WebhookBiteShipController extends Controller
     public function order_status(Request $request){
         // dd($request->courier_driver_plate_number);
         try {
-            DB::beginTransaction();
-            $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
-            $data->update([
-                'courier_name' => $request->courier_driver_name,
-                'courier_phone' => $request->courier_driver_phone,
-                'courier_link' => $request->courier_link,
-                'courier_photo_url' => $request->courier_driver_photo_url,
-                'courier_plate_number' => $request->courier_driver_plate_number
-            ]);
-            DB::commit();
+            // DB::beginTransaction();
+            // $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
+            // $data->update([
+            //     'courier_name' => $request->courier_driver_name,
+            //     'courier_phone' => $request->courier_driver_phone,
+            //     'courier_link' => $request->courier_link,
+            //     'courier_photo_url' => $request->courier_driver_photo_url,
+            //     'courier_plate_number' => $request->courier_driver_plate_number
+            // ]);
+            // DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
             //throw $th;
