@@ -41,11 +41,11 @@ class WebhookBiteShipController extends Controller
     public function order_price(Request $request){
         try {
             DB::beginTransaction();
-            $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
-            $data->update([
-                'price' => $request->shippment_fee,
-                'proof_of_delivery_fee' => $request->proof_of_delivery_fee,
-            ]);
+            // $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
+            // $data->update([
+            //     'price' => $request->shippment_fee,
+            //     'proof_of_delivery_fee' => $request->proof_of_delivery_fee,
+            // ]);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -65,11 +65,11 @@ class WebhookBiteShipController extends Controller
     public function order_waybill(Request $request){
         try {
             DB::beginTransaction();
-            $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
-            $data->update([
-                'waybill_id' => $request->courier_waybill_id,
-                'tracking_id' => $request->courier_tracking_id,
-            ]);
+            // $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
+            // $data->update([
+            //     'waybill_id' => $request->courier_waybill_id,
+            //     'tracking_id' => $request->courier_tracking_id,
+            // ]);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
