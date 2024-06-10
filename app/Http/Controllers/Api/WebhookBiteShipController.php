@@ -40,13 +40,13 @@ class WebhookBiteShipController extends Controller
     // pembaruan harga
     public function order_price(Request $request){
         try {
-            DB::beginTransaction();
-            // $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
-            // $data->update([
-            //     'price' => $request->shippment_fee,
-            //     'proof_of_delivery_fee' => $request->proof_of_delivery_fee,
-            // ]);
-            DB::commit();
+            // DB::beginTransaction();
+            // // $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
+            // // $data->update([
+            // //     'price' => $request->shippment_fee,
+            // //     'proof_of_delivery_fee' => $request->proof_of_delivery_fee,
+            // // ]);
+            // DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
             //throw $th;
@@ -64,13 +64,13 @@ class WebhookBiteShipController extends Controller
     //pembaruan waybill
     public function order_waybill(Request $request){
         try {
-            DB::beginTransaction();
-            // $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
-            // $data->update([
-            //     'waybill_id' => $request->courier_waybill_id,
-            //     'tracking_id' => $request->courier_tracking_id,
-            // ]);
-            DB::commit();
+            // DB::beginTransaction();
+            // // $data = Pengiriman::where('biteship_order_id',$request->order_id)->first();
+            // // $data->update([
+            // //     'waybill_id' => $request->courier_waybill_id,
+            // //     'tracking_id' => $request->courier_tracking_id,
+            // // ]);
+            // DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
             //throw $th;
