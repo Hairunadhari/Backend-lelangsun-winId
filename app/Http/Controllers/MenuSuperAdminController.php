@@ -1124,7 +1124,7 @@ class MenuSuperAdminController extends Controller
 
     public function add_barang_lelang(Request $request){
         $validator = Validator::make($request->all(), [
-            'gambar' => 'required|max:1024', // 1024 kilobytes = 1 megabyte
+            'gambar.*' => 'required|max:1024', // 1024 kilobytes = 1 megabyte
         ]);
         
         if($validator->fails()){
