@@ -16,15 +16,16 @@ class PengirimanController extends Controller
 {
     public function list_pengiriman(){
 
-        $dataModal = OrderItem::with('order')->get();
+        
        
         if (request()->ajax()) {
             $date = request('date');
           $query = DB::table('order_items')
         ->select('order_items.id','order_items.qty','order_items.nama_order','pengirimen.biteship_order_id','pengirimen.waybill_id',
-        'pengirimen.created_at','pengirimen.price','pengirimen.status')
+        'pengirimen.created_at','pengirimen.insurance_amount','pengirimen.status')
         ->leftJoin('orders','orders.id','=','order_items.order_id')
-        ->leftJoin('pengirimen','pengirimen.order_id','=','orders.id');
+        ->leftJoin('pengirimen','pengirimen.order_id','=','orders.id')
+        ->whereNotNull('pengirimen.biteship_order_id');
             if ($date) {
                 $query->whereDate('pengirimen.created_at',$date);
             }
@@ -36,7 +37,7 @@ class PengirimanController extends Controller
             return DataTables::of($data)->make(true);
             # code...
         }
-        return view('e-commerce.pengiriman',compact('dataModal'));
+        return view('e-commerce.pengiriman');
     }
     public function download_pdf(Request $request){
         if ($request->date == null) {
@@ -185,4 +186,43 @@ class PengirimanController extends Controller
         $data = json_decode($json, true);
         return view('e-commerce.tracking',compact('data'));
     }
+
+    public function detail_pengiriman($id){
+        $data = OrderItem::with('order')->find($id);
+        // dd($data->order->pengiriman);
+        return view('e-commerce.detail_pengiriman',compact('data'));
+    }
+
+    public function a(Request $request){
+       
+        try {
+          
+            $html = '';
+            
+            // Proses setiap entri data
+            foreach ($data as $key) {
+                $key->barcode = DNS1D::getBarcodeHTML($key->waybill_id, 'C39',2,80);
+                
+                $view = View::make('e-commerce.label-pengiriman', compact('key'));
+                $html .= $view;
+            }
+            
+            // Load gabungan HTML ke PDF
+            $pdf = PDF::loadHTML($html);
+            $pdf->setPaper(array(0, 0, 600, 700));
+            
+            // Buat nama file unik
+            $filename = 'WinShop-' . $request->date . '-' . time() . '.pdf';
+            $pdf->save(public_path('labelpengiriman/' . $filename));
+            
+        } catch (\Throwable $th) {
+            return response()->json(['error'=>'Gagal Mendownload Label Pengiriman, '.$th->getMessage()],400);
+
+        }
+        
+        // Kembalikan file PDF yang dihasilkan untuk diunduh
+        return asset('/labelpengiriman/'.$filename);
+        
+    }
+   
 }

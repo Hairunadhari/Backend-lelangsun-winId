@@ -319,6 +319,7 @@ Route::get('/dashboard', [MenuSuperAdminController::class, 'dashboard'])->name('
     Route::put('/update-pesanan/{id}', [MenuSuperAdminController::class, 'update_pesanan'])->name('update-pesanan');
     Route::get('/promosi', [MenuSuperAdminController::class, 'list_promosi'])->name('promosi');
     Route::get('/pengiriman', [PengirimanController::class, 'list_pengiriman'])->name('pengiriman');
+    Route::get('/detail-pengiriman/{id}', [PengirimanController::class, 'detail_pengiriman']);
     Route::get('/tracking/{id}', [PengirimanController::class, 'tracking'])->name('tracking');
     
     
@@ -350,6 +351,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     
 });
 
+Route::post('/download-excel', [MenuSuperAdminController::class, 'download_excel']);
 Route::post('/download-pdf', [PengirimanController::class, 'download_pdf']);
     Route::post('log-bidding',[MenuSuperAdminController::class, 'log_bidding']);
     Route::get('/download-apk', [MenuSuperAdminController::class, 'download_apk'])->name('download-apk');

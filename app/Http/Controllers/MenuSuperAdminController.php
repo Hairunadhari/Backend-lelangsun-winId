@@ -155,7 +155,7 @@ class MenuSuperAdminController extends Controller
 
         } catch (Throwable $th) {
             //throw $th;
-            DB::rollBack();
+            DB::rollback();
             return redirect()->route('superadmin.toko')->with(['error' => $th->getMessage()]);
         }
 
@@ -193,7 +193,7 @@ class MenuSuperAdminController extends Controller
             $wishlist->each->delete();
             DB::commit();
         } catch (\Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.toko')->with(['error' => $th->getMessage()]);
         }
@@ -217,7 +217,7 @@ class MenuSuperAdminController extends Controller
             }
             DB::commit();
         } catch (\Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             if (Auth::user()->role->role == 'Super Admin') {
                 return redirect()->route('superadmin.toko')->with(['error' => $th->getMessage()]);
@@ -336,7 +336,7 @@ class MenuSuperAdminController extends Controller
 
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             if (Auth::user()->role->role == 'Super Admin') {
                 return redirect()->route('superadmin.kategori-produk')->with(['error' => $th->getMessage()]);
@@ -362,7 +362,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             if (Auth::user()->role->role == 'Super Admin') {
                 return redirect()->route('superadmin.kategori-produk')->with(['error' => $th->getMessage()]);
@@ -382,11 +382,15 @@ class MenuSuperAdminController extends Controller
         $idAdmin = Auth::user()->id;
         if (request()->ajax()) {
             $status = request('status');
+            $date = request('date');
 
             $query = Order::with('orderitem');
             // get data role superadmin
             if ($status != null) {
                 $query->where('status',$status);
+            }
+            if ($date != null) {
+                $query->whereDate('created_at',$date);
             }
             if (Auth::user()->role->role == 'Admin') {
                 $query->where('toko_id',Auth::user()->toko->id)->get();    
@@ -470,7 +474,7 @@ class MenuSuperAdminController extends Controller
             }
                 DB::commit();
             } catch (Throwable $th) {
-                DB::rollBack();
+                DB::rollback();
                 // dd($th);
                 //throw $th;
                 if (Auth::user()->role->role == 'Super Admin') {
@@ -551,7 +555,7 @@ class MenuSuperAdminController extends Controller
         DB::commit();
 
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             // dd($th);
                 return redirect()->back()->with(['error' => $th->getMessage()]);
             //throw $th;
@@ -581,7 +585,7 @@ class MenuSuperAdminController extends Controller
             $wishlist->each->delete();
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             if (Auth::user()->role->role == 'Super Admin') {
                 return redirect()->route('superadmin.produk')->with(['error' => $th->getMessage()]);
             } else {
@@ -605,7 +609,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
             
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             if (Auth::user()->role->role == 'Super Admin') {
                 return redirect()->route('superadmin.produk')->with(['error' => $th->getMessage()]);
@@ -731,7 +735,7 @@ class MenuSuperAdminController extends Controller
 
         } catch (Throwable $th) {
             //throw $th;
-            DB::rollBack();
+            DB::rollback();
             return redirect()->route('superadmin.event-lelang')->with(['error' => $th->getMessage()]);
         }
 
@@ -757,7 +761,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.event-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -777,7 +781,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.event-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -806,10 +810,12 @@ class MenuSuperAdminController extends Controller
     public function form_input_promosi(){
         $idAdmin = Auth::user()->id;
         $idToko = Toko::where('user_id',$idAdmin)->first();
-        
-        $produk_berdasarkan_toko = Produk::select('id','nama','thumbnail')->where('stok', '>', 0)->where('toko_id', $idToko->id ?? null)->where('status','active')->orderBy('nama', 'asc')->get();
-        $produk = Produk::select('id','nama','thumbnail')->where('status','active')->where('stok', '>', 0)->orderBy('nama', 'asc')->get();
-        return view('e-commerce.tambah_promosi', compact('produk','produk_berdasarkan_toko'));
+        if (Auth::user()->role->role == 'Super Admin'){
+            $produk = Produk::with('gambarproduk')->where('status','active')->where('stok', '>', 0)->orderBy('nama', 'asc')->get();
+        }else{
+            $produk = Produk::with('gambarproduk')->where('stok', '>', 0)->where('toko_id', $idToko->id)->where('status','active')->orderBy('nama', 'asc')->get();
+        }
+        return view('e-commerce.tambah_promosi', compact('produk'));
     }
 
     public function add_promosi(Request $request){
@@ -860,7 +866,7 @@ class MenuSuperAdminController extends Controller
             }
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('promosi')->with('error', $th->getMessage());
         }
@@ -871,7 +877,7 @@ class MenuSuperAdminController extends Controller
     {
         $data = Promosi::find($id);
         if (request()->ajax()) {
-            $produkPromo = ProdukPromo::with('produk','promosi')->where('promosi_id',$id)->get();
+            $produkPromo = ProdukPromo::with('produk.gambarproduk','promosi')->where('promosi_id',$id)->get();
             return DataTables::of($produkPromo)->make(true);
         }
         return view('e-commerce.detail_promosi', compact('data'));
@@ -899,7 +905,10 @@ class MenuSuperAdminController extends Controller
             }
         } else {
             $data = Promosi::find($id);
-            $produk = Produk::where('status','active')->orderBy('nama', 'asc')->where('toko_id',Auth::user()->toko->id)->get();
+            $produk = Produk::with('gambarproduk')->where('status','active')->orderBy('nama', 'asc')->where('toko_id',Auth::user()->toko->id)->get();
+            $produk->each(function ($item) {
+                $item->thumbnail = (count($item->gambarproduk) == 0 ? '-' : $item->gambarproduk[0]->gambar);
+            });
             $produkPromo = ProdukPromo::where('promosi_id', $id)->get();
             $produkTerpilih = [];
             
@@ -990,7 +999,7 @@ class MenuSuperAdminController extends Controller
             }
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             return redirect()->route('promosi')->with(['error' => $th->getMessage()]);
             //throw $th;
         }
@@ -1009,7 +1018,7 @@ class MenuSuperAdminController extends Controller
             $data->update(['status'=>'not-active']);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             dd($th);
             return redirect()->route('promosi')->with(['error' => $th->getMessage()]);
@@ -1070,7 +1079,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.kategori-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -1088,7 +1097,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.kategori-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -1105,7 +1114,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.kategori-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -1206,7 +1215,7 @@ class MenuSuperAdminController extends Controller
 
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             dd($th);
             return redirect()->route('superadmin.barang-lelang')->with('error', $th->getMessage());
         }
@@ -1389,7 +1398,7 @@ class MenuSuperAdminController extends Controller
 
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.barang-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -1413,7 +1422,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.barang-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -1430,7 +1439,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.barang-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -1459,7 +1468,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-utama')->with('error', $th->getMessage());
         }
@@ -1499,7 +1508,7 @@ class MenuSuperAdminController extends Controller
         } 
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-utama')->with(['error' => $th->getMessage()]);
         }
@@ -1515,7 +1524,7 @@ class MenuSuperAdminController extends Controller
             $data->delete();
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-utama')->with(['error' => $th->getMessage()]);
         }
@@ -1577,7 +1586,7 @@ class MenuSuperAdminController extends Controller
         } 
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-diskon')->with(['error' => $th->getMessage()]);
         }
@@ -1593,7 +1602,7 @@ class MenuSuperAdminController extends Controller
             $data->delete();
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-diskon')->with(['error' => $th->getMessage()]);
         }
@@ -1655,7 +1664,7 @@ class MenuSuperAdminController extends Controller
         } 
         DB::commit();
     } catch (Throwable $th) {
-        DB::rollBack();
+        DB::rollback();
         //throw $th;
         return redirect()->route('superadmin.banner-spesial')->with(['error' => $th->getMessage()]);
     }
@@ -1671,7 +1680,7 @@ class MenuSuperAdminController extends Controller
             $data->delete();
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-spesial')->with(['error' => $th->getMessage()]);
         }
@@ -1720,7 +1729,7 @@ class MenuSuperAdminController extends Controller
             }
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with(['error' => $th->getMessage()]);
         }
@@ -1762,7 +1771,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('list-review')->with(['erro' => 'Data Gagal Diupdate!']);
         }
@@ -1805,7 +1814,7 @@ class MenuSuperAdminController extends Controller
             }
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('list-review')->with(['error' => $th->getMessage()]);
         }
@@ -1820,7 +1829,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             return redirect()->route('list-review')->with(['error' => $th->getMessage()]);
             //throw $th;
         }
@@ -1905,7 +1914,7 @@ class MenuSuperAdminController extends Controller
 
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.event')->with('error', $th->getMessage());
         }
@@ -1964,7 +1973,7 @@ class MenuSuperAdminController extends Controller
             }
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.event')->with(['error' => $th->getMessage()]);
         }
@@ -1980,7 +1989,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.event')->with(['error' => $th->getMessage()]);
         }
@@ -1996,7 +2005,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.event')->with(['error' => $th->getMessage()]);
         }
@@ -2022,7 +2031,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-lelang')->with('error', $th->getMessage());
         }
@@ -2053,7 +2062,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -2072,7 +2081,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.banner-lelang')->with(['error' => $th->getMessage()]);
         }
@@ -2116,7 +2125,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.user-cms')->with('error', $th->getMessage());
         }
@@ -2148,7 +2157,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.user-cms')->with(['error' => $th->getMessage()]);
         }
@@ -2166,7 +2175,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.user-cms')->with(['error' => $th->getMessage()]);
         }
@@ -2182,7 +2191,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.user-cms')->with(['error' => $th->getMessage()]);
         }
@@ -2210,7 +2219,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with(['error' => $th->getMessage()]);
         }
@@ -2233,7 +2242,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with(['error' => $th->getMessage()]);
         }
@@ -2250,7 +2259,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with(['error' => $th->getMessage()]);
         }
@@ -2327,7 +2336,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.toko')->with('error', $th->getMessage());
         }
@@ -2382,7 +2391,7 @@ class MenuSuperAdminController extends Controller
             ]); 
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with('error', $th->getMessage());
         }
@@ -2419,7 +2428,7 @@ class MenuSuperAdminController extends Controller
             $data->delete();
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with('error', $th->getMessage());
         }
@@ -2434,7 +2443,7 @@ class MenuSuperAdminController extends Controller
             $peserta->each->delete();
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with('error', $th->getMessage());
         }
@@ -2536,7 +2545,7 @@ class MenuSuperAdminController extends Controller
            
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             return redirect()->back()->with('error', $th->getMessage());
         }
 
@@ -2585,7 +2594,7 @@ class MenuSuperAdminController extends Controller
 
             
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             // dd($th);
             return redirect()->route('superadmin.peserta-npl')->with('error', $th->getMessage());
         }
@@ -2603,7 +2612,7 @@ class MenuSuperAdminController extends Controller
       
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             return redirect()->route('superadmin.peserta-npl')->with('error', $th->getMessage());
         }
         return redirect()->route('superadmin.peserta-npl')->with('success', 'Data Berhasil Dihapus!');
@@ -2618,7 +2627,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.peserta-npl')->with('error', $th->getMessage());
         }
@@ -2677,7 +2686,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
 
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             // dd($th);
             return redirect()->back()->with('error', $th->getMessage());
         }
@@ -2762,7 +2771,7 @@ class MenuSuperAdminController extends Controller
              
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.lot')->with('error', $th->getMessage());
         }
@@ -2791,7 +2800,7 @@ class MenuSuperAdminController extends Controller
 
             
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             return redirect()->back()->with('error', $th->getMessage());
         }
         
@@ -2841,7 +2850,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
             
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
 
             // dd($th);
             return response()->json([
@@ -2929,7 +2938,7 @@ class MenuSuperAdminController extends Controller
             event(new SearchPemenangLot($pemenang_bid, $request->event_lelang_id));
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             // dd($th);
             return response()->json($th);
             //throw $th;
@@ -2962,7 +2971,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
 
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             dd($th);
             //throw $th;
         }
@@ -3002,7 +3011,7 @@ class MenuSuperAdminController extends Controller
         
         DB::commit();
     } catch (Throwable $th) {
-        DB::rollBack();
+        DB::rollback();
         //throw $th;
         return redirect()->route('superadmin.peserta-npl')->with('error', $th->getMessage());
     }
@@ -3045,7 +3054,7 @@ class MenuSuperAdminController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.pemenang')->with('error', $th->getMessage());
         }
@@ -3082,7 +3091,7 @@ class MenuSuperAdminController extends Controller
 
         DB::commit();
     } catch (Throwable $th) {
-        DB::rollBack();
+        DB::rollback();
         //throw $th;
         return redirect()->back()->with('error', $th->getMessage());
     }
@@ -3104,7 +3113,7 @@ class MenuSuperAdminController extends Controller
             $ulasan->delete();
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->route('superadmin.ulasan')->with('error', $th->getMessage());
         }
@@ -3160,4 +3169,49 @@ class MenuSuperAdminController extends Controller
         $data->delete();
         return response()->json(['success'=>'Poster Berhasil Dihapus.']);
     }
+
+    public function download_excel(Request $request) {
+        if ($request->date == null) {
+            return back()->with(['error'=>'Silahkan isi tanggal Export Excel!']);
+        }
+        try {
+         
+            $filename = "export_data_pesanan_".date('Y-m-d').".xls";		 
+            header("Content-Type: application/vnd.ms-excel");
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+            header('Cache-Control: max-age=0');
+
+            $query = Order::whereDate('created_at', $request->date);
+
+            if (Auth::user()->toko != null) {
+                $query->where('toko_id',Auth::user()->toko->id);
+            }
+            $data = $query->get();
+    
+            // $heading = false;
+            $dataHtml = '<table border="1">
+            <tr>
+            <th class="text-center" scope="col">#</th>
+            <th class="text-center" scope="col">No Invoice</th>
+            <th class="text-center" scope="col">Nama Order</th>
+            <th class="text-center" scope="col">Sub Total</th>';
+            $dataHtml .= '</tr>';
+                if(!empty($data))
+                $no = 1;
+                foreach($data as $key => $item) {
+                    $dataHtml .= "<tr>
+                        <td>".$no++."</td>
+                        <td>".$item->no_invoice."</td>
+                        <td>".$item->order_name."</td>
+                        <td>".$item->sub_total."</td>";
+                    $dataHtml .= "</tr>";
+                }
+            $dataHtml .= '</table>';
+
+        } catch (\Throwable $th) {
+            return back()->with(['error'=>$th->getMessage()]);
+        }
+
+        echo $dataHtml;
+      }
 }   

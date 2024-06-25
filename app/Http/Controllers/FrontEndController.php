@@ -40,7 +40,7 @@ class FrontEndController extends Controller
 {
     public function beranda(){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         $data = BannerLelang::where('status','active')->first();
         $banner = BannerLelangImage::where('banner_lelang_id',$data->id)->get();
@@ -56,7 +56,7 @@ class FrontEndController extends Controller
     // }
     public function lelang(){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d');
@@ -67,7 +67,7 @@ class FrontEndController extends Controller
     }
     public function event(){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d');
@@ -77,8 +77,9 @@ class FrontEndController extends Controller
     }
     public function detail_event($id){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
+
         $event_id = Crypt::decrypt($id);
         $event = EventLelang::with(['lot_item'=>function($query){
             $query->where('status_item','active');
@@ -87,21 +88,21 @@ class FrontEndController extends Controller
         return view('front-end/detail_event',compact('event'));
     }
     public function kontak(){
-        if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+       if (Auth::user() && Auth::user()->role_id != null) {
+            Auth::logout();
         }
         $data = Setting::first();
         return view('front-end/kontak', compact('data'));
     }
     public function login(){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         return view('front-end/login');
     }
     public function register(){
-        if (Auth::user()) {
-            return back();
+        if (Auth::user() && Auth::user()->role_id != null) {
+            Auth::logout();
         }
         return view('front-end/register');
     }
@@ -184,33 +185,35 @@ class FrontEndController extends Controller
             }
     
            
-            $encrypt_email = Crypt::encrypt($request->email);
-            $url = route('verify-email-user',$encrypt_email);  
-            Mail::to($request->email)->send(new VerifyRegisterUser($url));
+            // $encrypt_email = Crypt::encrypt($request->email);
+            // $url = route('verify-email-user',$encrypt_email);  
+            // Mail::to($request->email)->send(new VerifyRegisterUser($url));
 
             DB::commit();
 
             
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             // dd($th);
             return redirect()->back()->with('error','Registrasi Gagal, '.$th->getMessage());
         }
-        return redirect('/user-verifikasi-email/'.$encrypt_email)->with('message','Registrasi berhasil, silahkan verifikasi email anda');
+        return redirect('/user-login')->with('message','Registrasi berhasil, silahkan login.');
+        // return redirect('/user-verifikasi-email/'.$encrypt_email)->with('message','Registrasi berhasil, silahkan verifikasi email anda');
 
     }
 
-    public function proses_login(LoginRequest $request){
-        if (Auth::user()->attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect('/user-kontak');
-        }
+    // public function proses_login(LoginRequest $request){
+    //     dd($request);
+    //     // if (Auth::user()->attempt(['email' => $request->email, 'password' => $request->password])) {
+    //     //     return redirect('/user-kontak');
+    //     // }
 
-        return back()->withErrors(['pesan' => 'Username atau password salah']);
+    //     return back()->withErrors(['pesan' => 'Username atau password salah']);
         
-    }
+    // }
     public function notif(){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         $id = Auth::user()->id;
         $data = User::find($id);
@@ -219,7 +222,7 @@ class FrontEndController extends Controller
 
     public function npl(){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         $konvers_tanggal = Carbon::parse(now(),'UTC')->setTimezone('Asia/Jakarta');
         $now = $konvers_tanggal->format('Y-m-d');
@@ -233,7 +236,7 @@ class FrontEndController extends Controller
 
     public function pelunasan(){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         $id = Auth::user()->id;
         $data = Npl::with('pemenang.bidding.lot_item.barang_lelang')->where('user_id',$id)->orderBy('created_at','desc')->get();
@@ -242,7 +245,7 @@ class FrontEndController extends Controller
     }
     public function pesan(){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         $id = Auth::user()->id;
         $notif = Notifikasi::with('user','refund')->where('user_id',$id)->get();
@@ -294,7 +297,7 @@ class FrontEndController extends Controller
             DB::commit();
 
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             return redirect()->back()->with('error', 'Pembelian NPL Gagal, silahkan isi ulang form pembelian npl kembali!');
         }
         
@@ -320,7 +323,7 @@ class FrontEndController extends Controller
 
     public function edit_profil_user(Request $request, $id){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         try {
             DB::beginTransaction();
@@ -391,7 +394,7 @@ class FrontEndController extends Controller
         }
         DB::commit();
     } catch (Throwable $th) {
-        DB::rollBack();
+        DB::rollback();
         //throw $th;
         return redirect()->back()->with('error', 'Data Gagal Diubah!');
     }
@@ -400,7 +403,7 @@ class FrontEndController extends Controller
     
     public function refund($id){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         try {
             DB::beginTransaction();
@@ -414,7 +417,7 @@ class FrontEndController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with('error', 'ERROR! data anda Gagal di verifikasi oleh admin');
         }
@@ -446,7 +449,7 @@ class FrontEndController extends Controller
             event(new Message($request->email, $bids, $request->event_lelang_id));
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             dd($th);
             return ['success' => false];
         }
@@ -463,7 +466,7 @@ class FrontEndController extends Controller
 
     public function pelunasan_barang(Request $request, $id){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         try {
             DB::beginTransaction();
@@ -478,7 +481,7 @@ class FrontEndController extends Controller
         ]);
         DB::commit();
     } catch (Throwable $th) {
-        DB::rollBack();
+        DB::rollback();
         //throw $th;
         return redirect()->back()->with('error', 'ERROR! data anda Gagal di verifikasi oleh admin');
     }
@@ -486,7 +489,7 @@ class FrontEndController extends Controller
     }
     public function beri_ulasan(Request $request, $id){
         if (Auth::user() && Auth::user()->role_id != null) {
-            return back();
+            Auth::logout();
         }
         try {
             DB::beginTransaction();
@@ -502,7 +505,7 @@ class FrontEndController extends Controller
             ]);
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
             return redirect()->back()->with('error', 'ERROR! Ulasan Gagal di kirim!');
         }

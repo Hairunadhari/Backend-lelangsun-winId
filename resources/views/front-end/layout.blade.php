@@ -165,7 +165,7 @@
                             </ul>
                         </li>
                     @else
-                    <a class="nav-link fw-semibold" href="{{route('front-end-login')}}">Login</a>
+                    <a class="nav-link fw-semibold" href="{{route('front-end-login')}}">Login / Registrasi</a>
                     @endif
                 </div>
             </div>

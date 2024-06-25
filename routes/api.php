@@ -60,7 +60,7 @@ Route::middleware('auth:api')->group(function(){
 
     Route::get('/list-pesanan', [ApiPesananController::class, 'list_pesanan']);
     Route::get('/detail-pesanan/{id}/', [ApiPesananController::class, 'detail_pesanan']);
-Route::get('/tracking/{id}', [ApiBiteShipController::class, 'tracking']);
+    Route::get('/tracking/{id}', [ApiBiteShipController::class, 'tracking']);
 
 
     Route::post('/add-review', [ApiReviewController::class, 'add_review']);

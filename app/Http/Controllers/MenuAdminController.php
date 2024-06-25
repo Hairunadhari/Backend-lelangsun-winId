@@ -123,10 +123,10 @@ class MenuAdminController extends Controller
             ]); 
             DB::commit();
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             //throw $th;
-            dd($th);
-            return redirect()->route('admin.profil-toko')->with('error', 'Data Gagal DiEdit!');
+            // dd($th);
+            return redirect()->route('admin.profil-toko')->with('error', $th->getMessage());
         }
     
         return redirect()->route('admin.profil-toko')->with('success', 'Data Berhasil DiEdit!');

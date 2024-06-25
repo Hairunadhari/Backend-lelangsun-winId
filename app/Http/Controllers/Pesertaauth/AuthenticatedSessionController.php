@@ -35,12 +35,12 @@ class AuthenticatedSessionController extends Controller
         try {
             $user = User::where('email', $request->email)->first();
             if ($user) {
-                if ($user->status == 'active' && $user->email_verified_at != null) {
+                if ($user->status == 'active') {
                     $request->authenticate();
                     $request->session()->regenerate();
                     return redirect()->intended(RouteServiceProvider::PESERTA);
                 } else {
-                    return redirect('/user-login')->with(['warning' => 'Akun belum Terverivikasi! Silahkan verifikasi email anda!']);            
+                    return redirect('/user-login')->with(['warning' => 'Akun anda tidak aktif!']);            
                 }
             }else{
                 return redirect('/user-login')->with(['error' => 'Email Belum Terdaftar!']);            

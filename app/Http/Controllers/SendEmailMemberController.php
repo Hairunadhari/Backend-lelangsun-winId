@@ -34,7 +34,7 @@ class SendEmailMemberController extends Controller
         } catch (Throwable $th) {
             DB::rollback();
             dd($th);
-            return redirect()->back()->with(['error' => 'Data Gagal diverifikasi!']);
+            return redirect()->back()->with(['error' => $th->getMessage()]);
         }
         return redirect()->back()->with(['success' => 'Data berhasil diverifikasi!']);
 

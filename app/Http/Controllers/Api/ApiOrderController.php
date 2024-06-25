@@ -372,7 +372,13 @@ class ApiOrderController extends Controller
 public function callback_xendit(Request $request){
     try {
         DB::beginTransaction();
-       
+        // $requestXendit = [
+        //     'external_id'=>$request->external_id,
+        //     'status'=>$request->status,
+        //     'payment_method'=>$request->payment_method,
+        //     'bank_code'=>$request->bank_code
+        // ];
+        // dispatch(new ProcessBiteship($requestXendit));
         $order = Order::where('no_invoice',$request->external_id)->first();
         $order->update(['status'=>$request->status]);
 
@@ -481,8 +487,8 @@ public function callback_xendit(Request $request){
                     'courier_name' => $response->courier->name,
                     'courier_phone' => $response->courier->phone,
                     'courier_link' => $response->courier->link,
-                    'insurance_amount' => $response->courier ->insurance->amount,
-                    'insurance_fee' => $response->courier ->insurance->fee,
+                    'insurance_amount' => $response->courier->insurance->amount,
+                    'insurance_fee' => $response->courier->insurance->fee,
                     'price' => $response->price,
                     'status' => $response->status,
                     'tanggal_dikirim' => $now,

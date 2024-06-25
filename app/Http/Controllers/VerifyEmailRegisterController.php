@@ -27,7 +27,7 @@ class VerifyEmailRegisterController extends Controller
             DB::commit();
             
         } catch (Throwable $th) {
-            DB::rollBack();
+            DB::rollback();
             // dd($th);
         }
             return redirect('/user-login')->with('message','Verifikasi Email berhasil silahkan login!');

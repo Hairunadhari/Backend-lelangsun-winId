@@ -114,7 +114,7 @@
                 <div class="row">
                     <div class="mb-1 col-6">
                         <label class="form-label">Telepon <span style="color: red">*</span></label>
-                        <input type="number" class="form-control" name="no_telp" required
+                        <input type="text" class="form-control" name="no_telp" required
                             value="{{ session('no_telp') }}">
                        
                     </div>

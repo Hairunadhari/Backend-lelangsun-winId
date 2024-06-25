@@ -26,13 +26,20 @@
                     <label>Tanggal Selesai</label>
                     <input type="text" class="form-control" name="promosi" value="{{$data->tanggal_selesai}}" readonly>
                 </div>
-                <label for="">Produk :</label>
-                <table class="table table-striped" id="tabeldetailpromosi">
-                    <thead >
-                        <tr>
+                <div class="form-group">
+                    <label>Gambar Promo</label>
+                    <br>
+                    <img class="ms-auto" src="{{ asset('storage/image/'.$data->gambar) }}" style="width:200px">
+                </div>
+                <div class="form-group">
+
+                    <label for="">Data Produk Yang Sedang Promo :</label>
+                    <table class="table table-striped" id="tabeldetailpromosi">
+                        <thead >
+                            <tr>
                             <th>No</th>
                             <th>Nama Produk</th>
-                            <th>Cover Produk</th>
+                            <th>Gambar Produk</th>
                             <th>Harga Produk</th>
                             <th>Harga Diskon</th>
                         </tr>
@@ -40,17 +47,6 @@
                     <tbody>
                     </tbody>
                 </table>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">
-            <h4>Media</h4>
-        </div>
-        <div class="card-body">
-            <div class="form-group">
-                <label>Gambar Promo</label>
-                <br>
-                <img class="ms-auto" src="{{ asset('storage/image/'.$data->gambar) }}" style="width:700px">
             </div>
         </div>
     </div>
@@ -84,9 +80,9 @@
                     data: "produk.nama",
                 },
                 {
-                    data: "produk.thumbnail",
+                    data: "produk.gambarproduk",
                     render: function (data) {
-                        return '<img src="/storage/image/' + data +
+                        return '<img src="/storage/image/' + data[0].gambar +
                             '"style="width: 100px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; ">';
                     },
                 },

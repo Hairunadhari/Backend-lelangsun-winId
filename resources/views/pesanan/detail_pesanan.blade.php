@@ -79,6 +79,9 @@
                         <div class="col-lg-8">
                         </div>
                         <div class="col-lg-4 text-right">
+                            <div class="invoice-detail-name">Ongkos Kirim</div>
+                            <div class="">Rp
+                                {{number_format($order->cost_shipping,0,',','.')}}</div>
                             <hr class="mt-2 mb-2">
                             <div class="invoice-detail-item">
                                 <div class="invoice-detail-name">SubTotal</div>
