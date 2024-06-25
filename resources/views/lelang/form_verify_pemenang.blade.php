@@ -2,7 +2,12 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h4>Form Verifikasi Pemenang Lelang</h4>
+            <h4>Form Verifikasi Pemenang Lelang </h4>
+            @if ($data->status_pembayaran == 'Belum Bayar')
+            <span class="badge bg-primary text-white">Belum Bayar</span>
+            @else
+            <span class="badge bg-success text-white">Lunas</span>
+            @endif
         </div>
         <form action="{{route('superadmin.verify-pemenang', $data->id)}}" method="post" enctype="multipart/form-data" onsubmit="return confirm('Apakah anda yakin akan memVerifikasi data ini ?');">
             @csrf
@@ -37,7 +42,7 @@
                 </div>
                 @endif
             </div>
-            @if ($data->status_pembayaran != 'Belum Bayar')
+            @if ($data->status_pembayaran != 'Belum Bayar' && $data->npl == null)
                 
             <div class="card-footer text-right">
                 <button class="btn btn-primary mr-1" type="submit">Verifikasi</button>
