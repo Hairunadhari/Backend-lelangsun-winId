@@ -131,7 +131,7 @@
 
                         if (data.nama_pemilik == null) {
                              a = `<a class="btn btn-success" href="${activeUrl}"><i class="fas fa-check"></i></a>`
-                        }else if(data.status_pembayaran == 'Lunas' || data.status_pembayaran == 'Verifikasi') {
+                        }else if(data.status_verif == 'Verifikasi') {
                             a = `<a class="btn btn-success" href="${activeUrl}"><i class="fas fa-check"></i></a>`
                         }else{
                             a= '-'
