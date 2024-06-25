@@ -126,11 +126,17 @@
                 },
                 {
                     data: null,
-                    render: function (data) {
+                    render: function (data,row) {
                         var activeUrl = '/superadmin/form-verify-pemenang/' + data.id;
-                        return `
-                    <a class="btn btn-success" href="${activeUrl}"><i class="fas fa-check"></i></a>
-                    `;
+                        
+                        if (data.nama_pemilik == null) {
+                             a = `<a class="btn btn-success" href="${activeUrl}"><i class="fas fa-check"></i></a>`
+                        }else if(data.status_pembayaran != 'Belum Bayar') {
+                            a = `<a class="btn btn-success" href="${activeUrl}"><i class="fas fa-check"></i></a>`
+                        }else{
+                            a= '-'
+                        }
+                        return a;
                     },
                 },
             ],
