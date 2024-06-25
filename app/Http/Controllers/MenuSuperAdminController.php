@@ -1216,7 +1216,7 @@ class MenuSuperAdminController extends Controller
             DB::commit();
         } catch (Throwable $th) {
             DB::rollback();
-            dd($th);
+            // dd($th);
             return redirect()->route('superadmin.barang-lelang')->with('error', $th->getMessage());
         }
         
