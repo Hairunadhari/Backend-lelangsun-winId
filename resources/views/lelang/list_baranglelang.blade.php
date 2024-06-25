@@ -22,35 +22,9 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <ul class="nav nav-pills" id="myTab3" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
-                                aria-controls="home" aria-selected="true">Data Aktif</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
-                                aria-controls="profile" aria-selected="false">Data Tidak Aktif</a>
-                        </li>
-                    </ul>
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
                             <table class="table table-striped w-100" id="barang-lelang">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama</th>
-                                        <th>Kategori</th>
-                                        <th>Gambar Barang</th>
-                                        <th>Kelengkapan Dokumen</th>
-                                        <th>Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                            <table class="table table-striped w-100" id="barang-lelang-notactive">
                                 <thead>
                                     <tr>
                                         <th>No</th>

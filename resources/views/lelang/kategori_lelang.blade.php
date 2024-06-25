@@ -11,16 +11,6 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <ul class="nav nav-pills" id="myTab3" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
-                                aria-controls="home" aria-selected="true">Aktif</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
-                                aria-controls="profile" aria-selected="false">Tidak Aktif</a>
-                        </li>
-                    </ul>
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
                             <table class="table table-striped w-100" id="kategori-lelang">
@@ -37,21 +27,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                            <table class="table table-striped w-100" id="kategorilelang-notactive"
-                                style="width:100% !important;">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Kategori</th>
-                                        <th>Kelipatan Bidding</th>
-                                        <th>Harga NPL</th>
-                                        <th>Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
@@ -115,67 +90,6 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="PUT">
                         <button class="btn btn-danger" type="submit"><i class="far fa-trash-alt"></i> Hapus</button>
-                        </form>
-                    `;
-                    },
-                },
-            ],
-        });
-    });
-
-    $(document).ready(function () {
-        $('#kategorilelang-notactive').DataTable({
-            // responsive: true,
-            processing: true,
-            ordering: false,
-            // fixedHeader: true,
-            ajax: {
-                url: '{{ url()->current() }}',
-                data: function (data) {
-                    data.status = 'not-active';
-                }
-            },
-            columns: [{
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    },
-                },
-                {
-                    data: "kategori",
-                },
-                {
-                    data: "kelipatan_bidding",
-                    render: function(data, type, row, meta) {
-                        if (type === 'display') {
-                            // Mengubah data menjadi format mata uang dengan simbol IDR
-                            return data.toLocaleString('id-ID', {
-                                minimumFractionDigits: 0
-                            });
-                        }
-                        return data;
-                    }
-                },
-                {
-                    data: "harga_npl",
-                    render: function(data, type, row, meta) {
-                        if (type === 'display') {
-                            // Mengubah data menjadi format mata uang dengan simbol IDR
-                            return "Rp " + data.toLocaleString('id-ID', {
-                                minimumFractionDigits: 0
-                            });
-                        }
-                        return data;
-                    }
-                },
-                {
-                data: null,
-                    render: function (data) {
-                    var activeurl = '/superadmin/active-kategori-lelang/' + data.id;
-                    return `
-                        <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden" name="_method" value="PUT">
-                        <button class="btn btn-success" type="submit">Aktifkan</button>
                         </form>
                     `;
                     },

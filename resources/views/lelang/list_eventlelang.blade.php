@@ -11,35 +11,9 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <ul class="nav nav-pills" id="myTab3" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab"
-                                aria-controls="home" aria-selected="true">Event Aktif</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab"
-                                aria-controls="profile" aria-selected="false">Event Tidak Aktif</a>
-                        </li>
-                    </ul>
                     <div class="tab-content" id="myTabContent2">
                         <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
                             <table class="table table-striped w-100" id="event">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Poster</th>
-                                        <th>Event</th>
-                                        <th>Tanggal Event</th>
-                                        <th>Lokasi</th>
-                                        <th>Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                            <table class="table table-striped w-100" id="event-notactive">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -119,52 +93,6 @@
                                 ${convert_eventDate == convert_today ? `<span><a class="btn btn-success ${lot}"  href="${bidding}"><i class="fas fa-hand-paper"></i></a></span>` : ''}
                             </form>`
                     }
-                 },
-             ],
-         });
-         $('#event-notactive').DataTable({
-             processing: true,
-             ordering: false,
-             responsive: true,
-             ajax: {
-                 url: '{{ url()->current() }}',
-                 data: function (data) {
-                     data.status_data = 'not-active';
-                 }
-             },
-             columns: [{
-                     render: function (data, type, row, meta) {
-                         return meta.row + meta.settings._iDisplayStart + 1;
-                     },
-                 },
-                 {
-                    data: "gambar",
-                    render: function (data) {
-                        return '<img src="/storage/image/' + data +
-                            '"style="width: 150px; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px; margin:5px; padding:0.25rem; border:1px solid #dee2e6; ">';
-                    },
-                },
-                 {
-                     data: "judul",
-                 },
-                 {
-                     data: "waktu",
-                 },
-                 {
-                     data: "link_lokasi",
-                 },
-                 {
-                     data: null,
-                     render: function (data) {
-                         var activeurl = '/superadmin/active-event-lelang/' + data.id;
-                         return `
-                         <form action="${activeurl}" method="POST" onsubmit="return confirm('Apakah anda yakin akan mengaktifkan data ini ?');">
-                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                         <input type="hidden" name="_method" value="PUT">
-                         <button class="btn btn-success" type="submit"><i class="fas fa-sync-alt"></i></button>
-                         </form>
-                     `;
-                     },
                  },
              ],
          });
