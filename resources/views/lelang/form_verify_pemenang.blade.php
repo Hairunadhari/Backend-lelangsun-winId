@@ -42,8 +42,7 @@
                 </div>
                 @endif
             </div>
-            @if ($data->status_pembayaran != 'Belum Bayar' && $data->npl == null)
-                
+            @if ($data->status_pembayaran == 'Belum Bayar' || $data->nama_pemilik == 'Bidder Offline')
             <div class="card-footer text-right">
                 <button class="btn btn-primary mr-1" type="submit">Verifikasi</button>
             </div>
