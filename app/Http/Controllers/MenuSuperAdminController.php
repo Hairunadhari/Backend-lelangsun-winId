@@ -1123,6 +1123,16 @@ class MenuSuperAdminController extends Controller
     
 
     public function add_barang_lelang(Request $request){
+        $validator = Validator::make($request->all(), [
+            'gambar' => 'required|max:1024', // 1024 kilobytes = 1 megabyte
+        ]);
+        
+        if($validator->fails()){
+            $messages = $validator->messages();
+            $alertMessage = $messages->first();
+          
+            return back()->with(['error' => $alertMessage]);
+        }
         if ($request->kategoribarang_id == null) {
             return redirect()->route('superadmin.barang-lelang')->with('error', $th->getMessage());
             
