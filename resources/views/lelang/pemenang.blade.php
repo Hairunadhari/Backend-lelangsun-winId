@@ -26,7 +26,7 @@
                                         <th>No</th>
                                         <th>Nama</th>
                                         <th>No Rekening</th>
-                                        <th>Nominal</th>
+                                        <th>Nominal (harga barang - harga npl peserta)</th>
                                         <th>Status Pembayaran</th>
                                         <th>Aksi</th>
                                     </tr>
