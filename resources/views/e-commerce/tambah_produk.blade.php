@@ -83,8 +83,8 @@
 <script>
       $('.input-images').imageUploader({
         imagesInputName: 'gambar',
-        maxSize: 2 * 1024 * 1024,
-
+        maxSize: 200 * 1024, // maksimum ukuran dalam byte (200 KB)
+         maxFiles: 4, 
     });
     $(document).ready(function () {
             $('#tokos').on('change', function () {

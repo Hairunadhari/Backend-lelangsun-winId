@@ -13,7 +13,7 @@ class Peserta
     {
         if (Auth::user()) {
             return $next($request);
-        }
+        }       
         return redirect('/');
     }
 }

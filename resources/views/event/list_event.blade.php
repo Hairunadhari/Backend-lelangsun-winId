@@ -251,10 +251,10 @@
 </div>
 </div>
 <script>
-    $('.input-images').imageUploader({
+   $('.input-images').imageUploader({
         imagesInputName: 'poster',
-        maxSize: 2 * 1024 * 1024,
-
+        maxSize: 500 * 1024, // maksimum ukuran dalam byte (200 KB)
+         maxFiles: 1, 
     });
     window.onload = function () {
         const tiket = document.getElementById("tiket");

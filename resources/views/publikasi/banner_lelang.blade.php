@@ -80,7 +80,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="tab-pane fade show active" id="beranda" role="tabpanel" aria-labelledby="beranda-tab">
+                        {{-- <div class="tab-pane fade show active" id="beranda" role="tabpanel" aria-labelledby="beranda-tab">
                             <form action="{{route('superadmin.update-banner-web',$data->id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
@@ -127,8 +127,8 @@
                                     <button class="me-auto btn btn-success mt-3" type="submit">Simpan</button>
                                 </div>
                             </form>
-                        </div>
-                        <div class="tab-pane fade show active" id="events" role="tabpanel" aria-labelledby="events-tab">
+                        </div> --}}
+                        {{-- <div class="tab-pane fade show active" id="events" role="tabpanel" aria-labelledby="events-tab">
                             <form action="{{route('superadmin.update-banner-web',$data->id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
@@ -161,7 +161,7 @@
                                     <button class="me-auto btn btn-success mt-3" type="submit">Simpan</button>
                                 </div>
                             </form>
-                        </div>
+                        </div> --}}
                        
                     </div>
                 </div>
@@ -170,10 +170,10 @@
     </div>
 </div>
 <script>
-    $('.input-images').imageUploader({
+   $('.input-images').imageUploader({
         imagesInputName: 'gambar',
-        maxSize: 2 * 1024 * 1024,
-
+        maxSize: 200 * 1024, // maksimum ukuran dalam byte (200 KB)
+         maxFiles: 3, 
     });
     $(document).on('click', '#deletegambar', function (e) {
         e.preventDefault();
