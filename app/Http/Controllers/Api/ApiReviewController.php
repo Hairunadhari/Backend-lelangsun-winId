@@ -96,7 +96,7 @@ class ApiReviewController extends Controller
             $totalRating = Review::where('produk_id', $request->produk_id)->sum('rating');
             $totalUser = Review::where('produk_id', $request->produk_id)->count('user_id');
             $hasil = $totalRating / $totalUser;
-            $rating = number_format($hasil, 1, ',','');
+          
             $ambilProduk = Produk::find($request->produk_id);
             $ambilProduk->update([
                 'rating'=> $rating
